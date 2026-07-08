@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: LinerCore Identity Service
+  version: 0.1.0
+paths:
+  /internal/identity/authorize:
+    post:
+      summary: Evaluate an authorization decision.
+      responses:
+        "200":
+          description: Safe allow or deny decision.
+  /internal/identity/effective-permissions:
+    post:
+      summary: Return session-safe roles and permissions.
+      responses:
+        "200":
+          description: Effective permission view.
+  /internal/identity/roles:
+    get:
+      summary: Return the MVP role catalog.
+      responses:
+        "200":
+          description: Role catalog.
+  /internal/identity/roles/assign:
+    post:
+      summary: Assign a platform role to an internal subject.
+      responses:
+        "200":
+          description: Assignment authorization result.
+  /internal/identity/audit:
+    get:
+      summary: Query authorization audit records.
+      responses:
+        "501":
+          description: Placeholder until persistence-backed audit query is implemented.
+components:
+  schemas:
+    AuthorizationDecision:
+      type: object
+      required: [decisionId, result, reasonCode, resource, action, evaluatedAt, policyVersion, correlationId]
+      properties:
+        decisionId:
+          type: string
+        subjectId:
+          type: string
+        result:
+          enum: [ALLOW, DENY]
+        reasonCode:
+          type: string
+        resource:
+          type: string
+        action:
+          type: string
+        scope:
+          type: string
+        evaluatedAt:
+          type: string
+          format: date-time
+        policyVersion:
+          type: string
+        correlationId:
+          type: string

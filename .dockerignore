@@ -1,0 +1,13 @@
+.git
+.local-tools
+node_modules
+**/node_modules
+.next
+**/.next
+.turbo
+coverage
+dist
+*.log
+artifacts
+aidlc/spaces/*/intents/*/runtime-graph.json
+aidlc/spaces/*/intents/*/.aidlc-*

@@ -1,0 +1,12 @@
+{
+  "decisionId": "decision-local-001",
+  "subjectId": "local.reference.admin",
+  "result": "ALLOW",
+  "reasonCode": "ROLE_PERMISSION_MATCH",
+  "resource": "reference-data",
+  "action": "write",
+  "scope": "CURRENCY",
+  "evaluatedAt": "2026-07-01T00:00:00Z",
+  "policyVersion": "mvp-2026-07-01",
+  "correlationId": "corr-authz-001"
+}

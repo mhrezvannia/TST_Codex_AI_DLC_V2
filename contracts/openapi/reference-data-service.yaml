@@ -1,0 +1,164 @@
+openapi: 3.0.3
+info:
+  title: LinerCore Reference Data Service
+  version: 0.1.0
+paths:
+  /reference-sets:
+    get:
+      summary: List supported reference sets.
+      responses:
+        "200":
+          description: Reference set catalog.
+  /reference-sets/{set}/records:
+    get:
+      summary: Provider list/search endpoint with active-only default.
+      parameters:
+        - name: set
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: includeInactive
+          in: query
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: size
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deterministic page of reference summaries.
+    post:
+      summary: Admin create endpoint.
+      responses:
+        "200":
+          description: Created reference record.
+  /reference-sets/{set}/records/{id}:
+    get:
+      summary: Provider detail endpoint.
+      responses:
+        "200":
+          description: Reference record detail.
+    put:
+      summary: Admin update endpoint with optimistic version.
+      responses:
+        "200":
+          description: Updated reference record.
+  /reference-sets/{set}/records/validate:
+    post:
+      summary: Validate without persistence or change fact.
+      responses:
+        "200":
+          description: Validation result.
+  /reference-sets/{set}/records/{id}/deactivate:
+    post:
+      summary: Admin deactivate endpoint.
+      responses:
+        "200":
+          description: Deactivated record.
+  /reference-sets/{set}/records/{id}/reactivate:
+    post:
+      summary: Admin reactivate endpoint.
+      responses:
+        "200":
+          description: Reactivated record.
+  /reference-sets/{set}/records/{id}/history:
+    get:
+      summary: Recent change history.
+      responses:
+        "200":
+          description: Reference change history.
+  /reference-sets/events:
+    get:
+      summary: Query reference event publication status.
+      parameters:
+        - name: eventId
+          in: query
+          schema:
+            type: string
+        - name: recordId
+          in: query
+          schema:
+            type: string
+        - name: referenceSet
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            enum: [PENDING, IN_PROGRESS, RETRYABLE, PUBLISHED, FAILED_PERMANENT, RECOVERY_REQUIRED]
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Event publication status rows.
+  /reference-sets/events/claims:
+    post:
+      summary: Claim publishable reference events for a worker.
+      parameters:
+        - name: workerId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: batchSize
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Claimed outbox events.
+  /reference-sets/events/publish:
+    post:
+      summary: Publish a claimed batch through the placeholder Kafka seam.
+      parameters:
+        - name: workerId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: batchSize
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Publish batch result.
+components:
+  schemas:
+    ReferenceRecord:
+      type: object
+      required: [id, set, code, displayName, status, version]
+      properties:
+        id:
+          type: string
+        set:
+          type: string
+        code:
+          type: string
+        displayName:
+          type: string
+        status:
+          enum: [ACTIVE, INACTIVE]
+        version:
+          type: integer
+        correlationId:
+          type: string

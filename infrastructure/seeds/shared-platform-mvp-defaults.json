@@ -1,0 +1,175 @@
+{
+  "seedPackId": "shared-platform-mvp-defaults",
+  "seedVersion": "2026.07.01",
+  "environmentScope": "local",
+  "classification": "local-only",
+  "targetServices": ["keycloak", "identity-service", "reference-data-service"],
+  "keycloak": {
+    "realm": "linercore-local",
+    "clientId": "linercore-local-bff",
+    "users": [
+      {
+        "username": "local.reference.admin",
+        "displayName": "Local Reference Admin",
+        "email": "local.reference.admin@example.invalid",
+        "roles": ["reference-admin", "platform-operator"]
+      },
+      {
+        "username": "local.carrier.user",
+        "displayName": "Local Carrier User",
+        "email": "local.carrier.user@example.invalid",
+        "roles": ["customer-service"]
+      }
+    ]
+  },
+  "identity": {
+    "roles": [
+      "pricing",
+      "sales",
+      "booking-desk",
+      "equipment-control",
+      "customer-service",
+      "finance-read",
+      "reference-admin",
+      "platform-operator",
+      "security-admin"
+    ],
+    "permissions": [
+      "reference-data:read",
+      "reference-data:write",
+      "identity:read",
+      "identity:admin",
+      "authz:decision"
+    ],
+    "rolePermissions": [
+      { "role": "customer-service", "permissions": ["reference-data:read"] },
+      { "role": "reference-admin", "permissions": ["reference-data:read", "reference-data:write"] },
+      { "role": "platform-operator", "permissions": ["reference-data:read", "identity:read"] },
+      { "role": "security-admin", "permissions": ["identity:read", "identity:admin", "authz:decision"] }
+    ],
+    "localUsers": [
+      { "username": "local.reference.admin", "roles": ["reference-admin", "platform-operator"] },
+      { "username": "local.carrier.user", "roles": ["customer-service"] }
+    ]
+  },
+  "referenceData": {
+    "eventEnabled": true,
+    "sets": {
+      "PARTY_CUSTOMER": [
+        {
+          "id": "party-customer-local-carrier",
+          "code": "LOCAL-CARRIER",
+          "displayName": "Local Demo Carrier",
+          "status": "ACTIVE",
+          "attributes": { "customerType": "carrier", "localOnly": "true" }
+        }
+      ],
+      "LOCATION": [
+        {
+          "id": "location-country-us",
+          "code": "US",
+          "displayName": "United States",
+          "status": "ACTIVE",
+          "attributes": { "locationType": "COUNTRY", "localOnly": "true" }
+        },
+        {
+          "id": "location-country-nl",
+          "code": "NL",
+          "displayName": "Netherlands",
+          "status": "ACTIVE",
+          "attributes": { "locationType": "COUNTRY", "localOnly": "true" }
+        },
+        {
+          "id": "location-usnyc",
+          "code": "USNYC",
+          "displayName": "New York, US",
+          "status": "ACTIVE",
+          "attributes": { "countryCode": "US", "locationType": "PORT", "parentCountryId": "location-country-us", "localOnly": "true" }
+        },
+        {
+          "id": "location-nlrot",
+          "code": "NLRTM",
+          "displayName": "Rotterdam, NL",
+          "status": "ACTIVE",
+          "attributes": { "countryCode": "NL", "locationType": "PORT", "parentCountryId": "location-country-nl", "localOnly": "true" }
+        }
+      ],
+      "REGION": [
+        {
+          "id": "region-na",
+          "code": "NA",
+          "displayName": "North America",
+          "status": "ACTIVE",
+          "attributes": { "localOnly": "true" }
+        },
+        {
+          "id": "region-eu",
+          "code": "EU",
+          "displayName": "Europe",
+          "status": "ACTIVE",
+          "attributes": { "localOnly": "true" }
+        }
+      ],
+      "VOYAGE": [
+        {
+          "id": "voyage-local-001",
+          "code": "LC-VOY-001",
+          "displayName": "Local Demo Voyage 001",
+          "status": "ACTIVE",
+          "attributes": { "origin": "USNYC", "destination": "NLRTM", "localOnly": "true" }
+        }
+      ],
+      "CURRENCY": [
+        {
+          "id": "currency-usd",
+          "code": "USD",
+          "displayName": "US Dollar",
+          "status": "ACTIVE",
+          "attributes": { "minorUnit": "2", "localOnly": "true" }
+        }
+      ],
+      "CHARGE_CODE": [
+        {
+          "id": "charge-code-ofr",
+          "code": "OFR",
+          "displayName": "Ocean Freight",
+          "status": "ACTIVE",
+          "attributes": { "chargeFamily": "freight", "localOnly": "true" }
+        }
+      ],
+      "EQUIPMENT_TYPE": [
+        {
+          "id": "equipment-type-40hc",
+          "code": "40HC",
+          "displayName": "40 Foot High Cube",
+          "status": "ACTIVE",
+          "attributes": { "isoSizeType": "45G1", "localOnly": "true" }
+        }
+      ],
+      "COMMODITY": [
+        {
+          "id": "commodity-general-cargo",
+          "code": "GEN",
+          "displayName": "General Cargo",
+          "status": "ACTIVE",
+          "attributes": { "hazardous": "false", "localOnly": "true" }
+        }
+      ],
+      "TRADE_LANE": [
+        {
+          "id": "trade-lane-na-eu",
+          "code": "NA-EU",
+          "displayName": "North America to Europe",
+          "status": "ACTIVE",
+          "attributes": { "originRegionId": "region-na", "destinationRegionId": "region-eu", "localOnly": "true" },
+          "dependencies": ["REGION:NA", "REGION:EU"]
+        }
+      ]
+    }
+  },
+  "smokeTags": {
+    "referenceRead": ["CURRENCY:USD", "TRADE_LANE:NA-EU"],
+    "authorizationDecision": ["local.reference.admin:reference-data:write"],
+    "eventStatus": ["referencedata.currency.changed"]
+  }
+}

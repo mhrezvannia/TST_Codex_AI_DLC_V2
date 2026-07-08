@@ -1,0 +1,17 @@
+{
+  "type": "record",
+  "name": "ReferenceDataCommodityChanged",
+  "namespace": "com.linercore.platform.referencedata.events",
+  "doc": "Placeholder schema for commodity reference changes.",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "eventType", "type": "string" },
+    { "name": "schemaVersion", "type": "string" },
+    { "name": "source", "type": "string" },
+    { "name": "occurredAt", "type": "string" },
+    { "name": "correlationId", "type": ["null", "string"], "default": null },
+    { "name": "entityId", "type": "string" },
+    { "name": "operation", "type": "string" },
+    { "name": "payload", "type": { "type": "map", "values": "string" } }
+  ]
+}

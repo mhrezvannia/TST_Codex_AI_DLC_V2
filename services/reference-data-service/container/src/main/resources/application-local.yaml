@@ -1,0 +1,10 @@
+server:
+  port: 8083
+
+reference-data:
+  identity-service-url: http://identity-service:8082
+  pagination:
+    max-size: 100
+  datasource:
+    # Local placeholder only; staging/production values must use Vault references.
+    url: jdbc:postgresql://postgres:5432/reference_data

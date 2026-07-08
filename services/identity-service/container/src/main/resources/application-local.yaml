@@ -1,0 +1,17 @@
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+identity:
+  keycloak:
+    issuer: http://keycloak:8080/realms/linercore
+    audience: linercore-shared-platform
+    jwks-uri: http://keycloak:8080/realms/linercore/protocol/openid-connect/certs
+  secrets:
+    # Staging and production values must be resolved through Vault references.
+    database-password: local-only

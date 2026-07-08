@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: apps-auth
+    metrics_path: /api/health
+    static_configs:
+      - targets: ["apps-auth:3000"]
+  - job_name: apps-reference-data
+    metrics_path: /api/health
+    static_configs:
+      - targets: ["apps-reference-data:3000"]
+  - job_name: identity-service
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["identity-service:8080"]
+  - job_name: reference-data-service
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["reference-data-service:8080"]

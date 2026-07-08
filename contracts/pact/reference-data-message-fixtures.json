@@ -1,0 +1,9 @@
+{
+  "fixtureId": "reference-data-message-currency-changed",
+  "eventType": "referencedata.currency.changed",
+  "contractId": "event-reference-data-changed",
+  "schemaVersion": "1.0.0",
+  "payloadExample": "contracts/examples/referencedata.currency.changed.example.json",
+  "consumerExpectation": "Future downstream consumers can deduplicate by eventId and route by eventType without database access.",
+  "verificationStatus": "pending"
+}

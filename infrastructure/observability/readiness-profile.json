@@ -1,0 +1,25 @@
+{
+  "profileId": "shared-platform-local-observability",
+  "environment": "local",
+  "correlationHeader": "X-Correlation-Id",
+  "requiredSignals": [
+    "structured-json-logs",
+    "prometheus-metrics",
+    "jaeger-traces",
+    "outbox-publication-status",
+    "health-smoke-status"
+  ],
+  "metricFamilies": [
+    "request-latency",
+    "error-rate",
+    "authorization-decisions",
+    "outbox-lag",
+    "event-freshness",
+    "publication-attempts",
+    "health-smoke-status"
+  ],
+  "secretPolicy": {
+    "nonLocalSecrets": "vault-reference-only",
+    "browserReceivesSecrets": false
+  }
+}

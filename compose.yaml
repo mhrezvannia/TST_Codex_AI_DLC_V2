@@ -1,0 +1,227 @@
+name: linercore-shared-platform
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: linercore
+      POSTGRES_PASSWORD: linercore_local
+      POSTGRES_DB: linercore
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linercore"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    command: ["start-dev"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/8080'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  kafka:
+    image: confluentinc/cp-kafka:7.7.1
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.7.1
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8081/subjects >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  identity-service:
+    image: linercore/identity-service:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/spring-service.Dockerfile
+      args:
+        JAR_FILE: services/identity-service/container/target/identity-container-0.1.0-SNAPSHOT.jar
+    profiles: ["apps"]
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+
+  reference-data-service:
+    image: linercore/reference-data-service:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/spring-service.Dockerfile
+      args:
+        JAR_FILE: services/reference-data-service/container/target/reference-data-container-0.1.0-SNAPSHOT.jar
+    profiles: ["apps"]
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
+
+  seed-loader:
+    image: node:24-alpine
+    profiles: ["seed"]
+    working_dir: /workspace
+    env_file:
+      - ./infrastructure/env/local.env.example
+    command:
+      - "node"
+      - "scripts/seed-local.mjs"
+      - "--dry-run"
+      - "--wait"
+      - "--seed-file"
+      - "/workspace/infrastructure/seeds/shared-platform-mvp-defaults.json"
+    volumes:
+      - ./:/workspace:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
+      identity-service:
+        condition: service_started
+      reference-data-service:
+        condition: service_started
+
+  apps-auth:
+    image: linercore/apps-auth:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/next-app.Dockerfile
+      args:
+        WORKSPACE: "@erp/app-auth"
+    profiles: ["apps"]
+    environment:
+      IDENTITY_SERVICE_URL: http://identity-service:8082
+    depends_on:
+      - identity-service
+
+  apps-reference-data:
+    image: linercore/apps-reference-data:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/next-app.Dockerfile
+      args:
+        WORKSPACE: "@erp/app-reference-data"
+    profiles: ["apps"]
+    environment:
+      IDENTITY_SERVICE_URL: http://identity-service:8082
+      REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+    depends_on:
+      - reference-data-service
+      - identity-service
+
+  nginx:
+    image: nginx:1.27
+    ports:
+      - "8088:80"
+    volumes:
+      - ./infrastructure/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - apps-auth
+      - apps-reference-data
+    profiles: ["apps"]
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    profiles: ["observability"]
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./infrastructure/observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infrastructure/observability/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    depends_on:
+      - prometheus
+      - jaeger
+    profiles: ["observability"]
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.63.0
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+    profiles: ["observability"]
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.114.0
+    command: ["--config=/etc/otelcol/config.yml"]
+    ports:
+      - "4319:4317"
+      - "4320:4318"
+    volumes:
+      - ./infrastructure/observability/otel-collector.yml:/etc/otelcol/config.yml:ro
+    depends_on:
+      - jaeger
+    profiles: ["observability"]
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.1
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+    ports:
+      - "9200:9200"
+    profiles: ["observability"]
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.16.1
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    profiles: ["observability"]

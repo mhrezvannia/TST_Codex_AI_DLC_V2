@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+.local-tools/
+.turbo/
+.next/
+dist/
+coverage/
+target/
+*.log
+.env
+.env.*
+!.env.example
+!infrastructure/env/*.example

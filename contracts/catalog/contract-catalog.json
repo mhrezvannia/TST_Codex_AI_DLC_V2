@@ -1,0 +1,65 @@
+{
+  "catalogVersion": "0.1.0",
+  "publishedAt": "2026-07-02T00:00:00Z",
+  "compatibilitySummary": "pending",
+  "contracts": [
+    {
+      "contractId": "api-reference-data-service",
+      "kind": "openapi",
+      "owner": "shared-platform",
+      "sourceService": "reference-data-service",
+      "version": "0.1.0",
+      "lifecycleStatus": "review",
+      "artifactPath": "contracts/openapi/reference-data-service.yaml",
+      "compatibilityStatus": "pending",
+      "examples": ["contracts/examples/reference-data-list-currency.response.json"],
+      "fixtures": ["contracts/pact/reference-data-provider-fixtures.json"]
+    },
+    {
+      "contractId": "api-identity-service",
+      "kind": "openapi",
+      "owner": "shared-platform",
+      "sourceService": "identity-service",
+      "version": "0.1.0",
+      "lifecycleStatus": "review",
+      "artifactPath": "contracts/openapi/identity-service.yaml",
+      "compatibilityStatus": "pending",
+      "examples": ["contracts/examples/identity-authorization-decision.response.json"],
+      "fixtures": ["contracts/pact/identity-provider-fixtures.json"]
+    },
+    {
+      "contractId": "event-reference-data-changed",
+      "kind": "avro-event-set",
+      "owner": "shared-platform",
+      "sourceService": "reference-data-service",
+      "version": "1.0.0",
+      "lifecycleStatus": "review",
+      "artifactPath": "contracts/avro",
+      "compatibilityStatus": "pending",
+      "eventTypes": [
+        "referencedata.party-customer.changed",
+        "referencedata.location.changed",
+        "referencedata.region.changed",
+        "referencedata.voyage.changed",
+        "referencedata.currency.changed",
+        "referencedata.charge-code.changed",
+        "referencedata.equipment-type.changed",
+        "referencedata.commodity.changed",
+        "referencedata.trade-lane.changed"
+      ],
+      "examples": ["contracts/examples/referencedata.currency.changed.example.json"],
+      "fixtures": ["contracts/pact/reference-data-message-fixtures.json"]
+    }
+  ],
+  "findings": [
+    {
+      "findingId": "U07-F001",
+      "contractId": "event-reference-data-changed",
+      "source": "compatibility-check",
+      "severity": "medium",
+      "summary": "Schema Registry compatibility execution is pending U08 CI gate wiring.",
+      "status": "deferred",
+      "resolution": "Catalog validation confirms schema presence and JSON shape; U08 will execute registry compatibility."
+    }
+  ]
+}

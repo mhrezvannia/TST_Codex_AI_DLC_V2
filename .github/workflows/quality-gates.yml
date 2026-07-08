@@ -1,0 +1,49 @@
+name: Quality Gates
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  quality-gates:
+    name: Shared Platform quality gates
+    runs-on: [self-hosted, on-prem, linux]
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install frontend dependencies
+        run: corepack yarn install --immutable
+
+      - name: Run quality gate aggregator
+        run: node scripts/run-quality-gates.mjs --all --evidence artifacts/quality-gates/evidence.json
+
+      - name: Run local readiness evidence
+        if: always()
+        run: node scripts/local-readiness.mjs --evidence artifacts/readiness/local-readiness.json
+
+      - name: Upload quality evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-gate-evidence
+          path: |
+            artifacts/quality-gates/evidence.json
+            artifacts/readiness/local-readiness.json
+            artifacts/contracts-live-verification.json
+            artifacts/seed-apply-attempt.json

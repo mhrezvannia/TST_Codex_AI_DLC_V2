@@ -1,0 +1,18 @@
+{
+  "eventId": "evt-reference-currency-usd-001",
+  "eventType": "referencedata.currency.changed",
+  "schemaVersion": "1.0.0",
+  "source": "reference-data-service",
+  "occurredAt": "2026-07-01T00:00:00Z",
+  "correlationId": "corr-reference-change-001",
+  "entityId": "currency-usd",
+  "operation": "CREATED",
+  "producer": "reference-data-service/0.1.0",
+  "payload": {
+    "id": "currency-usd",
+    "code": "USD",
+    "displayName": "US Dollar",
+    "status": "ACTIVE",
+    "version": "1"
+  }
+}

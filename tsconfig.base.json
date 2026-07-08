@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@erp/api-core": ["packages/api-core/src"],
+      "@erp/auth": ["packages/auth/src"],
+      "@erp/config": ["packages/config/src"],
+      "@erp/shared-types": ["packages/shared-types/src"],
+      "@erp/transformers": ["packages/transformers/src"],
+      "@erp/ui": ["packages/ui/src"],
+      "@erp/utils": ["packages/utils/src"]
+    }
+  }
+}

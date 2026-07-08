@@ -1,0 +1,21 @@
+{
+  "fixtureId": "identity-provider-authorize-reference-write",
+  "operationId": "authorize",
+  "contractId": "api-identity-service",
+  "requestShape": {
+    "method": "POST",
+    "path": "/internal/identity/authorize",
+    "body": {
+      "subjectId": "local.reference.admin",
+      "resource": "reference-data",
+      "action": "write",
+      "scope": "CURRENCY"
+    }
+  },
+  "responseShape": {
+    "status": 200,
+    "example": "contracts/examples/identity-authorization-decision.response.json"
+  },
+  "preconditions": ["local.reference.admin has reference-admin role"],
+  "verificationStatus": "pending"
+}

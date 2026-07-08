@@ -1,0 +1,16 @@
+{
+  "fixtureId": "reference-data-provider-list-currency",
+  "operationId": "listReferenceRecords",
+  "contractId": "api-reference-data-service",
+  "requestShape": {
+    "method": "GET",
+    "path": "/reference-sets/CURRENCY/records",
+    "query": { "includeInactive": "false", "page": "0", "size": "25" }
+  },
+  "responseShape": {
+    "status": 200,
+    "example": "contracts/examples/reference-data-list-currency.response.json"
+  },
+  "preconditions": ["CURRENCY:USD exists"],
+  "verificationStatus": "pending"
+}

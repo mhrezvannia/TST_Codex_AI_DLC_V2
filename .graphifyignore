@@ -1,0 +1,56 @@
+.git/
+node_modules/
+target/
+dist/
+build/
+logs/
+coverage/
+.next/
+.turbo/
+.local-tools/
+.history/
+graphify-out/
+.codebase-memory/
+**/.aidlc-sensors/
+**/.aidlc-hooks-health/
+**/.aidlc-stop-hook/
+**/runtime-graph.json
+**/tsconfig.tsbuildinfo
+.agents/skills/aidlc-*/
+.codex/tools/
+
+# Dependency and package-manager caches
+.yarn/install-state.gz
+**/.cache/
+**/.parcel-cache/
+**/.vite/
+
+# Binary/build artifacts
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.pdf
+
+# Test and report output
+test-results/
+playwright-report/
+reports/
+junit.xml
+surefire-reports/
+failsafe-reports/
+
+# IDE and OS noise
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

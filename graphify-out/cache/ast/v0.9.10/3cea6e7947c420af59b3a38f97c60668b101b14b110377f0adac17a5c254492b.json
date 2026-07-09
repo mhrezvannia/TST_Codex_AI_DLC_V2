@@ -1,0 +1,1 @@
+{"nodes": [{"id": "pkg_charge_agreement_published_language", "label": "charge-agreement-published-language", "file_type": "code", "type": "package", "ecosystem": "maven", "source_file": "services/charge-agreement-service/published-language/pom.xml", "source_location": "L1"}], "edges": []}

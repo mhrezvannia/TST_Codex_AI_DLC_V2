@@ -1,0 +1,30 @@
+[
+  {
+    "uuid": "019f18ae-d3cf-71b6-b519-0c307f82fe96",
+    "slug": "shared-platform",
+    "dirName": "260630-shared-platform",
+    "scope": "mvp",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f21e0-1365-737d-92a6-7aaeb6a6f940",
+    "slug": "shared-platform-live",
+    "dirName": "260702-shared-platform-live",
+    "scope": "feature",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f2f06-e7c7-7e15-b76f-c5c2fcfdcefa",
+    "slug": "charge-agreement",
+    "dirName": "260704-charge-agreement",
+    "scope": "feature",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f4229-ff22-76d7-a9c1-0a9c14aac80e",
+    "slug": "linercore-enterprise",
+    "dirName": "260708-linercore-enterprise",
+    "scope": "enterprise",
+    "status": "in-flight"
+  }
+]

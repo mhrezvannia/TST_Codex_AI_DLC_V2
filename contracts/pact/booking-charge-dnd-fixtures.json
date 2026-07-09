@@ -1,0 +1,21 @@
+{
+  "fixtureId": "booking-charge-dnd-happy-path",
+  "contractId": "pact-booking-charge-dnd",
+  "provider": "charge-agreement-service",
+  "consumer": "booking-service",
+  "interactionId": "booking-post-pricing-dnd",
+  "requestShape": {
+    "method": "POST",
+    "path": "/api/pricing/dnd",
+    "headers": {
+      "X-Correlation-Id": "corr-booking-0001",
+      "Idempotency-Key": "dnd-booking-0001"
+    }
+  },
+  "responseShape": {
+    "status": 200,
+    "example": "contracts/examples/pricing-dnd.response.json"
+  },
+  "preconditions": ["container movement status crosses a D&D-relevant boundary"],
+  "verificationStatus": "pending"
+}

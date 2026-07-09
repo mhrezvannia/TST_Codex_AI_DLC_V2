@@ -1,0 +1,15 @@
+asyncapi: 2.6.0
+info:
+  title: Container Movement Events
+  version: 1.0.0
+channels:
+  containermovement.status:
+    subscribe:
+      summary: Container movement status event consumed by Booking.
+      message:
+        name: ContainerMovementStatus
+        headers:
+          type: object
+          required: [correlationId, schemaVersion, idempotencyKey]
+        payload:
+          $ref: "../avro/containermovement.status.avsc"

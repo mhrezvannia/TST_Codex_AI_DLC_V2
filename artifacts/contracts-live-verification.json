@@ -1,0 +1,104 @@
+{
+  "status": "failed",
+  "valid": false,
+  "failures": [
+    "identity roles: fetch failed",
+    "reference sets: fetch failed"
+  ],
+  "checks": [
+    {
+      "name": "contract catalog",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/reference-data-service.yaml exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/reference-data-service.yaml declares /reference-sets",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}/history",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/reference-data-service.yaml declares /reference-sets/events",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/identity-service.yaml exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/identity-service.yaml declares /internal/identity/authorize",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/identity-service.yaml declares /internal/identity/effective-permissions",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/identity-service.yaml declares /internal/identity/roles",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/identity-service.yaml declares /internal/identity/roles/assign",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.party-customer.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.location.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.region.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.voyage.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.currency.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.charge-code.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.equipment-type.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.commodity.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "referencedata.trade-lane.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "identity roles",
+      "status": "failed",
+      "reason": "fetch failed"
+    },
+    {
+      "name": "reference sets",
+      "status": "failed",
+      "reason": "fetch failed"
+    }
+  ]
+}

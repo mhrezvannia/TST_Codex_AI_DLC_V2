@@ -19,5 +19,9 @@ class ReferenceEventMapperTest {
 
         assertEquals(OutboxStatus.PENDING, event.status());
         assertEquals("referencedata.currency.changed", event.eventType());
+        assertEquals("reference-data-service", event.payload().get("producerIdentity"));
+        assertEquals("referencedata.currency.changed-value", event.payload().get("schemaSubject"));
+        assertEquals("CURRENCY:id-1:CREATED:change-1", event.payload().get("deduplicationKey"));
+        assertEquals("corr-1", event.payload().get("correlationId"));
     }
 }

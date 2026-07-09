@@ -1,0 +1,28 @@
+{
+  "name": "@erp/app-charge-agreements",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "node ../../node_modules/vitest/vitest.mjs --root ../.. run apps/charge-agreements/app/page.test.tsx"
+  },
+  "dependencies": {
+    "@erp/api-core": "workspace:*",
+    "@erp/auth": "workspace:*",
+    "@erp/config": "workspace:*",
+    "@erp/shared-types": "workspace:*",
+    "@erp/transformers": "workspace:*",
+    "@erp/ui": "workspace:*",
+    "next": "^15.1.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.0.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

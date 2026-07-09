@@ -45,6 +45,10 @@ class IdentityApplicationServiceTest {
         assertEquals(DecisionResult.DENY, decision.result());
         assertEquals(ReasonCode.DENY_UNKNOWN_SUBJECT, decision.reasonCode());
         assertFalse(audit.records.isEmpty());
+        assertEquals("AUTHORIZATION_DECISION", audit.records.getLast().eventType());
+        assertEquals("reference-data", audit.records.getLast().resource());
+        assertEquals("read", audit.records.getLast().action());
+        assertEquals("corr-1", audit.records.getLast().correlationId());
     }
 
     @Test
@@ -62,6 +66,16 @@ class IdentityApplicationServiceTest {
         assignments.save(active("admin", RoleCode.REFERENCE_ADMIN));
 
         AuthorizationDecision decision = service.authorize(request("admin", "reference-data", "create"));
+
+        assertEquals(DecisionResult.ALLOW, decision.result());
+    }
+
+    @Test
+    void serviceSubjectCanUseAssignedPlatformOperatorPermission() {
+        subjects.addService("svc-reference-data");
+        assignments.save(active("svc-reference-data", RoleCode.PLATFORM_OPERATOR));
+
+        AuthorizationDecision decision = service.authorize(request("svc-reference-data", "platform-status", "read"));
 
         assertEquals(DecisionResult.ALLOW, decision.result());
     }
@@ -97,7 +111,15 @@ class IdentityApplicationServiceTest {
             known.add(subjectId);
         }
 
+        void addService(String subjectId) {
+            known.add("service:" + subjectId);
+        }
+
         public Optional<AuthenticatedSubject> resolve(String tokenReference) {
+            if (known.contains("service:" + tokenReference)) {
+                return Optional.of(AuthenticatedSubject.service(tokenReference, tokenReference,
+                        "keycloak", "carrier"));
+            }
             return known.contains(tokenReference)
                     ? Optional.of(new AuthenticatedSubject(tokenReference, tokenReference, tokenReference,
                     tokenReference + "@example.test", "keycloak", "carrier", "v1"))

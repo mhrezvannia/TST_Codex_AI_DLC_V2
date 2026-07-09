@@ -8,6 +8,7 @@ import com.linercore.platform.referencedata.applicationservice.port.Authorizatio
 import com.linercore.platform.referencedata.applicationservice.port.IdGenerator;
 import com.linercore.platform.referencedata.domain.model.ReferenceRecord;
 import com.linercore.platform.referencedata.domain.model.ReferenceSet;
+import com.linercore.platform.referencedata.domain.validation.ValidationResult;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -45,6 +46,15 @@ class ReferenceDataApplicationServiceTest {
         service.validateOnly(command(ReferenceSet.CURRENCY, "USD", "US Dollar", Map.of()));
 
         assertEquals(0, service.list(ReferenceSet.CURRENCY, false, 0, 25).total());
+    }
+
+    @Test
+    void validationFailsClosedForMissingRelatedReference() {
+        ValidationResult result = service.validateOnly(command(ReferenceSet.TRADE_LANE, "ASIA-EUR", "Asia Europe",
+                Map.of("originRegionId", "missing-origin", "destinationRegionId", "missing-destination")));
+
+        assertEquals(false, result.valid());
+        assertEquals(2, result.errors().size());
     }
 
     @Test

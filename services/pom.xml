@@ -12,6 +12,8 @@
         <module>identity-service</module>
         <module>reference-data-service</module>
         <module>charge-agreement-service</module>
+        <module>booking-service</module>
+        <module>container-movement-service</module>
     </modules>
 
     <properties>

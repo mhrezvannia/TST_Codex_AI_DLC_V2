@@ -12,6 +12,7 @@
     { "name": "correlationId", "type": ["null", "string"], "default": null },
     { "name": "entityId", "type": "string" },
     { "name": "operation", "type": "string" },
+    { "name": "producer", "type": "string" },
     { "name": "payload", "type": { "type": "map", "values": "string" } }
   ]
 }

@@ -1,0 +1,214 @@
+openapi: 3.0.3
+info:
+  title: Charge Agreement API
+  version: 0.1.0
+paths:
+  /api/charge-agreements:
+    get:
+      tags: [Agreements]
+      summary: Search agreements
+      parameters:
+        - in: query
+          name: customerId
+          schema: { type: string }
+        - in: query
+          name: tradeLaneId
+          schema: { type: string }
+        - in: query
+          name: commodityId
+          schema: { type: string }
+        - in: query
+          name: status
+          schema: { type: string, enum: [DRAFT, APPROVED, SUSPENDED, EXPIRED] }
+        - in: query
+          name: validOn
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Search results
+    post:
+      tags: [Agreements]
+      summary: Create a draft agreement
+      responses:
+        "201":
+          description: Created agreement
+  /api/charge-agreements/{id}:
+    get:
+      tags: [Agreements]
+      summary: Agreement detail
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Agreement detail
+        "404":
+          description: Agreement not found
+    put:
+      tags: [Agreements]
+      summary: Update a draft agreement
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: version
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Updated agreement
+        "409":
+          description: Stale version or invalid state
+  /api/charge-agreements/{id}/approve:
+    post:
+      tags: [Agreement Lifecycle]
+      summary: Approve a draft agreement
+      responses:
+        "200":
+          description: Approved agreement
+  /api/charge-agreements/{id}/suspend:
+    post:
+      tags: [Agreement Lifecycle]
+      summary: Suspend an approved agreement
+      responses:
+        "200":
+          description: Suspended agreement
+  /api/charge-agreements/{id}/expire:
+    post:
+      tags: [Agreement Lifecycle]
+      summary: Expire an approved agreement
+      responses:
+        "200":
+          description: Expired agreement
+  /api/charge-agreements/active-lookup:
+    get:
+      tags: [Agreement Lookup]
+      summary: Find active charge terms for Booking
+      parameters:
+        - in: query
+          name: customerId
+          required: true
+          schema: { type: string }
+        - in: query
+          name: tradeLaneId
+          schema: { type: string }
+        - in: query
+          name: commodityId
+          schema: { type: string }
+        - in: query
+          name: effectiveDate
+          required: true
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Active match or no-match response
+  /api/pricing/quote:
+    post:
+      tags: [Pricing]
+      summary: Price a booking request for Booking
+      parameters:
+        - in: header
+          name: X-Correlation-Id
+          required: true
+          schema: { type: string }
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PricingQuoteRequest"
+      responses:
+        "200":
+          description: Itemised pricing result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricingQuoteResponse"
+        "400":
+          description: Validation failure
+        "401":
+          description: Missing or invalid service identity
+        "503":
+          description: Pricing temporarily unavailable
+  /api/pricing/dnd:
+    post:
+      tags: [Pricing]
+      summary: Calculate demurrage and detention charges for Booking
+      parameters:
+        - in: header
+          name: X-Correlation-Id
+          required: true
+          schema: { type: string }
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DndPricingRequest"
+      responses:
+        "200":
+          description: D&D pricing result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DndPricingResponse"
+        "400":
+          description: Validation failure
+        "401":
+          description: Missing or invalid service identity
+        "409":
+          description: Manual review required
+components:
+  schemas:
+    PricingQuoteRequest:
+      type: object
+      required: [bookingId, customerId, correlationId, idempotencyKey, requestedAt]
+      properties:
+        bookingId: { type: string }
+        customerId: { type: string }
+        correlationId: { type: string }
+        idempotencyKey: { type: string }
+        requestedAt: { type: string, format: date-time }
+    PricingQuoteResponse:
+      type: object
+      required: [pricingRef, correlationId, lineItems, pricingBasis]
+      properties:
+        pricingRef: { type: string }
+        correlationId: { type: string }
+        pricingBasis: { type: string, enum: [AGREEMENT, TARIFF, MANUAL] }
+        lineItems:
+          type: array
+          items:
+            type: object
+    DndPricingRequest:
+      type: object
+      required: [bookingId, containerId, movementStatus, correlationId, idempotencyKey]
+      properties:
+        bookingId: { type: string }
+        containerId: { type: string }
+        movementStatus: { type: string }
+        correlationId: { type: string }
+        idempotencyKey: { type: string }
+    DndPricingResponse:
+      type: object
+      required: [dndPricingRef, correlationId, chargeableDays, lineItems]
+      properties:
+        dndPricingRef: { type: string }
+        correlationId: { type: string }
+        chargeableDays: { type: integer }
+        lineItems:
+          type: array
+          items:
+            type: object

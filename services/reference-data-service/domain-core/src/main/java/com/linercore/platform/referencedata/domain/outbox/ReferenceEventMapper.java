@@ -1,13 +1,22 @@
 package com.linercore.platform.referencedata.domain.outbox;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class ReferenceEventMapper {
     public static final String SCHEMA_VERSION = "1.0.0";
 
     public OutboxEvent toOutboxEvent(String eventId, ReferenceChangedFact fact) {
+        Map<String, String> payload = new HashMap<>(fact.payloadSnapshot());
+        payload.put("changeId", fact.changeId());
+        payload.put("businessKey", fact.businessKey());
+        payload.put("producerIdentity", fact.producerIdentity());
+        payload.put("deduplicationKey", fact.deduplicationKey());
+        payload.put("schemaSubject", eventType(fact) + "-value");
+        payload.put("correlationId", fact.correlationId());
         return new OutboxEvent(eventId, eventType(fact), fact.referenceSet(), fact.entityId(), fact.operation(),
-                fact.payloadSnapshot(), SCHEMA_VERSION, OutboxStatus.PENDING, 0, fact.occurredAt(), null, null,
+                Map.copyOf(payload), SCHEMA_VERSION, OutboxStatus.PENDING, 0, fact.occurredAt(), null, null,
                 null, null, fact.correlationId(), fact.occurredAt());
     }
 

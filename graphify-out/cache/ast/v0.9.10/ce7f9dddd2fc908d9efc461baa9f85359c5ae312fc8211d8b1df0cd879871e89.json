@@ -1,0 +1,1 @@
+{"nodes": [{"id": "pkg_reference_data_published_language", "label": "reference-data-published-language", "file_type": "code", "type": "package", "ecosystem": "maven", "source_file": "services/reference-data-service/published-language/pom.xml", "source_location": "L1"}], "edges": []}

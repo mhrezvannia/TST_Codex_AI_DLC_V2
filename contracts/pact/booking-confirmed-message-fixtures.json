@@ -1,0 +1,19 @@
+{
+  "fixtureId": "booking-confirmed-message-happy-path",
+  "contractId": "message-pact-booking-confirmed",
+  "producer": "booking-service",
+  "consumer": "container-movement-service",
+  "topic": "booking.confirmed",
+  "keyExample": "booking-0001",
+  "headerExample": {
+    "correlationId": "corr-booking-0001",
+    "schemaVersion": "1.0.0",
+    "idempotencyKey": "booking-confirmed-booking-0001-r1"
+  },
+  "payloadExample": "contracts/examples/booking.confirmed.example.json",
+  "orderingMetadata": {
+    "partitionKey": "bookingId",
+    "sequenceField": "bookingRevision"
+  },
+  "verificationStatus": "pending"
+}

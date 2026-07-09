@@ -21,6 +21,11 @@ public record AuthorizationDecision(
 
     public static AuthorizationDecision deny(String subjectId, AuthorizationRequest request, ReasonCode reasonCode, String policyVersion, Instant now) {
         return new AuthorizationDecision(UUID.randomUUID().toString(), subjectId, DecisionResult.DENY, reasonCode,
-                request.resource(), request.action(), request.scope(), now, policyVersion, request.correlationId());
+                request == null ? null : request.resource(),
+                request == null ? null : request.action(),
+                request == null ? null : request.scope(),
+                now,
+                policyVersion,
+                request == null ? null : request.correlationId());
     }
 }

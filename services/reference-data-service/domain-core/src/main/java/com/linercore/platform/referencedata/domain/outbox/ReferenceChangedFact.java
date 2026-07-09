@@ -14,5 +14,20 @@ public record ReferenceChangedFact(
         Map<String, String> changedFields,
         Map<String, String> payloadSnapshot,
         Instant occurredAt,
-        String correlationId) {
+        String correlationId,
+        String producerIdentity,
+        String deduplicationKey) {
+    public ReferenceChangedFact(
+            String changeId,
+            ReferenceSet referenceSet,
+            String entityId,
+            String businessKey,
+            ReferenceOperation operation,
+            Map<String, String> changedFields,
+            Map<String, String> payloadSnapshot,
+            Instant occurredAt,
+            String correlationId) {
+        this(changeId, referenceSet, entityId, businessKey, operation, changedFields, payloadSnapshot, occurredAt,
+                correlationId, "reference-data-service", referenceSet.name() + ":" + entityId + ":" + operation.name() + ":" + changeId);
+    }
 }

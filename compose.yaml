@@ -3,6 +3,7 @@ name: linercore-shared-platform
 services:
   postgres:
     image: postgres:15
+    profiles: ["core", "app", "devtools", "full"]
     environment:
       POSTGRES_USER: linercore
       POSTGRES_PASSWORD: linercore_local
@@ -17,6 +18,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
+    profiles: ["core", "app", "devtools", "full"]
     command: ["start-dev"]
     environment:
       KEYCLOAK_ADMIN: admin
@@ -31,6 +33,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.7.1
+    profiles: ["core", "app", "devtools", "full"]
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -49,6 +52,7 @@ services:
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.7.1
+    profiles: ["core", "app", "devtools", "full"]
     depends_on:
       kafka:
         condition: service_healthy
@@ -70,7 +74,7 @@ services:
       dockerfile: infrastructure/docker/spring-service.Dockerfile
       args:
         JAR_FILE: services/identity-service/container/target/identity-container-0.1.0-SNAPSHOT.jar
-    profiles: ["apps"]
+    profiles: ["app", "full"]
     environment:
       SPRING_PROFILES_ACTIVE: local
     ports:
@@ -88,7 +92,7 @@ services:
       dockerfile: infrastructure/docker/spring-service.Dockerfile
       args:
         JAR_FILE: services/reference-data-service/container/target/reference-data-container-0.1.0-SNAPSHOT.jar
-    profiles: ["apps"]
+    profiles: ["app", "full"]
     environment:
       SPRING_PROFILES_ACTIVE: local
     ports:
@@ -103,7 +107,7 @@ services:
 
   seed-loader:
     image: node:24-alpine
-    profiles: ["seed"]
+    profiles: ["app", "full"]
     working_dir: /workspace
     env_file:
       - ./infrastructure/env/local.env.example
@@ -137,7 +141,7 @@ services:
       dockerfile: infrastructure/docker/next-app.Dockerfile
       args:
         WORKSPACE: "@erp/app-auth"
-    profiles: ["apps"]
+    profiles: ["app", "full"]
     environment:
       IDENTITY_SERVICE_URL: http://identity-service:8082
     depends_on:
@@ -150,7 +154,7 @@ services:
       dockerfile: infrastructure/docker/next-app.Dockerfile
       args:
         WORKSPACE: "@erp/app-reference-data"
-    profiles: ["apps"]
+    profiles: ["app", "full"]
     environment:
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
@@ -167,7 +171,16 @@ services:
     depends_on:
       - apps-auth
       - apps-reference-data
-    profiles: ["apps"]
+    profiles: ["app", "full"]
+
+  contract-devtools:
+    image: node:24-alpine
+    profiles: ["devtools", "full"]
+    working_dir: /workspace
+    command: ["sh", "-c", "node --version && sleep infinity"]
+    volumes:
+      - ./contracts:/workspace/contracts:ro
+      - ./scripts:/workspace/scripts:ro
 
   prometheus:
     image: prom/prometheus:v2.55.1
@@ -175,7 +188,7 @@ services:
       - "9090:9090"
     volumes:
       - ./infrastructure/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    profiles: ["observability"]
+    profiles: ["observability", "full"]
 
   grafana:
     image: grafana/grafana:11.4.0
@@ -187,7 +200,7 @@ services:
     depends_on:
       - prometheus
       - jaeger
-    profiles: ["observability"]
+    profiles: ["observability", "full"]
 
   jaeger:
     image: jaegertracing/all-in-one:1.63.0
@@ -195,7 +208,7 @@ services:
       - "16686:16686"
       - "4317:4317"
       - "4318:4318"
-    profiles: ["observability"]
+    profiles: ["observability", "full"]
 
   otel-collector:
     image: otel/opentelemetry-collector:0.114.0
@@ -207,7 +220,7 @@ services:
       - ./infrastructure/observability/otel-collector.yml:/etc/otelcol/config.yml:ro
     depends_on:
       - jaeger
-    profiles: ["observability"]
+    profiles: ["observability", "full"]
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.16.1
@@ -216,7 +229,7 @@ services:
       xpack.security.enabled: "false"
     ports:
       - "9200:9200"
-    profiles: ["observability"]
+    profiles: ["observability", "full"]
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.16.1
@@ -224,4 +237,8 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
-    profiles: ["observability"]
+    profiles: ["observability", "full"]
+
+networks:
+  default:
+    name: linercore-local

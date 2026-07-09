@@ -103,12 +103,19 @@ function checkCommand({ id, command, args, required, fallback }) {
 }
 
 function spawnCommand(command, args, env = {}) {
-  return spawnSync(command, args, {
+  const useShell = process.platform === "win32" && command.endsWith(".cmd");
+  const spawnCommandText = useShell ? [command, ...args].map(quoteShellArg).join(" ") : command;
+  return spawnSync(spawnCommandText, useShell ? [] : args, {
     encoding: "utf8",
     env: { ...process.env, ...env },
     timeout: 10000,
-    shell: process.platform === "win32" && command.endsWith(".cmd")
+    shell: useShell
   });
+}
+
+function quoteShellArg(value) {
+  if (!/[\s"]/u.test(value)) return value;
+  return `"${value.replaceAll("\"", "\\\"")}"`;
 }
 
 function checkPort({ id, port, required }) {

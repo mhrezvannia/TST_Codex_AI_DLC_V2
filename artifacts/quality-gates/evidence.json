@@ -1,0 +1,113 @@
+{
+  "generatedAt": "2026-07-03T22:46:10.329Z",
+  "changedPaths": [
+    "<all>"
+  ],
+  "scopes": [
+    "workspace",
+    "services",
+    "apps/reference-data",
+    "apps/auth",
+    "packages",
+    "contracts",
+    "seeds"
+  ],
+  "results": [
+    {
+      "gateId": "policy-package-manager",
+      "scope": "workspace",
+      "command": "policy",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/policy-package-manager.log"
+    },
+    {
+      "gateId": "backend-domain-purity",
+      "scope": "services",
+      "command": "policy",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/backend-domain-purity.log"
+    },
+    {
+      "gateId": "contracts-validate",
+      "scope": "contracts",
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"ok\",\n  \"catalogVersion\": \"0.1.0\",\n  \"contracts\": 3\n}\n",
+      "evidencePath": "artifacts/quality-gates/contracts-validate.log"
+    },
+    {
+      "gateId": "contracts-verify",
+      "scope": "contracts",
+      "command": "node scripts/verify-contract-providers.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"ok\",\n  \"valid\": true,\n  \"failures\": [],\n  \"checks\": [\n    {\n      \"name\": \"contract catalog\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}/history\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/events\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/authorize\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/effective-permissions\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles/assign\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.party-customer.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.location.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.region.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.voyage.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.currency.changed avro record\",\n      \"status",
+      "evidencePath": "artifacts/quality-gates/contracts-verify.log"
+    },
+    {
+      "gateId": "seed-validate",
+      "scope": "seeds",
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"dry-run\",\n  \"seedPackId\": \"shared-platform-mvp-defaults\",\n  \"seedVersion\": \"2026.07.01\",\n  \"correlationId\": \"55a1222f-c865-401d-9946-e15f0f784ee8\",\n  \"created\": 11,\n  \"updated\": 0,\n  \"skipped\": 0,\n  \"failed\": 0,\n  \"failures\": [],\n  \"records\": [\n    {\n      \"key\": \"PARTY_CUSTOMER:LOCAL-CARRIER\",\n      \"id\": \"party-customer-local-carrier\",\n      \"fingerprint\": \"c81cedccd25f427cc3cb78b20018a33ab803362d7febc85862068a7f4a22634d\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:USNYC\",\n      \"id\": \"location-usnyc\",\n      \"fingerprint\": \"364b39f5e01afd85d3f290a9ee9f960ba00031e5c389fc6b198048e98942196a\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NLRTM\",\n      \"id\": \"location-nlrot\",\n      \"fingerprint\": \"93ddee2e1c774b7ca668b1bc297e7d18b0849a834f99353e5e9f5cd924455080\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:NA\",\n      \"id\": \"region-na\",\n      \"fingerprint\": \"51216095618b8aea5e4082e5c273b460c8784c57b8ce251e2430310c8d75ae11\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:EU\",\n      \"id\": \"region-eu\",\n      \"fingerprint\": \"9b8f718b6fbbe76849ad836a422cb576967a8e9a9c074dcec12111b165e4b105\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VOYAGE:LC-VOY-001\",\n      \"id\": \"voyage-local-001\",\n      \"fingerprint\": \"b4760588c84abbc7322b2205c3e130462f543678d5b66772ef602396fa8c735f\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CURRENCY:USD\",\n      \"id\": \"currency-usd\",\n      \"fingerprint\": \"33c273c8d34772637436c78cffe8557b4530ccc5ddb4be2e29282230c9de133a\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:OFR\",\n      \"id\": \"charge-code-ofr\",\n      \"fingerprint\": \"49b66d5e96b9bdb31d238bd3e0e188425f92165d0ebb7ed0d8c0213ad8b8ccaa\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:40HC\",\n      \"id\": \"equipment-type-40hc\",\n      \"fingerprint\": \"db784ed8d04c5c83ec17d36b50b1392ba40a6f4a6eadf7c55c4f66e133da75fb\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\":",
+      "evidencePath": "artifacts/quality-gates/seed-validate.log"
+    },
+    {
+      "gateId": "skeleton-validate",
+      "scope": "workspace",
+      "command": "node scripts/validate-skeleton.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"ok\",\n  \"serviceRoots\": [\n    \"identity-service\",\n    \"reference-data-service\"\n  ]\n}\n",
+      "evidencePath": "artifacts/quality-gates/skeleton-validate.log"
+    },
+    {
+      "gateId": "frontend-reference-data-test",
+      "scope": "apps/reference-data",
+      "command": "node node_modules/vitest/vitest.mjs run apps/reference-data/app/page.test.tsx apps/reference-data/lib/reference-data.test.ts apps/reference-data/lib/contract-catalog.test.ts --config vitest.config.ts",
+      "required": true,
+      "status": "passed",
+      "summary": "\u001b[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.\u001b[39m\n",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-test.log"
+    },
+    {
+      "gateId": "frontend-reference-data-typecheck",
+      "scope": "apps/reference-data",
+      "command": "corepack yarn workspace @erp/app-reference-data typecheck",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-typecheck.log"
+    },
+    {
+      "gateId": "frontend-auth-typecheck",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth typecheck",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-typecheck.log"
+    },
+    {
+      "gateId": "backend-test",
+      "scope": "services",
+      "command": "mvn -f services/pom.xml test",
+      "required": true,
+      "status": "failed",
+      "summary": "'mvn' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+      "evidencePath": "artifacts/quality-gates/backend-test.log"
+    }
+  ],
+  "aggregate": {
+    "status": "failed",
+    "failedRequired": [
+      "backend-test"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "eventId": "evt-cmm-status-0001",
+  "eventType": "containermovement.status",
+  "schemaVersion": "1.0.0",
+  "source": "container-movement-service",
+  "occurredAt": "2026-07-09T00:05:00Z",
+  "correlationId": "corr-booking-0001",
+  "idempotencyKey": "cmm-status-container-0001-10",
+  "containerId": "CONT0000001",
+  "bookingId": "booking-0001",
+  "movementStatus": "GATE_OUT",
+  "sequenceNumber": 10,
+  "statusReason": "Validated depot movement",
+  "lastKnownLocationId": "SGSIN"
+}

@@ -1,0 +1,21 @@
+{
+  "fixtureId": "booking-charge-pricing-happy-path",
+  "contractId": "pact-booking-charge-pricing",
+  "provider": "charge-agreement-service",
+  "consumer": "booking-service",
+  "interactionId": "booking-post-pricing-quote",
+  "requestShape": {
+    "method": "POST",
+    "path": "/api/pricing/quote",
+    "headers": {
+      "X-Correlation-Id": "corr-booking-0001",
+      "Idempotency-Key": "pricing-booking-0001"
+    }
+  },
+  "responseShape": {
+    "status": 200,
+    "example": "contracts/examples/pricing-quote.response.json"
+  },
+  "preconditions": ["booking-service has a confirmed customer and route request"],
+  "verificationStatus": "pending"
+}

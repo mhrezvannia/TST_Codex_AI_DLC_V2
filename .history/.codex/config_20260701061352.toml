@@ -1,0 +1,35 @@
+# AI-DLC v2 project-local Codex configuration
+# This file is for AI-DLC project behavior, hooks, sandbox, tools, and status line.
+#
+# IMPORTANT:
+# Do NOT put model_provider or [model_providers] here.
+# Your Codex version ignores those keys in project-local config.
+#
+# Model/provider settings should be in:
+# C:\Users\mohammad.rezvannia\.codex\config.toml
+
+model = "gpt-5.5"
+model_context_window = 1000000
+model_reasoning_effort = "high"
+
+# AI-DLC rules/memory directory
+[shell_environment_policy]
+set = { AIDLC_RULES_DIR = "aidlc/spaces/default/memory" }
+
+# Sandbox
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = true
+# writable_roots = ["D:/TST_Codex/.git"]
+
+# AI-DLC gate support
+[tools]
+experimental_request_user_input = { enabled = true }
+
+[features]
+default_mode_request_user_input = true
+
+# Codex status line
+[tui]
+status_line = ["model-with-reasoning", "git-branch", "task-progress", "context-used"]

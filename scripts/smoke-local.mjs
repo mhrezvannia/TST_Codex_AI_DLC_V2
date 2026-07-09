@@ -47,10 +47,18 @@ for (const route of ["/auth/", "/reference-data/", "/health"]) {
   }
 }
 
-if (compose.includes("observability") && compose.includes("profiles: [\"observability\"]")) {
+if (compose.includes("observability") && compose.includes("profiles: [\"observability\", \"full\"]")) {
   pass("observability profile remains optional");
 } else {
   fail("observability profile remains optional", "optional observability profile marker is missing");
+}
+
+for (const profile of ["core", "app", "devtools", "full"]) {
+  if (compose.includes(`\"${profile}\"`)) {
+    pass(`compose profile ${profile} present`);
+  } else {
+    fail(`compose profile ${profile} present`, "profile is not declared");
+  }
 }
 
 if (failures.length > 0) {

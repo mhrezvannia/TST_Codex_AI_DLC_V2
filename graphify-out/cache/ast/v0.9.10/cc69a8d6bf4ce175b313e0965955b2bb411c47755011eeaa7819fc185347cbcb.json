@@ -1,0 +1,1 @@
+{"nodes": [{"id": "pkg_identity_published_language", "label": "identity-published-language", "file_type": "code", "type": "package", "ecosystem": "maven", "source_file": "services/identity-service/published-language/pom.xml", "source_location": "L1"}], "edges": []}

@@ -9,11 +9,18 @@ import {
   type SessionSummary
 } from "@erp/auth";
 
+const keycloakRealm = process.env.KEYCLOAK_REALM ?? "linercore-local";
+const keycloakBaseUrl = process.env.KEYCLOAK_PUBLIC_URL ?? "http://keycloak:8080";
+const keycloakRealmUrl = `${keycloakBaseUrl}/realms/${keycloakRealm}`;
+
 export const authConfig = {
-  keycloakAuthorizeUrl: process.env.KEYCLOAK_AUTHORIZE_URL ?? "http://keycloak:8080/realms/linercore/protocol/openid-connect/auth",
-  keycloakLogoutUrl: process.env.KEYCLOAK_LOGOUT_URL ?? "http://keycloak:8080/realms/linercore/protocol/openid-connect/logout",
+  keycloakRealm,
+  keycloakIssuer: process.env.JWT_ISSUER_URI ?? keycloakRealmUrl,
+  keycloakAuthorizeUrl: process.env.KEYCLOAK_AUTHORIZE_URL ?? `${keycloakRealmUrl}/protocol/openid-connect/auth`,
+  keycloakLogoutUrl: process.env.KEYCLOAK_LOGOUT_URL ?? `${keycloakRealmUrl}/protocol/openid-connect/logout`,
   clientId: process.env.AUTH_CLIENT_ID ?? "linercore-auth",
-  redirectUri: process.env.AUTH_REDIRECT_URI ?? "http://localhost:3000/api/auth/callback"
+  redirectUri: process.env.AUTH_REDIRECT_URI ?? process.env.KEYCLOAK_CALLBACK_URL ?? "http://localhost:3000/api/auth/callback",
+  serviceIdentityClientId: process.env.IDENTITY_SERVICE_CLIENT_ID ?? "linercore-identity-service"
 };
 
 export function isAuthBypassEnabled(): boolean {
@@ -58,6 +65,7 @@ export function createLocalSession(subjectId: string): AuthSession {
   return {
     sessionId: createCorrelationId(),
     subjectId,
+    subjectType: "user",
     displayName: subjectId,
     email: `${subjectId}@example.test`,
     roles: ["reference-admin"],
@@ -80,9 +88,11 @@ export function safeSessionSummary(request: Request): SessionSummary {
     return {
       isAuthenticated: false,
       subject: "",
+      subjectType: "user",
       displayName: "",
       roles: [],
       permissions: [],
+      permissionSummary: { total: 0, byResource: {} },
       correlationId
     };
   }

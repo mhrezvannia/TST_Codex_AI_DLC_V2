@@ -1,0 +1,22 @@
+{
+  "type": "record",
+  "name": "BookingConfirmed",
+  "namespace": "com.linercore.booking.events",
+  "doc": "Booking confirmation event contract consumed by Container Movement Management.",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "eventType", "type": "string" },
+    { "name": "schemaVersion", "type": "string" },
+    { "name": "source", "type": "string" },
+    { "name": "occurredAt", "type": "string" },
+    { "name": "correlationId", "type": "string" },
+    { "name": "idempotencyKey", "type": "string" },
+    { "name": "bookingId", "type": "string" },
+    { "name": "bookingRevision", "type": "int" },
+    { "name": "pricingRef", "type": "string" },
+    { "name": "customerId", "type": "string" },
+    { "name": "originLocationId", "type": "string" },
+    { "name": "destinationLocationId", "type": "string" },
+    { "name": "equipmentTypeId", "type": "string" }
+  ]
+}

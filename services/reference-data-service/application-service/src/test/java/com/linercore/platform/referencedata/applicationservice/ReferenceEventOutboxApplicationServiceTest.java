@@ -38,6 +38,10 @@ class ReferenceEventOutboxApplicationServiceTest {
         service.create(command(ReferenceSet.CURRENCY, "USD", "US Dollar", Map.of("minorUnit", "2")));
 
         assertEquals(1, service.outboxStatuses(new OutboxStatusQuery(null, null, ReferenceSet.CURRENCY, OutboxStatus.PENDING, null, null, 10)).size());
+        OutboxEvent event = service.claimOutboxBatch("inspector", 1).get(0);
+        assertEquals("reference-data-service", event.payload().get("producerIdentity"));
+        assertEquals("referencedata.currency.changed-value", event.payload().get("schemaSubject"));
+        assertEquals("corr-1", event.payload().get("correlationId"));
     }
 
     @Test

@@ -26,9 +26,15 @@ public class AuthorizationPolicyEvaluator {
         if (subject == null) {
             return AuthorizationDecision.deny(null, request, ReasonCode.DENY_UNKNOWN_SUBJECT, MvpAuthorizationCatalog.POLICY_VERSION, now());
         }
+        if (request == null || request.resource() == null || request.resource().isBlank()
+                || request.action() == null || request.action().isBlank()) {
+            return AuthorizationDecision.deny(subject.subjectId(), request, ReasonCode.DENY_INVALID_TOKEN, MvpAuthorizationCatalog.POLICY_VERSION, now());
+        }
 
-        boolean allowed = assignments.stream()
+        List<RoleAssignment> safeAssignments = assignments == null ? List.of() : assignments;
+        boolean allowed = safeAssignments.stream()
                 .filter(RoleAssignment::active)
+                .filter(assignment -> subject.subjectId().equals(assignment.subjectId()))
                 .flatMap(assignment -> catalog.grantsForRole(assignment.roleId()).stream())
                 .filter(grant -> grant.activeAt(now()))
                 .map(grant -> catalog.permissionById(grant.permissionId()))

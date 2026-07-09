@@ -1,0 +1,12 @@
+asyncapi: 2.6.0
+info:
+  title: Reference Data Events
+  version: 1.0.0
+channels:
+  referencedata.currency.changed:
+    subscribe:
+      summary: Reference data currency change event.
+      message:
+        name: ReferenceDataCurrencyChanged
+        payload:
+          $ref: "../avro/referencedata.currency.changed.avsc"

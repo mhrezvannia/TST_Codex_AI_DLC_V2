@@ -1,0 +1,5911 @@
+{
+  "workflow_id": "2026-07-04T21:26:49Z",
+  "scope": "feature",
+  "started_at": "2026-07-04T21:26:49Z",
+  "stages": [
+    {
+      "stage_slug": "workspace-scaffold",
+      "started_at": "2026-07-04T21:26:49Z",
+      "completed_at": "2026-07-04T21:26:49Z",
+      "agent": "orchestrator",
+      "memory_path": "aidlc/spaces/default/intents/initialization/workspace-scaffold/memory.md",
+      "memory_entries": null,
+      "memory_breakdown": null,
+      "sensor_firings": [],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "workspace-detection",
+      "started_at": "2026-07-04T21:26:49Z",
+      "completed_at": "2026-07-04T21:26:49Z",
+      "agent": "orchestrator",
+      "memory_path": "aidlc/spaces/default/intents/initialization/workspace-detection/memory.md",
+      "memory_entries": null,
+      "memory_breakdown": null,
+      "sensor_firings": [],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "state-init",
+      "started_at": "2026-07-04T21:26:49Z",
+      "completed_at": "2026-07-04T21:26:49Z",
+      "agent": "orchestrator",
+      "memory_path": "aidlc/spaces/default/intents/initialization/state-init/memory.md",
+      "memory_entries": null,
+      "memory_breakdown": null,
+      "sensor_firings": [],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "intent-capture",
+      "started_at": "2026-07-04T21:26:49Z",
+      "completed_at": "2026-07-04T21:30:40Z",
+      "agent": "aidlc-product-agent",
+      "memory_path": "aidlc/spaces/default/intents/ideation/intent-capture/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 2,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "ac2024df",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:54Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "93b36ce1",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:54Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8818a47d",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:55Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "afe5b205",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:55Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "169c2bb2",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:55Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "802e966c",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:55Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a7c50103",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:56Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a9f38b33",
+          "result": "passed",
+          "ts": "2026-07-04T21:28:56Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "bb679dc3",
+          "result": "passed",
+          "ts": "2026-07-04T21:29:26Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5178a5de",
+          "result": "passed",
+          "ts": "2026-07-04T21:29:26Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "market-research",
+      "started_at": "2026-07-04T21:30:40Z",
+      "completed_at": "2026-07-04T21:33:53Z",
+      "agent": "aidlc-product-agent",
+      "memory_path": "aidlc/spaces/default/intents/ideation/market-research/memory.md",
+      "memory_entries": 3,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "a6a845cd",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:38Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ae206581",
+          "result": "failed",
+          "ts": "2026-07-04T21:32:38Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/market-research/upstream-coverage-ae206581.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "06fbd873",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d9fb9644",
+          "result": "failed",
+          "ts": "2026-07-04T21:32:39Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/market-research/upstream-coverage-d9fb9644.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "77d153c3",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:40Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "73c5bfa1",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:40Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f86dc609",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:40Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9e7c3c93",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:41Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "66754535",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:41Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5d7948c5",
+          "result": "passed",
+          "ts": "2026-07-04T21:32:41Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ba6245cb",
+          "result": "passed",
+          "ts": "2026-07-04T21:33:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "89841420",
+          "result": "passed",
+          "ts": "2026-07-04T21:33:09Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "feasibility",
+      "started_at": "2026-07-04T21:33:53Z",
+      "completed_at": "2026-07-05T04:39:24Z",
+      "agent": "aidlc-architect-agent",
+      "memory_path": "aidlc/spaces/default/intents/ideation/feasibility/memory.md",
+      "memory_entries": 3,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "27a96a67",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d1cb5b73",
+          "result": "failed",
+          "ts": "2026-07-04T21:36:07Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/feasibility/upstream-coverage-d1cb5b73.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0243423e",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "23bfb5d3",
+          "result": "failed",
+          "ts": "2026-07-04T21:36:08Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/feasibility/upstream-coverage-23bfb5d3.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d6a9ccd0",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2aa4d7f9",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:08Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c8f9bfbb",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:09Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fb5076f3",
+          "result": "failed",
+          "ts": "2026-07-04T21:36:09Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/feasibility/upstream-coverage-fb5076f3.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "831b6c9d",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "76007453",
+          "result": "failed",
+          "ts": "2026-07-04T21:36:10Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/feasibility/upstream-coverage-76007453.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7c35c2cb",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3fd55e4f",
+          "result": "passed",
+          "ts": "2026-07-04T21:36:21Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "scope-definition",
+      "started_at": "2026-07-05T04:39:24Z",
+      "completed_at": "2026-07-05T04:41:27Z",
+      "agent": "aidlc-product-agent",
+      "memory_path": "aidlc/spaces/default/intents/ideation/scope-definition/memory.md",
+      "memory_entries": 3,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "9248fe05",
+          "result": "passed",
+          "ts": "2026-07-05T04:40:49Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8c90f95b",
+          "result": "failed",
+          "ts": "2026-07-05T04:40:50Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/scope-definition/upstream-coverage-8c90f95b.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8ebab398",
+          "result": "passed",
+          "ts": "2026-07-05T04:40:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9481fc57",
+          "result": "failed",
+          "ts": "2026-07-05T04:40:50Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/scope-definition/upstream-coverage-9481fc57.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "facb9dbd",
+          "result": "passed",
+          "ts": "2026-07-05T04:40:51Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "72729a4d",
+          "result": "passed",
+          "ts": "2026-07-05T04:40:51Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9afffa0d",
+          "result": "passed",
+          "ts": "2026-07-05T04:40:51Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "455952ab",
+          "result": "failed",
+          "ts": "2026-07-05T04:40:52Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/scope-definition/upstream-coverage-455952ab.md"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c6694230",
+          "result": "passed",
+          "ts": "2026-07-05T04:41:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "767b1df3",
+          "result": "passed",
+          "ts": "2026-07-05T04:41:03Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "team-formation",
+      "started_at": "2026-07-05T04:41:27Z",
+      "completed_at": "2026-07-05T04:45:04Z",
+      "agent": "aidlc-delivery-agent",
+      "memory_path": "aidlc/spaces/default/intents/ideation/team-formation/memory.md",
+      "memory_entries": 3,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "7780221a",
+          "result": "passed",
+          "ts": "2026-07-05T04:42:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9d921492",
+          "result": "failed",
+          "ts": "2026-07-05T04:42:46Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/team-formation/upstream-coverage-9d921492.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "303d8d74",
+          "result": "passed",
+          "ts": "2026-07-05T04:42:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a7f079f1",
+          "result": "failed",
+          "ts": "2026-07-05T04:42:46Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/team-formation/upstream-coverage-a7f079f1.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "95b0ac42",
+          "result": "passed",
+          "ts": "2026-07-05T04:42:47Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b5011903",
+          "result": "passed",
+          "ts": "2026-07-05T04:42:47Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4979448d",
+          "result": "passed",
+          "ts": "2026-07-05T04:42:48Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "584534f0",
+          "result": "failed",
+          "ts": "2026-07-05T04:42:48Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/team-formation/upstream-coverage-584534f0.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cded632f",
+          "result": "passed",
+          "ts": "2026-07-05T04:42:48Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a2e4919d",
+          "result": "failed",
+          "ts": "2026-07-05T04:42:48Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/team-formation/upstream-coverage-a2e4919d.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "610e8eb8",
+          "result": "passed",
+          "ts": "2026-07-05T04:43:00Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "196de36a",
+          "result": "failed",
+          "ts": "2026-07-05T04:43:00Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/team-formation/upstream-coverage-196de36a.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "5898f199",
+          "result": "passed",
+          "ts": "2026-07-05T04:43:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0be9bdd8",
+          "result": "passed",
+          "ts": "2026-07-05T04:43:12Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "rough-mockups",
+      "started_at": "2026-07-05T04:45:04Z",
+      "completed_at": "2026-07-05T05:33:01Z",
+      "agent": "aidlc-design-agent",
+      "memory_path": "aidlc/spaces/default/intents/ideation/rough-mockups/memory.md",
+      "memory_entries": 3,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "18b41c2a",
+          "result": "passed",
+          "ts": "2026-07-05T04:46:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1be4e2ff",
+          "result": "failed",
+          "ts": "2026-07-05T04:46:37Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/rough-mockups/upstream-coverage-1be4e2ff.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e1e59831",
+          "result": "passed",
+          "ts": "2026-07-05T04:46:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ab795bd8",
+          "result": "failed",
+          "ts": "2026-07-05T04:46:38Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/rough-mockups/upstream-coverage-ab795bd8.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "75c5eaa7",
+          "result": "passed",
+          "ts": "2026-07-05T04:46:38Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ddc48625",
+          "result": "passed",
+          "ts": "2026-07-05T04:46:38Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "bc4b5198",
+          "result": "passed",
+          "ts": "2026-07-05T04:46:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "30e3773a",
+          "result": "passed",
+          "ts": "2026-07-05T04:46:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a0e84c8c",
+          "result": "passed",
+          "ts": "2026-07-05T04:47:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7c9e00e6",
+          "result": "passed",
+          "ts": "2026-07-05T04:47:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "17d3e8ef",
+          "result": "passed",
+          "ts": "2026-07-05T04:47:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ccf06f9f",
+          "result": "passed",
+          "ts": "2026-07-05T04:47:12Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "approval-handoff",
+      "started_at": "2026-07-05T05:33:01Z",
+      "completed_at": "2026-07-05T05:39:32Z",
+      "agent": "aidlc-delivery-agent",
+      "memory_path": "aidlc/spaces/default/intents/ideation/approval-handoff/memory.md",
+      "memory_entries": 3,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "371a5f7a",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d755dfe5",
+          "result": "failed",
+          "ts": "2026-07-05T05:34:32Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/approval-handoff/upstream-coverage-d755dfe5.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ab581ad5",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d74643cf",
+          "result": "failed",
+          "ts": "2026-07-05T05:34:33Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/approval-handoff/upstream-coverage-d74643cf.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4b0ab73d",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "cadc6bf1",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "64a9267b",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1145f741",
+          "result": "failed",
+          "ts": "2026-07-05T05:34:34Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/approval-handoff/upstream-coverage-1145f741.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ea30d895",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2e1d70aa",
+          "result": "failed",
+          "ts": "2026-07-05T05:34:36Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/approval-handoff/upstream-coverage-2e1d70aa.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f9488736",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ae62b808",
+          "result": "passed",
+          "ts": "2026-07-05T05:34:50Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "reverse-engineering",
+      "started_at": "2026-07-05T05:39:32Z",
+      "completed_at": "2026-07-05T05:48:41Z",
+      "agent": "aidlc-developer-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/reverse-engineering/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "7775ee27",
+          "result": "passed",
+          "ts": "2026-07-05T05:44:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "04f7c1f0",
+          "result": "passed",
+          "ts": "2026-07-05T05:44:34Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "practices-discovery",
+      "started_at": "2026-07-05T05:48:41Z",
+      "completed_at": "2026-07-05T05:51:04Z",
+      "agent": "aidlc-pipeline-deploy-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/practices-discovery/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "07272d7b",
+          "result": "passed",
+          "ts": "2026-07-05T05:49:57Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7a21e889",
+          "result": "failed",
+          "ts": "2026-07-05T05:49:58Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/practices-discovery/upstream-coverage-7a21e889.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c9f42072",
+          "result": "passed",
+          "ts": "2026-07-05T05:49:58Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "637f511c",
+          "result": "failed",
+          "ts": "2026-07-05T05:49:58Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/practices-discovery/upstream-coverage-637f511c.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6624e9d3",
+          "result": "passed",
+          "ts": "2026-07-05T05:49:59Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "054acca2",
+          "result": "failed",
+          "ts": "2026-07-05T05:49:59Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/practices-discovery/upstream-coverage-054acca2.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ddf2e3af",
+          "result": "passed",
+          "ts": "2026-07-05T05:50:00Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "32058e72",
+          "result": "passed",
+          "ts": "2026-07-05T05:50:00Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "be2f30d4",
+          "result": "passed",
+          "ts": "2026-07-05T05:50:01Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a980dcac",
+          "result": "failed",
+          "ts": "2026-07-05T05:50:01Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/practices-discovery/upstream-coverage-a980dcac.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "32475365",
+          "result": "passed",
+          "ts": "2026-07-05T05:50:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "37f157a1",
+          "result": "failed",
+          "ts": "2026-07-05T05:50:14Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/practices-discovery/upstream-coverage-37f157a1.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "requirements-analysis",
+      "started_at": "2026-07-05T05:51:04Z",
+      "completed_at": "2026-07-05T05:53:42Z",
+      "agent": "aidlc-product-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/requirements-analysis/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "26729f7b",
+          "result": "passed",
+          "ts": "2026-07-05T05:52:38Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "978c3a79",
+          "result": "failed",
+          "ts": "2026-07-05T05:52:39Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/requirements-analysis/upstream-coverage-978c3a79.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c20bbc7e",
+          "result": "passed",
+          "ts": "2026-07-05T05:52:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ae8fcd41",
+          "result": "failed",
+          "ts": "2026-07-05T05:52:39Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/requirements-analysis/upstream-coverage-ae8fcd41.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b592219f",
+          "result": "passed",
+          "ts": "2026-07-05T05:52:40Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d3d663a1",
+          "result": "passed",
+          "ts": "2026-07-05T05:52:40Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d3f5d170",
+          "result": "passed",
+          "ts": "2026-07-05T05:52:56Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "04546c12",
+          "result": "passed",
+          "ts": "2026-07-05T05:52:56Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "user-stories",
+      "started_at": "2026-07-05T05:53:42Z",
+      "completed_at": "2026-07-05T05:58:48Z",
+      "agent": "aidlc-product-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/user-stories/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "8025d46e",
+          "result": "passed",
+          "ts": "2026-07-05T05:55:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "53783473",
+          "result": "failed",
+          "ts": "2026-07-05T05:55:14Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/user-stories/upstream-coverage-53783473.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "44cf5a28",
+          "result": "passed",
+          "ts": "2026-07-05T05:55:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ea89c296",
+          "result": "failed",
+          "ts": "2026-07-05T05:55:15Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/user-stories/upstream-coverage-ea89c296.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "36377a40",
+          "result": "passed",
+          "ts": "2026-07-05T05:55:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2c691a37",
+          "result": "failed",
+          "ts": "2026-07-05T05:55:16Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/user-stories/upstream-coverage-2c691a37.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "505b5098",
+          "result": "passed",
+          "ts": "2026-07-05T05:55:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ecf44066",
+          "result": "failed",
+          "ts": "2026-07-05T05:55:17Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/user-stories/upstream-coverage-ecf44066.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "34134e87",
+          "result": "passed",
+          "ts": "2026-07-05T05:55:29Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5865c599",
+          "result": "failed",
+          "ts": "2026-07-05T05:55:29Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/user-stories/upstream-coverage-5865c599.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "refined-mockups",
+      "started_at": "2026-07-05T05:58:48Z",
+      "completed_at": "2026-07-05T06:01:56Z",
+      "agent": "aidlc-design-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/refined-mockups/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "973215d3",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2f0116e9",
+          "result": "failed",
+          "ts": "2026-07-05T06:01:08Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/refined-mockups/upstream-coverage-2f0116e9.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9447b5c5",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:09Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "673736b3",
+          "result": "failed",
+          "ts": "2026-07-05T06:01:09Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/refined-mockups/upstream-coverage-673736b3.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "30420f28",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "84a32777",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:10Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dc3f0de9",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0a7c4969",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:11Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ddf15dbb",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d837dd15",
+          "result": "failed",
+          "ts": "2026-07-05T06:01:12Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/refined-mockups/upstream-coverage-d837dd15.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0ef229aa",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0ea2f660",
+          "result": "failed",
+          "ts": "2026-07-05T06:01:13Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/refined-mockups/upstream-coverage-0ea2f660.md"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b178aff2",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "376cd15d",
+          "result": "passed",
+          "ts": "2026-07-05T06:01:25Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "application-design",
+      "started_at": "2026-07-05T06:01:56Z",
+      "completed_at": "2026-07-05T06:04:59Z",
+      "agent": "aidlc-architect-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/application-design/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "3dc38dba",
+          "result": "passed",
+          "ts": "2026-07-05T06:03:57Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a8fcc5d6",
+          "result": "failed",
+          "ts": "2026-07-05T06:03:57Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/application-design/upstream-coverage-a8fcc5d6.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "462d5230",
+          "result": "passed",
+          "ts": "2026-07-05T06:03:58Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b66cfcbe",
+          "result": "failed",
+          "ts": "2026-07-05T06:03:58Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/application-design/upstream-coverage-b66cfcbe.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4453294d",
+          "result": "passed",
+          "ts": "2026-07-05T06:03:59Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "764fb056",
+          "result": "passed",
+          "ts": "2026-07-05T06:03:59Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3bc76de6",
+          "result": "passed",
+          "ts": "2026-07-05T06:04:00Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "abf3af53",
+          "result": "failed",
+          "ts": "2026-07-05T06:04:00Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/application-design/upstream-coverage-abf3af53.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d4a83b46",
+          "result": "passed",
+          "ts": "2026-07-05T06:04:01Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1eac4ec0",
+          "result": "failed",
+          "ts": "2026-07-05T06:04:01Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/application-design/upstream-coverage-1eac4ec0.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a492930e",
+          "result": "passed",
+          "ts": "2026-07-05T06:04:02Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "860bd6d4",
+          "result": "failed",
+          "ts": "2026-07-05T06:04:02Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/application-design/upstream-coverage-860bd6d4.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "22298056",
+          "result": "passed",
+          "ts": "2026-07-05T06:04:03Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "38810137",
+          "result": "passed",
+          "ts": "2026-07-05T06:04:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4246358e",
+          "result": "passed",
+          "ts": "2026-07-05T06:04:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "6468142d",
+          "result": "passed",
+          "ts": "2026-07-05T06:04:14Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "units-generation",
+      "started_at": "2026-07-05T06:04:59Z",
+      "completed_at": "2026-07-05T06:10:52Z",
+      "agent": "aidlc-architect-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/units-generation/memory.md",
+      "memory_entries": 3,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 0
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "12606a3d",
+          "result": "passed",
+          "ts": "2026-07-05T06:06:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "66347fe6",
+          "result": "failed",
+          "ts": "2026-07-05T06:06:07Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/units-generation/upstream-coverage-66347fe6.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "71301d17",
+          "result": "passed",
+          "ts": "2026-07-05T06:06:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "cb1888e7",
+          "result": "passed",
+          "ts": "2026-07-05T06:06:08Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b61aab12",
+          "result": "failed",
+          "ts": "2026-07-05T06:06:09Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/units-generation/required-sections-b61aab12.md"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f98605e8",
+          "result": "failed",
+          "ts": "2026-07-05T06:06:09Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/units-generation/upstream-coverage-f98605e8.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dc12b094",
+          "result": "passed",
+          "ts": "2026-07-05T06:06:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2eaa41a1",
+          "result": "failed",
+          "ts": "2026-07-05T06:06:10Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/units-generation/upstream-coverage-2eaa41a1.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ee344868",
+          "result": "passed",
+          "ts": "2026-07-05T06:06:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0e7e1919",
+          "result": "passed",
+          "ts": "2026-07-05T06:06:21Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "delivery-planning",
+      "started_at": "2026-07-05T06:10:52Z",
+      "completed_at": "2026-07-05T06:15:21Z",
+      "agent": "aidlc-delivery-agent",
+      "memory_path": "aidlc/spaces/default/intents/inception/delivery-planning/memory.md",
+      "memory_entries": 2,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 0,
+        "tradeoffs": 1,
+        "open_questions": 0
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "d488203d",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b2bb5dc0",
+          "result": "failed",
+          "ts": "2026-07-05T06:12:11Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/delivery-planning/upstream-coverage-b2bb5dc0.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "bf4217c9",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1adb97e6",
+          "result": "failed",
+          "ts": "2026-07-05T06:12:12Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/delivery-planning/upstream-coverage-1adb97e6.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ae9e9253",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f821f4f6",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b114c6c5",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8449f127",
+          "result": "failed",
+          "ts": "2026-07-05T06:12:14Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/delivery-planning/upstream-coverage-8449f127.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c26047fd",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3c9ad3a5",
+          "result": "failed",
+          "ts": "2026-07-05T06:12:15Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/delivery-planning/upstream-coverage-3c9ad3a5.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "31b02b0f",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a2cba8a0",
+          "result": "failed",
+          "ts": "2026-07-05T06:12:16Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/delivery-planning/upstream-coverage-a2cba8a0.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "056e25f0",
+          "result": "passed",
+          "ts": "2026-07-05T06:12:17Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9e9471bf",
+          "result": "failed",
+          "ts": "2026-07-05T06:12:17Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/delivery-planning/upstream-coverage-9e9471bf.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e4cd5272",
+          "result": "passed",
+          "ts": "2026-07-05T06:14:30Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5adb0478",
+          "result": "passed",
+          "ts": "2026-07-05T06:14:30Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "infrastructure-design",
+      "started_at": "2026-07-05T19:28:44Z",
+      "completed_at": "2026-07-05T19:34:30Z",
+      "agent": "aidlc-aws-platform-agent",
+      "memory_path": "aidlc/spaces/default/intents/construction/infrastructure-design/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "85a76574",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:31Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "851d0ef4",
+          "result": "failed",
+          "ts": "2026-07-05T19:31:32Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/infrastructure-design/upstream-coverage-851d0ef4.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e3fad80a",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "86f97728",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:32Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a24774d7",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "83bc1034",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:33Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "15876bd0",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d34b623c",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:33Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dd7da545",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "38cad62a",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d036a25f",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "94db681a",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:35Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f342a826",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d8f845d7",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:35Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a4600c17",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b37559ff",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:36Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ff371be9",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:36Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a3deba9b",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:36Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dbb6d964",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "6d3d5557",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:37Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cc2b444d",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f03d660d",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:37Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a39b6408",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:38Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d2bb6277",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:38Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8bc463c1",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:38Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "49f4e981",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:39Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "eeeb5d40",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "327a3d62",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:39Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b7c6b68b",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:40Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "86c576d7",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:40Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "2249bdaa",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:40Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5d672a7c",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:40Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9bb6ed19",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:41Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "df1f5ac6",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:41Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9aca0121",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:41Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "6bb520d4",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:42Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8f398677",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:42Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a547f231",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:42Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e6ba8b2b",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:43Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e5550415",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:43Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e88f8ee9",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:44Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fc301aa2",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:44Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "560da378",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:44Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8f8bbadb",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:44Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cc3ead8f",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:45Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0aad4404",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:45Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dda802c6",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "57e756eb",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:46Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ac794d59",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0717d9c3",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:47Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ae04bffd",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:47Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f6953688",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:47Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "058d4f44",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:48Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2421301b",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:48Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8d60409d",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:48Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f83e0b16",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:49Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d3f19669",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:49Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d83699bf",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:49Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d63fb921",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9ebf6377",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:50Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "82d94e09",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:51Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ee01ae81",
+          "result": "passed",
+          "ts": "2026-07-05T19:31:51Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a8a5a1ec",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:19Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "012e9d8f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:20Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ef91a8db",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:20Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7e716517",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:20Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "199bbf4d",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:20Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "140fe069",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:21Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "205dec90",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "90a0b76c",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:21Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c078acef",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8a4109b2",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d67ea194",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "17e5a849",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6cdfb35f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c67e3e55",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:23Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c15f56a5",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1d5495b1",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:24Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "81481799",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8aab30dc",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:24Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b432d489",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "6ceb6e88",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cd17468c",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:25Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "17bb53cc",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ff9b15b6",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:26Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "73138d5b",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:26Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1f249153",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:26Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b4a81018",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:26Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "527cecab",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:27Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a391d727",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:27Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "12001760",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:27Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2fa65ba3",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:28Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1302a53f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:28Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "53fc2b69",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:28Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "39244fbd",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:29Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b45f6076",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:29Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "fa3be547",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:29Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4f24f835",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:29Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d66c072f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:30Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fc5c851c",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:30Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3a9ceda4",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:30Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e27bf0a8",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:31Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ff82fbed",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:31Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "03bc3991",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:31Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ebe69d3b",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c0f5db3f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:32Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3e47c83b",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9649a892",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:33Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c5187369",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "56a5d726",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0425c15a",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b2662343",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "59d67de7",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "84d5e81b",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:35Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9250be4f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0bf86b13",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:36Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c4a7e88f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:36Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "22d376bc",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:36Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cfbb3d06",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1a64d103",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:37Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d56bcbef",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "34a61591",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:38Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e7583e99",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:52Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "16d44224",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:52Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e56366a8",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:52Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4fb0bb06",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:52Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d329dd7e",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:52Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b9a90aa6",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:52Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f1860fd1",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:52Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8a547c22",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e35de7c2",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b162f58f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e28827da",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "51dbb60a",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "645c3707",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b4bd88eb",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "302f4392",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:53Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e92d621a",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "32b397da",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "16cbf370",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9498b0df",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d996cb15",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "28cc007f",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e073bb56",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "00030f08",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:54Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9a29181e",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:55Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "98f94963",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:55Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7a06795a",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:55Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6dcc3c52",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:55Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "884e1472",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:56Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3d431bf4",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:56Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dc9c4779",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:56Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "45bbffb7",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:56Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6a863204",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:57Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cae6fb54",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:57Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e1b0dff1",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:57Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "80e874b8",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:57Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a9b1c581",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:58Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "08c3a0cc",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:58Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4c14e7d3",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:58Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "18c04ee9",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:58Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "83b004a0",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:59Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e7994013",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:59Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f351017c",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:59Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "978c7721",
+          "result": "passed",
+          "ts": "2026-07-05T19:33:59Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f8b9ba18",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:00Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d0f1900a",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:00Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cdd64fe1",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:00Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4c79b2ff",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:01Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8fa37ee3",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:01Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "85349870",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:01Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ece453f8",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:01Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c1332ee4",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1e359ddc",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e1abdea7",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "91b1d297",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9d5a9205",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "fa08a93f",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1f3df3b3",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7c612142",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "659b6d0c",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "98627cbe",
+          "result": "passed",
+          "ts": "2026-07-05T19:34:04Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "code-generation",
+      "started_at": "2026-07-05T19:34:30Z",
+      "completed_at": "2026-07-05T20:05:16Z",
+      "agent": "aidlc-developer-agent",
+      "memory_path": "aidlc/spaces/default/intents/construction/code-generation/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "linter",
+          "fire_id": "a6327df8",
+          "result": "passed",
+          "ts": "2026-07-05T19:39:51Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "fee81e61",
+          "result": "passed",
+          "ts": "2026-07-05T19:39:59Z"
+        },
+        {
+          "id": "linter",
+          "fire_id": "399aa99b",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:06Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "de7bc2ec",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:11Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "7e2211c7",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:15Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "7754c6c0",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:18Z"
+        },
+        {
+          "id": "linter",
+          "fire_id": "322c049a",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:20Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "ed1f9b49",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:28Z"
+        },
+        {
+          "id": "linter",
+          "fire_id": "afa8c229",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:31Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "c69624a0",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:36Z"
+        },
+        {
+          "id": "linter",
+          "fire_id": "cedc59e5",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:40Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "b6436035",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:45Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "424a2d3e",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:48Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "8d4bb20a",
+          "result": "passed",
+          "ts": "2026-07-05T19:40:50Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "c74a3a9d",
+          "result": "passed",
+          "ts": "2026-07-05T19:53:55Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "1a19b342",
+          "result": "passed",
+          "ts": "2026-07-05T19:55:08Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "69ee01c6",
+          "result": "passed",
+          "ts": "2026-07-05T20:02:29Z"
+        },
+        {
+          "id": "linter",
+          "fire_id": "fb6c4347",
+          "result": "passed",
+          "ts": "2026-07-05T20:02:41Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "build-and-test",
+      "started_at": "2026-07-05T20:05:16Z",
+      "completed_at": "2026-07-05T20:09:21Z",
+      "agent": "aidlc-quality-agent",
+      "memory_path": "aidlc/spaces/default/intents/construction/build-and-test/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "1b5ed90c",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:29Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "77ea1f2b",
+          "result": "failed",
+          "ts": "2026-07-05T20:06:30Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/build-and-test/upstream-coverage-77ea1f2b.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "172397b3",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:30Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0b21b9dc",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:30Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f5230215",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:31Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "74493af2",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:31Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "2b914b1f",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:31Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b1ceaa0d",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:32Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "48f92f60",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a1cbe189",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:32Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f63656d4",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5c3ce7fa",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:33Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f87ecf57",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9fd0e7b8",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "981cd49c",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "41d87e5f",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "29fef002",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:49Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4e87aa28",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:49Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "926453d6",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ee97f87d",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8cf091f3",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2cb29388",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9f096c7a",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b5330c00",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1b3d5e17",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "94c873c0",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:50Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f005bb7c",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:51Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "40997707",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:51Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "21720d15",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:51Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9b4c58b7",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:51Z"
+        },
+        {
+          "id": "type-check",
+          "fire_id": "653f059f",
+          "result": "passed",
+          "ts": "2026-07-05T20:06:51Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "ci-pipeline",
+      "started_at": "2026-07-05T20:09:21Z",
+      "completed_at": "2026-07-05T20:17:56Z",
+      "agent": "aidlc-pipeline-deploy-agent",
+      "memory_path": "aidlc/spaces/default/intents/construction/ci-pipeline/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "a5af88b3",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3147465d",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1ac79cf7",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8b1ecd3b",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "75907782",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "37dc0908",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:23Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "11691852",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e3821078",
+          "result": "failed",
+          "ts": "2026-07-05T20:14:24Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/ci-pipeline/upstream-coverage-e3821078.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7eec29cc",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "64ab2ff1",
+          "result": "passed",
+          "ts": "2026-07-05T20:14:26Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "deployment-pipeline",
+      "started_at": "2026-07-05T20:17:56Z",
+      "completed_at": "2026-07-05T20:22:12Z",
+      "agent": "aidlc-pipeline-deploy-agent",
+      "memory_path": "aidlc/spaces/default/intents/operation/deployment-pipeline/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "8df1c23c",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "352cedd6",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:14Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7674cb0e",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "28f8231f",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:14Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d8824d88",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b3e9e142",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:15Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6d1a69fd",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "88821b86",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:16Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "20754359",
+          "result": "passed",
+          "ts": "2026-07-05T20:19:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "05149508",
+          "result": "failed",
+          "ts": "2026-07-05T20:19:17Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/deployment-pipeline/upstream-coverage-05149508.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "environment-provisioning",
+      "started_at": "2026-07-05T20:22:12Z",
+      "completed_at": "2026-07-05T20:26:10Z",
+      "agent": "aidlc-aws-platform-agent",
+      "memory_path": "aidlc/spaces/default/intents/operation/environment-provisioning/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "5f8fe267",
+          "result": "passed",
+          "ts": "2026-07-05T20:23:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "101de8e1",
+          "result": "passed",
+          "ts": "2026-07-05T20:23:16Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "17772feb",
+          "result": "passed",
+          "ts": "2026-07-05T20:23:17Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d5263df4",
+          "result": "passed",
+          "ts": "2026-07-05T20:23:17Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "02d0998e",
+          "result": "passed",
+          "ts": "2026-07-05T20:23:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1324c093",
+          "result": "passed",
+          "ts": "2026-07-05T20:23:18Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "08bd6a8a",
+          "result": "passed",
+          "ts": "2026-07-05T20:23:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b6c25e9f",
+          "result": "failed",
+          "ts": "2026-07-05T20:23:18Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/environment-provisioning/upstream-coverage-b6c25e9f.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "deployment-execution",
+      "started_at": "2026-07-05T20:26:10Z",
+      "completed_at": "2026-07-05T20:30:10Z",
+      "agent": "aidlc-pipeline-deploy-agent",
+      "memory_path": "aidlc/spaces/default/intents/operation/deployment-execution/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "70b2395f",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "6c4870fc",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:12Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c2f41a04",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fca49c62",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:12Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4a176bf5",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "426eb564",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3b458583",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b635f8c1",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:14Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0486a658",
+          "result": "passed",
+          "ts": "2026-07-05T20:27:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4dcde559",
+          "result": "failed",
+          "ts": "2026-07-05T20:27:15Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/deployment-execution/upstream-coverage-4dcde559.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "observability-setup",
+      "started_at": "2026-07-05T20:30:10Z",
+      "completed_at": "2026-07-05T20:34:31Z",
+      "agent": "aidlc-operations-agent",
+      "memory_path": "aidlc/spaces/default/intents/operation/observability-setup/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "17baf816",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d8d7222f",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a2131887",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a49af573",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:35Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d78445bc",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "af6ffd60",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:36Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3ebdfc92",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:36Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9464804a",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:36Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1e8584fa",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4becb445",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:37Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "36b6f257",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:38Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "35c5bd7f",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:38Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "99dd36db",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c1a4cb27",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:39Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d8c98aa6",
+          "result": "passed",
+          "ts": "2026-07-05T20:31:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f9524b1a",
+          "result": "failed",
+          "ts": "2026-07-05T20:31:40Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/observability-setup/upstream-coverage-f9524b1a.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "incident-response",
+      "started_at": "2026-07-05T20:34:31Z",
+      "completed_at": "2026-07-05T20:39:13Z",
+      "agent": "aidlc-operations-agent",
+      "memory_path": "aidlc/spaces/default/intents/operation/incident-response/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "04fa48d3",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f6da7354",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:47Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cabd8857",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:47Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "903301fe",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:48Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "53407c29",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:48Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0e642c8e",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:48Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e900c085",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:49Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ee7028f9",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:49Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "26695f79",
+          "result": "passed",
+          "ts": "2026-07-05T20:35:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "52f72f27",
+          "result": "failed",
+          "ts": "2026-07-05T20:35:50Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/incident-response/upstream-coverage-52f72f27.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "performance-validation",
+      "started_at": "2026-07-05T20:39:13Z",
+      "completed_at": "2026-07-05T20:43:27Z",
+      "agent": "aidlc-quality-agent",
+      "memory_path": "aidlc/spaces/default/intents/operation/performance-validation/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "dfa90925",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "85ca871a",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "59034345",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2d7dc7c9",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:23Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "fe4874fc",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4b2cc22d",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:24Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "84de1e68",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e7cceeaf",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c55d1de8",
+          "result": "passed",
+          "ts": "2026-07-05T20:40:25Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8fd8b66d",
+          "result": "failed",
+          "ts": "2026-07-05T20:40:26Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/performance-validation/upstream-coverage-8fd8b66d.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "feedback-optimization",
+      "started_at": "2026-07-05T20:43:27Z",
+      "completed_at": "2026-07-05T20:47:59Z",
+      "agent": "aidlc-operations-agent",
+      "memory_path": "aidlc/spaces/default/intents/operation/feedback-optimization/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "bf4cca7c",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:42Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "dcba381c",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:42Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "61f05c2e",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:42Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d3e4b6cf",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:43Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "015d2d5a",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:43Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "00105eb4",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:43Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b2e812ee",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:44Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d4798eed",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:44Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6b26ee7b",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:45Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0537c743",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:45Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3ff368a9",
+          "result": "passed",
+          "ts": "2026-07-05T20:44:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "703f5ce5",
+          "result": "failed",
+          "ts": "2026-07-05T20:44:46Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/feedback-optimization/upstream-coverage-703f5ce5.md"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "functional-design",
+      "started_at": "2026-07-08T07:13:49Z",
+      "completed_at": "2026-07-08T07:39:53Z",
+      "agent": "aidlc-architect-agent",
+      "memory_path": "aidlc/spaces/default/intents/construction/functional-design/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ec159881",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "94e7b85c",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cd5c9fc0",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8d9f3bf1",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4a59cb46",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9c628af9",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:14Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-9c628af9.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c1438bc3",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "30bdb3c4",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:14Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-30bdb3c4.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "61d8107d",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "08252eab",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:15Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-08252eab.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "da8f3385",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "cdbe4011",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:16Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6e7da6a2",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d18cf08b",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:16Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-d18cf08b.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "488c5587",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9fb0c2c0",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:17Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-9fb0c2c0.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d8aa9aa4",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:17Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3d7850d3",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:17Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-3d7850d3.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d107c3a5",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9cce3a25",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:18Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a71bac37",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0852d213",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:19Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-0852d213.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "82d42243",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:19Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ddc8e3dd",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:19Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-ddc8e3dd.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ef7df760",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:20Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e88bc582",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:20Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-e88bc582.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3ea8654c",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:20Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8fe377af",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:20Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "99467db2",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "cd4b7b4e",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:21Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-cd4b7b4e.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d9135fb1",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f066c17c",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:22Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-f066c17c.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "129cf9c1",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c7a82e98",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:22Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-c7a82e98.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b9c6a7df",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5129e6c3",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:23Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "df5b6b4b",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fca65101",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:23Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-fca65101.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "26d1e4a9",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "689b82ca",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:24Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-689b82ca.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cf793442",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2c3da681",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:24Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-2c3da681.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e3c406e3",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:25Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "bc886164",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f31cfe24",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:25Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "85b4dd38",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:26Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-85b4dd38.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e8c0d9fa",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:26Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7bbde316",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:26Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-7bbde316.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "379b1ac2",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:26Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e64783fc",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:27Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-e64783fc.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4af71092",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:27Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "97f6b3f9",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:27Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3c0516d1",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:27Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3af6e394",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:28Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-3af6e394.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a9587372",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:28Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a27196a2",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:28Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-a27196a2.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0a2ad850",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:29Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c478348d",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:29Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-c478348d.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0c7e0e56",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:29Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "644df9bc",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:29Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "53999128",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:30Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ec23ba94",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:30Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-ec23ba94.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0e11d0a2",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:30Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c17bf53e",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:30Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-c17bf53e.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9cf8a950",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:31Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4a0077e9",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:31Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-4a0077e9.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3aea6997",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:31Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "79eea1c3",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:32Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "90950ec0",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7005c06b",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:32Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-7005c06b.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "aabb0b91",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "acea82ae",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:33Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-acea82ae.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d5d0a623",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:33Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "53a6f16b",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:33Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-53a6f16b.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "2075bea1",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5d7b3836",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:34Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0b100635",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:34Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "47893dce",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:35Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-47893dce.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7768048e",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:35Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "740a59ee",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:35Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-740a59ee.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6164dffc",
+          "result": "passed",
+          "ts": "2026-07-08T07:18:36Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "89ac449d",
+          "result": "failed",
+          "ts": "2026-07-08T07:18:36Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/functional-design/upstream-coverage-89ac449d.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9ae1cefa",
+          "result": "passed",
+          "ts": "2026-07-08T07:23:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ef6c8a1d",
+          "result": "passed",
+          "ts": "2026-07-08T07:23:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4e4e90a3",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:02Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fce92ef5",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b6940837",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:02Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1fbdc29f",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "72f612d4",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:03Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "820ec8c8",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "640d4295",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:04Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "18c67fcd",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "478d5300",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:04Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f01b71c5",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:05Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "92bf9c9c",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:05Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "03205514",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:05Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "5e2f66f0",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:05Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c531069b",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:06Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cc1e5dde",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:06Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "05433f1b",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:06Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e53cf0c4",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1bc8837d",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:07Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "da9bb5bd",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "acfc92ef",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:08Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "00a14fd7",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "45c2ba07",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:08Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c9012778",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e59dae38",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:09Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "bb4355ee",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:09Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3e8b0248",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:09Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "617e9009",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:09Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5faeaf3c",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:10Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a32960f4",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "69fc1391",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:10Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "de49a38e",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "36bcdb60",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:11Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9fdb9fc8",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2abd2056",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:11Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "80670acb",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3451f13f",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:12Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d9cc9751",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e0e0e794",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:12Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ae939071",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3e862fd8",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "73cc9934",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ac7057d3",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e9029d4a",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7996baa5",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:14Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "37f53517",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "119b8341",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:15Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e1597064",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1d81d922",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:15Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8bd7cf1b",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3517cae4",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:16Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "fb602690",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "770a7ff2",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:16Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7941f978",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:17Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f7b297ad",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:17Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "63ca1596",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:17Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c096da99",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:17Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b5d34a73",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c881ced9",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:18Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "8f847340",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f75dd2d8",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:19Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f28a6baa",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:19Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f65765fe",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:19Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a0c4c44d",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:19Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "67d52cfe",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:20Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "96d06836",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:20Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "62a1f297",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:20Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ca875333",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e4aa78fe",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:21Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "018e62ea",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "165b01a1",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f5dd0e61",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "18077154",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "bf5d0757",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4a5e7c50",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:23Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b395fea2",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7a9ca3c4",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:24Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "53d1dc5c",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "08528deb",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:24Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3565d2e0",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:25Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4a25dfe5",
+          "result": "passed",
+          "ts": "2026-07-08T07:25:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4798442a",
+          "result": "passed",
+          "ts": "2026-07-08T07:27:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5d6058c3",
+          "result": "passed",
+          "ts": "2026-07-08T07:27:13Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "nfr-requirements",
+      "started_at": "2026-07-08T07:39:53Z",
+      "completed_at": "2026-07-08T08:19:16Z",
+      "agent": "aidlc-architect-agent",
+      "memory_path": "aidlc/spaces/default/intents/construction/nfr-requirements/memory.md",
+      "memory_entries": 6,
+      "memory_breakdown": {
+        "interpretations": 2,
+        "deviations": 1,
+        "tradeoffs": 2,
+        "open_questions": 1
+      },
+      "sensor_firings": [
+        {
+          "id": "required-sections",
+          "fire_id": "d9299d9e",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:00Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "406dfbb8",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:00Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b852d79c",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:01Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "78875f78",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:01Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6fd3483b",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:01Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "552de98b",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4e88788d",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:02Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f04bfec0",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:02Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4ed8cf22",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:02Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9e068f65",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "01efc340",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:03Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b8206088",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9d1b1761",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:03Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "20b05d73",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "2b97c5fe",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:04Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9bade490",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4ed2cd53",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:04Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e1e33fdc",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:05Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a4d0425a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:05Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2a451ded",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:05Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "27ce36ae",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:06Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "95154450",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:06Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "5d87a0bb",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:06Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "66f615ae",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:06Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7ac99acb",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b634b076",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:07Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "45aebfcc",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "359c5240",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:07Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ddbe71d4",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e254b060",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:08Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "240d0ba9",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "740f2df1",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:09Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "57be3a0f",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:09Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f3818f6f",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:09Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a105be3a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:09Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e824fecd",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:10Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "2ec798b0",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0953056c",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:10Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d8dca77c",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b3b2c46a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:10Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d9e8e98f",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2827ed56",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:11Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9a80ef7f",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7dfa20a0",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:12Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "5bf8759a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1f427f3a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:12Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "358bf766",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3e73ac39",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "09696f5e",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:13Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "6bcc8b55",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:13Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "56c57397",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3cf4f148",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:14Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7cb03925",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:14Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "68f13b01",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:14Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "5191cf7e",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b8f464a5",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:15Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ae3442b9",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:15Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fa8b2bdf",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:16Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "50e7db9b",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2108eeab",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:16Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "62767fcf",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:16Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ec973c89",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:17Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4d96e1cf",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:17Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "181135b3",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:17Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dedd64a7",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "871d8e6a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:18Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c0533632",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:18Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1991f287",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:18Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ba48f375",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:19Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "63ebf915",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:19Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "21c2828c",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:19Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "94129ed2",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:20Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b879e55e",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:20Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7d853c26",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:20Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1db6db3a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:20Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c908a5d8",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:21Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "48b48317",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:21Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4f345288",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:21Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "dfa139a3",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "dbbb897b",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "05791054",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:22Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b384c710",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:22Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c716ee89",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "16e95295",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:23Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "760e9eaf",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:23Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8d1b155a",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:23Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e90e044f",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ff3e8330",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:24Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "33b774b6",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "95163972",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "39613ad0",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:25Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e708e751",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:25Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3af41a18",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:25Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "cf7db255",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:26Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "06d01b87",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:26Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "63b72692",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:26Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7ebd5d8b",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:27Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "dcbb2411",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:27Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1f4cfaaa",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:27Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8abd7c15",
+          "result": "passed",
+          "ts": "2026-07-08T07:42:27Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7a39339d",
+          "result": "passed",
+          "ts": "2026-07-08T07:45:36Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "fe6edd47",
+          "result": "failed",
+          "ts": "2026-07-08T07:45:37Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/nfr-requirements/upstream-coverage-fe6edd47.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "388d5430",
+          "result": "passed",
+          "ts": "2026-07-08T07:45:53Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3849e838",
+          "result": "failed",
+          "ts": "2026-07-08T07:45:53Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/nfr-requirements/upstream-coverage-3849e838.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0c0e96ab",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:06Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "66f55adc",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:06Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "49b9b7a0",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2c716c76",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:07Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "542e9d57",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8170359e",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:08Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "64f41b31",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "06f89896",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:09Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "df20beff",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:09Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "be438773",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:09Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4ff8efa4",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a848417f",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:10Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "19bc8d91",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:10Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c5e07ec5",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:11Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "16d209b7",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:11Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "64eb08be",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:11Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6faa2724",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:12Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "34b91aff",
+          "result": "passed",
+          "ts": "2026-07-08T07:49:12Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e12905d0",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:36Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "58289fcc",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:36Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "eadc84f5",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b8b0034b",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:37Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e1205d48",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:37Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a1133bf0",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:37Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b00245ab",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:38Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "36e91377",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:38Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "ddcd5041",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b98f4af1",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:39Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "22964ed5",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:39Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "819789fa",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:39Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a762c9f3",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:40Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1de3a0e4",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:40Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "182a7699",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:41Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "52e997b7",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:41Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4fb201a5",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:41Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "76ad2aa3",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:42Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "48e8c725",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:42Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "607347f9",
+          "result": "passed",
+          "ts": "2026-07-08T07:50:42Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "e629f247",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:02Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e2a798c5",
+          "result": "failed",
+          "ts": "2026-07-08T07:51:02Z",
+          "detail_path": "aidlc/spaces/default/intents/260704-charge-agreement/.aidlc-sensors/nfr-requirements/upstream-coverage-e2a798c5.md"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a739168f",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3a6d0edf",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:32Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "2cbd2bd6",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:32Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "7acace94",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:33Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "cbfaab5f",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:41Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "c7a85dab",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:41Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "5181bd12",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:42Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "1c1d3c16",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:42Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b948d280",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:42Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "73ca9ef1",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:43Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4cebfe8c",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:43Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "bba0b349",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:43Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b093ff39",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:44Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "5c68fa71",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:44Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9b20b48c",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:45Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ec6ae67e",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:45Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9406b7c9",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ebb2624a",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:46Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "100d6992",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:46Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "f6d5ac05",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:47Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "26517b7d",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:47Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "cdac8a8d",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:47Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "547a059a",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:48Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "4f0fca0d",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:48Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "4e3ebd9b",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:48Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "97f0ad5f",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:49Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1e521879",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:49Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "8094f498",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:49Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "b6b23249",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:49Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "afb9007e",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:50Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "204a119e",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:50Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a0aae9fe",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:50Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "5d4b7bdc",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:51Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b7787454",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:51Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "6b51625d",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:51Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "ece71a83",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:52Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "723834c3",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:52Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "a19073d2",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:53Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "d663a5f3",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:53Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "688a3d3c",
+          "result": "passed",
+          "ts": "2026-07-08T07:51:53Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "7497cb65",
+          "result": "budget-override",
+          "ts": "2026-07-08T07:51:53Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "186bf245",
+          "result": "passed",
+          "ts": "2026-07-08T07:58:24Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "0dfc1a28",
+          "result": "passed",
+          "ts": "2026-07-08T07:58:24Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "830880e0",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:03Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "687cb060",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:03Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "bde547e1",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:04Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "75275101",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "9ead5cc5",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:04Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e5034feb",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:04Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "c9a0da15",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:05Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "d2f133ad",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:05Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "f08a659d",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:05Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "2a71cbaf",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:05Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "fc6ae931",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:06Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "9aaedba8",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:06Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "3308070d",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:06Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "e408a48a",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:06Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "a0dfead5",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "3f74f203",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:07Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "1e11d002",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:07Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "b820407c",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:08Z"
+        },
+        {
+          "id": "required-sections",
+          "fire_id": "0943fa1e",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:08Z"
+        },
+        {
+          "id": "upstream-coverage",
+          "fire_id": "53b3c5a1",
+          "result": "passed",
+          "ts": "2026-07-08T07:59:08Z"
+        }
+      ],
+      "outcome": "approved",
+      "learnings_captured": {
+        "from_orchestrator": 0,
+        "from_user_addition": 0
+      }
+    },
+    {
+      "stage_slug": "nfr-design",
+      "started_at": "2026-07-08T08:19:16Z",
+      "completed_at": null,
+      "agent": "aidlc-architect-agent",
+      "memory_path": "aidlc/spaces/default/intents/construction/nfr-design/memory.md",
+      "memory_entries": 4,
+      "memory_breakdown": {
+        "interpretations": 1,
+        "deviations": 1,
+        "tradeoffs": 1,
+        "open_questions": 1
+      },
+      "sensor_firings": [],
+      "outcome": "pending",
+      "learnings_captured": null
+    }
+  ]
+}

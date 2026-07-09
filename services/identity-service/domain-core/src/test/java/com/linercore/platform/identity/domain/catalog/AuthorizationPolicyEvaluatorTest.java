@@ -1,6 +1,8 @@
 package com.linercore.platform.identity.domain.catalog;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.linercore.platform.identity.domain.model.AssignmentStatus;
 import com.linercore.platform.identity.domain.model.AuthenticatedSubject;
@@ -44,6 +46,31 @@ class AuthorizationPolicyEvaluatorTest {
                 AssignmentStatus.REVOKED, "sec", Instant.EPOCH, "sec", Instant.EPOCH, "test", 2);
 
         assertEquals(DecisionResult.DENY, evaluator.evaluate(subject, List.of(assignment), request("create")).result());
+    }
+
+    @Test
+    void assignmentForAnotherSubjectDoesNotGrantPermission() {
+        AuthenticatedSubject subject = subject("alice");
+        RoleAssignment assignment = assignment("mallory", RoleCode.REFERENCE_ADMIN);
+
+        assertEquals(ReasonCode.DENY_NO_PERMISSION, evaluator.evaluate(subject, List.of(assignment), request("create")).reasonCode());
+    }
+
+    @Test
+    void invalidRequestFailsClosedWithCorrelationSafeDecision() {
+        AuthenticatedSubject subject = subject("alice");
+
+        assertEquals(ReasonCode.DENY_INVALID_TOKEN, evaluator.evaluate(subject, List.of(assignment("alice", RoleCode.REFERENCE_ADMIN)),
+                new AuthorizationRequest("req-1", "corr-1", "token-ref", "", "create", null, Map.of())).reasonCode());
+    }
+
+    @Test
+    void serviceSubjectUsesExplicitServiceMarker() {
+        AuthenticatedSubject subject = AuthenticatedSubject.service("svc-reference-data", "Reference Data Service", "keycloak", "carrier");
+
+        assertEquals("svc-reference-data", subject.subjectId());
+        assertNull(subject.email());
+        assertTrue(subject.serviceSubject());
     }
 
     private AuthenticatedSubject subject(String id) {

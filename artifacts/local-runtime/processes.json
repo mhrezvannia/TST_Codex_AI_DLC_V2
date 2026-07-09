@@ -1,0 +1,32 @@
+[
+    {
+        "name":  "identity-service",
+        "pid":  166708,
+        "out":  "D:\\TST_Codex\\artifacts\\local-runtime\\identity-service.out.log",
+        "err":  "D:\\TST_Codex\\artifacts\\local-runtime\\identity-service.err.log"
+    },
+    {
+        "name":  "local-reverse-proxy",
+        "pid":  116288,
+        "out":  "D:\\TST_Codex\\artifacts\\local-runtime\\local-reverse-proxy.out.log",
+        "err":  "D:\\TST_Codex\\artifacts\\local-runtime\\local-reverse-proxy.err.log"
+    },
+    {
+        "name":  "apps-auth",
+        "pid":  113200,
+        "out":  "D:\\TST_Codex\\artifacts\\local-runtime\\apps-auth.out.log",
+        "err":  "D:\\TST_Codex\\artifacts\\local-runtime\\apps-auth.err.log"
+    },
+    {
+        "name":  "apps-reference-data",
+        "pid":  23232,
+        "out":  "D:\\TST_Codex\\artifacts\\local-runtime\\apps-reference-data.out.log",
+        "err":  "D:\\TST_Codex\\artifacts\\local-runtime\\apps-reference-data.err.log"
+    },
+    {
+        "name":  "reference-data-service",
+        "pid":  115108,
+        "out":  "D:\\TST_Codex\\artifacts\\local-runtime\\reference-data-service.out.log",
+        "err":  "D:\\TST_Codex\\artifacts\\local-runtime\\reference-data-service.err.log"
+    }
+]

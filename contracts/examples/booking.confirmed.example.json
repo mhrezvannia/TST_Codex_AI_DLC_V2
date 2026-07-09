@@ -1,0 +1,16 @@
+{
+  "eventId": "evt-booking-confirmed-0001",
+  "eventType": "booking.confirmed",
+  "schemaVersion": "1.0.0",
+  "source": "booking-service",
+  "occurredAt": "2026-07-09T00:00:00Z",
+  "correlationId": "corr-booking-0001",
+  "idempotencyKey": "booking-confirmed-booking-0001-r1",
+  "bookingId": "booking-0001",
+  "bookingRevision": 1,
+  "pricingRef": "price_20260709_0001",
+  "customerId": "cust-001",
+  "originLocationId": "SGSIN",
+  "destinationLocationId": "NLRTM",
+  "equipmentTypeId": "40HC"
+}

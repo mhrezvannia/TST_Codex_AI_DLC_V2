@@ -1,0 +1,12 @@
+{
+  "dndPricingRef": "dnd_20260709_0001",
+  "correlationId": "corr-booking-0001",
+  "chargeableDays": 2,
+  "lineItems": [
+    {
+      "chargeCode": "IMPORT_DEMURRAGE",
+      "amount": "250.00",
+      "currency": "USD"
+    }
+  ]
+}

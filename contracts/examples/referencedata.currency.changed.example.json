@@ -13,6 +13,12 @@
     "code": "USD",
     "displayName": "US Dollar",
     "status": "ACTIVE",
-    "version": "1"
+    "version": "1",
+    "changeId": "change-reference-currency-usd-001",
+    "businessKey": "USD",
+    "producerIdentity": "reference-data-service",
+    "deduplicationKey": "CURRENCY:currency-usd:CREATED:change-reference-currency-usd-001",
+    "schemaSubject": "referencedata.currency.changed-value",
+    "correlationId": "corr-reference-change-001"
   }
 }

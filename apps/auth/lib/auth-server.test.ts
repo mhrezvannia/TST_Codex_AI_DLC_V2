@@ -1,5 +1,5 @@
 import { SESSION_COOKIE_NAME } from "@erp/auth";
-import { createLocalSession, decodeCookie, encodeCookie, isAuthBypassEnabled, readCookie, safeSessionSummary, setCookieHeader } from "./auth-server";
+import { authConfig, createLocalSession, decodeCookie, encodeCookie, isAuthBypassEnabled, readCookie, safeSessionSummary, setCookieHeader } from "./auth-server";
 
 test("encodes and decodes session cookies", () => {
   const session = createLocalSession("user-1");
@@ -13,7 +13,12 @@ test("reads safe session summary from cookie", () => {
 
   expect(safeSessionSummary(request)).toMatchObject({
     isAuthenticated: true,
-    subjectId: "user-1"
+    subjectId: "user-1",
+    subjectType: "user",
+    permissionSummary: {
+      total: 2,
+      byResource: { "reference-data": ["create", "read"] }
+    }
   });
 });
 
@@ -48,4 +53,10 @@ test("auth bypass is ignored outside local runtime profile", () => {
 
   delete process.env.AUTH_BYPASS;
   delete process.env.APP_ENV;
+});
+
+test("auth config exposes local keycloak and service identity defaults", () => {
+  expect(authConfig.keycloakRealm).toBe("linercore-local");
+  expect(authConfig.keycloakIssuer).toContain("/realms/linercore-local");
+  expect(authConfig.serviceIdentityClientId).toBe("linercore-identity-service");
 });

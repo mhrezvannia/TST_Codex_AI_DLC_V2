@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildRuntimePlan, loadRuntimeProfiles } from "./local-runtime.mjs";
 
 export const readinessSteps = [
   { id: "prerequisites", command: "node scripts/check-local-prereqs.mjs --json", blockedWhen: ["\"status\": \"blocked\""] },
@@ -18,6 +19,9 @@ export const readinessSteps = [
 
 export function runLocalReadiness(options = {}) {
   const runner = options.runner ?? runCommand;
+  const profile = options.profile ?? "full";
+  const metadata = options.profileMetadata ?? loadRuntimeProfiles(options.root ?? process.cwd());
+  const runtimePlan = buildRuntimePlan(profile, metadata);
   const steps = (options.steps ?? readinessSteps).map((step) => {
     const result = runner(step.command);
     return classifyStep(step, result);
@@ -26,12 +30,19 @@ export function runLocalReadiness(options = {}) {
   const blocked = steps.filter((step) => step.status === "blocked");
   const evidence = {
     generatedAt: new Date().toISOString(),
+    profile,
+    readinessState: failed.length > 0 ? "failed" : blocked.length > 0 ? "blocked" : runtimePlan.readinessState,
     status: failed.length > 0 ? "failed" : blocked.length > 0 ? "blocked" : "passed",
     summary: {
       passed: steps.filter((step) => step.status === "passed").length,
       blocked: blocked.length,
       failed: failed.length
     },
+    serviceStatuses: runtimePlan.services.map((serviceName) => ({
+      serviceName,
+      status: failed.length > 0 ? "unknown" : blocked.length > 0 ? "blocked" : "evidence_ready"
+    })),
+    runtimePlan,
     steps
   };
   if (options.evidencePath) {
@@ -60,6 +71,7 @@ function runCommand(command) {
 
 function parseArgs(argv) {
   return {
+    profile: valueAfter(argv, "--profile") ?? process.env.LOCAL_RUNTIME_PROFILE ?? "full",
     evidencePath: valueAfter(argv, "--evidence") ?? "artifacts/readiness/local-readiness.json"
   };
 }

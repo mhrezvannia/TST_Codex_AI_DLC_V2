@@ -1,0 +1,125 @@
+{
+  "status": "failed",
+  "seedPackId": "shared-platform-mvp-defaults",
+  "seedVersion": "2026.07.01",
+  "correlationId": "76b8180d-124c-463d-82fd-d4f412fedf5b",
+  "created": 0,
+  "updated": 0,
+  "skipped": 0,
+  "failed": 16,
+  "failures": [
+    "identity role reference-admin for local.reference.admin: fetch failed",
+    "identity role platform-operator for local.reference.admin: fetch failed",
+    "identity role customer-service for local.carrier.user: fetch failed",
+    "PARTY_CUSTOMER:LOCAL-CARRIER: fetch failed",
+    "LOCATION:US: fetch failed",
+    "LOCATION:NL: fetch failed",
+    "LOCATION:USNYC: fetch failed",
+    "LOCATION:NLRTM: fetch failed",
+    "REGION:NA: fetch failed",
+    "REGION:EU: fetch failed",
+    "VOYAGE:LC-VOY-001: fetch failed",
+    "CURRENCY:USD: fetch failed",
+    "CHARGE_CODE:OFR: fetch failed",
+    "EQUIPMENT_TYPE:40HC: fetch failed",
+    "COMMODITY:GEN: fetch failed",
+    "TRADE_LANE:NA-EU: fetch failed"
+  ],
+  "records": [
+    {
+      "key": "PARTY_CUSTOMER:LOCAL-CARRIER",
+      "id": "party-customer-local-carrier",
+      "fingerprint": "c81cedccd25f427cc3cb78b20018a33ab803362d7febc85862068a7f4a22634d",
+      "status": "failed"
+    },
+    {
+      "key": "LOCATION:US",
+      "id": "location-country-us",
+      "fingerprint": "877d3f3e2793bf424a817e587d02d4fd147adfe66c516d75e0214a90513def78",
+      "status": "failed"
+    },
+    {
+      "key": "LOCATION:NL",
+      "id": "location-country-nl",
+      "fingerprint": "29b26256564a78dbd03f275f6d36a7ea9f7ab411bebf11508d68893176b96f10",
+      "status": "failed"
+    },
+    {
+      "key": "LOCATION:USNYC",
+      "id": "location-usnyc",
+      "fingerprint": "68f92f92852e7349f4d51c709cfdf192d3e89fbaaa015c8bcb71dcc0ad9dd6ec",
+      "status": "failed"
+    },
+    {
+      "key": "LOCATION:NLRTM",
+      "id": "location-nlrot",
+      "fingerprint": "63f58f7ed8c911ef74d8d9e934be03ec58252c7f2d3821684041319072603593",
+      "status": "failed"
+    },
+    {
+      "key": "REGION:NA",
+      "id": "region-na",
+      "fingerprint": "51216095618b8aea5e4082e5c273b460c8784c57b8ce251e2430310c8d75ae11",
+      "status": "failed"
+    },
+    {
+      "key": "REGION:EU",
+      "id": "region-eu",
+      "fingerprint": "9b8f718b6fbbe76849ad836a422cb576967a8e9a9c074dcec12111b165e4b105",
+      "status": "failed"
+    },
+    {
+      "key": "VOYAGE:LC-VOY-001",
+      "id": "voyage-local-001",
+      "fingerprint": "b4760588c84abbc7322b2205c3e130462f543678d5b66772ef602396fa8c735f",
+      "status": "failed"
+    },
+    {
+      "key": "CURRENCY:USD",
+      "id": "currency-usd",
+      "fingerprint": "33c273c8d34772637436c78cffe8557b4530ccc5ddb4be2e29282230c9de133a",
+      "status": "failed"
+    },
+    {
+      "key": "CHARGE_CODE:OFR",
+      "id": "charge-code-ofr",
+      "fingerprint": "49b66d5e96b9bdb31d238bd3e0e188425f92165d0ebb7ed0d8c0213ad8b8ccaa",
+      "status": "failed"
+    },
+    {
+      "key": "EQUIPMENT_TYPE:40HC",
+      "id": "equipment-type-40hc",
+      "fingerprint": "db784ed8d04c5c83ec17d36b50b1392ba40a6f4a6eadf7c55c4f66e133da75fb",
+      "status": "failed"
+    },
+    {
+      "key": "COMMODITY:GEN",
+      "id": "commodity-general-cargo",
+      "fingerprint": "842d844d169e58c4bfb687b1e60e1e656e7818082218295981e8ee1e4c40ed78",
+      "status": "failed"
+    },
+    {
+      "key": "TRADE_LANE:NA-EU",
+      "id": "trade-lane-na-eu",
+      "fingerprint": "062ee046253fc752d8a7f4808ae2610a6359df49689d79aef075faf17fceb055",
+      "status": "failed"
+    }
+  ],
+  "identityAssignments": [
+    {
+      "targetSubjectId": "local.reference.admin",
+      "roleCode": "reference-admin",
+      "status": "failed"
+    },
+    {
+      "targetSubjectId": "local.reference.admin",
+      "roleCode": "platform-operator",
+      "status": "failed"
+    },
+    {
+      "targetSubjectId": "local.carrier.user",
+      "roleCode": "customer-service",
+      "status": "failed"
+    }
+  ]
+}

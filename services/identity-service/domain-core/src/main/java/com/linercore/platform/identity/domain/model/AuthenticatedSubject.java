@@ -13,4 +13,16 @@ public record AuthenticatedSubject(
             throw new IllegalArgumentException("subject id is required");
         }
     }
+
+    public static AuthenticatedSubject user(String subjectId, String displayName, String email, String issuer, String tenantOrCarrierCode) {
+        return new AuthenticatedSubject(subjectId, subjectId, displayName, email, issuer, tenantOrCarrierCode, "v1");
+    }
+
+    public static AuthenticatedSubject service(String serviceId, String displayName, String issuer, String tenantOrCarrierCode) {
+        return new AuthenticatedSubject(serviceId, serviceId, displayName, null, issuer, tenantOrCarrierCode, "service-v1");
+    }
+
+    public boolean serviceSubject() {
+        return claimVersion != null && claimVersion.startsWith("service-");
+    }
 }

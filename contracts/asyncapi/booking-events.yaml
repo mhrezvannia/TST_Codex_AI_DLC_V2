@@ -1,0 +1,15 @@
+asyncapi: 2.6.0
+info:
+  title: Booking Events
+  version: 1.0.0
+channels:
+  booking.confirmed:
+    subscribe:
+      summary: Booking confirmed event consumed by Container Movement Management.
+      message:
+        name: BookingConfirmed
+        headers:
+          type: object
+          required: [correlationId, schemaVersion, idempotencyKey]
+        payload:
+          $ref: "../avro/booking.confirmed.avsc"

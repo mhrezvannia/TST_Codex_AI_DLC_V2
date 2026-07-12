@@ -49,13 +49,13 @@ export const tokensCss = `
   --erp-color-on-primary: #ffffff;
   --erp-color-accent: #2f73c4;
 
-  --erp-color-success: #1f8a5b;
+  --erp-color-success: #136b45;
   --erp-color-success-bg: #e7f4ee;
-  --erp-color-warning: #b76e00;
+  --erp-color-warning: #8a5200;
   --erp-color-warning-bg: #fbf0dc;
   --erp-color-danger: #b42318;
   --erp-color-danger-bg: #fbe9e7;
-  --erp-color-info: #2f73c4;
+  --erp-color-info: #2a68b0;
   --erp-color-info-bg: #e7f0fb;
 
   --erp-shadow-1: 0 10px 30px rgba(16, 34, 53, 0.05);
@@ -63,8 +63,12 @@ export const tokensCss = `
   --erp-focus-ring: 0 0 0 3px rgba(47, 115, 196, 0.45);
 }
 
+/* The complete dark token set — shared by system-preference dark and the explicit
+   [data-theme="dark"] toggle so the two can never drift. Semantic foregrounds are
+   lightened for dark tinted backgrounds; primary is darkened so white text on it
+   clears WCAG AA. All pairs verified >= 4.5:1 (see the contrast check in styles.test). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --erp-color-bg: #0b1622;
     --erp-color-surface: #12202f;
     --erp-color-surface-2: #1a2b3d;
@@ -74,36 +78,67 @@ export const tokensCss = `
     --erp-color-text: #e7eef6;
     --erp-color-text-muted: #9db0c4;
     --erp-color-text-inverse: #0b1622;
-    --erp-color-primary: #3f7fc4;
+    --erp-color-primary: #3670b5;
     --erp-color-primary-hover: #5a93d0;
     --erp-color-on-primary: #ffffff;
+    --erp-color-success: #4fbf87;
     --erp-color-success-bg: #143026;
+    --erp-color-warning: #e0a444;
     --erp-color-warning-bg: #33280f;
+    --erp-color-danger: #f0968a;
     --erp-color-danger-bg: #331512;
+    --erp-color-info: #6ba8e0;
     --erp-color-info-bg: #12263c;
     --erp-shadow-1: 0 10px 30px rgba(0, 0, 0, 0.35);
     --erp-shadow-2: 0 14px 34px rgba(0, 0, 0, 0.45);
   }
 }
 
-/* Explicit theme override wins in both directions (viewer theme toggle). */
+/* Explicit theme override wins in both directions (viewer theme toggle) — each is a
+   COMPLETE set so toggling never leaves a token at the other theme's value. */
 :root[data-theme="light"] {
   --erp-color-bg: #f4f7fb;
   --erp-color-surface: #ffffff;
   --erp-color-surface-2: #eef3f9;
+  --erp-color-surface-inverse: #0c2742;
   --erp-color-border: #d7e2ef;
+  --erp-color-border-strong: #c2d0e0;
   --erp-color-text: #102235;
   --erp-color-text-muted: #5a6b7d;
+  --erp-color-text-inverse: #eaf1f8;
   --erp-color-primary: #11427a;
+  --erp-color-primary-hover: #0d3663;
+  --erp-color-on-primary: #ffffff;
+  --erp-color-success: #136b45;
+  --erp-color-success-bg: #e7f4ee;
+  --erp-color-warning: #8a5200;
+  --erp-color-warning-bg: #fbf0dc;
+  --erp-color-danger: #b42318;
+  --erp-color-danger-bg: #fbe9e7;
+  --erp-color-info: #2a68b0;
+  --erp-color-info-bg: #e7f0fb;
 }
 :root[data-theme="dark"] {
   --erp-color-bg: #0b1622;
   --erp-color-surface: #12202f;
   --erp-color-surface-2: #1a2b3d;
+  --erp-color-surface-inverse: #e7eef6;
   --erp-color-border: #26384c;
+  --erp-color-border-strong: #33485f;
   --erp-color-text: #e7eef6;
   --erp-color-text-muted: #9db0c4;
-  --erp-color-primary: #3f7fc4;
+  --erp-color-text-inverse: #0b1622;
+  --erp-color-primary: #3670b5;
+  --erp-color-primary-hover: #5a93d0;
+  --erp-color-on-primary: #ffffff;
+  --erp-color-success: #4fbf87;
+  --erp-color-success-bg: #143026;
+  --erp-color-warning: #e0a444;
+  --erp-color-warning-bg: #33280f;
+  --erp-color-danger: #f0968a;
+  --erp-color-danger-bg: #331512;
+  --erp-color-info: #6ba8e0;
+  --erp-color-info-bg: #12263c;
 }
 `;
 

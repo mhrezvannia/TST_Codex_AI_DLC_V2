@@ -182,7 +182,7 @@ function railHref(key: string) {
 }
 
 function severityStyle(severity: WorkflowQueueItem["severity"] = "normal"): CSSProperties {
-  const color = severity === "blocked" ? "#b42318" : severity === "attention" ? "#b76e00" : "#1f8a5b";
+  const color = severity === "blocked" ? "var(--erp-color-danger)" : severity === "attention" ? "var(--erp-color-warning)" : "var(--erp-color-success)";
   return {
     width: 8,
     height: 8,
@@ -192,19 +192,22 @@ function severityStyle(severity: WorkflowQueueItem["severity"] = "normal"): CSSP
   };
 }
 
+// Shell + command-center layout. Colors reference design tokens so the chrome is
+// theme-aware (light/dark); layout dimensions stay literal. Brand marks (logo gradient,
+// avatar) intentionally keep fixed brand colors that read on both themes.
 const styles: Record<string, CSSProperties> = {
   shell: {
     minHeight: "100vh",
     display: "grid",
     gridTemplateColumns: "72px minmax(0, 1fr)",
-    background: "#f4f7fb"
+    background: "var(--erp-color-bg)"
   },
   rail: {
     position: "sticky",
     top: 0,
     height: "100vh",
-    background: "#ffffff",
-    borderRight: "1px solid #e3e9f1",
+    background: "var(--erp-color-surface)",
+    borderRight: "1px solid var(--erp-color-border)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -216,7 +219,7 @@ const styles: Record<string, CSSProperties> = {
     height: 34,
     borderRadius: 8,
     background: "linear-gradient(135deg, #082b4c, #185f8f)",
-    color: "#ffffff",
+    color: "var(--erp-color-on-primary)",
     display: "grid",
     placeItems: "center",
     fontSize: 11,
@@ -237,7 +240,7 @@ const styles: Record<string, CSSProperties> = {
     display: "grid",
     placeItems: "center",
     gap: 3,
-    color: "#7a8795",
+    color: "var(--erp-color-text-muted)",
     textDecoration: "none",
     fontSize: 10,
     fontWeight: 600
@@ -249,8 +252,8 @@ const styles: Record<string, CSSProperties> = {
     display: "grid",
     placeItems: "center",
     gap: 3,
-    background: "#0c2742",
-    color: "#ffffff",
+    background: "var(--erp-color-primary)",
+    color: "var(--erp-color-on-primary)",
     textDecoration: "none",
     fontSize: 10,
     fontWeight: 600,
@@ -287,8 +290,8 @@ const styles: Record<string, CSSProperties> = {
     alignItems: "center",
     gap: 18,
     padding: "0 26px",
-    background: "#ffffff",
-    borderBottom: "1px solid #e6ebf2"
+    background: "var(--erp-color-surface)",
+    borderBottom: "1px solid var(--erp-color-border)"
   },
   brandBlock: {
     minWidth: 0,
@@ -299,21 +302,21 @@ const styles: Record<string, CSSProperties> = {
   },
   brandName: {
     fontWeight: 700,
-    color: "#102235"
+    color: "var(--erp-color-text)"
   },
   brandDivider: {
     width: 1,
     height: 18,
-    background: "#d9e0e8"
+    background: "var(--erp-color-border)"
   },
   brandSubcopy: {
-    color: "#71808f",
+    color: "var(--erp-color-text-muted)",
     fontSize: 13
   },
   scopePill: {
     borderRadius: 6,
-    background: "#edf3fb",
-    color: "#255f99",
+    background: "var(--erp-color-info-bg)",
+    color: "var(--erp-color-info)",
     padding: "4px 9px",
     fontSize: 11,
     fontWeight: 700,
@@ -322,18 +325,18 @@ const styles: Record<string, CSSProperties> = {
   searchBar: {
     minWidth: 0,
     height: 34,
-    border: "1px solid #e1e7ee",
+    border: "1px solid var(--erp-color-border)",
     borderRadius: 8,
-    color: "#94a1af",
+    color: "var(--erp-color-text-muted)",
     display: "flex",
     alignItems: "center",
     gap: 8,
     padding: "0 12px",
     fontSize: 13,
-    background: "#ffffff"
+    background: "var(--erp-color-surface)"
   },
   currency: {
-    color: "#586777",
+    color: "var(--erp-color-text-muted)",
     fontSize: 12,
     fontWeight: 700
   },
@@ -344,8 +347,8 @@ const styles: Record<string, CSSProperties> = {
     gap: 10,
     alignItems: "center",
     padding: "0 26px",
-    background: "#ffffff",
-    borderBottom: "1px solid #e6ebf2",
+    background: "var(--erp-color-surface)",
+    borderBottom: "1px solid var(--erp-color-border)",
     overflowX: "auto"
   },
   stageItem: {
@@ -361,8 +364,8 @@ const styles: Record<string, CSSProperties> = {
     display: "grid",
     placeItems: "center",
     flex: "0 0 auto",
-    background: "#eef2f6",
-    color: "#9aa7b4",
+    background: "var(--erp-color-surface-2)",
+    color: "var(--erp-color-text-muted)",
     fontSize: 12,
     fontWeight: 700
   },
@@ -373,8 +376,8 @@ const styles: Record<string, CSSProperties> = {
     display: "grid",
     placeItems: "center",
     flex: "0 0 auto",
-    background: "#11427a",
-    color: "#ffffff",
+    background: "var(--erp-color-primary)",
+    color: "var(--erp-color-on-primary)",
     fontSize: 12,
     fontWeight: 700
   },
@@ -385,8 +388,8 @@ const styles: Record<string, CSSProperties> = {
     display: "grid",
     placeItems: "center",
     flex: "0 0 auto",
-    background: "#e4f4ec",
-    color: "#1f8a5b",
+    background: "var(--erp-color-success-bg)",
+    color: "var(--erp-color-success)",
     fontSize: 12,
     fontWeight: 700
   },
@@ -397,11 +400,11 @@ const styles: Record<string, CSSProperties> = {
   },
   stageLabel: {
     fontSize: 13,
-    color: "#102235"
+    color: "var(--erp-color-text)"
   },
   stageModule: {
     fontSize: 11,
-    color: "#8896a5"
+    color: "var(--erp-color-text-muted)"
   },
   content: {
     minWidth: 0,
@@ -416,17 +419,17 @@ const styles: Record<string, CSSProperties> = {
   },
   commandPanel: {
     minWidth: 0,
-    background: "#ffffff",
-    border: "1px solid #e1e7ee",
+    background: "var(--erp-color-surface)",
+    border: "1px solid var(--erp-color-border)",
     borderRadius: 8,
     padding: 16,
-    boxShadow: "0 10px 30px rgba(16, 34, 53, 0.04)"
+    boxShadow: "var(--erp-shadow-1)"
   },
   commandHeader: {
     display: "flex",
     justifyContent: "space-between",
     gap: 12,
-    color: "#102235",
+    color: "var(--erp-color-text)",
     fontSize: 13,
     marginBottom: 12
   },
@@ -440,16 +443,16 @@ const styles: Record<string, CSSProperties> = {
     alignItems: "center",
     gap: 10,
     minHeight: 38,
-    color: "#607080"
+    color: "var(--erp-color-text-muted)"
   },
   queueText: {
     display: "grid",
     gap: 2,
     minWidth: 0,
-    color: "#102235"
+    color: "var(--erp-color-text)"
   },
   queueStatus: {
-    color: "#607080",
+    color: "var(--erp-color-text-muted)",
     fontSize: 12,
     fontWeight: 700
   },
@@ -462,7 +465,7 @@ const styles: Record<string, CSSProperties> = {
     display: "flex",
     justifyContent: "space-between",
     gap: 12,
-    color: "#607080",
+    color: "var(--erp-color-text-muted)",
     fontSize: 13
   }
 };

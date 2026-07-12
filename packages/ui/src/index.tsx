@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { DesignSystemStyles } from "./primitives";
 
 export * from "./primitives";
+export * from "./interactive";
 export { designSystemCss, tokensCss } from "./styles";
 
 type Stage = {

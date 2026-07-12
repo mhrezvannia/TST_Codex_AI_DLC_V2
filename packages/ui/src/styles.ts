@@ -197,6 +197,37 @@ export const componentsCss = `
 
 /* Status message strip */
 .erp-status { border: 1px solid var(--erp-color-border); border-radius: var(--erp-radius-sm); padding: 9px 12px; background: var(--erp-color-surface); color: var(--erp-color-text-muted); font-size: var(--erp-font-size-sm); }
+
+/* Tabs */
+.erp-tabs__list { display: flex; gap: var(--erp-space-1); border-bottom: 1px solid var(--erp-color-border); }
+.erp-tab { appearance: none; border: none; background: transparent; color: var(--erp-color-text-muted); padding: 8px 14px; font-size: var(--erp-font-size-md); font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.erp-tab:hover { color: var(--erp-color-text); }
+.erp-tab--active { color: var(--erp-color-primary); border-bottom-color: var(--erp-color-primary); }
+.erp-tabpanel { padding-top: var(--erp-space-4); }
+
+/* Combobox */
+.erp-combobox { position: relative; }
+.erp-combobox__list { position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0; max-height: 240px; overflow-y: auto; margin: 0; padding: var(--erp-space-1); list-style: none; background: var(--erp-color-surface); border: 1px solid var(--erp-color-border-strong); border-radius: var(--erp-radius-sm); box-shadow: var(--erp-shadow-2); }
+.erp-combobox__option { padding: 8px 10px; border-radius: var(--erp-radius-sm); cursor: pointer; font-size: var(--erp-font-size-md); }
+.erp-combobox__option--active, .erp-combobox__option[aria-selected="true"] { background: var(--erp-color-info-bg); color: var(--erp-color-info); }
+.erp-combobox__empty { padding: 8px 10px; color: var(--erp-color-text-muted); font-size: var(--erp-font-size-sm); }
+
+/* Dialog */
+.erp-dialog__backdrop { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: var(--erp-space-4); background: rgba(6, 18, 30, 0.55); }
+.erp-dialog { width: 100%; max-width: 520px; background: var(--erp-color-surface); color: var(--erp-color-text); border-radius: var(--erp-radius-lg); box-shadow: var(--erp-shadow-2); padding: var(--erp-space-6); }
+.erp-dialog__title { margin: 0 0 var(--erp-space-3); font-size: var(--erp-font-size-lg); font-weight: 700; }
+.erp-dialog__actions { display: flex; justify-content: flex-end; gap: var(--erp-space-2); margin-top: var(--erp-space-5); }
+
+/* Toast */
+.erp-toasts { position: fixed; z-index: 60; bottom: var(--erp-space-5); right: var(--erp-space-5); display: flex; flex-direction: column; gap: var(--erp-space-2); max-width: 360px; }
+.erp-toast { display: flex; align-items: flex-start; gap: var(--erp-space-3); background: var(--erp-color-surface); border: 1px solid var(--erp-color-border); border-left: 4px solid var(--erp-color-info); border-radius: var(--erp-radius-md); box-shadow: var(--erp-shadow-2); padding: var(--erp-space-3) var(--erp-space-4); font-size: var(--erp-font-size-sm); }
+.erp-toast--success { border-left-color: var(--erp-color-success); }
+.erp-toast--warning { border-left-color: var(--erp-color-warning); }
+.erp-toast--danger { border-left-color: var(--erp-color-danger); }
+.erp-toast__close { appearance: none; border: none; background: transparent; color: var(--erp-color-text-muted); cursor: pointer; font-size: var(--erp-font-size-lg); line-height: 1; padding: 0 var(--erp-space-1); }
+
+/* Theme toggle */
+.erp-theme-toggle { appearance: none; border: 1px solid var(--erp-color-border-strong); background: var(--erp-color-surface); color: var(--erp-color-text); border-radius: var(--erp-radius-pill); padding: 4px 12px; font-size: var(--erp-font-size-sm); font-weight: 600; cursor: pointer; }
 `;
 
 export const designSystemCss = `${tokensCss}\n${baseCss}\n${componentsCss}`;

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
-import { describe, expect, it, vi } from "vitest";
-import { Combobox, Dialog, Tabs, Toasts, type ComboOption } from "./interactive";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { Combobox, Dialog, Tabs, ThemeToggle, Toasts, type ComboOption } from "./interactive";
 
 describe("Tabs", () => {
   const tabs = [
@@ -87,5 +87,26 @@ describe("Toasts", () => {
     expect(screen.getByText("Saved")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Dismiss notification" }));
     expect(onDismiss).toHaveBeenCalledWith("t1");
+  });
+});
+
+describe("ThemeToggle", () => {
+  afterEach(() => {
+    document.documentElement.removeAttribute("data-theme");
+    try { localStorage.removeItem("erp-theme"); } catch { /* noop */ }
+  });
+
+  it("flips data-theme and persists to localStorage on click", () => {
+    render(<ThemeToggle />);
+    const btn = screen.getByRole("button");
+    // useEffect applies an initial theme (light in jsdom without matchMedia)
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+    fireEvent.click(btn);
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+    expect(localStorage.getItem("erp-theme")).toBe("dark");
+    expect(btn.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(btn);
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+    expect(localStorage.getItem("erp-theme")).toBe("light");
   });
 });

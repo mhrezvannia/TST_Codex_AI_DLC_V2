@@ -92,7 +92,7 @@ Your scenario — *"intent 3 of module A depends on intent 10 of module B"* — 
 
 | Id | Intent | Driver | Depends on | Statement |
 |---|---|---|---|---|
-| W0-01 | Platform eventing foundation — real Kafka/SR publisher, shared outbox relay + scheduler, kill placeholders (fixes C1–C5) | Shared Platform | — | [W0-01](W0-01-platform-eventing-foundation.md) |
+| W0-01 | Platform eventing foundation — real Kafka/SR publisher, shared outbox relay + scheduler, kill placeholders (fixes C1–C5) | **Codex** (Claude supervises) | — | [W0-01](W0-01-platform-eventing-foundation.md) · [handoff](W0-01-CODEX-HANDOFF.md) 🔵 delegated |
 | W0-02 | Reference-data completeness — Vessel/Voyage, Equipment-type, Charge-code modeled + seeded + APIs | Shared Platform | — | [W0-02](W0-02-reference-data-completeness.md) |
 | W1-01 ★ | Booking quote-to-cash spine — create→validate→price→confirm→real event→journey→status back→detail page | Booking | W0-01 | [worked example](../examples/booking-quote-to-cash/intent-statement.md) *(questions answered)* |
 | W2-01 | App shell & auth — one shell, login gates it, session to all modules, kill `local-user` | Platform+UI | soft: W1-01 (migration unit) | [W2-01](W2-01-app-shell-and-auth.md) |

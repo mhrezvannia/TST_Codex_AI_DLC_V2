@@ -65,3 +65,16 @@ Commit the `aidlc/` workspace tree — the record (state, the per-clone audit sh
 - `aidlc/.aidlc-clone-id` (per-clone audit-shard token) and `aidlc/.aidlc-sessions/`
 - `aidlc/spaces/*/intents/*/runtime-graph.json` (also covers per-Bolt worktree fragments by relative-path glob)
 - `aidlc/spaces/*/intents/*/.aidlc-*` (recovery, hooks-health, sensors scratch)
+
+## Intent Workflow (program backlog — read this first for any delivery work)
+
+All delivery work is organized as **vertical intents** in a single program backlog:
+`docs/intents/00-INTENT-BACKLOG.md` (DAG, waves, ownership, dependency & merge protocol).
+
+Before starting any intent:
+1. Read `docs/aidlc-v2-slicing-playbook.md` (slicing rules, two-layer model, folder conventions).
+2. Read the intent's statement in `docs/intents/` — its **Context Pack** section lists the exact docs to load.
+3. Artifact shapes are governed by binding templates in `aidlc/spaces/default/memory/templates/` (skeleton + sensor gate in one file).
+4. Exit gate for every intent: DoD observed on the live Compose stack + `aidlc-audit` + `erp-fidelity-audit` green (see `.claude/skills/`).
+
+Review context: `docs/codex-review-findings.md`, `docs/erp-business-ui-gap-analysis.md`, `docs/erp-workflow-map.md`.

@@ -1,8 +1,24 @@
 import type { CSSProperties, ReactNode } from "react";
+import { DesignSystemStyles } from "./primitives";
+
+export * from "./primitives";
+export { designSystemCss, tokensCss } from "./styles";
 
 type Stage = {
   label: string;
   module: string;
+};
+
+export type WorkflowQueueItem = {
+  label: string;
+  owner: string;
+  status: string;
+  severity?: "normal" | "attention" | "blocked";
+};
+
+export type EvidenceItem = {
+  label: string;
+  value: string;
 };
 
 const stages: Stage[] = [
@@ -25,7 +41,7 @@ export function PlatformShell({ title, children }: { title: string; children: Re
 
   return (
     <>
-      <style>{baseCss}</style>
+      <DesignSystemStyles />
       <div style={styles.shell}>
         <aside aria-label="LinerCore modules" style={styles.rail}>
           <div aria-hidden="true" style={styles.logoMark}>LC</div>
@@ -89,36 +105,91 @@ export function PlatformShell({ title, children }: { title: string; children: Re
   );
 }
 
+export function WorkflowCommandCenter({
+  queue,
+  evidence,
+  exceptions
+}: {
+  queue: WorkflowQueueItem[];
+  evidence: EvidenceItem[];
+  exceptions: WorkflowQueueItem[];
+}) {
+  return (
+    <section aria-label="Workflow command center" style={styles.commandCenter}>
+      <div style={styles.commandPanel}>
+        <div style={styles.commandHeader}>
+          <strong>Work queue</strong>
+          <span>{queue.length} active</span>
+        </div>
+        <div style={styles.queueList}>
+          {queue.map((item) => (
+            <div key={`${item.label}-${item.owner}`} style={styles.queueRow}>
+              <span style={severityStyle(item.severity)} />
+              <span style={styles.queueText}>
+                <strong>{item.label}</strong>
+                <small>{item.owner}</small>
+              </span>
+              <span style={styles.queueStatus}>{item.status}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={styles.commandPanel}>
+        <div style={styles.commandHeader}>
+          <strong>Evidence</strong>
+          <span>Live/API backed</span>
+        </div>
+        <dl style={styles.evidenceList}>
+          {evidence.map((item) => (
+            <div key={item.label} style={styles.evidenceRow}>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div style={styles.commandPanel}>
+        <div style={styles.commandHeader}>
+          <strong>Exceptions</strong>
+          <span>{exceptions.length} open</span>
+        </div>
+        <div style={styles.queueList}>
+          {exceptions.map((item) => (
+            <div key={`${item.label}-${item.owner}`} style={styles.queueRow}>
+              <span style={severityStyle(item.severity ?? "attention")} />
+              <span style={styles.queueText}>
+                <strong>{item.label}</strong>
+                <small>{item.owner}</small>
+              </span>
+              <span style={styles.queueStatus}>{item.status}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function railHref(key: string) {
   const hrefs: Record<string, string> = {
-    pricing: "http://localhost:3002",
-    booking: "#",
-    equipment: "#",
+    pricing: "/charge-agreements/",
+    booking: "/booking/",
+    equipment: "/container-movement/",
     identity: "http://localhost:3000"
   };
   return hrefs[key] ?? "#";
 }
 
-const baseCss = `
-  html, body {
-    margin: 0;
-    min-height: 100%;
-    background: #f4f7fb;
-  }
-  body {
-    font-family: "IBM Plex Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: #102235;
-  }
-  a {
-    color: inherit;
-  }
-  button, input, textarea, select {
-    font: inherit;
-  }
-  code {
-    font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-  }
-`;
+function severityStyle(severity: WorkflowQueueItem["severity"] = "normal"): CSSProperties {
+  const color = severity === "blocked" ? "#b42318" : severity === "attention" ? "#b76e00" : "#1f8a5b";
+  return {
+    width: 8,
+    height: 8,
+    borderRadius: "50%",
+    background: color,
+    flex: "0 0 auto"
+  };
+}
 
 const styles: Record<string, CSSProperties> = {
   shell: {
@@ -335,5 +406,62 @@ const styles: Record<string, CSSProperties> = {
     minWidth: 0,
     flex: 1,
     overflowX: "hidden"
+  },
+  commandCenter: {
+    display: "grid",
+    gridTemplateColumns: "1.2fr 0.9fr 1fr",
+    gap: 14,
+    marginBottom: 16
+  },
+  commandPanel: {
+    minWidth: 0,
+    background: "#ffffff",
+    border: "1px solid #e1e7ee",
+    borderRadius: 8,
+    padding: 16,
+    boxShadow: "0 10px 30px rgba(16, 34, 53, 0.04)"
+  },
+  commandHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    color: "#102235",
+    fontSize: 13,
+    marginBottom: 12
+  },
+  queueList: {
+    display: "grid",
+    gap: 10
+  },
+  queueRow: {
+    display: "grid",
+    gridTemplateColumns: "8px minmax(0, 1fr) auto",
+    alignItems: "center",
+    gap: 10,
+    minHeight: 38,
+    color: "#607080"
+  },
+  queueText: {
+    display: "grid",
+    gap: 2,
+    minWidth: 0,
+    color: "#102235"
+  },
+  queueStatus: {
+    color: "#607080",
+    fontSize: 12,
+    fontWeight: 700
+  },
+  evidenceList: {
+    display: "grid",
+    gap: 10,
+    margin: 0
+  },
+  evidenceRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    color: "#607080",
+    fontSize: 13
   }
 };

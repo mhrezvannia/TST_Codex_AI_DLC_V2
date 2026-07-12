@@ -218,22 +218,30 @@ export function Toasts({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss: 
 }
 
 /* ---------------- Theme toggle ---------------- */
+const THEME_STORAGE_KEY = "erp-theme";
+
 export function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   useEffect(() => {
     const root = document.documentElement;
-    const initial = (root.getAttribute("data-theme") as "light" | "dark" | null)
-      ?? (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const stored = (() => {
+      try { return window.localStorage?.getItem(THEME_STORAGE_KEY) as "light" | "dark" | null; } catch { return null; }
+    })();
+    const initial = stored
+      ?? (root.getAttribute("data-theme") as "light" | "dark" | null)
+      ?? (window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ? "dark" : "light");
     setTheme(initial);
+    root.setAttribute("data-theme", initial);
   }, []);
   function toggle() {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
+    try { window.localStorage?.setItem(THEME_STORAGE_KEY, next); } catch { /* storage unavailable */ }
   }
   return (
-    <button type="button" className="erp-theme-toggle" onClick={toggle} aria-pressed={theme === "dark"}>
-      {theme === "dark" ? "Dark" : "Light"} theme
+    <button type="button" className="erp-theme-toggle" onClick={toggle} aria-pressed={theme === "dark"} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}>
+      {theme === "dark" ? "◐ Dark" : "◑ Light"}
     </button>
   );
 }

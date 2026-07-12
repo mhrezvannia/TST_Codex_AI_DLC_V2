@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { DesignSystemStyles } from "./primitives";
+import { ThemeToggle } from "./interactive";
 
 export * from "./primitives";
 export * from "./interactive";
@@ -78,7 +79,10 @@ export function PlatformShell({ title, children }: { title: string; children: Re
               <span aria-hidden="true">Search</span>
               <span>Search bookings, containers...</span>
             </div>
-            <span style={styles.currency}>USD</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, justifySelf: "end" }}>
+              <span style={styles.currency}>USD</span>
+              <ThemeToggle />
+            </div>
           </header>
 
           <div style={styles.stageRibbon} aria-label="MVP journey">

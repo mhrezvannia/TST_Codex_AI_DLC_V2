@@ -12,7 +12,7 @@ CREATE INDEX IF NOT EXISTS idx_container_journeys_booking
     ON container_journeys(booking_id, updated_at);
 
 CREATE INDEX IF NOT EXISTS idx_container_journeys_container_status
-    ON container_journeys(container_id, status);
+    ON container_journeys(container_id, movement_status);
 
 CREATE TABLE IF NOT EXISTS container_movement_idempotency (
     idempotency_key VARCHAR(128) PRIMARY KEY,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS container_movement_outbox (
     journey_id VARCHAR(64) NOT NULL,
     booking_id VARCHAR(64) NOT NULL,
     container_id VARCHAR(64) NOT NULL,
-    status VARCHAR(32) NOT NULL,
+    movement_status VARCHAR(32) NOT NULL,
     schema_subject VARCHAR(128) NOT NULL,
     producer_identity VARCHAR(128) NOT NULL,
     deduplication_key VARCHAR(128) NOT NULL,

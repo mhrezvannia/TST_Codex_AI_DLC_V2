@@ -18,6 +18,10 @@ The pricing mock below is only a prerequisite-state fixture. Reference Data,
 Booking, CMM, PostgreSQL, Kafka, Schema Registry, schema registration, the outbox
 relays, and the Booking-to-CMM HTTP call are the real implementations.
 
+The customer, location, and equipment database fixtures only establish booking prerequisites.
+Relay acceptance is evaluated against the designated `corr-w0-reference-live` and
+`corr-w0-booking-live` proof correlations.
+
 ## 1. Clean, package, and pull
 
 The `down -v` command deletes only this Compose project's local volumes. Do not run
@@ -52,11 +56,15 @@ docker image inspect linercore/container-movement-service:local --format '{{.Id}
 docker compose --profile app up -d postgres kafka schema-registry
 docker compose --profile app up -d --no-deps reference-data-service container-movement-service
 
+$pricingScript = 'const http=require("http");const body=JSON.stringify({matched:true,agreementId:"w0-live-agreement",terms:[{id:"term-1",chargeCodeId:"OCEAN_FREIGHT",basis:"PER_CONTAINER",amount:100,currencyId:"USD",validFrom:"2026-01-01",validTo:"2027-12-31",notes:"W0 live proof"}],noMatchReason:null});http.createServer((req,res)=>{res.writeHead(200,{"content-type":"application/json"});res.end(body)}).listen(18084,"0.0.0.0");'
+$pricingScriptBase64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pricingScript))
+
 docker run -d --rm --name w0-pricing-mock `
   --network linercore-local `
-  node:24-alpine node -e 'const http=require("http");const body=JSON.stringify({matched:true,agreementId:"w0-live-agreement",terms:[{id:"term-1",chargeCodeId:"OCEAN_FREIGHT",basis:"PER_CONTAINER",amount:100,currencyId:"USD",validFrom:"2026-01-01",validTo:"2027-12-31",notes:"W0 live proof"}],noMatchReason:null});http.createServer((req,res)=>{res.writeHead(200,{"content-type":"application/json"});res.end(body)}).listen(18084,"0.0.0.0")'
+  node:24-alpine node -e 'eval(Buffer.from(process.argv[1],process.argv[2]).toString())' `
+  $pricingScriptBase64 base64
 
-docker compose --profile app run -d --name w0-booking --no-deps --service-ports `
+docker compose --profile app run -d --name w0-booking --no-deps --service-ports --use-aliases `
   -e CHARGE_AGREEMENT_SERVICE_URL=http://w0-pricing-mock:18084 `
   booking-service
 ```
@@ -91,6 +99,52 @@ if (-not $ready) {
 ## 3. Create booking prerequisites and one proof reference change
 
 ```powershell
+$customerId = '00000000-0000-4000-8000-000000000101'
+$originId = '00000000-0000-4000-8000-000000000102'
+$destinationId = '00000000-0000-4000-8000-000000000103'
+$equipmentId = '00000000-0000-4000-8000-000000000104'
+
+function Add-W0ReferenceFixture {
+  param(
+    [string]$Set,
+    [string]$Id,
+    [string]$Code,
+    [string]$DisplayName
+  )
+
+  $now = (Get-Date).ToUniversalTime().ToString('o')
+  $actor = @{ subjectId = 'w0-proof-fixture'; displayName = 'W0 Proof Fixture' }
+  $snapshot = @{
+    id = @{ value = $Id }
+    set = $Set
+    code = @{ value = $Code }
+    displayName = $DisplayName
+    status = 'ACTIVE'
+    version = 1
+    createdBy = $actor
+    createdAt = $now
+    updatedBy = $actor
+    updatedAt = $now
+    statusChangedBy = $null
+    statusChangedAt = $null
+    changeReason = 'W0 booking prerequisite fixture'
+    attributes = @{}
+  } | ConvertTo-Json -Compress -Depth 8
+  $escapedSnapshot = $snapshot.Replace("'", "''")
+  $sql = "INSERT INTO reference_records " +
+    "(reference_set,record_id,code,status,version,updated_at,snapshot) VALUES " +
+    "('$Set','$Id','$Code','ACTIVE',1,CURRENT_TIMESTAMP,'$escapedSnapshot');"
+
+  $sql | docker compose exec -T postgres env PGPASSWORD=reference_data_local `
+    psql -v ON_ERROR_STOP=1 -U linercore_reference_data -d linercore_reference_data
+  if ($LASTEXITCODE -ne 0) { throw "Failed to insert $Set fixture" }
+}
+
+Add-W0ReferenceFixture PARTY_CUSTOMER $customerId W0-CUSTOMER 'W0 Customer'
+Add-W0ReferenceFixture LOCATION $originId W0-ORIGIN 'W0 Origin'
+Add-W0ReferenceFixture LOCATION $destinationId W0-DESTINATION 'W0 Destination'
+Add-W0ReferenceFixture EQUIPMENT_TYPE $equipmentId W0-40HC 'W0 40HC'
+
 function New-W0Reference {
   param(
     [string]$Set,
@@ -118,21 +172,11 @@ function New-W0Reference {
     -Body $body
 }
 
-function Get-W0ReferenceId($record) {
-  if ($record.id -is [string]) { return $record.id }
-  return $record.id.value
-}
-
-$customer = New-W0Reference PARTY_CUSTOMER W0-CUSTOMER 'W0 Customer' corr-w0-setup-customer
-$origin = New-W0Reference LOCATION W0-ORIGIN 'W0 Origin' corr-w0-setup-origin
-$destination = New-W0Reference LOCATION W0-DESTINATION 'W0 Destination' corr-w0-setup-destination
-$equipment = New-W0Reference EQUIPMENT_TYPE W0-40HC 'W0 40HC' corr-w0-setup-equipment
-
 # This is the designated reference-data proof event.
 $currency = New-W0Reference CURRENCY W0-USD 'W0 US Dollar' corr-w0-reference-live
 ```
 
-Expected: all responses have `status: ACTIVE`. The designated currency mutation
+Expected: the currency response has `status: ACTIVE`. The designated currency mutation
 must later appear with correlation ID `corr-w0-reference-live` on
 `referencedata.events`.
 
@@ -141,10 +185,10 @@ must later appear with correlation ID `corr-w0-reference-live` on
 ```powershell
 $bookingBody = @{
   idempotencyKey = 'w0-live-booking-create'
-  customerId = Get-W0ReferenceId $customer
-  originLocationId = Get-W0ReferenceId $origin
-  destinationLocationId = Get-W0ReferenceId $destination
-  equipmentType = Get-W0ReferenceId $equipment
+  customerId = $customerId
+  originLocationId = $originId
+  destinationLocationId = $destinationId
+  equipmentType = $equipmentId
   attributes = @{ proof = 'W0-01' }
   actorSubjectId = 'booking-operator'
   correlationId = 'corr-w0-booking-live'
@@ -223,11 +267,11 @@ docker compose exec -T schema-registry kafka-avro-console-consumer `
   2>$null | Tee-Object artifacts/w0-01-live/booking-events.jsonl
 
 docker compose exec -T postgres bash -lc `
-  "PGPASSWORD=reference_data_local psql -h localhost -U linercore_reference_data -d linercore_reference_data -c \"select event_id,event_type,status,attempt_count,correlation_id from reference_outbox order by occurred_at;\"" |
+  "PGPASSWORD=reference_data_local psql -h localhost -U linercore_reference_data -d linercore_reference_data -c \"select event_id,reference_set,operation,status,attempt_count,correlation_id from reference_outbox where correlation_id='corr-w0-reference-live' order by occurred_at;\"" |
   Tee-Object artifacts/w0-01-live/reference-outbox.txt
 
 docker compose exec -T postgres bash -lc `
-  "PGPASSWORD=booking_local psql -h localhost -U linercore_booking -d linercore_booking -c \"select event_id,event_type,status,attempt_count,correlation_id from booking_outbox order by occurred_at;\"" |
+  "PGPASSWORD=booking_local psql -h localhost -U linercore_booking -d linercore_booking -c \"select event_id,event_type,status,attempt_count,correlation_id from booking_outbox where correlation_id='corr-w0-booking-live' order by occurred_at;\"" |
   Tee-Object artifacts/w0-01-live/booking-outbox.txt
 
 docker compose exec -T postgres bash -lc `
@@ -253,6 +297,12 @@ if (-not (Select-String artifacts/w0-01-live/reference-outbox.txt -Pattern 'PUBL
 }
 if (-not (Select-String artifacts/w0-01-live/booking-outbox.txt -Pattern 'PUBLISHED' -Quiet)) {
   throw 'Booking outbox did not reach PUBLISHED'
+}
+if (Select-String artifacts/w0-01-live/reference-outbox.txt -Pattern 'FAILED_PERMANENT' -Quiet) {
+  throw 'Reference proof event reached FAILED_PERMANENT'
+}
+if (Select-String artifacts/w0-01-live/booking-outbox.txt -Pattern 'FAILED_PERMANENT' -Quiet) {
+  throw 'Booking proof event reached FAILED_PERMANENT'
 }
 if (-not (Select-String artifacts/w0-01-live/cmm-booking-journey.txt -Pattern $booking.id -Quiet)) {
   throw 'Booking-to-CMM delivery was not observed'

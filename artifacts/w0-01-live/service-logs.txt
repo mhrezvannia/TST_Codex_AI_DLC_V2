@@ -1,0 +1,382 @@
+﻿container-movement-service-1  |
+reference-data-service-1      |
+reference-data-service-1      |   .   ____          _            __ _ _
+reference-data-service-1      |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+container-movement-service-1  |   .   ____          _            __ _ _
+container-movement-service-1  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+container-movement-service-1  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+container-movement-service-1  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+container-movement-service-1  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+container-movement-service-1  |  =========|_|==============|___/=/_/_/_/
+container-movement-service-1  |
+container-movement-service-1  |  :: Spring Boot ::                (v3.3.7)
+container-movement-service-1  |
+container-movement-service-1  | 2026-07-13T12:26:22.212Z  INFO 1 --- [           main] .c.c.ContainerMovementServiceApplication : Starting ContainerMovementServiceApplication using Java 21.0.11 with PID 1 (/app/app.jar started by root in /app)
+container-movement-service-1  | 2026-07-13T12:26:22.280Z  INFO 1 --- [           main] .c.c.ContainerMovementServiceApplication : The following 2 profiles are active: "local", "kafka"
+container-movement-service-1  | 2026-07-13T12:26:30.106Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8086 (http)
+container-movement-service-1  | 2026-07-13T12:26:30.238Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+container-movement-service-1  | 2026-07-13T12:26:30.244Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+container-movement-service-1  | 2026-07-13T12:26:30.489Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+container-movement-service-1  | 2026-07-13T12:26:30.493Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7792 ms
+container-movement-service-1  | 2026-07-13T12:26:32.371Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+container-movement-service-1  | 2026-07-13T12:26:34.318Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7ce29a2d
+container-movement-service-1  | 2026-07-13T12:26:34.335Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+container-movement-service-1  | 2026-07-13T12:26:40.897Z  INFO 1 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+reference-data-service-1      | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+reference-data-service-1      |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+reference-data-service-1      |   '  |____| .__|_| |_|_| |_\__, | / / / /
+reference-data-service-1      |  =========|_|==============|___/=/_/_/_/
+reference-data-service-1      |
+reference-data-service-1      |  :: Spring Boot ::                (v3.3.7)
+reference-data-service-1      |
+reference-data-service-1      | 2026-07-13T12:26:20.793Z  INFO 1 --- [           main] .l.p.r.c.ReferenceDataServiceApplication : Starting ReferenceDataServiceApplication using Java 21.0.11 with PID 1 (/app/app.jar started by root in /app)
+reference-data-service-1      | 2026-07-13T12:26:20.811Z  INFO 1 --- [           main] .l.p.r.c.ReferenceDataServiceApplication : The following 2 profiles are active: "local", "kafka"
+reference-data-service-1      | 2026-07-13T12:26:28.154Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8083 (http)
+reference-data-service-1      | 2026-07-13T12:26:28.210Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+reference-data-service-1      | 2026-07-13T12:26:28.210Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+reference-data-service-1      | 2026-07-13T12:26:28.337Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+container-movement-service-1  | 2026-07-13T12:26:41.449Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8086 (http) with context path '/'
+reference-data-service-1      | 2026-07-13T12:26:28.344Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7249 ms
+reference-data-service-1      | 2026-07-13T12:26:29.623Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+container-movement-service-1  | 2026-07-13T12:26:41.553Z  INFO 1 --- [           main] .c.c.ContainerMovementServiceApplication : Started ContainerMovementServiceApplication in 21.871 seconds (process running for 24.404)
+container-movement-service-1  | 2026-07-13T12:26:42.360Z  INFO 1 --- [nio-8086-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+container-movement-service-1  | 2026-07-13T12:26:42.361Z  INFO 1 --- [nio-8086-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+reference-data-service-1      | 2026-07-13T12:26:30.981Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@12952aff
+reference-data-service-1      | 2026-07-13T12:26:31.002Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+reference-data-service-1      | 2026-07-13T12:26:36.521Z  INFO 1 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+container-movement-service-1  | 2026-07-13T12:26:42.365Z  INFO 1 --- [nio-8086-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+reference-data-service-1      | 2026-07-13T12:26:37.159Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8083 (http) with context path '/'
+container-movement-service-1  | 2026-07-13T12:28:07.442Z  INFO 1 --- [   scheduling-1] o.a.k.clients.producer.ProducerConfig    : ProducerConfig values:
+container-movement-service-1  | 	acks = -1
+container-movement-service-1  | 	auto.include.jmx.reporter = true
+container-movement-service-1  | 	batch.size = 16384
+reference-data-service-1      | 2026-07-13T12:26:37.276Z  INFO 1 --- [           main] .l.p.r.c.ReferenceDataServiceApplication : Started ReferenceDataServiceApplication in 18.655 seconds (process running for 20.576)
+reference-data-service-1      | 2026-07-13T12:26:40.637Z  INFO 1 --- [nio-8083-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+reference-data-service-1      | 2026-07-13T12:26:40.644Z  INFO 1 --- [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+reference-data-service-1      | 2026-07-13T12:26:40.647Z  INFO 1 --- [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+container-movement-service-1  | 	bootstrap.servers = [kafka:9092]
+container-movement-service-1  | 	buffer.memory = 33554432
+container-movement-service-1  | 	client.dns.lookup = use_all_dns_ips
+container-movement-service-1  | 	client.id = container-movement-service-1
+container-movement-service-1  | 	compression.type = none
+container-movement-service-1  | 	connections.max.idle.ms = 540000
+reference-data-service-1      | 2026-07-13T12:28:08.288Z  INFO 1 --- [   scheduling-1] o.a.k.clients.producer.ProducerConfig    : ProducerConfig values:
+reference-data-service-1      | 	acks = -1
+reference-data-service-1      | 	auto.include.jmx.reporter = true
+reference-data-service-1      | 	batch.size = 16384
+reference-data-service-1      | 	bootstrap.servers = [kafka:9092]
+reference-data-service-1      | 	buffer.memory = 33554432
+reference-data-service-1      | 	client.dns.lookup = use_all_dns_ips
+reference-data-service-1      | 	client.id = reference-data-service-1
+reference-data-service-1      | 	compression.type = none
+reference-data-service-1      | 	connections.max.idle.ms = 540000
+reference-data-service-1      | 	delivery.timeout.ms = 120000
+reference-data-service-1      | 	enable.idempotence = true
+reference-data-service-1      | 	enable.metrics.push = true
+reference-data-service-1      | 	interceptor.classes = []
+reference-data-service-1      | 	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+reference-data-service-1      | 	linger.ms = 0
+reference-data-service-1      | 	max.block.ms = 60000
+container-movement-service-1  | 	delivery.timeout.ms = 120000
+reference-data-service-1      | 	max.in.flight.requests.per.connection = 5
+container-movement-service-1  | 	enable.idempotence = true
+container-movement-service-1  | 	enable.metrics.push = true
+container-movement-service-1  | 	interceptor.classes = []
+reference-data-service-1      | 	max.request.size = 1048576
+reference-data-service-1      | 	metadata.max.age.ms = 300000
+reference-data-service-1      | 	metadata.max.idle.ms = 300000
+container-movement-service-1  | 	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+reference-data-service-1      | 	metric.reporters = []
+container-movement-service-1  | 	linger.ms = 0
+reference-data-service-1      | 	metrics.num.samples = 2
+reference-data-service-1      | 	metrics.recording.level = INFO
+container-movement-service-1  | 	max.block.ms = 60000
+reference-data-service-1      | 	metrics.sample.window.ms = 30000
+container-movement-service-1  | 	max.in.flight.requests.per.connection = 5
+container-movement-service-1  | 	max.request.size = 1048576
+container-movement-service-1  | 	metadata.max.age.ms = 300000
+container-movement-service-1  | 	metadata.max.idle.ms = 300000
+container-movement-service-1  | 	metric.reporters = []
+container-movement-service-1  | 	metrics.num.samples = 2
+container-movement-service-1  | 	metrics.recording.level = INFO
+container-movement-service-1  | 	metrics.sample.window.ms = 30000
+container-movement-service-1  | 	partitioner.adaptive.partitioning.enable = true
+reference-data-service-1      | 	partitioner.adaptive.partitioning.enable = true
+reference-data-service-1      | 	partitioner.availability.timeout.ms = 0
+reference-data-service-1      | 	partitioner.class = null
+reference-data-service-1      | 	partitioner.ignore.keys = false
+reference-data-service-1      | 	receive.buffer.bytes = 32768
+reference-data-service-1      | 	reconnect.backoff.max.ms = 1000
+reference-data-service-1      | 	reconnect.backoff.ms = 50
+reference-data-service-1      | 	request.timeout.ms = 30000
+container-movement-service-1  | 	partitioner.availability.timeout.ms = 0
+container-movement-service-1  | 	partitioner.class = null
+reference-data-service-1      | 	retries = 2147483647
+container-movement-service-1  | 	partitioner.ignore.keys = false
+reference-data-service-1      | 	retry.backoff.max.ms = 1000
+reference-data-service-1      | 	retry.backoff.ms = 100
+reference-data-service-1      | 	sasl.client.callback.handler.class = null
+reference-data-service-1      | 	sasl.jaas.config = null
+reference-data-service-1      | 	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+container-movement-service-1  | 	receive.buffer.bytes = 32768
+container-movement-service-1  | 	reconnect.backoff.max.ms = 1000
+container-movement-service-1  | 	reconnect.backoff.ms = 50
+reference-data-service-1      | 	sasl.kerberos.min.time.before.relogin = 60000
+container-movement-service-1  | 	request.timeout.ms = 30000
+reference-data-service-1      | 	sasl.kerberos.service.name = null
+container-movement-service-1  | 	retries = 2147483647
+container-movement-service-1  | 	retry.backoff.max.ms = 1000
+reference-data-service-1      | 	sasl.kerberos.ticket.renew.jitter = 0.05
+reference-data-service-1      | 	sasl.kerberos.ticket.renew.window.factor = 0.8
+container-movement-service-1  | 	retry.backoff.ms = 100
+reference-data-service-1      | 	sasl.login.callback.handler.class = null
+container-movement-service-1  | 	sasl.client.callback.handler.class = null
+reference-data-service-1      | 	sasl.login.class = null
+container-movement-service-1  | 	sasl.jaas.config = null
+container-movement-service-1  | 	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+reference-data-service-1      | 	sasl.login.connect.timeout.ms = null
+reference-data-service-1      | 	sasl.login.read.timeout.ms = null
+reference-data-service-1      | 	sasl.login.refresh.buffer.seconds = 300
+reference-data-service-1      | 	sasl.login.refresh.min.period.seconds = 60
+reference-data-service-1      | 	sasl.login.refresh.window.factor = 0.8
+reference-data-service-1      | 	sasl.login.refresh.window.jitter = 0.05
+container-movement-service-1  | 	sasl.kerberos.min.time.before.relogin = 60000
+reference-data-service-1      | 	sasl.login.retry.backoff.max.ms = 10000
+container-movement-service-1  | 	sasl.kerberos.service.name = null
+reference-data-service-1      | 	sasl.login.retry.backoff.ms = 100
+container-movement-service-1  | 	sasl.kerberos.ticket.renew.jitter = 0.05
+reference-data-service-1      | 	sasl.mechanism = GSSAPI
+container-movement-service-1  | 	sasl.kerberos.ticket.renew.window.factor = 0.8
+container-movement-service-1  | 	sasl.login.callback.handler.class = null
+container-movement-service-1  | 	sasl.login.class = null
+reference-data-service-1      | 	sasl.oauthbearer.clock.skew.seconds = 30
+container-movement-service-1  | 	sasl.login.connect.timeout.ms = null
+reference-data-service-1      | 	sasl.oauthbearer.expected.audience = null
+container-movement-service-1  | 	sasl.login.read.timeout.ms = null
+container-movement-service-1  | 	sasl.login.refresh.buffer.seconds = 300
+container-movement-service-1  | 	sasl.login.refresh.min.period.seconds = 60
+reference-data-service-1      | 	sasl.oauthbearer.expected.issuer = null
+container-movement-service-1  | 	sasl.login.refresh.window.factor = 0.8
+reference-data-service-1      | 	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+container-movement-service-1  | 	sasl.login.refresh.window.jitter = 0.05
+reference-data-service-1      | 	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+reference-data-service-1      | 	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+reference-data-service-1      | 	sasl.oauthbearer.jwks.endpoint.url = null
+container-movement-service-1  | 	sasl.login.retry.backoff.max.ms = 10000
+reference-data-service-1      | 	sasl.oauthbearer.scope.claim.name = scope
+reference-data-service-1      | 	sasl.oauthbearer.sub.claim.name = sub
+reference-data-service-1      | 	sasl.oauthbearer.token.endpoint.url = null
+reference-data-service-1      | 	security.protocol = PLAINTEXT
+container-movement-service-1  | 	sasl.login.retry.backoff.ms = 100
+reference-data-service-1      | 	security.providers = null
+container-movement-service-1  | 	sasl.mechanism = GSSAPI
+container-movement-service-1  | 	sasl.oauthbearer.clock.skew.seconds = 30
+container-movement-service-1  | 	sasl.oauthbearer.expected.audience = null
+reference-data-service-1      | 	send.buffer.bytes = 131072
+reference-data-service-1      | 	socket.connection.setup.timeout.max.ms = 30000
+reference-data-service-1      | 	socket.connection.setup.timeout.ms = 10000
+reference-data-service-1      | 	ssl.cipher.suites = null
+reference-data-service-1      | 	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+reference-data-service-1      | 	ssl.endpoint.identification.algorithm = https
+container-movement-service-1  | 	sasl.oauthbearer.expected.issuer = null
+reference-data-service-1      | 	ssl.engine.factory.class = null
+container-movement-service-1  | 	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+container-movement-service-1  | 	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+reference-data-service-1      | 	ssl.key.password = null
+container-movement-service-1  | 	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+container-movement-service-1  | 	sasl.oauthbearer.jwks.endpoint.url = null
+reference-data-service-1      | 	ssl.keymanager.algorithm = SunX509
+reference-data-service-1      | 	ssl.keystore.certificate.chain = null
+reference-data-service-1      | 	ssl.keystore.key = null
+container-movement-service-1  | 	sasl.oauthbearer.scope.claim.name = scope
+container-movement-service-1  | 	sasl.oauthbearer.sub.claim.name = sub
+container-movement-service-1  | 	sasl.oauthbearer.token.endpoint.url = null
+container-movement-service-1  | 	security.protocol = PLAINTEXT
+container-movement-service-1  | 	security.providers = null
+reference-data-service-1      | 	ssl.keystore.location = null
+reference-data-service-1      | 	ssl.keystore.password = null
+reference-data-service-1      | 	ssl.keystore.type = JKS
+reference-data-service-1      | 	ssl.protocol = TLSv1.3
+reference-data-service-1      | 	ssl.provider = null
+container-movement-service-1  | 	send.buffer.bytes = 131072
+reference-data-service-1      | 	ssl.secure.random.implementation = null
+reference-data-service-1      | 	ssl.trustmanager.algorithm = PKIX
+reference-data-service-1      | 	ssl.truststore.certificates = null
+reference-data-service-1      | 	ssl.truststore.location = null
+container-movement-service-1  | 	socket.connection.setup.timeout.max.ms = 30000
+container-movement-service-1  | 	socket.connection.setup.timeout.ms = 10000
+container-movement-service-1  | 	ssl.cipher.suites = null
+container-movement-service-1  | 	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+container-movement-service-1  | 	ssl.endpoint.identification.algorithm = https
+container-movement-service-1  | 	ssl.engine.factory.class = null
+container-movement-service-1  | 	ssl.key.password = null
+container-movement-service-1  | 	ssl.keymanager.algorithm = SunX509
+reference-data-service-1      | 	ssl.truststore.password = null
+reference-data-service-1      | 	ssl.truststore.type = JKS
+container-movement-service-1  | 	ssl.keystore.certificate.chain = null
+container-movement-service-1  | 	ssl.keystore.key = null
+container-movement-service-1  | 	ssl.keystore.location = null
+reference-data-service-1      | 	transaction.timeout.ms = 60000
+reference-data-service-1      | 	transactional.id = null
+reference-data-service-1      | 	value.serializer = class io.confluent.kafka.serializers.KafkaAvroSerializer
+container-movement-service-1  | 	ssl.keystore.password = null
+container-movement-service-1  | 	ssl.keystore.type = JKS
+container-movement-service-1  | 	ssl.protocol = TLSv1.3
+reference-data-service-1      |
+reference-data-service-1      | 2026-07-13T12:28:08.439Z  INFO 1 --- [   scheduling-1] o.a.k.c.t.i.KafkaMetricsCollector        : initializing Kafka metrics collector
+reference-data-service-1      | 2026-07-13T12:28:08.500Z  INFO 1 --- [   scheduling-1] i.c.k.s.KafkaAvroSerializerConfig        : KafkaAvroSerializerConfig values:
+reference-data-service-1      | 	auto.register.schemas = true
+reference-data-service-1      | 	avro.reflection.allow.null = false
+reference-data-service-1      | 	avro.remove.java.properties = false
+reference-data-service-1      | 	avro.use.logical.type.converters = false
+container-movement-service-1  | 	ssl.provider = null
+container-movement-service-1  | 	ssl.secure.random.implementation = null
+reference-data-service-1      | 	basic.auth.credentials.source = URL
+container-movement-service-1  | 	ssl.trustmanager.algorithm = PKIX
+reference-data-service-1      | 	basic.auth.user.info = [hidden]
+reference-data-service-1      | 	bearer.auth.cache.expiry.buffer.seconds = 300
+container-movement-service-1  | 	ssl.truststore.certificates = null
+container-movement-service-1  | 	ssl.truststore.location = null
+container-movement-service-1  | 	ssl.truststore.password = null
+container-movement-service-1  | 	ssl.truststore.type = JKS
+container-movement-service-1  | 	transaction.timeout.ms = 60000
+reference-data-service-1      | 	bearer.auth.client.id = null
+reference-data-service-1      | 	bearer.auth.client.secret = null
+container-movement-service-1  | 	transactional.id = null
+container-movement-service-1  | 	value.serializer = class io.confluent.kafka.serializers.KafkaAvroSerializer
+container-movement-service-1  |
+container-movement-service-1  | 2026-07-13T12:28:07.538Z  INFO 1 --- [   scheduling-1] o.a.k.c.t.i.KafkaMetricsCollector        : initializing Kafka metrics collector
+container-movement-service-1  | 2026-07-13T12:28:07.591Z  INFO 1 --- [   scheduling-1] i.c.k.s.KafkaAvroSerializerConfig        : KafkaAvroSerializerConfig values:
+reference-data-service-1      | 	bearer.auth.credentials.source = STATIC_TOKEN
+reference-data-service-1      | 	bearer.auth.custom.provider.class = null
+container-movement-service-1  | 	auto.register.schemas = true
+container-movement-service-1  | 	avro.reflection.allow.null = false
+reference-data-service-1      | 	bearer.auth.identity.pool.id = null
+reference-data-service-1      | 	bearer.auth.issuer.endpoint.url = null
+container-movement-service-1  | 	avro.remove.java.properties = false
+container-movement-service-1  | 	avro.use.logical.type.converters = false
+reference-data-service-1      | 	bearer.auth.logical.cluster = null
+container-movement-service-1  | 	basic.auth.credentials.source = URL
+reference-data-service-1      | 	bearer.auth.scope = null
+reference-data-service-1      | 	bearer.auth.scope.claim.name = scope
+reference-data-service-1      | 	bearer.auth.sub.claim.name = sub
+reference-data-service-1      | 	bearer.auth.token = [hidden]
+container-movement-service-1  | 	basic.auth.user.info = [hidden]
+container-movement-service-1  | 	bearer.auth.cache.expiry.buffer.seconds = 300
+reference-data-service-1      | 	context.name.strategy = class io.confluent.kafka.serializers.context.NullContextNameStrategy
+reference-data-service-1      | 	http.connect.timeout.ms = 60000
+reference-data-service-1      | 	http.read.timeout.ms = 60000
+reference-data-service-1      | 	id.compatibility.strict = true
+reference-data-service-1      | 	key.subject.name.strategy = class io.confluent.kafka.serializers.subject.TopicNameStrategy
+container-movement-service-1  | 	bearer.auth.client.id = null
+reference-data-service-1      | 	latest.cache.size = 1000
+reference-data-service-1      | 	latest.cache.ttl.sec = -1
+container-movement-service-1  | 	bearer.auth.client.secret = null
+container-movement-service-1  | 	bearer.auth.credentials.source = STATIC_TOKEN
+container-movement-service-1  | 	bearer.auth.custom.provider.class = null
+reference-data-service-1      | 	latest.compatibility.strict = true
+reference-data-service-1      | 	max.schemas.per.subject = 1000
+reference-data-service-1      | 	normalize.schemas = false
+reference-data-service-1      | 	propagate.schema.tags = false
+container-movement-service-1  | 	bearer.auth.identity.pool.id = null
+container-movement-service-1  | 	bearer.auth.issuer.endpoint.url = null
+container-movement-service-1  | 	bearer.auth.logical.cluster = null
+container-movement-service-1  | 	bearer.auth.scope = null
+container-movement-service-1  | 	bearer.auth.scope.claim.name = scope
+reference-data-service-1      | 	proxy.host =
+reference-data-service-1      | 	proxy.port = -1
+container-movement-service-1  | 	bearer.auth.sub.claim.name = sub
+container-movement-service-1  | 	bearer.auth.token = [hidden]
+reference-data-service-1      | 	rule.actions = []
+container-movement-service-1  | 	context.name.strategy = class io.confluent.kafka.serializers.context.NullContextNameStrategy
+container-movement-service-1  | 	http.connect.timeout.ms = 60000
+container-movement-service-1  | 	http.read.timeout.ms = 60000
+container-movement-service-1  | 	id.compatibility.strict = true
+container-movement-service-1  | 	key.subject.name.strategy = class io.confluent.kafka.serializers.subject.TopicNameStrategy
+container-movement-service-1  | 	latest.cache.size = 1000
+container-movement-service-1  | 	latest.cache.ttl.sec = -1
+container-movement-service-1  | 	latest.compatibility.strict = true
+container-movement-service-1  | 	max.schemas.per.subject = 1000
+container-movement-service-1  | 	normalize.schemas = false
+container-movement-service-1  | 	propagate.schema.tags = false
+container-movement-service-1  | 	proxy.host =
+container-movement-service-1  | 	proxy.port = -1
+reference-data-service-1      | 	rule.executors = []
+reference-data-service-1      | 	rule.service.loader.enable = true
+container-movement-service-1  | 	rule.actions = []
+container-movement-service-1  | 	rule.executors = []
+reference-data-service-1      | 	schema.format = null
+reference-data-service-1      | 	schema.reflection = false
+container-movement-service-1  | 	rule.service.loader.enable = true
+reference-data-service-1      | 	schema.registry.basic.auth.user.info = [hidden]
+reference-data-service-1      | 	schema.registry.ssl.cipher.suites = null
+reference-data-service-1      | 	schema.registry.ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+reference-data-service-1      | 	schema.registry.ssl.endpoint.identification.algorithm = https
+reference-data-service-1      | 	schema.registry.ssl.engine.factory.class = null
+container-movement-service-1  | 	schema.format = null
+container-movement-service-1  | 	schema.reflection = false
+container-movement-service-1  | 	schema.registry.basic.auth.user.info = [hidden]
+reference-data-service-1      | 	schema.registry.ssl.key.password = null
+reference-data-service-1      | 	schema.registry.ssl.keymanager.algorithm = SunX509
+container-movement-service-1  | 	schema.registry.ssl.cipher.suites = null
+reference-data-service-1      | 	schema.registry.ssl.keystore.certificate.chain = null
+container-movement-service-1  | 	schema.registry.ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+reference-data-service-1      | 	schema.registry.ssl.keystore.key = null
+reference-data-service-1      | 	schema.registry.ssl.keystore.location = null
+reference-data-service-1      | 	schema.registry.ssl.keystore.password = null
+reference-data-service-1      | 	schema.registry.ssl.keystore.type = JKS
+reference-data-service-1      | 	schema.registry.ssl.protocol = TLSv1.3
+reference-data-service-1      | 	schema.registry.ssl.provider = null
+reference-data-service-1      | 	schema.registry.ssl.secure.random.implementation = null
+container-movement-service-1  | 	schema.registry.ssl.endpoint.identification.algorithm = https
+container-movement-service-1  | 	schema.registry.ssl.engine.factory.class = null
+container-movement-service-1  | 	schema.registry.ssl.key.password = null
+reference-data-service-1      | 	schema.registry.ssl.trustmanager.algorithm = PKIX
+reference-data-service-1      | 	schema.registry.ssl.truststore.certificates = null
+reference-data-service-1      | 	schema.registry.ssl.truststore.location = null
+reference-data-service-1      | 	schema.registry.ssl.truststore.password = null
+reference-data-service-1      | 	schema.registry.ssl.truststore.type = JKS
+reference-data-service-1      | 	schema.registry.url = [http://schema-registry:8081]
+reference-data-service-1      | 	use.latest.version = false
+container-movement-service-1  | 	schema.registry.ssl.keymanager.algorithm = SunX509
+reference-data-service-1      | 	use.latest.with.metadata = null
+reference-data-service-1      | 	use.schema.id = -1
+container-movement-service-1  | 	schema.registry.ssl.keystore.certificate.chain = null
+reference-data-service-1      | 	value.subject.name.strategy = class io.confluent.kafka.serializers.subject.TopicNameStrategy
+reference-data-service-1      |
+reference-data-service-1      | 2026-07-13T12:28:09.062Z  INFO 1 --- [   scheduling-1] o.a.k.clients.producer.KafkaProducer     : [Producer clientId=reference-data-service-1] Instantiated an idempotent producer.
+reference-data-service-1      | 2026-07-13T12:28:09.236Z  INFO 1 --- [   scheduling-1] o.a.k.clients.producer.ProducerConfig    : These configurations '[schema.registry.url]' were supplied but are not used yet.
+reference-data-service-1      | 2026-07-13T12:28:09.241Z  INFO 1 --- [   scheduling-1] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.7.2
+reference-data-service-1      | 2026-07-13T12:28:09.241Z  INFO 1 --- [   scheduling-1] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 79a8f2b5f44f9d5a
+container-movement-service-1  | 	schema.registry.ssl.keystore.key = null
+container-movement-service-1  | 	schema.registry.ssl.keystore.location = null
+container-movement-service-1  | 	schema.registry.ssl.keystore.password = null
+container-movement-service-1  | 	schema.registry.ssl.keystore.type = JKS
+container-movement-service-1  | 	schema.registry.ssl.protocol = TLSv1.3
+container-movement-service-1  | 	schema.registry.ssl.provider = null
+container-movement-service-1  | 	schema.registry.ssl.secure.random.implementation = null
+container-movement-service-1  | 	schema.registry.ssl.trustmanager.algorithm = PKIX
+container-movement-service-1  | 	schema.registry.ssl.truststore.certificates = null
+container-movement-service-1  | 	schema.registry.ssl.truststore.location = null
+container-movement-service-1  | 	schema.registry.ssl.truststore.password = null
+container-movement-service-1  | 	schema.registry.ssl.truststore.type = JKS
+container-movement-service-1  | 	schema.registry.url = [http://schema-registry:8081]
+container-movement-service-1  | 	use.latest.version = false
+container-movement-service-1  | 	use.latest.with.metadata = null
+container-movement-service-1  | 	use.schema.id = -1
+container-movement-service-1  | 	value.subject.name.strategy = class io.confluent.kafka.serializers.subject.TopicNameStrategy
+container-movement-service-1  |
+container-movement-service-1  | 2026-07-13T12:28:08.008Z  INFO 1 --- [   scheduling-1] o.a.k.clients.producer.KafkaProducer     : [Producer clientId=container-movement-service-1] Instantiated an idempotent producer.
+container-movement-service-1  | 2026-07-13T12:28:08.242Z  INFO 1 --- [   scheduling-1] o.a.k.clients.producer.ProducerConfig    : These configurations '[schema.registry.url]' were supplied but are not used yet.
+container-movement-service-1  | 2026-07-13T12:28:08.246Z  INFO 1 --- [   scheduling-1] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.7.2
+container-movement-service-1  | 2026-07-13T12:28:08.247Z  INFO 1 --- [   scheduling-1] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 79a8f2b5f44f9d5a
+container-movement-service-1  | 2026-07-13T12:28:08.247Z  INFO 1 --- [   scheduling-1] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1783945688243
+container-movement-service-1  | 2026-07-13T12:28:09.411Z  WARN 1 --- [ement-service-1] org.apache.kafka.clients.NetworkClient   : [Producer clientId=container-movement-service-1] Error while fetching metadata with correlation id 1 : {containermovement.events=UNKNOWN_TOPIC_OR_PARTITION}
+reference-data-service-1      | 2026-07-13T12:28:09.242Z  INFO 1 --- [   scheduling-1] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1783945689237
+reference-data-service-1      | 2026-07-13T12:28:10.026Z  WARN 1 --- [-data-service-1] org.apache.kafka.clients.NetworkClient   : [Producer clientId=reference-data-service-1] Error while fetching metadata with correlation id 1 : {referencedata.events=UNKNOWN_TOPIC_OR_PARTITION}
+reference-data-service-1      | 2026-07-13T12:28:10.027Z  INFO 1 --- [-data-service-1] org.apache.kafka.clients.Metadata        : [Producer clientId=reference-data-service-1] Cluster ID: MkU3OEVBNTcwNTJENDM2Qk
+container-movement-service-1  | 2026-07-13T12:28:09.413Z  INFO 1 --- [ement-service-1] org.apache.kafka.clients.Metadata        : [Producer clientId=container-movement-service-1] Cluster ID: MkU3OEVBNTcwNTJENDM2Qk
+reference-data-service-1      | 2026-07-13T12:28:10.028Z  INFO 1 --- [-data-service-1] o.a.k.c.p.internals.TransactionManager   : [Producer clientId=reference-data-service-1] ProducerId set to 2 with epoch 0
+container-movement-service-1  | 2026-07-13T12:28:09.527Z  INFO 1 --- [ement-service-1] o.a.k.c.p.internals.TransactionManager   : [Producer clientId=container-movement-service-1] ProducerId set to 1 with epoch 0
+container-movement-service-1  | 2026-07-13T12:28:09.747Z  INFO 1 --- [   scheduling-1] c.l.p.messaging.ScheduledOutboxRelay     : container-movement outbox relay claimed=1 published=1 retryable=0 permanent=0
+reference-data-service-1      | 2026-07-13T12:28:10.335Z  INFO 1 --- [   scheduling-1] c.l.p.messaging.ScheduledOutboxRelay     : reference-data outbox relay claimed=1 published=1 retryable=0 permanent=0

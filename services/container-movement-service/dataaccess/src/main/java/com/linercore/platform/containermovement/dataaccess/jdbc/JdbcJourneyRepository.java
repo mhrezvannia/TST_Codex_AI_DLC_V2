@@ -23,13 +23,13 @@ public class JdbcJourneyRepository implements JourneyRepository {
     public ContainerJourney save(ContainerJourney journey) {
         jdbc.update("""
                 INSERT INTO container_journeys
-                    (journey_id, booking_id, booking_revision, container_id, status, updated_at, snapshot)
+                    (journey_id, booking_id, booking_revision, container_id, movement_status, updated_at, snapshot)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (journey_id) DO UPDATE SET
                     booking_id = EXCLUDED.booking_id,
                     booking_revision = EXCLUDED.booking_revision,
                     container_id = EXCLUDED.container_id,
-                    status = EXCLUDED.status,
+                    movement_status = EXCLUDED.movement_status,
                     updated_at = EXCLUDED.updated_at,
                     snapshot = EXCLUDED.snapshot
                 """,

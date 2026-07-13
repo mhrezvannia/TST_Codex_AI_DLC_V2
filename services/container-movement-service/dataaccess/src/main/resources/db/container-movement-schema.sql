@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS container_journeys (
     journey_id VARCHAR(64) PRIMARY KEY,
     booking_id VARCHAR(64) NOT NULL,
     booking_revision INTEGER NOT NULL,
-    container_id VARCHAR(64) NOT NULL,
+    container_id VARCHAR(128) NOT NULL,
     movement_status VARCHAR(32) NOT NULL,
     updated_at TIMESTAMP,
     snapshot TEXT NOT NULL
@@ -13,6 +13,8 @@ CREATE INDEX IF NOT EXISTS idx_container_journeys_booking
 
 CREATE INDEX IF NOT EXISTS idx_container_journeys_container_status
     ON container_journeys(container_id, movement_status);
+
+ALTER TABLE container_journeys ALTER COLUMN container_id TYPE VARCHAR(128);
 
 CREATE TABLE IF NOT EXISTS container_movement_idempotency (
     idempotency_key VARCHAR(128) PRIMARY KEY,
@@ -40,7 +42,7 @@ CREATE TABLE IF NOT EXISTS container_movement_outbox (
     event_type VARCHAR(128) NOT NULL,
     journey_id VARCHAR(64) NOT NULL,
     booking_id VARCHAR(64) NOT NULL,
-    container_id VARCHAR(64) NOT NULL,
+    container_id VARCHAR(128) NOT NULL,
     movement_status VARCHAR(32) NOT NULL,
     schema_subject VARCHAR(128) NOT NULL,
     producer_identity VARCHAR(128) NOT NULL,
@@ -57,20 +59,8 @@ CREATE TABLE IF NOT EXISTS container_movement_outbox (
     snapshot TEXT NOT NULL
 );
 
-DO $$
-BEGIN
-    IF EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_name = 'container_movement_outbox' AND column_name = 'status'
-    ) AND NOT EXISTS (
-        SELECT 1 FROM information_schema.columns
-        WHERE table_name = 'container_movement_outbox' AND column_name = 'movement_status'
-    ) THEN
-        ALTER TABLE container_movement_outbox RENAME COLUMN status TO movement_status;
-    END IF;
-END $$;
-
 ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS movement_status VARCHAR(32) NOT NULL DEFAULT 'CREATED';
+ALTER TABLE container_movement_outbox ALTER COLUMN container_id TYPE VARCHAR(128);
 ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS status VARCHAR(32) NOT NULL DEFAULT 'PENDING';
 ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS attempt_count INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS next_attempt_at TIMESTAMP;
@@ -78,6 +68,11 @@ ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS claimed_by VARCHA
 ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS claimed_at TIMESTAMP;
 ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS last_error_code VARCHAR(128);
 ALTER TABLE container_movement_outbox ADD COLUMN IF NOT EXISTS last_error_message VARCHAR(1024);
+
+UPDATE container_movement_outbox
+SET movement_status = status,
+    status = 'PENDING'
+WHERE status NOT IN ('PENDING', 'CLAIMED', 'PUBLISHED', 'FAILED_RETRYABLE', 'FAILED_PERMANENT');
 
 CREATE INDEX IF NOT EXISTS idx_container_movement_outbox_journey
     ON container_movement_outbox(journey_id, occurred_at);

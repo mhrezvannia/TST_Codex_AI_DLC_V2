@@ -1,5 +1,6 @@
 package com.linercore.platform.referencedata.container;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linercore.platform.referencedata.application.identity.IdentityAuthorizationClient;
 import com.linercore.platform.referencedata.applicationservice.ReferenceDataApplicationService;
 import com.linercore.platform.referencedata.applicationservice.port.AuthorizationClientPort;
@@ -9,41 +10,30 @@ import com.linercore.platform.referencedata.applicationservice.port.ReferenceCha
 import com.linercore.platform.referencedata.applicationservice.port.ReferenceEventPublisherPort;
 import com.linercore.platform.referencedata.applicationservice.port.ReferenceRepository;
 import com.linercore.platform.referencedata.applicationservice.port.SchemaRegistryPort;
-import com.linercore.platform.referencedata.dataaccess.inmemory.InMemoryReferenceChangeRepository;
-import com.linercore.platform.referencedata.dataaccess.inmemory.InMemoryOutboxRepository;
-import com.linercore.platform.referencedata.dataaccess.inmemory.InMemoryReferenceRepository;
+import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcReferenceChangeRepository;
+import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcOutboxRepository;
+import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcReferenceRepository;
 import com.linercore.platform.referencedata.dataaccess.inmemory.UuidIdGenerator;
-import com.linercore.platform.referencedata.messaging.PlaceholderKafkaReferenceEventPublisher;
-import com.linercore.platform.referencedata.messaging.PlaceholderSchemaRegistryAdapter;
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ReferenceDataServiceConfiguration {
     @Bean
-    ReferenceRepository referenceRepository() {
-        return new InMemoryReferenceRepository();
+    ReferenceRepository referenceRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcReferenceRepository(jdbc, mapper);
     }
 
     @Bean
-    ReferenceChangeRepository referenceChangeRepository() {
-        return new InMemoryReferenceChangeRepository();
+    ReferenceChangeRepository referenceChangeRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcReferenceChangeRepository(jdbc, mapper);
     }
 
     @Bean
-    OutboxRepository outboxRepository() {
-        return new InMemoryOutboxRepository();
-    }
-
-    @Bean
-    ReferenceEventPublisherPort referenceEventPublisherPort() {
-        return new PlaceholderKafkaReferenceEventPublisher(Clock.systemUTC());
-    }
-
-    @Bean
-    SchemaRegistryPort schemaRegistryPort() {
-        return new PlaceholderSchemaRegistryAdapter();
+    OutboxRepository outboxRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcOutboxRepository(jdbc, mapper);
     }
 
     @Bean

@@ -4,12 +4,16 @@ services:
   postgres:
     image: postgres:15
     profiles: ["core", "app", "devtools", "full"]
+    env_file:
+      - ./infrastructure/env/local.env.example
     environment:
       POSTGRES_USER: linercore
       POSTGRES_PASSWORD: linercore_local
       POSTGRES_DB: linercore
     ports:
       - "5432:5432"
+    volumes:
+      - ./infrastructure/database/00-local-bootstrap.sh:/docker-entrypoint-initdb.d/00-local-bootstrap.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U linercore"]
       interval: 10s
@@ -77,6 +81,9 @@ services:
     profiles: ["app", "full"]
     environment:
       SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_identity
+      SPRING_DATASOURCE_USERNAME: linercore_identity
+      SPRING_DATASOURCE_PASSWORD: ${IDENTITY_DB_PASSWORD:-identity_local}
     ports:
       - "8082:8082"
     depends_on:
@@ -94,7 +101,13 @@ services:
         JAR_FILE: services/reference-data-service/container/target/reference-data-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
-      SPRING_PROFILES_ACTIVE: local
+      SPRING_PROFILES_ACTIVE: local,kafka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_reference_data
+      SPRING_DATASOURCE_USERNAME: linercore_reference_data
+      SPRING_DATASOURCE_PASSWORD: ${REFERENCE_DATA_DB_PASSWORD:-reference_data_local}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      REFERENCE_DATA_EVENTS_TOPIC: referencedata.events
     ports:
       - "8083:8083"
     depends_on:
@@ -105,16 +118,91 @@ services:
       schema-registry:
         condition: service_healthy
 
+  charge-agreement-service:
+    image: linercore/charge-agreement-service:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/spring-service.Dockerfile
+      args:
+        JAR_FILE: services/charge-agreement-service/container/target/charge-agreement-container-0.1.0-SNAPSHOT.jar
+    profiles: ["app", "full"]
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_pricing
+      SPRING_DATASOURCE_USERNAME: linercore_pricing
+      SPRING_DATASOURCE_PASSWORD: ${PRICING_DB_PASSWORD:-pricing_local}
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      reference-data-service:
+        condition: service_started
+
+  booking-service:
+    image: linercore/booking-service:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/spring-service.Dockerfile
+      args:
+        JAR_FILE: services/booking-service/container/target/booking-container-0.1.0-SNAPSHOT.jar
+    profiles: ["app", "full"]
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_booking
+      SPRING_DATASOURCE_USERNAME: linercore_booking
+      SPRING_DATASOURCE_PASSWORD: ${BOOKING_DB_PASSWORD:-booking_local}
+      REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
+      CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
+    ports:
+      - "8085:8085"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      reference-data-service:
+        condition: service_started
+      charge-agreement-service:
+        condition: service_started
+
+  container-movement-service:
+    image: linercore/container-movement-service:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/spring-service.Dockerfile
+      args:
+        JAR_FILE: services/container-movement-service/container/target/container-movement-container-0.1.0-SNAPSHOT.jar
+    profiles: ["app", "full"]
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_container_movement
+      SPRING_DATASOURCE_USERNAME: linercore_container_movement
+      SPRING_DATASOURCE_PASSWORD: ${CONTAINER_MOVEMENT_DB_PASSWORD:-container_movement_local}
+      REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      BOOKING_SERVICE_URL: http://booking-service:8085
+    ports:
+      - "8086:8086"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      reference-data-service:
+        condition: service_started
+
   seed-loader:
     image: node:24-alpine
     profiles: ["app", "full"]
     working_dir: /workspace
     env_file:
       - ./infrastructure/env/local.env.example
+    environment:
+      IDENTITY_SERVICE_URL: http://identity-service:8082
+      REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
+      BOOKING_SERVICE_URL: http://booking-service:8085
+      CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
     command:
       - "node"
       - "scripts/seed-local.mjs"
-      - "--dry-run"
       - "--wait"
       - "--seed-file"
       - "/workspace/infrastructure/seeds/shared-platform-mvp-defaults.json"
@@ -132,6 +220,12 @@ services:
       identity-service:
         condition: service_started
       reference-data-service:
+        condition: service_started
+      charge-agreement-service:
+        condition: service_started
+      booking-service:
+        condition: service_started
+      container-movement-service:
         condition: service_started
 
   apps-auth:
@@ -162,6 +256,49 @@ services:
       - reference-data-service
       - identity-service
 
+  apps-charge-agreements:
+    image: linercore/apps-charge-agreements:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/next-app.Dockerfile
+      args:
+        WORKSPACE: "@erp/app-charge-agreements"
+    profiles: ["app", "full"]
+    environment:
+      CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
+    depends_on:
+      - charge-agreement-service
+
+  apps-booking:
+    image: linercore/apps-booking:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/next-app.Dockerfile
+      args:
+        WORKSPACE: "@erp/app-booking"
+    profiles: ["app", "full"]
+    environment:
+      BOOKING_SERVICE_URL: http://booking-service:8085
+      CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
+    depends_on:
+      - booking-service
+      - container-movement-service
+
+  apps-container-movement:
+    image: linercore/apps-container-movement:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/next-app.Dockerfile
+      args:
+        WORKSPACE: "@erp/app-container-movement"
+    profiles: ["app", "full"]
+    environment:
+      CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
+      BOOKING_SERVICE_URL: http://booking-service:8085
+    depends_on:
+      - container-movement-service
+      - booking-service
+
   nginx:
     image: nginx:1.27
     ports:
@@ -171,6 +308,9 @@ services:
     depends_on:
       - apps-auth
       - apps-reference-data
+      - apps-charge-agreements
+      - apps-booking
+      - apps-container-movement
     profiles: ["app", "full"]
 
   contract-devtools:

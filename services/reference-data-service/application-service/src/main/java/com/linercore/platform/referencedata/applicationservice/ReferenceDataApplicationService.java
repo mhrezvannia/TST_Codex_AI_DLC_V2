@@ -35,6 +35,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 public class ReferenceDataApplicationService {
     private final ReferenceRepository references;
@@ -80,6 +81,7 @@ public class ReferenceDataApplicationService {
         return HealthDocument.up("reference-data-service");
     }
 
+    @Transactional
     public ReferenceRecord create(ReferenceMutationCommand command) {
         return createWithId(new ReferenceId(ids.nextId()), command);
     }
@@ -97,6 +99,7 @@ public class ReferenceDataApplicationService {
         return saved;
     }
 
+    @Transactional
     public ReferenceRecord update(ReferenceId id, long expectedVersion, ReferenceMutationCommand command) {
         requireMutationPermission(command);
         Optional<ReferenceRecord> existingRecord = references.findById(command.set(), id);
@@ -115,6 +118,7 @@ public class ReferenceDataApplicationService {
         return saved;
     }
 
+    @Transactional
     public ReferenceRecord deactivate(ReferenceSet set, ReferenceId id, String reason, String actorSubjectId, String correlationId) {
         ReferenceMutationCommand command = ReferenceMutationCommand.statusCommand(set, actorSubjectId, reason, correlationId);
         requireMutationPermission(command);
@@ -159,6 +163,7 @@ public class ReferenceDataApplicationService {
         return outbox.claimAvailable(workerId, now(), Math.max(1, Math.min(batchSize, 100)));
     }
 
+    @Transactional
     public PublishBatchResult publishOutboxBatch(String workerId, int batchSize) {
         requireOutbox();
         requirePublisher();

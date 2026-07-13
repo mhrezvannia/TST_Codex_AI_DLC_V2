@@ -1,0 +1,21 @@
+package com.linercore.platform.messaging;
+
+/** Raised when publishing or schema registration fails; {@code retryable} drives outbox back-off. */
+public class EventPublicationException extends RuntimeException {
+    private final String code;
+    private final boolean retryable;
+
+    public EventPublicationException(String code, String message, boolean retryable) {
+        super(message);
+        this.code = code;
+        this.retryable = retryable;
+    }
+
+    public String code() {
+        return code;
+    }
+
+    public boolean retryable() {
+        return retryable;
+    }
+}

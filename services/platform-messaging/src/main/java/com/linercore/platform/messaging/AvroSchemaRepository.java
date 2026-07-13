@@ -1,6 +1,5 @@
-package com.linercore.platform.referencedata.messaging;
+package com.linercore.platform.messaging;
 
-import com.linercore.platform.referencedata.applicationservice.port.EventPublicationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -9,6 +8,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.avro.Schema;
 
+/**
+ * Loads and caches Avro schemas by event type from the classpath ({@code <base>/<eventType>.avsc})
+ * with a filesystem fallback. Shared by every service's publisher.
+ */
 public class AvroSchemaRepository {
     private final String classpathBase;
     private final Path fileBase;

@@ -3,6 +3,7 @@ package com.linercore.platform.referencedata.messaging;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.linercore.platform.messaging.AvroSchemaRepository;
 import com.linercore.platform.referencedata.domain.model.ReferenceOperation;
 import com.linercore.platform.referencedata.domain.outbox.ReferenceEventEnvelope;
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;

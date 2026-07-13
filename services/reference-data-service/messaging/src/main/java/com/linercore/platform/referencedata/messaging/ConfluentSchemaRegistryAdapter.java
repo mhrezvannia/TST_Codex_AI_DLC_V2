@@ -1,35 +1,30 @@
 package com.linercore.platform.referencedata.messaging;
 
+import com.linercore.platform.messaging.AvroSchemaRepository;
+import com.linercore.platform.messaging.SchemaRegistrar;
 import com.linercore.platform.referencedata.applicationservice.port.EventPublicationException;
 import com.linercore.platform.referencedata.applicationservice.port.SchemaRegistryPort;
 import com.linercore.platform.referencedata.domain.outbox.SchemaSubject;
-import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
-import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
-import java.io.IOException;
-import org.apache.avro.Schema;
 
+/** Reference-data adapter over the shared {@link SchemaRegistrar}. */
 public class ConfluentSchemaRegistryAdapter implements SchemaRegistryPort {
     private static final String COMPATIBILITY = "BACKWARD";
 
-    private final SchemaRegistryClient client;
+    private final SchemaRegistrar registrar;
     private final AvroSchemaRepository schemas;
 
-    public ConfluentSchemaRegistryAdapter(SchemaRegistryClient client, AvroSchemaRepository schemas) {
-        this.client = client;
+    public ConfluentSchemaRegistryAdapter(SchemaRegistrar registrar, AvroSchemaRepository schemas) {
+        this.registrar = registrar;
         this.schemas = schemas;
     }
 
+    @Override
     public SchemaSubject ensureRegistered(String eventType, String schemaVersion) {
-        String subject = eventType + "-value";
-        Schema schema = schemas.schemaFor(eventType);
         try {
-            client.updateCompatibility(subject, COMPATIBILITY);
-            client.register(subject, schema);
+            String subject = registrar.ensureRegistered(eventType, schemas.schemaFor(eventType), COMPATIBILITY);
             return new SchemaSubject(subject, eventType, schemaVersion, COMPATIBILITY);
-        } catch (IOException ex) {
-            throw new EventPublicationException("SCHEMA_REGISTRY_UNAVAILABLE", ex.getMessage(), true);
-        } catch (RestClientException ex) {
-            throw new EventPublicationException("SCHEMA_REGISTRY_REJECTED", ex.getMessage(), ex.getStatus() != 409);
+        } catch (com.linercore.platform.messaging.EventPublicationException ex) {
+            throw new EventPublicationException(ex.code(), ex.getMessage(), ex.retryable());
         }
     }
 }

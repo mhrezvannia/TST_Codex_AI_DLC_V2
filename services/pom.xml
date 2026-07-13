@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>platform-messaging</module>
         <module>identity-service</module>
         <module>reference-data-service</module>
         <module>charge-agreement-service</module>

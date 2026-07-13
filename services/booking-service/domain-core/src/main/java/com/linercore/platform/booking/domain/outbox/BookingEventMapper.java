@@ -12,6 +12,7 @@ public class BookingEventMapper {
         String eventType = "booking.confirmed";
         String deduplicationKey = booking.id().value() + ":" + booking.revision() + ":CONFIRMED";
         String pricingRef = booking.pricingSnapshot() == null ? "" : booking.pricingSnapshot().pricingQuoteId();
+        String containerId = booking.attributes().getOrDefault("containerId", "");
         return new BookingOutboxEvent(eventId, eventType, SCHEMA_VERSION, booking.id().value(), booking.bookingNumber(), booking.revision(),
                 eventType + "-value", "booking-service", deduplicationKey, correlationId, now,
                 Map.ofEntries(
@@ -30,6 +31,8 @@ public class BookingEventMapper {
                         entry("customerId", booking.customerId()),
                         entry("originLocationId", booking.originLocationId()),
                         entry("destinationLocationId", booking.destinationLocationId()),
-                        entry("equipmentTypeId", booking.equipmentType())));
+                        entry("containerId", containerId),
+                        entry("equipmentTypeId", booking.equipmentType())),
+                OutboxStatus.PENDING, 0, null, null, null, null, null);
     }
 }

@@ -11,7 +11,8 @@ CREATE TABLE charge_agreements (
     created_by VARCHAR(128),
     created_at TIMESTAMP,
     updated_by VARCHAR(128),
-    updated_at TIMESTAMP
+    updated_at TIMESTAMP,
+    snapshot TEXT
 );
 
 CREATE TABLE charge_agreement_terms (
@@ -41,3 +42,50 @@ CREATE INDEX idx_charge_agreements_customer_status_validity
 
 CREATE INDEX idx_charge_agreements_lane_customer_validity
     ON charge_agreements(trade_lane_id, customer_id, valid_from, valid_to);
+
+CREATE TABLE IF NOT EXISTS manual_pricing_cases (
+    case_id VARCHAR(64) PRIMARY KEY,
+    pricing_request_id VARCHAR(128) NOT NULL,
+    reason_code VARCHAR(128) NOT NULL,
+    correlation_id VARCHAR(128),
+    opened_at TIMESTAMP,
+    snapshot TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_manual_pricing_cases_request
+    ON manual_pricing_cases(pricing_request_id);
+
+CREATE TABLE IF NOT EXISTS charge_agreement_outbox (
+    event_id VARCHAR(128) PRIMARY KEY,
+    event_type VARCHAR(128) NOT NULL,
+    agreement_id VARCHAR(64) NOT NULL,
+    agreement_status VARCHAR(32) NOT NULL,
+    agreement_version BIGINT NOT NULL,
+    schema_subject VARCHAR(128) NOT NULL,
+    producer_identity VARCHAR(128) NOT NULL,
+    deduplication_key VARCHAR(256) NOT NULL,
+    correlation_id VARCHAR(128),
+    occurred_at TIMESTAMP,
+    status VARCHAR(32) NOT NULL DEFAULT 'PENDING',
+    attempt_count INTEGER NOT NULL DEFAULT 0,
+    next_attempt_at TIMESTAMP,
+    claimed_by VARCHAR(128),
+    claimed_at TIMESTAMP,
+    last_error_code VARCHAR(128),
+    last_error_message VARCHAR(1024),
+    snapshot TEXT NOT NULL
+);
+
+ALTER TABLE charge_agreement_outbox ADD COLUMN IF NOT EXISTS status VARCHAR(32) NOT NULL DEFAULT 'PENDING';
+ALTER TABLE charge_agreement_outbox ADD COLUMN IF NOT EXISTS attempt_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE charge_agreement_outbox ADD COLUMN IF NOT EXISTS next_attempt_at TIMESTAMP;
+ALTER TABLE charge_agreement_outbox ADD COLUMN IF NOT EXISTS claimed_by VARCHAR(128);
+ALTER TABLE charge_agreement_outbox ADD COLUMN IF NOT EXISTS claimed_at TIMESTAMP;
+ALTER TABLE charge_agreement_outbox ADD COLUMN IF NOT EXISTS last_error_code VARCHAR(128);
+ALTER TABLE charge_agreement_outbox ADD COLUMN IF NOT EXISTS last_error_message VARCHAR(1024);
+
+CREATE INDEX IF NOT EXISTS idx_charge_agreement_outbox_agreement
+    ON charge_agreement_outbox(agreement_id, occurred_at);
+
+CREATE INDEX IF NOT EXISTS idx_charge_agreement_outbox_claim
+    ON charge_agreement_outbox(status, next_attempt_at, occurred_at);

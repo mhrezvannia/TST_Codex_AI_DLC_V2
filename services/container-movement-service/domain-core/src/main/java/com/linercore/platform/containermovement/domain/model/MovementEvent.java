@@ -11,6 +11,9 @@ public record MovementEvent(
         DedupeKey dedupeKey,
         String correlationId) {
     public MovementEvent {
+        if (eventType == null) {
+            throw new IllegalArgumentException("event type is required");
+        }
         if (eventId == null || eventId.isBlank()) {
             throw new IllegalArgumentException("event id is required");
         }
@@ -22,6 +25,12 @@ public record MovementEvent(
         }
         if (eventTime == null) {
             throw new IllegalArgumentException("event time is required");
+        }
+        if (dedupeKey == null) {
+            throw new IllegalArgumentException("dedupe key is required");
+        }
+        if (correlationId == null || correlationId.isBlank()) {
+            throw new IllegalArgumentException("correlation id is required");
         }
     }
 }

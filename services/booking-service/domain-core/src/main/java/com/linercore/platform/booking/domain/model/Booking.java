@@ -103,6 +103,44 @@ public record Booking(
                 exceptions, next, attributes, "BOOKING_DND_TRIGGER_CANDIDATE_RECORDED");
     }
 
+    public Booking movementStatusObserved(
+            String containerId,
+            String movementStatus,
+            long sequenceNumber,
+            String statusReason,
+            String lastKnownLocationId,
+            String actorSubjectId,
+            String correlationId,
+            Instant now) {
+        java.util.HashMap<String, String> nextAttributes = new java.util.HashMap<>(attributes);
+        nextAttributes.put("movementContainerId", containerId);
+        nextAttributes.put("movementStatus", movementStatus);
+        nextAttributes.put("movementSequenceNumber", String.valueOf(sequenceNumber));
+        nextAttributes.put("movementStatusReason", statusReason == null ? "" : statusReason);
+        nextAttributes.put("movementLastKnownLocationId", lastKnownLocationId == null ? "" : lastKnownLocationId);
+        return withStatus(status, revision, actorSubjectId, correlationId, now, pricingSnapshot,
+                exceptions, dndTriggerCandidates, nextAttributes, "BOOKING_MOVEMENT_STATUS_RECORDED");
+    }
+
+    public Booking dndPricingObserved(
+            String dndPricingRef,
+            int chargeableDays,
+            Map<String, String> lineItems,
+            String dndStatus,
+            String actorSubjectId,
+            String correlationId,
+            Instant now) {
+        java.util.HashMap<String, String> nextAttributes = new java.util.HashMap<>(attributes);
+        nextAttributes.put("dndPricingRef", dndPricingRef);
+        nextAttributes.put("dndChargeableDays", String.valueOf(chargeableDays));
+        nextAttributes.put("dndStatus", dndStatus);
+        for (Map.Entry<String, String> entry : (lineItems == null ? Map.<String, String>of() : lineItems).entrySet()) {
+            nextAttributes.put("dnd." + entry.getKey(), entry.getValue());
+        }
+        return withStatus(status, revision, actorSubjectId, correlationId, now, pricingSnapshot,
+                exceptions, dndTriggerCandidates, nextAttributes, "BOOKING_DND_PRICING_STORED");
+    }
+
     private Booking withStatus(
             BookingStatus nextStatus,
             int nextRevision,

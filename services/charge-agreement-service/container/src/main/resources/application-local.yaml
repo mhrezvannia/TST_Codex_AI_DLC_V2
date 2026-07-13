@@ -6,3 +6,29 @@ management:
     web:
       exposure:
         include: health,info
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/linercore_pricing}
+    username: ${SPRING_DATASOURCE_USERNAME:linercore_pricing}
+    password: ${SPRING_DATASOURCE_PASSWORD:pricing_local}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/charge-agreement-schema.sql
+
+charge-agreement:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    topic: ${CHARGE_AGREEMENT_EVENTS_TOPIC:charge-agreement.events}
+    client-id: ${CHARGE_AGREEMENT_KAFKA_CLIENT_ID:charge-agreement-service}
+  schema-registry:
+    url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}
+  outbox-relay:
+    enabled: ${CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED:true}
+    worker-id: ${CHARGE_AGREEMENT_OUTBOX_RELAY_WORKER_ID:charge-agreement-relay}
+    batch-size: ${CHARGE_AGREEMENT_OUTBOX_RELAY_BATCH_SIZE:50}
+
+platform:
+  outbox-relay:
+    fixed-delay-ms: ${CHARGE_AGREEMENT_OUTBOX_RELAY_DELAY_MS:5000}

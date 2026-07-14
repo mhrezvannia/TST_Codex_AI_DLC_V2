@@ -1,0 +1,97 @@
+{
+    "records":  [
+                    {
+                        "id":  {
+                                   "value":  "charge-code-baf"
+                               },
+                        "set":  "CHARGE_CODE",
+                        "code":  {
+                                     "value":  "BAF"
+                                 },
+                        "displayName":  "Bunker Adjustment Factor",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.278101567Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.278103656Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed charge-code-baf",
+                        "attributes":  {
+                                           "chargeFamily":  "surcharge",
+                                           "relationship":  "Fuel surcharge",
+                                           "localOnly":  "true"
+                                       }
+                    },
+                    {
+                        "id":  {
+                                   "value":  "charge-code-ofr"
+                               },
+                        "set":  "CHARGE_CODE",
+                        "code":  {
+                                     "value":  "OFR"
+                                 },
+                        "displayName":  "Ocean Freight",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.229922891Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.229925132Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed charge-code-ofr",
+                        "attributes":  {
+                                           "chargeFamily":  "freight",
+                                           "relationship":  "Freight",
+                                           "localOnly":  "true"
+                                       }
+                    },
+                    {
+                        "id":  {
+                                   "value":  "charge-code-thc"
+                               },
+                        "set":  "CHARGE_CODE",
+                        "code":  {
+                                     "value":  "THC"
+                                 },
+                        "displayName":  "Terminal Handling Charge",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.308537784Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.308539664Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed charge-code-thc",
+                        "attributes":  {
+                                           "chargeFamily":  "handling",
+                                           "relationship":  "Terminal handling",
+                                           "localOnly":  "true"
+                                       }
+                    }
+                ],
+    "page":  0,
+    "size":  25,
+    "total":  3
+}

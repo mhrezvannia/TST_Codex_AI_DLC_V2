@@ -2,6 +2,9 @@ package com.linercore.platform.booking.container.integration;
 
 import com.linercore.platform.booking.applicationservice.port.ReferenceValidationPort;
 import java.util.Locale;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -21,11 +24,17 @@ public class HttpReferenceValidationAdapter implements ReferenceValidationPort {
             return false;
         }
         try {
-            ReferenceRecord record = restTemplate.getForObject(
+            HttpHeaders headers = new HttpHeaders();
+            if (correlationId != null && !correlationId.isBlank()) {
+                headers.set("X-Correlation-Id", correlationId);
+            }
+            ReferenceRecord record = restTemplate.exchange(
                     baseUrl + "/reference-sets/{set}/records/{id}",
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
                     ReferenceRecord.class,
                     toReferenceSet(referenceSet),
-                    referenceId);
+                    referenceId).getBody();
             return record != null && "ACTIVE".equals(record.status());
         } catch (RestClientResponseException ex) {
             HttpStatusCode status = ex.getStatusCode();

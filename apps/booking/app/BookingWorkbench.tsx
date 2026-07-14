@@ -37,7 +37,7 @@ export function BookingWorkbench({ initialBookings }: Props) {
     customerId: "cust-demo",
     originLocationId: "loc-origin",
     destinationLocationId: "loc-destination",
-    equipmentType: "40HC",
+    equipmentType: "equipment-type-45g1",
     containerId: "CONT-DEMO-001"
   });
 

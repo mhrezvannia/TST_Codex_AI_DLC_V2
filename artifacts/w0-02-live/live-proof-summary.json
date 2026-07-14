@@ -1,0 +1,53 @@
+{
+  "capturedAt": "2026-07-14T19:14:22Z",
+  "composeProject": "linercore-shared-platform",
+  "postgresHostPort": 55432,
+  "seededFirst": {
+    "created": 19,
+    "failed": 0
+  },
+  "seededSecond": {
+    "created": 0,
+    "updated": 0,
+    "skipped": 19,
+    "failed": 0
+  },
+  "liveRecords": {
+    "vessels": 1,
+    "voyages": 2,
+    "equipmentTypes": ["22G1", "42G1", "45G1"],
+    "chargeCodes": ["OFR", "BAF", "THC"]
+  },
+  "publishedOutboxEvents": {
+    "vesselVoyage": 3,
+    "equipmentType": 3,
+    "chargeCode": 3
+  },
+  "changeHistoryObserved": {
+    "voyage": 1,
+    "equipmentType": 1,
+    "chargeCode": 1
+  },
+  "kafka": {
+    "topic": "referencedata.events",
+    "messagesObserved": 10,
+    "schemaRegistrySubjects": 8
+  },
+  "bookingValidation": {
+    "seededVoyage": true,
+    "unknownVoyage": false
+  },
+  "ui": {
+    "url": "http://localhost:3002",
+    "liveApiListsAllThreeSets": true
+  },
+  "verification": {
+    "mavenReactorModules": 38,
+    "maven": "BUILD SUCCESS",
+    "seedTestsPassed": 7,
+    "referenceUiTestsPassed": 19,
+    "referenceUiTypecheck": "PASS",
+    "aidlcAuditExit": 0,
+    "erpFidelityAuditExit": 0
+  }
+}

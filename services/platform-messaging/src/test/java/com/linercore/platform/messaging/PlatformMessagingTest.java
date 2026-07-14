@@ -11,6 +11,7 @@ import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.serializers.subject.RecordNameStrategy;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.env.StandardEnvironment;
 
 class PlatformMessagingTest {
+
+    @Test
+    void producerPropsIsolateSchemasByAvroRecordName() {
+        Map<String, Object> config = AvroProducerConfig.avroProducerProps(
+                "localhost:9092", "http://localhost:8081", "platform-messaging-test");
+
+        assertEquals(
+                RecordNameStrategy.class,
+                config.get(AbstractKafkaSchemaSerDeConfig.VALUE_SUBJECT_NAME_STRATEGY));
+    }
 
     @Test
     void loadsSchemaRegistersAndRoundTripsAvroThroughRegistry() {

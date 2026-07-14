@@ -1,0 +1,13 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mD:/TST_Codex_W0-02[39m
+
+ [32mâœ“[39m apps/reference-data/lib/contract-catalog.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32mâœ“[39m apps/reference-data/lib/reference-data.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32mâœ“[39m apps/reference-data/lib/service-clients.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32mâœ“[39m apps/reference-data/app/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 346[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+[2m   Start at [22m 22:49:51
+[2m   Duration [22m 3.16s[2m (transform 222ms, setup 901ms, collect 951ms, tests 378ms, environment 4.69s, prepare 748ms)[22m

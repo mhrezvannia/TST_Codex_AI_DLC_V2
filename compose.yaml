@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: linercore_local
       POSTGRES_DB: linercore
     ports:
-      - "5432:5432"
+      - "${POSTGRES_HOST_PORT:-55432}:5432"
     volumes:
       - ./infrastructure/database/00-local-bootstrap.sh:/docker-entrypoint-initdb.d/00-local-bootstrap.sh:ro
     healthcheck:
@@ -274,6 +274,8 @@ services:
     environment:
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+    ports:
+      - "${REFERENCE_DATA_UI_HOST_PORT:-3002}:3000"
     depends_on:
       - reference-data-service
       - identity-service

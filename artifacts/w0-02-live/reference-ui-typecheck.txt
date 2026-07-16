@@ -1,0 +1,1 @@
+PASS: yarn workspace @erp/app-reference-data typecheck (exit 0)

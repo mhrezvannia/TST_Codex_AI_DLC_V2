@@ -1,22 +1,39 @@
 package com.linercore.platform.chargeagreement.container;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linercore.platform.chargeagreement.applicationservice.ChargeAgreementApplicationService;
 import com.linercore.platform.chargeagreement.applicationservice.port.AgreementEventPublisherPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.AgreementRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.AuthorizationPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.IdGenerator;
+import com.linercore.platform.chargeagreement.applicationservice.port.ManualPricingCaseRepository;
+import com.linercore.platform.chargeagreement.applicationservice.port.OutboxRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.ReferenceValidationPort;
-import com.linercore.platform.chargeagreement.dataaccess.inmemory.InMemoryAgreementRepository;
+import com.linercore.platform.chargeagreement.applicationservice.port.SchemaRegistryPort;
+import com.linercore.platform.chargeagreement.dataaccess.jdbc.JdbcAgreementRepository;
+import com.linercore.platform.chargeagreement.dataaccess.jdbc.JdbcManualPricingCaseRepository;
+import com.linercore.platform.chargeagreement.dataaccess.jdbc.JdbcOutboxRepository;
 import com.linercore.platform.chargeagreement.dataaccess.inmemory.UuidIdGenerator;
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ChargeAgreementServiceConfiguration {
     @Bean
-    AgreementRepository agreementRepository() {
-        return new InMemoryAgreementRepository();
+    AgreementRepository agreementRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcAgreementRepository(jdbc, mapper);
+    }
+
+    @Bean
+    ManualPricingCaseRepository manualPricingCaseRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcManualPricingCaseRepository(jdbc, mapper);
+    }
+
+    @Bean
+    OutboxRepository chargeAgreementOutboxRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcOutboxRepository(jdbc, mapper);
     }
 
     @Bean
@@ -38,19 +55,16 @@ public class ChargeAgreementServiceConfiguration {
     }
 
     @Bean
-    AgreementEventPublisherPort chargeAgreementEventPublisherPort() {
-        return fact -> {
-        };
-    }
-
-    @Bean
     ChargeAgreementApplicationService chargeAgreementApplicationService(
             AgreementRepository repository,
             AuthorizationPort authorization,
             ReferenceValidationPort referenceValidation,
             IdGenerator idGenerator,
-            AgreementEventPublisherPort eventPublisher) {
+            OutboxRepository outbox,
+            AgreementEventPublisherPort eventPublisher,
+            SchemaRegistryPort schemaRegistry,
+            ManualPricingCaseRepository manualPricingCaseRepository) {
         return new ChargeAgreementApplicationService(repository, authorization, referenceValidation, idGenerator,
-                Clock.systemUTC(), eventPublisher);
+                Clock.systemUTC(), outbox, eventPublisher, schemaRegistry, manualPricingCaseRepository);
     }
 }

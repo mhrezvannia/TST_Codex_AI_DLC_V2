@@ -1,0 +1,37 @@
+server:
+  port: 8085
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/linercore_booking}
+    username: ${SPRING_DATASOURCE_USERNAME:linercore_booking}
+    password: ${SPRING_DATASOURCE_PASSWORD:booking_local}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/booking-schema.sql
+
+booking:
+  reference-data-service-url: ${REFERENCE_DATA_SERVICE_URL:http://reference-data-service:8083}
+  charge-agreement-service-url: ${CHARGE_AGREEMENT_SERVICE_URL:http://charge-agreement-service:8084}
+  container-movement-service-url: ${CONTAINER_MOVEMENT_SERVICE_URL:http://container-movement-service:8086}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    topic: ${BOOKING_EVENTS_TOPIC:booking.events}
+    client-id: ${BOOKING_KAFKA_CLIENT_ID:booking-service}
+  schema-registry:
+    url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}
+  outbox-relay:
+    enabled: ${BOOKING_OUTBOX_RELAY_ENABLED:true}
+    worker-id: ${BOOKING_OUTBOX_RELAY_WORKER_ID:booking-relay}
+    batch-size: ${BOOKING_OUTBOX_RELAY_BATCH_SIZE:50}
+
+platform:
+  outbox-relay:
+    fixed-delay-ms: ${BOOKING_OUTBOX_RELAY_DELAY_MS:5000}

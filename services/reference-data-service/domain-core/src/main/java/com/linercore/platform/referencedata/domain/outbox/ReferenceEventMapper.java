@@ -1,7 +1,6 @@
 package com.linercore.platform.referencedata.domain.outbox;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ReferenceEventMapper {
@@ -27,6 +26,6 @@ public class ReferenceEventMapper {
     }
 
     private String eventType(ReferenceChangedFact fact) {
-        return "referencedata." + fact.referenceSet().name().toLowerCase(Locale.ROOT).replace('_', '-') + ".changed";
+        return "referencedata." + fact.referenceSet().eventPath() + ".changed";
     }
 }

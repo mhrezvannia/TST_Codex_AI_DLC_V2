@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: linercore_local
       POSTGRES_DB: linercore
     ports:
-      - "5432:5432"
+      - "${POSTGRES_HOST_PORT:-55432}:5432"
     volumes:
       - ./infrastructure/database/00-local-bootstrap.sh:/docker-entrypoint-initdb.d/00-local-bootstrap.sh:ro
     healthcheck:
@@ -39,6 +39,7 @@ services:
     image: confluentinc/cp-kafka:7.7.1
     profiles: ["core", "app", "devtools", "full"]
     environment:
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
@@ -127,10 +128,13 @@ services:
         JAR_FILE: services/charge-agreement-service/container/target/charge-agreement-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
-      SPRING_PROFILES_ACTIVE: local
+      SPRING_PROFILES_ACTIVE: local,kafka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_pricing
       SPRING_DATASOURCE_USERNAME: linercore_pricing
       SPRING_DATASOURCE_PASSWORD: ${PRICING_DB_PASSWORD:-pricing_local}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CHARGE_AGREEMENT_EVENTS_TOPIC: charge-agreement.events
     ports:
       - "8084:8084"
     depends_on:
@@ -138,6 +142,10 @@ services:
         condition: service_healthy
       reference-data-service:
         condition: service_started
+      kafka:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
 
   booking-service:
     image: linercore/booking-service:local
@@ -148,13 +156,16 @@ services:
         JAR_FILE: services/booking-service/container/target/booking-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
-      SPRING_PROFILES_ACTIVE: local
+      SPRING_PROFILES_ACTIVE: local,kafka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_booking
       SPRING_DATASOURCE_USERNAME: linercore_booking
       SPRING_DATASOURCE_PASSWORD: ${BOOKING_DB_PASSWORD:-booking_local}
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
       CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      BOOKING_EVENTS_TOPIC: booking.events
     ports:
       - "8085:8085"
     depends_on:
@@ -164,6 +175,10 @@ services:
         condition: service_started
       charge-agreement-service:
         condition: service_started
+      kafka:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
 
   container-movement-service:
     image: linercore/container-movement-service:local
@@ -174,12 +189,15 @@ services:
         JAR_FILE: services/container-movement-service/container/target/container-movement-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
-      SPRING_PROFILES_ACTIVE: local
+      SPRING_PROFILES_ACTIVE: local,kafka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_container_movement
       SPRING_DATASOURCE_USERNAME: linercore_container_movement
       SPRING_DATASOURCE_PASSWORD: ${CONTAINER_MOVEMENT_DB_PASSWORD:-container_movement_local}
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
       BOOKING_SERVICE_URL: http://booking-service:8085
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONTAINER_MOVEMENT_EVENTS_TOPIC: containermovement.events
     ports:
       - "8086:8086"
     depends_on:
@@ -187,6 +205,10 @@ services:
         condition: service_healthy
       reference-data-service:
         condition: service_started
+      kafka:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
 
   seed-loader:
     image: node:24-alpine
@@ -252,6 +274,8 @@ services:
     environment:
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+    ports:
+      - "${REFERENCE_DATA_UI_HOST_PORT:-3002}:3000"
     depends_on:
       - reference-data-service
       - identity-service

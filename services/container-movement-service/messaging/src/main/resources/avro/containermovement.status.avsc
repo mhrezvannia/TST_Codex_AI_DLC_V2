@@ -1,0 +1,21 @@
+{
+  "type": "record",
+  "name": "ContainerMovementStatus",
+  "namespace": "com.linercore.containermovement.events",
+  "doc": "Container movement status event contract consumed by Booking.",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "eventType", "type": "string" },
+    { "name": "schemaVersion", "type": "string" },
+    { "name": "source", "type": "string" },
+    { "name": "occurredAt", "type": "string" },
+    { "name": "correlationId", "type": "string" },
+    { "name": "idempotencyKey", "type": "string" },
+    { "name": "containerId", "type": "string" },
+    { "name": "bookingId", "type": "string" },
+    { "name": "movementStatus", "type": "string" },
+    { "name": "sequenceNumber", "type": "long" },
+    { "name": "statusReason", "type": ["null", "string"], "default": null },
+    { "name": "lastKnownLocationId", "type": ["null", "string"], "default": null }
+  ]
+}

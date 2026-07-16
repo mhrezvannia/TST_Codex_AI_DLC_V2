@@ -8,13 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.linercore.platform.chargeagreement.applicationservice.command.ChargeTermCommand;
 import com.linercore.platform.chargeagreement.applicationservice.command.CreateAgreementCommand;
 import com.linercore.platform.chargeagreement.applicationservice.command.UpdateAgreementCommand;
-import com.linercore.platform.chargeagreement.applicationservice.port.AgreementEventPublisherPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.AuthorizationPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.IdGenerator;
 import com.linercore.platform.chargeagreement.applicationservice.port.ReferenceValidationPort;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupQuery;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupResult;
-import com.linercore.platform.chargeagreement.applicationservice.query.AgreementFact;
 import com.linercore.platform.chargeagreement.domain.model.AgreementId;
 import com.linercore.platform.chargeagreement.domain.model.AgreementStatus;
 import com.linercore.platform.chargeagreement.domain.model.ChargeBasis;
@@ -23,6 +21,7 @@ import com.linercore.platform.chargeagreement.domain.model.ManualPricingCase;
 import com.linercore.platform.chargeagreement.domain.model.PricingRequest;
 import com.linercore.platform.chargeagreement.domain.model.PricingResult;
 import com.linercore.platform.chargeagreement.domain.model.ReferenceId;
+import com.linercore.platform.chargeagreement.domain.outbox.AgreementOutboxEvent;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
@@ -35,7 +34,7 @@ import org.junit.jupiter.api.Test;
 
 class ChargeAgreementApplicationServiceTest {
     private final TestAgreementRepository agreements = new TestAgreementRepository();
-    private final List<AgreementFact> published = new ArrayList<>();
+    private final List<AgreementOutboxEvent> outbox = new ArrayList<>();
     private final List<ManualPricingCase> manualCases = new ArrayList<>();
     private final ChargeAgreementApplicationService service = new ChargeAgreementApplicationService(
             agreements,
@@ -43,7 +42,9 @@ class ChargeAgreementApplicationServiceTest {
             validReferences(),
             new SequentialIds(),
             Clock.fixed(Instant.parse("2026-07-08T00:00:00Z"), ZoneOffset.UTC),
-            published::add,
+            outbox::add,
+            null,
+            null,
             manualCases::add);
 
     @Test
@@ -54,8 +55,8 @@ class ChargeAgreementApplicationServiceTest {
         CustomerAgreement suspended = service.suspend(approved.id(), approved.version(), "ops-1", "hold", "corr-3");
 
         assertEquals(AgreementStatus.SUSPENDED, suspended.status());
-        assertEquals(4, published.size());
-        assertEquals("charge-agreement.approved", published.get(2).eventType());
+        assertEquals(4, outbox.size());
+        assertEquals("charge-agreement.approved", outbox.get(2).eventType());
     }
 
     @Test

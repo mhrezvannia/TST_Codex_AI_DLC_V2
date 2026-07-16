@@ -27,5 +27,9 @@ class MovementStatusEventMapperTest {
         assertEquals("container-movement-service", event.producerIdentity());
         assertEquals("booking-1", event.bookingId());
         assertEquals("corr-1", event.correlationId());
+        assertEquals("container-movement-service", event.payload().get("source"));
+        assertEquals("IN_TRANSIT", event.payload().get("movementStatus"));
+        assertEquals("1", event.payload().get("sequenceNumber"));
+        assertEquals("SGSIN", event.payload().get("lastKnownLocationId"));
     }
 }

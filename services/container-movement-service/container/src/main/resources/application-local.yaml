@@ -1,0 +1,36 @@
+server:
+  port: 8086
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/linercore_container_movement}
+    username: ${SPRING_DATASOURCE_USERNAME:linercore_container_movement}
+    password: ${SPRING_DATASOURCE_PASSWORD:container_movement_local}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/container-movement-schema.sql
+
+container-movement:
+  reference-data-service-url: ${REFERENCE_DATA_SERVICE_URL:http://reference-data-service:8083}
+  booking-service-url: ${BOOKING_SERVICE_URL:http://booking-service:8085}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    topic: ${CONTAINER_MOVEMENT_EVENTS_TOPIC:containermovement.events}
+    client-id: ${CONTAINER_MOVEMENT_KAFKA_CLIENT_ID:container-movement-service}
+  schema-registry:
+    url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}
+  outbox-relay:
+    enabled: ${CONTAINER_MOVEMENT_OUTBOX_RELAY_ENABLED:true}
+    worker-id: ${CONTAINER_MOVEMENT_OUTBOX_RELAY_WORKER_ID:container-movement-relay}
+    batch-size: ${CONTAINER_MOVEMENT_OUTBOX_RELAY_BATCH_SIZE:50}
+
+platform:
+  outbox-relay:
+    fixed-delay-ms: ${CONTAINER_MOVEMENT_OUTBOX_RELAY_DELAY_MS:5000}

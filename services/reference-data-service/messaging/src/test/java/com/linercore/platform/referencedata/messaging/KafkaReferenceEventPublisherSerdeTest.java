@@ -13,12 +13,16 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import java.nio.file.Path;
+import java.nio.file.Files;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Proves the reference-data event serialization contract for real — no placeholder.
@@ -37,18 +41,23 @@ import org.junit.jupiter.api.Test;
 class KafkaReferenceEventPublisherSerdeTest {
 
     private static final String TOPIC = "referencedata.events";
-    private static final String EVENT_TYPE = "referencedata.currency.changed";
     private static final String MOCK_REGISTRY = "mock://reference-data-serde-test";
 
-    @Test
-    void productionRecordSerializesAndDeserializesThroughSchemaRegistry() {
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "referencedata.currency.changed",
+            "referencedata.voyage.changed",
+            "referencedata.equipment-type.changed",
+            "referencedata.charge-code.changed"
+    })
+    void productionRecordSerializesAndDeserializesThroughSchemaRegistry(String eventType) {
         // The real schema the publisher would use, loaded the same way (classpath avro/*.avsc).
         AvroSchemaRepository schemas = new AvroSchemaRepository("avro", Path.of("contracts", "avro"));
-        Schema schema = schemas.schemaFor(EVENT_TYPE);
-        assertNotNull(schema, "reference-data currency-changed schema must load");
+        Schema schema = schemas.schemaFor(eventType);
+        assertNotNull(schema, eventType + " schema must load");
 
         ReferenceEventEnvelope envelope = new ReferenceEventEnvelope(
-                "evt-1", EVENT_TYPE, "1.0.0", "reference-data-service",
+                "evt-1", eventType, "1.0.0", "reference-data-service",
                 Instant.parse("2026-07-13T00:00:00Z"), "corr-1", "currency-usd",
                 ReferenceOperation.CREATED, "reference-data-service");
         Map<String, String> payload = Map.of("code", "USD", "status", "ACTIVE");
@@ -76,7 +85,7 @@ class KafkaReferenceEventPublisherSerdeTest {
         assertEquals(0, wire[0], "Confluent wire format magic byte");
 
         assertEquals("evt-1", received.get("eventId").toString());
-        assertEquals(EVENT_TYPE, received.get("eventType").toString());
+        assertEquals(eventType, received.get("eventType").toString());
         assertEquals("1.0.0", received.get("schemaVersion").toString());
         assertEquals("reference-data-service", received.get("source").toString());
         assertEquals("corr-1", received.get("correlationId").toString());
@@ -88,5 +97,35 @@ class KafkaReferenceEventPublisherSerdeTest {
         ((Map<?, ?>) received.get("payload")).forEach((k, v) -> receivedPayload.put(k.toString(), v.toString()));
         assertEquals("USD", receivedPayload.get("code"));
         assertEquals("ACTIVE", receivedPayload.get("status"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "referencedata.voyage.changed",
+            "referencedata.equipment-type.changed",
+            "referencedata.charge-code.changed"
+    })
+    void packagedSchemaMatchesPublishedContractExactly(String eventType) throws IOException {
+        String fileName = eventType + ".avsc";
+        Path repositoryRoot = repositoryRoot();
+        String contract = Files.readString(repositoryRoot.resolve("contracts").resolve("avro").resolve(fileName));
+        try (InputStream resource = getClass().getClassLoader().getResourceAsStream("avro/" + fileName)) {
+            assertNotNull(resource, fileName + " must be packaged");
+            String packaged = new String(resource.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            assertEquals(normalize(contract), normalize(packaged));
+        }
+    }
+
+    private Path repositoryRoot() {
+        Path current = Path.of("").toAbsolutePath();
+        while (current != null && !Files.isDirectory(current.resolve("contracts").resolve("avro"))) {
+            current = current.getParent();
+        }
+        assertNotNull(current, "repository root with contracts/avro must exist");
+        return current;
+    }
+
+    private String normalize(String value) {
+        return value.replace("\r\n", "\n").strip();
     }
 }

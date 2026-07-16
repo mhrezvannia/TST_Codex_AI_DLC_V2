@@ -1,0 +1,44 @@
+{
+    "value":  [
+                  {
+                      "eventId":  "52b9589d-cd26-4226-9a80-afb14805da31",
+                      "recordId":  "voyage-local-002",
+                      "referenceSet":  "VESSEL_VOYAGE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  0,
+                      "lastAttemptAt":  "2026-07-14T19:01:47.100734311Z",
+                      "publishedAt":  "2026-07-14T19:01:49.120111766Z",
+                      "brokerMetadata":  "referencedata.events:0:2",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  },
+                  {
+                      "eventId":  "f45006fe-bb75-439c-b990-fee18ad803dd",
+                      "recordId":  "voyage-local-001",
+                      "referenceSet":  "VESSEL_VOYAGE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  0,
+                      "lastAttemptAt":  "2026-07-14T19:01:47.100734311Z",
+                      "publishedAt":  "2026-07-14T19:01:49.101729199Z",
+                      "brokerMetadata":  "referencedata.events:0:1",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  },
+                  {
+                      "eventId":  "7257ef73-face-4f73-b028-060ab31992e9",
+                      "recordId":  "vessel-linercore-atlas",
+                      "referenceSet":  "VESSEL_VOYAGE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  0,
+                      "lastAttemptAt":  "2026-07-14T19:01:47.100734311Z",
+                      "publishedAt":  "2026-07-14T19:01:49.074960519Z",
+                      "brokerMetadata":  "referencedata.events:0:0",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  }
+              ],
+    "Count":  3
+}

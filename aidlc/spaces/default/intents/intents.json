@@ -26,5 +26,12 @@
     "dirName": "260708-linercore-enterprise",
     "scope": "enterprise",
     "status": "in-flight"
+  },
+  {
+    "uuid": "019f628f-fab3-719d-bc28-ed73dd00d76c",
+    "slug": "booking-quote-cash",
+    "dirName": "260714-booking-quote-cash",
+    "scope": "feature",
+    "status": "complete"
   }
 ]

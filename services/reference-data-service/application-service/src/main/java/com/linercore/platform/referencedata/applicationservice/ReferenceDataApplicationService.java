@@ -134,6 +134,19 @@ public class ReferenceDataApplicationService {
         return saved;
     }
 
+    @Transactional
+    public ReferenceRecord reactivate(ReferenceSet set, ReferenceId id, String reason, String actorSubjectId, String correlationId) {
+        ReferenceMutationCommand command = ReferenceMutationCommand.statusCommand(set, actorSubjectId, reason, correlationId);
+        requireMutationPermission(command);
+        ReferenceRecord existing = references.findById(set, id).orElseThrow();
+        references.rejectDuplicateActiveCode(existing.set(), existing.code());
+        ReferenceRecord saved = references.save(existing.withStatus(ReferenceStatus.ACTIVE,
+                new AuditActor(actorSubjectId, actorSubjectId), now(), reason));
+        appendChange(saved, ReferenceOperation.REACTIVATED, existing, command)
+                .ifPresent(change -> enqueueOutbox(saved, ReferenceOperation.REACTIVATED, change, command));
+        return saved;
+    }
+
     public ValidationResult validateOnly(ReferenceMutationCommand command) {
         AuditActor actor = new AuditActor(command.actorSubjectId(), command.actorDisplayName());
         ReferenceRecord candidate = new ReferenceRecord(new ReferenceId("validation-only"), command.set(), new ReferenceCode(command.code()),

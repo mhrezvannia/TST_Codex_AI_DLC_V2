@@ -40,21 +40,48 @@ public class KafkaBookingEventPublisher implements BookingEventPublisherPort {
     static GenericRecord toGenericRecord(Schema schema, BookingOutboxEvent event) {
         Map<String, String> payload = event.payload();
         GenericRecord record = new GenericData.Record(schema);
-        record.put("eventId", payload.get("eventId"));
-        record.put("eventType", payload.get("eventType"));
-        record.put("schemaVersion", payload.get("schemaVersion"));
+        record.put("id", payload.get("id"));
         record.put("source", payload.get("source"));
-        record.put("occurredAt", payload.get("occurredAt"));
+        record.put("type", payload.get("type"));
+        record.put("time", payload.get("time"));
         record.put("correlationId", payload.get("correlationId"));
-        record.put("idempotencyKey", payload.get("idempotencyKey"));
-        record.put("bookingId", payload.get("bookingId"));
-        record.put("bookingRevision", Integer.parseInt(payload.get("bookingRevision")));
-        record.put("pricingRef", payload.get("pricingRef"));
-        record.put("customerId", payload.get("customerId"));
-        record.put("originLocationId", payload.get("originLocationId"));
-        record.put("destinationLocationId", payload.get("destinationLocationId"));
-        record.put("containerId", payload.get("containerId"));
-        record.put("equipmentTypeId", payload.get("equipmentTypeId"));
+        record.put("dataSchemaVersion", Integer.parseInt(payload.get("dataSchemaVersion")));
+        Schema dataSchema = schema.getField("data").schema();
+        GenericRecord data = new GenericData.Record(dataSchema);
+        data.put("bookingId", payload.get("data.bookingId"));
+        data.put("bookingRevision", Integer.parseInt(payload.get("data.bookingRevision")));
+        data.put("routing", routingRecords(dataSchema.getField("routing").schema(), payload));
+        data.put("equipment", equipmentRecords(dataSchema.getField("equipment").schema(), payload));
+        record.put("data", data);
         return record;
+    }
+
+    private static GenericData.Array<GenericRecord> routingRecords(Schema arraySchema, Map<String, String> payload) {
+        int count = Integer.parseInt(payload.getOrDefault("data.routing.count", "0"));
+        Schema itemSchema = arraySchema.getElementType();
+        GenericData.Array<GenericRecord> records = new GenericData.Array<>(count, arraySchema);
+        for (int index = 0; index < count; index++) {
+            GenericRecord leg = new GenericData.Record(itemSchema);
+            leg.put("legSequence", Integer.parseInt(payload.get("data.routing." + index + ".legSequence")));
+            leg.put("loadUnLocode", payload.get("data.routing." + index + ".loadUnLocode"));
+            leg.put("dischargeUnLocode", payload.get("data.routing." + index + ".dischargeUnLocode"));
+            leg.put("voyageId", payload.get("data.routing." + index + ".voyageId"));
+            records.add(leg);
+        }
+        return records;
+    }
+
+    private static GenericData.Array<GenericRecord> equipmentRecords(Schema arraySchema, Map<String, String> payload) {
+        int count = Integer.parseInt(payload.getOrDefault("data.equipment.count", "0"));
+        Schema itemSchema = arraySchema.getElementType();
+        GenericData.Array<GenericRecord> records = new GenericData.Array<>(count, arraySchema);
+        for (int index = 0; index < count; index++) {
+            GenericRecord equipment = new GenericData.Record(itemSchema);
+            equipment.put("equipmentTypeCode", payload.get("data.equipment." + index + ".equipmentTypeCode"));
+            equipment.put("quantity", Integer.parseInt(payload.get("data.equipment." + index + ".quantity")));
+            equipment.put("equipmentId", payload.get("data.equipment." + index + ".equipmentId"));
+            records.add(equipment);
+        }
+        return records;
     }
 }

@@ -15,6 +15,10 @@ export const gateDefinitions = [
   { id: "frontend-auth-typecheck", scope: "apps/auth", required: true, command: "corepack yarn workspace @erp/app-auth typecheck" },
   { id: "frontend-charge-agreements-test", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements test" },
   { id: "frontend-charge-agreements-typecheck", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements typecheck" },
+  { id: "frontend-booking-test", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking test" },
+  { id: "frontend-booking-typecheck", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking typecheck" },
+  { id: "frontend-booking-lint", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking lint" },
+  { id: "frontend-booking-build", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking build" },
   { id: "backend-test", scope: "services", required: true, command: "mvn -f services/pom.xml test" }
 ];
 
@@ -25,6 +29,7 @@ export function classifyChangedPaths(paths) {
     if (path.startsWith("apps/reference-data/")) scopes.add("apps/reference-data");
     if (path.startsWith("apps/auth/")) scopes.add("apps/auth");
     if (path.startsWith("apps/charge-agreements/")) scopes.add("apps/charge-agreements");
+    if (path.startsWith("apps/booking/")) scopes.add("apps/booking");
     if (path.startsWith("packages/")) scopes.add("packages");
     if (path.startsWith("contracts/")) scopes.add("contracts");
     if (path.startsWith("infrastructure/seeds/") || path === "compose.yaml") scopes.add("seeds");
@@ -78,7 +83,7 @@ export function aggregate(results) {
 
 export function runQualityGates(options = {}) {
   const changedPaths = options.all ? ["<all>"] : options.changedPaths ?? discoverChangedPaths();
-  const scopes = options.all ? ["workspace", "services", "apps/reference-data", "apps/auth", "apps/charge-agreements", "packages", "contracts", "seeds"] : classifyChangedPaths(changedPaths);
+  const scopes = options.all ? ["workspace", "services", "apps/reference-data", "apps/auth", "apps/charge-agreements", "apps/booking", "packages", "contracts", "seeds"] : classifyChangedPaths(changedPaths);
   const gates = selectGates(scopes, options.all);
   const results = gates.map((gate) => runGate(gate, options));
   const aggregateResult = aggregate(results);
@@ -140,7 +145,7 @@ function discoverChangedPaths() {
   return result.stdout.trim().split(/\r?\n/);
 }
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   return {
     all: argv.includes("--all"),
     dryRun: argv.includes("--dry-run"),

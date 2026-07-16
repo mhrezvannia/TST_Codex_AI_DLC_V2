@@ -17,10 +17,24 @@ import com.linercore.platform.booking.applicationservice.port.AuditRepository;
 import com.linercore.platform.booking.applicationservice.port.BookingRepository;
 import com.linercore.platform.booking.applicationservice.port.IdGenerator;
 import com.linercore.platform.booking.applicationservice.port.IdempotencyRepository;
+import com.linercore.platform.booking.applicationservice.port.IdempotencyReceipt;
+import com.linercore.platform.booking.applicationservice.port.ConsumedEventDisposition;
+import com.linercore.platform.booking.applicationservice.port.MovementLocation;
+import com.linercore.platform.booking.applicationservice.port.MovementStatusProjection;
+import com.linercore.platform.booking.applicationservice.port.MovementStatusProjectionRepository;
 import com.linercore.platform.booking.applicationservice.port.PricingRequestResult;
+import com.linercore.platform.booking.applicationservice.port.ProjectionUpsertResult;
+import com.linercore.platform.booking.applicationservice.port.ReferenceValidationPort;
+import com.linercore.platform.booking.applicationservice.port.ReferenceValidationResult;
+import com.linercore.platform.booking.applicationservice.port.ReferenceProviderFailureCategory;
+import com.linercore.platform.booking.applicationservice.port.ReferenceProviderUnavailable;
 import com.linercore.platform.booking.domain.model.Booking;
 import com.linercore.platform.booking.domain.model.BookingId;
 import com.linercore.platform.booking.domain.model.BookingStatus;
+import com.linercore.platform.booking.domain.model.EquipmentAssignment;
+import com.linercore.platform.booking.domain.model.RoutingLeg;
+import com.linercore.platform.booking.domain.model.ReferenceFieldResult;
+import com.linercore.platform.booking.domain.model.ReferenceValidationFieldOutcome;
 import com.linercore.platform.booking.domain.outbox.BookingOutboxEvent;
 import java.time.Clock;
 import java.time.Instant;
@@ -37,14 +51,16 @@ class BookingApplicationServiceTest {
     private final InMemoryIdempotency idempotency = new InMemoryIdempotency();
     private final List<String> audit = new ArrayList<>();
     private final List<BookingOutboxEvent> outbox = new ArrayList<>();
+    private final InMemoryMovementStatusProjections movementStatusProjections = new InMemoryMovementStatusProjections();
     private final BookingApplicationService service = new BookingApplicationService(
             bookings,
             idempotency,
             (subjectId, resource, action, correlationId) -> true,
-            (referenceSet, referenceId, correlationId) -> !referenceId.startsWith("missing"),
+            references(true),
             (booking, idempotencyKey, correlationId) -> PricingRequestResult.pending("price-req-1", correlationId),
             audit(),
             outbox::add,
+            movementStatusProjections,
             new SequentialIds(),
             Clock.fixed(Instant.parse("2026-07-01T00:00:00Z"), ZoneOffset.UTC));
 
@@ -63,7 +79,7 @@ class BookingApplicationServiceTest {
                 bookings,
                 idempotency,
                 (subjectId, resource, action, correlationId) -> false,
-                (referenceSet, referenceId, correlationId) -> true,
+                references(false),
                 (booking, idempotencyKey, correlationId) -> PricingRequestResult.pending("price-req-1", correlationId),
                 audit(),
                 outbox::add,
@@ -75,13 +91,13 @@ class BookingApplicationServiceTest {
     }
 
     @Test
-    void validationFailureRecordsExceptionState() {
-        Booking booking = service.createDraft(command("idem-2", "customer-1", "missing-origin", "loc-destination"));
+    void validationFailureRecordsBlockedState() {
+        Booking booking = service.createDraft(command("idem-2", "missing-customer", "loc-origin", "loc-destination"));
 
         Booking validated = service.validate(booking.id(), "booking-user", "corr-2");
 
-        assertEquals(BookingStatus.EXCEPTION, validated.status());
-        assertEquals("REFERENCE_VALIDATION_FAILED", validated.exceptions().get(0).code());
+        assertEquals(BookingStatus.VALIDATION_BLOCKED, validated.status());
+        assertEquals("REFERENCE_NOT_FOUND", validated.referenceValidationSnapshot().fieldResults().get(0).reasonCode());
     }
 
     @Test
@@ -92,7 +108,7 @@ class BookingApplicationServiceTest {
         service.storePricingSnapshot(booking.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
                 Map.of("total", "100.00 USD"), "pricing-service", "corr-3"));
 
-        Booking confirmed = service.confirm(booking.id(), "booking-user", "corr-3");
+        Booking confirmed = service.confirm(booking.id(), "booking-user", "confirm-idem-1", "corr-3");
 
         assertEquals(BookingStatus.CONFIRMED, confirmed.status());
         assertEquals(1, outbox.size());
@@ -102,12 +118,49 @@ class BookingApplicationServiceTest {
     }
 
     @Test
+    void confirmIsIdempotentAndDoesNotDuplicateOutbox() {
+        Booking booking = service.createDraft(command("idem-confirm-replay", "customer-1", "loc-origin",
+                "loc-destination"));
+        service.validate(booking.id(), "booking-user", "corr-confirm");
+        service.requestPricing(booking.id(), "booking-user", "price-idem-confirm", "corr-confirm");
+        service.storePricingSnapshot(booking.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
+                Map.of("total", "100.00 USD"), "pricing-service", "corr-confirm"));
+
+        Booking first = service.confirm(booking.id(), "booking-user", "confirm-idem-replay", "corr-confirm");
+        Booking replay = service.confirm(booking.id(), "booking-user", "confirm-idem-replay", "corr-confirm");
+
+        assertEquals(first.id(), replay.id());
+        assertEquals(BookingStatus.CONFIRMED, replay.status());
+        assertEquals(1, outbox.size());
+    }
+
+    @Test
+    void confirmIdempotencyKeyCannotBeReusedForAnotherBooking() {
+        Booking first = service.createDraft(command("idem-confirm-conflict-1", "customer-1", "loc-origin",
+                "loc-destination"));
+        service.validate(first.id(), "booking-user", "corr-confirm");
+        service.requestPricing(first.id(), "booking-user", "price-idem-confirm-1", "corr-confirm");
+        service.storePricingSnapshot(first.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
+                Map.of("total", "100.00 USD"), "pricing-service", "corr-confirm"));
+        service.confirm(first.id(), "booking-user", "confirm-idem-conflict", "corr-confirm");
+        Booking second = service.createDraft(command("idem-confirm-conflict-2", "customer-1", "loc-origin",
+                "loc-destination"));
+        service.validate(second.id(), "booking-user", "corr-confirm");
+        service.requestPricing(second.id(), "booking-user", "price-idem-confirm-2", "corr-confirm");
+        service.storePricingSnapshot(second.id(), new PricingSnapshotCommand("price-req-2", "quote-2", "QUOTED",
+                Map.of("total", "100.00 USD"), "pricing-service", "corr-confirm"));
+
+        assertThrows(IdempotencyConflictException.class,
+                () -> service.confirm(second.id(), "booking-user", "confirm-idem-conflict", "corr-confirm"));
+    }
+
+    @Test
     void requestPricingStoresImmediateChargeSnapshot() {
         BookingApplicationService pricedService = new BookingApplicationService(
                 bookings,
                 idempotency,
                 (subjectId, resource, action, correlationId) -> true,
-                (referenceSet, referenceId, correlationId) -> true,
+                references(false),
                 (booking, idempotencyKey, correlationId) -> PricingRequestResult.priced("price-req-2", "quote-2",
                         Map.of("pricingBasis", "AGREEMENT", "requestHash", "hash-1"), correlationId),
                 audit(),
@@ -125,12 +178,12 @@ class BookingApplicationServiceTest {
     }
 
     @Test
-    void manualPricingResponseIsVisibleExceptionState() {
+    void manualPricingResponseIsVisibleManualPricingState() {
         BookingApplicationService manualService = new BookingApplicationService(
                 bookings,
                 idempotency,
                 (subjectId, resource, action, correlationId) -> true,
-                (referenceSet, referenceId, correlationId) -> true,
+                references(false),
                 (booking, idempotencyKey, correlationId) -> PricingRequestResult.manual("price-req-manual",
                         "NO_ACTIVE_AGREEMENT", "Charge requires manual pricing", correlationId),
                 audit(),
@@ -142,9 +195,10 @@ class BookingApplicationServiceTest {
 
         Booking manual = manualService.requestPricing(booking.id(), "booking-user", "price-idem-manual", "corr-manual");
 
-        assertEquals(BookingStatus.EXCEPTION, manual.status());
-        assertEquals("price-req-manual", manual.attributes().get("pricingRequestId"));
-        assertEquals("MANUAL_PRICING_REQUIRED", manual.exceptions().get(0).code());
+        assertEquals(BookingStatus.MANUAL_PRICING, manual.status());
+        assertEquals("price-req-manual", manual.attributes().get("manualPricingRequestId"));
+        assertEquals("NO_ACTIVE_AGREEMENT", manual.attributes().get("manualPricingReasonCode"));
+        assertEquals("Charge requires manual pricing", manual.attributes().get("manualPricingReasonMessage"));
     }
 
     @Test
@@ -162,48 +216,56 @@ class BookingApplicationServiceTest {
         Booking booking = confirmedBooking("idem-move-1");
 
         Booking moved = service.consumeMovementStatus(movementStatus(booking.id(), "event-move-1", "move-1",
-                "IN_TRANSIT", 1));
+                "ACT", "2026-07-01T00:05:00Z"));
 
-        assertEquals("IN_TRANSIT", moved.attributes().get("movementStatus"));
-        assertEquals("1", moved.attributes().get("movementSequenceNumber"));
-        assertEquals("CONT0000001", moved.attributes().get("movementContainerId"));
-        assertEquals(0, moved.dndTriggerCandidates().size());
+        MovementStatusProjection projection = movementStatusProjections.findByBookingRef(booking.id().value()).get(0);
+        assertEquals(booking.id(), moved.id());
+        assertEquals("IN_TRANSIT", projection.derivedStatus());
+        assertEquals("event-move-1", projection.eventId());
+        assertNull(moved.attributes().get("movementStatus"));
     }
 
     @Test
     void duplicateMovementStatusDoesNotAddLifecycleEvidence() {
         Booking booking = confirmedBooking("idem-move-2");
-        service.consumeMovementStatus(movementStatus(booking.id(), "event-move-1", "move-1", "IN_TRANSIT", 1));
+        service.consumeMovementStatus(movementStatus(booking.id(), "event-move-1", "move-1", "ACT",
+                "2026-07-01T00:05:00Z"));
 
         Booking replay = service.consumeMovementStatus(movementStatus(booking.id(), "event-move-1", "move-1",
-                "IN_TRANSIT", 1));
+                "ACT", "2026-07-01T00:05:00Z"));
 
-        assertEquals("1", replay.attributes().get("movementSequenceNumber"));
+        assertEquals(1, movementStatusProjections.receipts.size());
+        assertEquals(booking.id(), replay.id());
         assertEquals("BOOKING_MOVEMENT_STATUS_DUPLICATE:SUCCESS:corr-move", audit.get(audit.size() - 1));
     }
 
     @Test
     void staleMovementStatusIsIgnoredBySequenceNumber() {
         Booking booking = confirmedBooking("idem-move-3");
-        service.consumeMovementStatus(movementStatus(booking.id(), "event-move-2", "move-2", "ARRIVED", 2));
+        service.consumeMovementStatus(movementStatus(booking.id(), "event-move-2", "move-2", "ACT",
+                "2026-07-01T00:06:00Z"));
 
         Booking stale = service.consumeMovementStatus(movementStatus(booking.id(), "event-move-1", "move-1",
-                "IN_TRANSIT", 1));
+                "EST", "2026-07-01T00:05:00Z"));
 
-        assertEquals("ARRIVED", stale.attributes().get("movementStatus"));
-        assertEquals("2", stale.attributes().get("movementSequenceNumber"));
+        MovementStatusProjection projection = movementStatusProjections.findByBookingRef(booking.id().value()).get(0);
+        assertEquals("event-move-2", projection.eventId());
+        assertEquals(booking.id(), stale.id());
         assertEquals("BOOKING_MOVEMENT_STATUS_STALE:SUCCESS:corr-move", audit.get(audit.size() - 1));
     }
 
     @Test
-    void arrivedMovementStatusRecordsDndTriggerInputEvidence() {
+    void strongerClassifierAtSameOccurredTimeWinsProjection() {
         Booking booking = confirmedBooking("idem-move-4");
 
-        Booking arrived = service.consumeMovementStatus(movementStatus(booking.id(), "event-move-2", "move-2",
-                "ARRIVED", 2));
+        service.consumeMovementStatus(movementStatus(booking.id(), "event-move-1", "move-1", "PLN",
+                "2026-07-01T00:05:00Z"));
+        service.consumeMovementStatus(movementStatus(booking.id(), "event-move-2", "move-2", "ACT",
+                "2026-07-01T00:05:00Z"));
 
-        assertEquals(1, arrived.dndTriggerCandidates().size());
-        assertEquals("movement status ARRIVED at SGSIN", arrived.dndTriggerCandidates().get(0).reason());
+        MovementStatusProjection projection = movementStatusProjections.findByBookingRef(booking.id().value()).get(0);
+        assertEquals("event-move-2", projection.eventId());
+        assertEquals(3, projection.classifierRank());
     }
 
     @Test
@@ -212,7 +274,7 @@ class BookingApplicationServiceTest {
                 bookings,
                 idempotency,
                 (subjectId, resource, action, correlationId) -> !"consume-movement-status".equals(action),
-                (referenceSet, referenceId, correlationId) -> true,
+                references(false),
                 (booking, idempotencyKey, correlationId) -> PricingRequestResult.pending("price-req-1", correlationId),
                 audit(),
                 outbox::add,
@@ -222,7 +284,7 @@ class BookingApplicationServiceTest {
 
         assertThrows(SecurityException.class,
                 () -> denied.consumeMovementStatus(movementStatus(booking.id(), "event-move-denied", "move-denied",
-                        "IN_TRANSIT", 1)));
+                        "ACT", "2026-07-01T00:05:00Z")));
     }
 
     @Test
@@ -230,7 +292,8 @@ class BookingApplicationServiceTest {
         BookingApplicationService dndService = dndService(DndPricingResult.priced("dnd-ref-1", 4,
                 Map.of("line.1", "DETENTION:60.00 USD"), "corr-dnd"));
         Booking booking = confirmedBookingWithService(dndService, "idem-dnd-1");
-        dndService.consumeMovementStatus(movementStatus(booking.id(), "event-arrived", "move-arrived", "ARRIVED", 2));
+        dndService.consumeMovementStatus(movementStatus(booking.id(), "event-arrived", "move-arrived", "ACT",
+                "2026-07-01T00:06:00Z"));
 
         Booking priced = dndService.requestDndPricing(booking.id(), "booking-user", "dnd-idem-1", "corr-dnd");
 
@@ -272,8 +335,10 @@ class BookingApplicationServiceTest {
     }
 
     private CreateBookingCommand command(String idempotencyKey, String customerId, String origin, String destination) {
-        return new CreateBookingCommand(idempotencyKey, customerId, origin, destination, "40HC", Map.of(),
-                "booking-user", "corr-1");
+        return new CreateBookingCommand(idempotencyKey, customerId,
+                List.of(new RoutingLeg(1, "USNYC", "NLRTM", "voyage-1")),
+                List.of(new EquipmentAssignment("45G1", 1, "MSCU6639870")), "USD", "FCL_DRY", false, false,
+                Map.of(), "booking-user", "corr-1");
     }
 
     private Booking confirmedBooking(String idempotencyKey) {
@@ -286,7 +351,7 @@ class BookingApplicationServiceTest {
         targetService.requestPricing(booking.id(), "booking-user", idempotencyKey + "-pricing", "corr-confirmed");
         targetService.storePricingSnapshot(booking.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
                 Map.of("total", "100.00 USD"), "pricing-service", "corr-confirmed"));
-        return targetService.confirm(booking.id(), "booking-user", "corr-confirmed");
+        return targetService.confirm(booking.id(), "booking-user", idempotencyKey + "-confirm", "corr-confirmed");
     }
 
     private BookingApplicationService dndService(DndPricingResult result) {
@@ -294,20 +359,28 @@ class BookingApplicationServiceTest {
                 bookings,
                 idempotency,
                 (subjectId, resource, action, correlationId) -> true,
-                (referenceSet, referenceId, correlationId) -> !referenceId.startsWith("missing"),
+                references(true),
                 (booking, idempotencyKey, correlationId) -> PricingRequestResult.pending("price-req-1", correlationId),
                 (booking, idempotencyKey, correlationId) -> result,
                 audit(),
                 outbox::add,
+                new InMemoryMovementStatusProjections(),
                 new SequentialIds(),
                 Clock.fixed(Instant.parse("2026-07-01T00:00:00Z"), ZoneOffset.UTC));
     }
 
-    private MovementStatusReceivedEvent movementStatus(BookingId bookingId, String eventId, String idempotencyKey, String status, long sequenceNumber) {
-        return new MovementStatusReceivedEvent(eventId, "containermovement.status", "1.0.0",
-                "container-movement-service", Instant.parse("2026-07-01T00:05:00Z"), "corr-move",
-                idempotencyKey, "CONT0000001", bookingId.value(), status, sequenceNumber,
-                "Validated movement", "SGSIN");
+    private MovementStatusReceivedEvent movementStatus(
+            BookingId bookingId,
+            String eventId,
+            String movementId,
+            String classifier,
+            String occurredAt) {
+        String status = "ACT".equals(classifier) ? "IN_TRANSIT" : "PLANNED";
+        return new MovementStatusReceivedEvent(eventId, "containermovement.status",
+                "container-movement-service", Instant.parse(occurredAt), "corr-move", 1,
+                bookingId.value(), "MSCU6639870", movementId, "LOAD", classifier,
+                Instant.parse(occurredAt), Instant.parse("2026-07-01T00:07:00Z"), status,
+                "LADEN", false, new MovementLocation("SGSIN", null, null));
     }
 
     private AuditRepository audit() {
@@ -330,6 +403,7 @@ class BookingApplicationServiceTest {
 
     private static class InMemoryIdempotency implements IdempotencyRepository {
         private final Map<String, BookingId> keys = new LinkedHashMap<>();
+        private final Map<String, IdempotencyReceipt> receipts = new LinkedHashMap<>();
 
         public Optional<BookingId> findBookingId(String idempotencyKey) {
             return Optional.ofNullable(keys.get(idempotencyKey));
@@ -338,6 +412,165 @@ class BookingApplicationServiceTest {
         public void remember(String idempotencyKey, BookingId bookingId) {
             keys.put(idempotencyKey, bookingId);
         }
+
+        public Optional<IdempotencyReceipt> findReceipt(String idempotencyKey) {
+            return Optional.ofNullable(receipts.get(idempotencyKey));
+        }
+
+        public boolean claim(String idempotencyKey, String operation, String requestHash, BookingId bookingId) {
+            if (receipts.containsKey(idempotencyKey)) {
+                return false;
+            }
+            receipts.put(idempotencyKey, new IdempotencyReceipt(idempotencyKey, operation, requestHash, bookingId,
+                    "IN_PROGRESS", null));
+            return true;
+        }
+
+        public void complete(String idempotencyKey, int responseRevision) {
+            IdempotencyReceipt current = receipts.get(idempotencyKey);
+            receipts.put(idempotencyKey, new IdempotencyReceipt(current.idempotencyKey(), current.operation(),
+                    current.requestHash(), current.bookingId(), "COMPLETED", responseRevision));
+            keys.put(idempotencyKey, current.bookingId());
+        }
+    }
+
+    private static class InMemoryMovementStatusProjections implements MovementStatusProjectionRepository {
+        private final Map<String, MovementStatusProjection> projections = new LinkedHashMap<>();
+        private final Map<String, ConsumedEventDisposition> receipts = new LinkedHashMap<>();
+
+        public boolean insertReceipt(MovementStatusReceivedEvent event, Instant consumedAt) {
+            if (receipts.containsKey(event.eventId())) {
+                return false;
+            }
+            receipts.put(event.eventId(), null);
+            return true;
+        }
+
+        public ProjectionUpsertResult upsert(MovementStatusProjection projection) {
+            String key = projection.bookingRef() + ":" + projection.containerRef();
+            MovementStatusProjection current = projections.get(key);
+            boolean apply = current == null || compare(projection, current) > 0;
+            if (apply) {
+                projections.put(key, projection);
+            }
+            return new ProjectionUpsertResult(apply ? ConsumedEventDisposition.APPLIED : ConsumedEventDisposition.STALE,
+                    projections.get(key));
+        }
+
+        public void markReceiptDisposition(String eventId, ConsumedEventDisposition disposition) {
+            receipts.put(eventId, disposition);
+        }
+
+        public Optional<MovementStatusProjection> findLatest(String bookingRef, String containerRef) {
+            return Optional.ofNullable(projections.get(bookingRef + ":" + containerRef));
+        }
+
+        public List<MovementStatusProjection> findByBookingRef(String bookingRef) {
+            return projections.values().stream()
+                    .filter(projection -> bookingRef.equals(projection.bookingRef()))
+                    .toList();
+        }
+
+        private int compare(MovementStatusProjection left, MovementStatusProjection right) {
+            int occurred = left.occurredDateTime().compareTo(right.occurredDateTime());
+            if (occurred != 0) {
+                return occurred;
+            }
+            int classifier = Integer.compare(left.classifierRank(), right.classifierRank());
+            if (classifier != 0) {
+                return classifier;
+            }
+            int received = left.receivedDateTime().compareTo(right.receivedDateTime());
+            if (received != 0) {
+                return received;
+            }
+            return left.eventId().compareTo(right.eventId());
+        }
+    }
+
+    @Test
+    void repeatedEquivalentValidationDoesNotDuplicateLifecycleOrAudit() {
+        Booking booking = service.createDraft(command("idem-validation-replay", "customer-1", "unused", "unused"));
+        Booking first = service.validate(booking.id(), "booking-user", "corr-validation-replay");
+        int lifecycleCount = first.lifecycleEvents().size();
+        int auditCount = audit.size();
+
+        Booking replay = service.validate(booking.id(), "booking-user", "corr-validation-replay");
+
+        assertEquals(lifecycleCount, replay.lifecycleEvents().size());
+        assertEquals(auditCount, audit.size());
+    }
+
+    @Test
+    void providerUnavailableAuditsAttemptWithoutChangingBooking() {
+        BookingApplicationService unavailableService = new BookingApplicationService(
+                bookings, idempotency, (subjectId, resource, action, correlationId) -> true,
+                (request, correlationId) -> {
+                    throw new ReferenceProviderUnavailable(ReferenceProviderFailureCategory.TIMEOUT,
+                            "Reference Data is unavailable", correlationId, null);
+                },
+                (booking, idempotencyKey, correlationId) -> PricingRequestResult.pending("price-req-1", correlationId),
+                audit(), outbox::add, new SequentialIds(), Clock.systemUTC());
+        Booking booking = unavailableService.createDraft(command("idem-validation-unavailable", "customer-1",
+                "unused", "unused"));
+
+        assertThrows(ReferenceProviderUnavailable.class,
+                () -> unavailableService.validate(booking.id(), "booking-user", "corr-unavailable"));
+
+        assertEquals(BookingStatus.DRAFT, bookings.findById(booking.id()).orElseThrow().status());
+        assertEquals("BOOKING_VALIDATION_UNAVAILABLE:ERROR:corr-unavailable", audit.get(audit.size() - 1));
+    }
+
+    @Test
+    void changedBookingRejectsStaleProviderResult() {
+        ReferenceValidationPort changingReferences = (request, correlationId) -> {
+            Booking original = bookings.findById(request.bookingId()).orElseThrow();
+            bookings.save(Booking.draft(original.id(), original.bookingNumber(), "customer-changed",
+                    original.routing(), original.equipment(), original.currency(), original.cargoMode(),
+                    original.reefer(), original.dangerousGoods(), original.attributes(), "other-user",
+                    "corr-change", Instant.parse("2026-07-01T00:00:01Z")));
+            return references(false).validate(request, correlationId);
+        };
+        BookingApplicationService changingService = new BookingApplicationService(
+                bookings, idempotency, (subjectId, resource, action, correlationId) -> true, changingReferences,
+                (booking, idempotencyKey, correlationId) -> PricingRequestResult.pending("price-req-1", correlationId),
+                audit(), outbox::add, new SequentialIds(), Clock.systemUTC());
+        Booking booking = changingService.createDraft(command("idem-validation-stale", "customer-1", "unused", "unused"));
+
+        assertThrows(BookingChangedException.class,
+                () -> changingService.validate(booking.id(), "booking-user", "corr-stale"));
+    }
+
+    private static ReferenceValidationPort references(boolean rejectMissing) {
+        return (request, correlationId) -> new ReferenceValidationResult(
+                request.bookingRevision(), request.referenceFingerprint(), request.checks().stream().map(check -> {
+                    boolean active = !rejectMissing || !check.requestedValue().startsWith("missing");
+                    return new ReferenceFieldResult(check.fieldPath(), check.referenceSet().name(),
+                            check.requestedValue(), active ? ReferenceValidationFieldOutcome.ACTIVE
+                                    : ReferenceValidationFieldOutcome.NOT_FOUND,
+                            active ? check.requestedValue() : null, active ? check.requestedValue() : null,
+                            active ? 1L : null, active ? "REFERENCE_ACTIVE" : "REFERENCE_NOT_FOUND");
+                }).toList(), Instant.parse("2026-07-01T00:00:00Z"), correlationId);
+    }
+
+    @Test
+    void changedPayloadWithSameIdempotencyKeyConflicts() {
+        service.createDraft(command("idem-conflict", "customer-1", "loc-origin", "loc-destination"));
+
+        assertThrows(IdempotencyConflictException.class,
+                () -> service.createDraft(command("idem-conflict", "customer-2", "loc-origin", "loc-destination")));
+        assertEquals(1, bookings.records.size());
+    }
+
+    @Test
+    void equivalentInProgressCommandReturnsRetryableConflict() {
+        CreateBookingCommand command = command("idem-progress", "customer-1", "loc-origin", "loc-destination");
+        service.createDraft(command);
+        IdempotencyReceipt completed = idempotency.receipts.get("idem-progress");
+        idempotency.receipts.put("idem-progress", new IdempotencyReceipt(completed.idempotencyKey(),
+                completed.operation(), completed.requestHash(), completed.bookingId(), "IN_PROGRESS", null));
+
+        assertThrows(CommandInProgressException.class, () -> service.createDraft(command));
     }
 
     private static class SequentialIds implements IdGenerator {

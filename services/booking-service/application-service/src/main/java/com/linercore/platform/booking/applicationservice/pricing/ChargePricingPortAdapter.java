@@ -36,6 +36,9 @@ public class ChargePricingPortAdapter implements PricingPort {
             return PricingRequestResult.priced(pricingRequestId, response.pricingRef(),
                     quotedAmounts(response, requestHash), response.correlationId());
         } catch (ChargePricingClientException ex) {
+            if ("PRICING_IN_PROGRESS".equals(ex.reasonCode())) {
+                return PricingRequestResult.pending(pricingRequestId, correlationId);
+            }
             return PricingRequestResult.failure(pricingRequestId, toOutcome(ex.failureType()), ex.reasonCode(),
                     ex.getMessage(), correlationId);
         }
@@ -50,6 +53,7 @@ public class ChargePricingPortAdapter implements PricingPort {
             ChargePricingLineItem line = response.lineItems().get(i);
             String prefix = "line." + (i + 1) + ".";
             quoted.put(prefix + "chargeCode", line.chargeCode());
+            quoted.put(prefix + "category", line.category());
             quoted.put(prefix + "basis", nullToBlank(line.basis()));
             quoted.put(prefix + "quantity", Integer.toString(line.quantity()));
             quoted.put(prefix + "amount", line.amount());

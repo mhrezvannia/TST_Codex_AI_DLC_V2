@@ -1,0 +1,21 @@
+{
+  "stage_slug": "reverse-engineering",
+  "selections": [
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat current source and contracts as authoritative when the checked-in Graphify index omits recent service work; retain the graph as the first discovery layer and record its staleness explicitly.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Complete developer and architect work inline only after the user selects that recovery path; preserve the delegation failure in the freshness artifact instead of claiming sub-agent execution.",
+      "source": "orchestrator"
+    }
+  ]
+}

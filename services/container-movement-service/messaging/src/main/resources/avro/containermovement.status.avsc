@@ -2,20 +2,48 @@
   "type": "record",
   "name": "ContainerMovementStatus",
   "namespace": "com.linercore.containermovement.events",
-  "doc": "Container movement status event contract consumed by Booking.",
+  "doc": "Canonical container movement status event consumed by Booking.",
   "fields": [
-    { "name": "eventId", "type": "string" },
-    { "name": "eventType", "type": "string" },
-    { "name": "schemaVersion", "type": "string" },
+    { "name": "id", "type": "string" },
     { "name": "source", "type": "string" },
-    { "name": "occurredAt", "type": "string" },
+    { "name": "type", "type": "string" },
+    { "name": "time", "type": "string" },
     { "name": "correlationId", "type": "string" },
-    { "name": "idempotencyKey", "type": "string" },
-    { "name": "containerId", "type": "string" },
-    { "name": "bookingId", "type": "string" },
-    { "name": "movementStatus", "type": "string" },
-    { "name": "sequenceNumber", "type": "long" },
-    { "name": "statusReason", "type": ["null", "string"], "default": null },
-    { "name": "lastKnownLocationId", "type": ["null", "string"], "default": null }
+    { "name": "dataSchemaVersion", "type": "int" },
+    {
+      "name": "data",
+      "type": {
+        "type": "record",
+        "name": "ContainerMovementStatusData",
+        "fields": [
+          { "name": "bookingRef", "type": "string" },
+          { "name": "containerRef", "type": "string" },
+          { "name": "movementId", "type": ["null", "string"], "default": null },
+          { "name": "moveCode", "type": "string" },
+          { "name": "eventClassifierCode", "type": "string" },
+          { "name": "occurredDateTime", "type": "string" },
+          { "name": "receivedDateTime", "type": "string" },
+          { "name": "derivedStatus", "type": "string" },
+          { "name": "emptyIndicatorCode", "type": "string" },
+          { "name": "transshipment", "type": "boolean" },
+          {
+            "name": "location",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "MovementLocation",
+                "fields": [
+                  { "name": "unLocationCode", "type": ["null", "string"], "default": null },
+                  { "name": "facilityCode", "type": ["null", "string"], "default": null },
+                  { "name": "facilityTypeCode", "type": ["null", "string"], "default": null }
+                ]
+              }
+            ],
+            "default": null
+          }
+        ]
+      }
+    }
   ]
 }

@@ -23,6 +23,10 @@
     "contracts:verify:live": "node scripts/verify-contract-providers.mjs --live --evidence-file artifacts/contracts-live-verification.json",
     "readiness:local": "node scripts/local-readiness.mjs --evidence artifacts/readiness/local-readiness.json",
     "quality:gates": "node scripts/run-quality-gates.mjs --all --evidence artifacts/quality-gates/evidence.json",
+    "w1:replay-restart": "node scripts/replay-restart-proof.mjs --evidence artifacts/w1-01-live/replay-restart/evidence.json",
+    "w1:replay-restart:dry-run": "node scripts/replay-restart-proof.mjs --dry-run --evidence artifacts/w1-01-live/replay-restart/evidence.json",
+    "w1:live-acceptance": "node scripts/w1-live-acceptance.mjs",
+    "w1:live-acceptance:dry-run": "node scripts/w1-live-acceptance.mjs --dry-run",
     "skeleton:validate": "node scripts/validate-skeleton.mjs",
     "smoke:local": "node scripts/smoke-local.mjs",
     "smoke:observability": "node scripts/smoke-observability.mjs"

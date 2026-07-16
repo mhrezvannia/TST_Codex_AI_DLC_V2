@@ -20,30 +20,36 @@ import org.junit.jupiter.api.Test;
 
 class KafkaContainerMovementEventPublisherSerdeTest {
     private static final String EVENT_TYPE = "containermovement.status";
-    private static final String TOPIC = "containermovement.events";
+    private static final String TOPIC = "containermovement.status";
 
     @Test
     void productionRecordRoundTripsEveryContractField() {
-        Instant occurredAt = Instant.parse("2026-07-13T00:00:00Z");
+        Instant now = Instant.parse("2026-07-13T00:00:00Z");
         Map<String, String> payload = Map.ofEntries(
-                Map.entry("eventId", "evt-movement-1"),
-                Map.entry("eventType", EVENT_TYPE),
-                Map.entry("schemaVersion", "1.0.0"),
+                Map.entry("id", "evt-movement-1"),
+                Map.entry("type", EVENT_TYPE),
                 Map.entry("source", "container-movement-service"),
-                Map.entry("occurredAt", occurredAt.toString()),
+                Map.entry("time", now.toString()),
                 Map.entry("correlationId", "corr-1"),
-                Map.entry("idempotencyKey", "journey-1:IN_TRANSIT:4"),
-                Map.entry("journeyId", "journey-1"),
-                Map.entry("containerId", "container-1"),
-                Map.entry("bookingId", "booking-1"),
-                Map.entry("movementStatus", "IN_TRANSIT"),
-                Map.entry("sequenceNumber", "4"),
-                Map.entry("statusReason", "Validated movement GATE_OUT"),
-                Map.entry("lastKnownLocationId", "location-1"));
+                Map.entry("dataSchemaVersion", "1"),
+                Map.entry("data.bookingRef", "booking-1"),
+                Map.entry("data.containerRef", "MSCU6639870"),
+                Map.entry("data.movementId", "movement-1"),
+                Map.entry("data.moveCode", "LOAD"),
+                Map.entry("data.eventClassifierCode", "ACT"),
+                Map.entry("data.occurredDateTime", now.toString()),
+                Map.entry("data.receivedDateTime", now.toString()),
+                Map.entry("data.derivedStatus", "IN_TRANSIT"),
+                Map.entry("data.emptyIndicatorCode", "LADEN"),
+                Map.entry("data.transshipment", "false"),
+                Map.entry("data.location.present", "true"),
+                Map.entry("data.location.unLocationCode", "USNYC"),
+                Map.entry("data.location.facilityCode", "PIER1"),
+                Map.entry("data.location.facilityTypeCode", "POTE"));
         MovementStatusEvent event = new MovementStatusEvent(
-                "evt-movement-1", EVENT_TYPE, "1.0.0", "journey-1", "booking-1",
-                "container-1", MovementStatus.IN_TRANSIT, EVENT_TYPE + "-value",
-                "container-movement-service", "journey-1:IN_TRANSIT:4", "corr-1", occurredAt,
+                "evt-movement-1", EVENT_TYPE, "1", "journey-1", "booking-1",
+                "MSCU6639870", MovementStatus.IN_TRANSIT, EVENT_TYPE + "-value",
+                "container-movement-service", "evt-movement-1", "corr-1", now,
                 payload, OutboxStatus.PENDING, 0, null, null, null, null, null);
 
         AvroSchemaRepository schemas = new AvroSchemaRepository("avro", Path.of("contracts", "avro"));
@@ -65,20 +71,26 @@ class KafkaContainerMovementEventPublisherSerdeTest {
             received = (GenericRecord) deserializer.deserialize(TOPIC, wire);
         }
 
+        GenericRecord data = (GenericRecord) received.get("data");
+        GenericRecord location = (GenericRecord) data.get("location");
         assertEquals(0, wire[0]);
-        assertEquals("evt-movement-1", string(received, "eventId"));
-        assertEquals(EVENT_TYPE, string(received, "eventType"));
-        assertEquals("1.0.0", string(received, "schemaVersion"));
+        assertEquals("evt-movement-1", string(received, "id"));
+        assertEquals(EVENT_TYPE, string(received, "type"));
         assertEquals("container-movement-service", string(received, "source"));
-        assertEquals(occurredAt.toString(), string(received, "occurredAt"));
+        assertEquals(now.toString(), string(received, "time"));
         assertEquals("corr-1", string(received, "correlationId"));
-        assertEquals("journey-1:IN_TRANSIT:4", string(received, "idempotencyKey"));
-        assertEquals("container-1", string(received, "containerId"));
-        assertEquals("booking-1", string(received, "bookingId"));
-        assertEquals("IN_TRANSIT", string(received, "movementStatus"));
-        assertEquals(4L, received.get("sequenceNumber"));
-        assertEquals("Validated movement GATE_OUT", string(received, "statusReason"));
-        assertEquals("location-1", string(received, "lastKnownLocationId"));
+        assertEquals(1, received.get("dataSchemaVersion"));
+        assertEquals("booking-1", string(data, "bookingRef"));
+        assertEquals("MSCU6639870", string(data, "containerRef"));
+        assertEquals("movement-1", string(data, "movementId"));
+        assertEquals("LOAD", string(data, "moveCode"));
+        assertEquals("ACT", string(data, "eventClassifierCode"));
+        assertEquals("IN_TRANSIT", string(data, "derivedStatus"));
+        assertEquals("LADEN", string(data, "emptyIndicatorCode"));
+        assertEquals(false, data.get("transshipment"));
+        assertEquals("USNYC", string(location, "unLocationCode"));
+        assertEquals("PIER1", string(location, "facilityCode"));
+        assertEquals("POTE", string(location, "facilityTypeCode"));
     }
 
     private String string(GenericRecord record, String field) {

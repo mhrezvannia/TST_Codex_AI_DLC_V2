@@ -8,11 +8,13 @@ import com.linercore.platform.chargeagreement.applicationservice.port.Authorizat
 import com.linercore.platform.chargeagreement.applicationservice.port.IdGenerator;
 import com.linercore.platform.chargeagreement.applicationservice.port.ManualPricingCaseRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.OutboxRepository;
+import com.linercore.platform.chargeagreement.applicationservice.port.PricingRequestRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.ReferenceValidationPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.SchemaRegistryPort;
 import com.linercore.platform.chargeagreement.dataaccess.jdbc.JdbcAgreementRepository;
 import com.linercore.platform.chargeagreement.dataaccess.jdbc.JdbcManualPricingCaseRepository;
 import com.linercore.platform.chargeagreement.dataaccess.jdbc.JdbcOutboxRepository;
+import com.linercore.platform.chargeagreement.dataaccess.jdbc.JdbcPricingRequestRepository;
 import com.linercore.platform.chargeagreement.dataaccess.inmemory.UuidIdGenerator;
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +31,11 @@ public class ChargeAgreementServiceConfiguration {
     @Bean
     ManualPricingCaseRepository manualPricingCaseRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
         return new JdbcManualPricingCaseRepository(jdbc, mapper);
+    }
+
+    @Bean
+    PricingRequestRepository pricingRequestRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcPricingRequestRepository(jdbc, mapper);
     }
 
     @Bean
@@ -63,8 +70,10 @@ public class ChargeAgreementServiceConfiguration {
             OutboxRepository outbox,
             AgreementEventPublisherPort eventPublisher,
             SchemaRegistryPort schemaRegistry,
-            ManualPricingCaseRepository manualPricingCaseRepository) {
+            ManualPricingCaseRepository manualPricingCaseRepository,
+            PricingRequestRepository pricingRequestRepository) {
         return new ChargeAgreementApplicationService(repository, authorization, referenceValidation, idGenerator,
-                Clock.systemUTC(), outbox, eventPublisher, schemaRegistry, manualPricingCaseRepository);
+                Clock.systemUTC(), outbox, eventPublisher, schemaRegistry, manualPricingCaseRepository,
+                pricingRequestRepository);
     }
 }

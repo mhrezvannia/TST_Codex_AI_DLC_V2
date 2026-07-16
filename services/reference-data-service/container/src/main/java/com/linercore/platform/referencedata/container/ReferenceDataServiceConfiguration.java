@@ -15,12 +15,38 @@ import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcOutboxRepository
 import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcReferenceRepository;
 import com.linercore.platform.referencedata.dataaccess.inmemory.UuidIdGenerator;
 import java.time.Clock;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ReferenceDataServiceConfiguration {
+    @Bean
+    @Profile("local")
+    ReferenceDataLocalIdentityFilter referenceDataLocalIdentityFilter(
+            @Value("${reference-data.security.booking-token}") String bookingToken,
+            @Value("${reference-data.security.bff-token}") String bffToken,
+            @Value("${reference-data.security.seed-token}") String seedToken,
+            @Value("${reference-data.security.cmm-token}") String cmmToken) {
+        return new ReferenceDataLocalIdentityFilter(Map.of(
+                "booking-service", bookingToken,
+                "apps-reference-data", bffToken,
+                "seed-loader", seedToken,
+                "container-movement-service", cmmToken));
+    }
+
+    @Bean
+    @Profile("!local")
+    ApplicationRunner referenceDataNonLocalIdentityGuard() {
+        return arguments -> {
+            throw new IllegalStateException("Non-local Reference Data identity requires W2-01 JWT/TLS configuration");
+        };
+    }
+
     @Bean
     ReferenceRepository referenceRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
         return new JdbcReferenceRepository(jdbc, mapper);

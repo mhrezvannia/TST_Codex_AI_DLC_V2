@@ -141,3 +141,7 @@ Phase 2 intents are largely independent (they hang off already-closed Phase-1 in
 Same rules as Phase 1: one Driver per intent, Contributors via frozen contracts + CODEOWNERS, dependency-order merge behind quality gates + both audits, and **every intent exits on an observed live run.**
 
 **Status tracking:** when an intent closes, mark it here with the closing date and the evidence path. Do not start an intent whose dependencies aren't closed (except contract-first bridges, marked as such).
+
+## Test acceptance waivers
+
+- 2026-07-17: W1-01 was merged to `integ/main-reconciled` under explicit test-project authority. The real live-acceptance manifest `artifacts/w1-01-live/w1-merge-gate-20260716-200141/manifest.json` remains `BLOCKED` at `compose-start` because Docker could not pull Elastic images from `docker-auth.elastic.co`. Waiver evidence: `artifacts/w1-01-live/w1-test-acceptance-waiver-20260717/acceptance-waiver.md`.

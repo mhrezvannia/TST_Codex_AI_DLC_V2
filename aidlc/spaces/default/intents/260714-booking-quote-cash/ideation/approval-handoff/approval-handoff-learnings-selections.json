@@ -1,0 +1,21 @@
+{
+  "stage_slug": "approval-handoff",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat an Ideation handoff as approval of a risk-controlled initiative, not as a promise of unsupported budget, staffing, velocity, or completion date.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Proceed with W1-01 targeted build on adopted W0 and standards infrastructure rather than blocking the thin journey on a program-level suite procurement decision.",
+      "source": "orchestrator"
+    }
+  ]
+}

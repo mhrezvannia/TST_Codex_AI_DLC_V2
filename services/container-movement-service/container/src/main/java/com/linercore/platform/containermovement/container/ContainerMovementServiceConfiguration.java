@@ -11,7 +11,6 @@ import com.linercore.platform.containermovement.applicationservice.port.OutboxRe
 import com.linercore.platform.containermovement.applicationservice.port.ReferenceValidationPort;
 import com.linercore.platform.containermovement.applicationservice.port.MovementEventPublisherPort;
 import com.linercore.platform.containermovement.applicationservice.port.SchemaRegistryPort;
-import com.linercore.platform.containermovement.container.integration.HttpBookingMovementStatusClient;
 import com.linercore.platform.containermovement.container.integration.HttpLocationValidationAdapter;
 import com.linercore.platform.containermovement.dataaccess.jdbc.JdbcAuditRepository;
 import com.linercore.platform.containermovement.dataaccess.jdbc.JdbcIdempotencyRepository;
@@ -61,15 +60,9 @@ public class ContainerMovementServiceConfiguration {
     @Bean
     ReferenceValidationPort containerMovementReferenceValidationPort(
             RestTemplate restTemplate,
-            @Value("${container-movement.reference-data-service-url}") String referenceDataServiceUrl) {
-        return new HttpLocationValidationAdapter(restTemplate, referenceDataServiceUrl);
-    }
-
-    @Bean
-    HttpBookingMovementStatusClient bookingMovementStatusClient(
-            RestTemplate restTemplate,
-            @Value("${container-movement.booking-service-url}") String bookingServiceUrl) {
-        return new HttpBookingMovementStatusClient(restTemplate, bookingServiceUrl);
+            @Value("${container-movement.reference-data-service-url}") String referenceDataServiceUrl,
+            @Value("${container-movement.reference-data-service-token:}") String referenceDataServiceToken) {
+        return new HttpLocationValidationAdapter(restTemplate, referenceDataServiceUrl, referenceDataServiceToken);
     }
 
     @Bean

@@ -2,22 +2,55 @@
   "type": "record",
   "name": "BookingConfirmed",
   "namespace": "com.linercore.booking.events",
-  "doc": "Booking confirmation event contract consumed by Container Movement Management.",
+  "doc": "Canonical Booking confirmation event consumed by Container Movement Management.",
   "fields": [
-    { "name": "eventId", "type": "string" },
-    { "name": "eventType", "type": "string" },
-    { "name": "schemaVersion", "type": "string" },
+    { "name": "id", "type": "string" },
     { "name": "source", "type": "string" },
-    { "name": "occurredAt", "type": "string" },
+    { "name": "type", "type": "string" },
+    { "name": "time", "type": "string" },
     { "name": "correlationId", "type": "string" },
-    { "name": "idempotencyKey", "type": "string" },
-    { "name": "bookingId", "type": "string" },
-    { "name": "bookingRevision", "type": "int" },
-    { "name": "pricingRef", "type": "string" },
-    { "name": "customerId", "type": "string" },
-    { "name": "originLocationId", "type": "string" },
-    { "name": "destinationLocationId", "type": "string" },
-    { "name": "containerId", "type": "string", "default": "" },
-    { "name": "equipmentTypeId", "type": "string" }
+    { "name": "dataSchemaVersion", "type": "int" },
+    {
+      "name": "data",
+      "type": {
+        "type": "record",
+        "name": "BookingConfirmedData",
+        "fields": [
+          { "name": "bookingId", "type": "string" },
+          { "name": "bookingRevision", "type": "int" },
+          {
+            "name": "routing",
+            "type": {
+              "type": "array",
+              "items": {
+                "type": "record",
+                "name": "BookingConfirmedRoutingLeg",
+                "fields": [
+                  { "name": "legSequence", "type": "int" },
+                  { "name": "loadUnLocode", "type": "string" },
+                  { "name": "dischargeUnLocode", "type": "string" },
+                  { "name": "voyageId", "type": "string" }
+                ]
+              }
+            }
+          },
+          {
+            "name": "equipment",
+            "type": {
+              "type": "array",
+              "items": {
+                "type": "record",
+                "name": "BookingConfirmedEquipmentAssignment",
+                "fields": [
+                  { "name": "equipmentTypeCode", "type": "string" },
+                  { "name": "quantity", "type": "int" },
+                  { "name": "equipmentId", "type": ["null", "string"], "default": null }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
   ]
 }

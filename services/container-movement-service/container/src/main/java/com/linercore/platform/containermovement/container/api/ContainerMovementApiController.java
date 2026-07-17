@@ -3,8 +3,6 @@ package com.linercore.platform.containermovement.container.api;
 import com.linercore.platform.containermovement.applicationservice.ContainerMovementApplicationService;
 import com.linercore.platform.containermovement.applicationservice.command.CaptureMovementCommand;
 import com.linercore.platform.containermovement.applicationservice.command.CreateJourneyCommand;
-import com.linercore.platform.containermovement.applicationservice.event.BookingConfirmedEvent;
-import com.linercore.platform.containermovement.container.integration.HttpBookingMovementStatusClient;
 import com.linercore.platform.containermovement.domain.model.ContainerJourney;
 import com.linercore.platform.containermovement.domain.model.ExpectedMovement;
 import com.linercore.platform.containermovement.domain.model.MovementEvent;
@@ -29,13 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/container-movement")
 public class ContainerMovementApiController {
     private final ContainerMovementApplicationService service;
-    private final HttpBookingMovementStatusClient bookingMovementStatusClient;
 
-    public ContainerMovementApiController(
-            ContainerMovementApplicationService service,
-            HttpBookingMovementStatusClient bookingMovementStatusClient) {
+    public ContainerMovementApiController(ContainerMovementApplicationService service) {
         this.service = service;
-        this.bookingMovementStatusClient = bookingMovementStatusClient;
     }
 
     @GetMapping("/journeys")
@@ -60,7 +54,6 @@ public class ContainerMovementApiController {
                 actor(request.actorSubjectId()),
                 request.idempotencyKey(),
                 correlation(correlationId, request.correlationId())));
-        bookingMovementStatusClient.publishStatus(journey, correlation(correlationId, request.correlationId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(journey));
     }
 
@@ -80,28 +73,6 @@ public class ContainerMovementApiController {
         return toResponse(service.detailByBookingId(bookingId, actor, correlation(correlationId, null)));
     }
 
-    @PostMapping("/booking-confirmed")
-    public JourneyResponse consumeBookingConfirmed(@RequestBody BookingConfirmedRequest request) {
-        ContainerJourney journey = service.consumeBookingConfirmed(new BookingConfirmedEvent(
-                request.eventId(),
-                request.eventType(),
-                request.schemaVersion(),
-                request.source(),
-                request.occurredAt(),
-                request.correlationId(),
-                request.idempotencyKey(),
-                request.bookingId(),
-                request.bookingRevision(),
-                request.pricingRef(),
-                request.customerId(),
-                request.originLocationId(),
-                request.destinationLocationId(),
-                request.containerId(),
-                request.equipmentTypeId()));
-        bookingMovementStatusClient.publishStatus(journey, request.correlationId());
-        return toResponse(journey);
-    }
-
     @PostMapping("/journeys/{id}/movements")
     public JourneyResponse captureMovement(
             @PathVariable("id") String id,
@@ -117,7 +88,6 @@ public class ContainerMovementApiController {
                 actor(request.actorSubjectId()),
                 request.idempotencyKey(),
                 resolvedCorrelation));
-        bookingMovementStatusClient.publishStatus(journey, resolvedCorrelation);
         return toResponse(journey);
     }
 
@@ -187,24 +157,6 @@ public class ContainerMovementApiController {
             String actorSubjectId,
             String idempotencyKey,
             String correlationId) {
-    }
-
-    public record BookingConfirmedRequest(
-            String eventId,
-            String eventType,
-            String schemaVersion,
-            String source,
-            Instant occurredAt,
-            String correlationId,
-            String idempotencyKey,
-            String bookingId,
-            int bookingRevision,
-            String pricingRef,
-            String customerId,
-            String originLocationId,
-            String destinationLocationId,
-            String containerId,
-            String equipmentTypeId) {
     }
 
     public record CaptureMovementRequest(

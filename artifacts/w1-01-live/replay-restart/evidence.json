@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-07-16T15:04:38.284Z",
+  "mode": "dry-run",
+  "runId": "w1-01-replay-restart-1784214278286",
+  "status": "planned",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "bookingTopic": "booking.confirmed",
+    "movementTopic": "containermovement.status",
+    "bookingDetailSource": "booking-local-projection",
+    "replayRequiresAuthorization": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "summary": {
+    "passed": 0,
+    "planned": 8,
+    "blocked": 0,
+    "failed": 0
+  },
+  "steps": [
+    {
+      "id": "compose-services",
+      "command": "docker compose ps --format json",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "booking-health-before",
+      "command": "node scripts/replay-restart-proof.mjs --probe http://localhost:8088/api/bookings",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "capture-business-counts-before",
+      "command": "docker compose exec -T postgres psql -U linercore -d linercore_booking -c \"SELECT COUNT(*) AS bookings FROM bookings; SELECT COUNT(*) AS booking_outbox FROM booking_outbox; SELECT COUNT(*) AS booking_consumed_events FROM booking_consumed_events; SELECT COUNT(*) AS booking_movement_status FROM booking_movement_status;\"",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "restart-booking",
+      "command": "docker compose restart booking-service",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "booking-health-after",
+      "command": "node scripts/replay-restart-proof.mjs --probe http://localhost:8088/api/bookings",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "restart-cmm",
+      "command": "docker compose restart container-movement-service",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "capture-business-counts-after",
+      "command": "docker compose exec -T postgres psql -U linercore -d linercore_booking -c \"SELECT COUNT(*) AS bookings FROM bookings; SELECT COUNT(*) AS booking_outbox FROM booking_outbox; SELECT COUNT(*) AS booking_consumed_events FROM booking_consumed_events; SELECT COUNT(*) AS booking_movement_status FROM booking_movement_status;\"",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "topic-presence",
+      "command": "docker compose exec -T kafka kafka-topics --bootstrap-server kafka:9092 --list",
+      "status": "planned",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": "dry-run: command not executed"
+    }
+  ]
+}

@@ -19,6 +19,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
 class PlatformMessagingTest {
@@ -77,5 +78,16 @@ class PlatformMessagingTest {
 
         // A real (non-noop) adapter is always allowed.
         assertDoesNotThrow(() -> NoopMessagingGuard.assertNoopAllowed(nonLocal, false));
+    }
+
+    @Test
+    void guardRejectsNoopAdaptersWhenRealMessagingIsRequiredEvenInLocalProfile() {
+        StandardEnvironment local = new StandardEnvironment();
+        local.setActiveProfiles("local", "local-noop");
+        local.getPropertySources().addFirst(new MapPropertySource(
+                "test", Map.of("messaging.require-real", "true")));
+
+        assertThrows(IllegalStateException.class, () -> NoopMessagingGuard.assertNoopAllowed(local, true));
+        assertDoesNotThrow(() -> NoopMessagingGuard.assertNoopAllowed(local, false));
     }
 }

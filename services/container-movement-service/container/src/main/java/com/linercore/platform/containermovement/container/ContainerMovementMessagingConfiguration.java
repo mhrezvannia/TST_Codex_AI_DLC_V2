@@ -5,6 +5,8 @@ import com.linercore.platform.containermovement.applicationservice.port.Movement
 import com.linercore.platform.containermovement.applicationservice.port.SchemaRegistryPort;
 import com.linercore.platform.containermovement.applicationservice.query.PublishBatchResult;
 import com.linercore.platform.containermovement.messaging.ConfluentSchemaRegistryAdapter;
+import com.linercore.platform.containermovement.messaging.BookingConfirmedRecordMapper;
+import com.linercore.platform.containermovement.messaging.KafkaBookingConfirmedListener;
 import com.linercore.platform.containermovement.messaging.KafkaContainerMovementEventPublisher;
 import com.linercore.platform.containermovement.messaging.LocalNoopMovementEventPublisher;
 import com.linercore.platform.containermovement.messaging.LocalNoopSchemaRegistryAdapter;
@@ -24,11 +26,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 @Configuration
+@EnableKafka
 public class ContainerMovementMessagingConfiguration {
     @Bean
     @Profile("kafka")
@@ -74,7 +78,7 @@ public class ContainerMovementMessagingConfiguration {
     MovementEventPublisherPort movementEventPublisher(
             KafkaGenericRecordPublisher movementGenericRecordPublisher,
             AvroSchemaRepository movementEventSchemas,
-            @Value("${container-movement.kafka.topic:containermovement.events}") String topic) {
+            @Value("${container-movement.kafka.topic:containermovement.status}") String topic) {
         return new KafkaContainerMovementEventPublisher(movementGenericRecordPublisher, movementEventSchemas, topic);
     }
 
@@ -85,6 +89,20 @@ public class ContainerMovementMessagingConfiguration {
             AvroSchemaRepository movementEventSchemas) {
         return new ConfluentSchemaRegistryAdapter(
                 new ConfluentSchemaRegistrar(movementSchemaRegistryClient), movementEventSchemas);
+    }
+
+    @Bean
+    @Profile("kafka")
+    BookingConfirmedRecordMapper bookingConfirmedRecordMapper() {
+        return new BookingConfirmedRecordMapper();
+    }
+
+    @Bean
+    @Profile("kafka")
+    KafkaBookingConfirmedListener bookingConfirmedListener(
+            ContainerMovementApplicationService service,
+            BookingConfirmedRecordMapper bookingConfirmedRecordMapper) {
+        return new KafkaBookingConfirmedListener(service, bookingConfirmedRecordMapper);
     }
 
     @Bean

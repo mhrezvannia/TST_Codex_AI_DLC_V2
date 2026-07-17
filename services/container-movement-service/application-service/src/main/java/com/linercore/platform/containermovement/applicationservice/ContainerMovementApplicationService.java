@@ -125,7 +125,7 @@ public class ContainerMovementApplicationService {
         }
 
         Optional<ContainerJourney> existing = journeys.findByBookingId(event.bookingId());
-        if (existing.isPresent() && event.bookingRevision() < existing.get().bookingRevision()) {
+        if (existing.isPresent() && event.bookingRevision() <= existing.get().bookingRevision()) {
             audit.append("CMM_BOOKING_CONFIRMED_STALE", existing.get().id().value(), event.source(), "SUCCESS",
                     event.eventId(), event.correlationId());
             idempotency.rememberJourney(event.idempotencyKey(), existing.get().id());

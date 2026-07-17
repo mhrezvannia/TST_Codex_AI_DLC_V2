@@ -1,0 +1,37 @@
+{
+  "stage_slug": "rough-mockups",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat W1-01 UI as a Booking-local operational list/create/detail experience; global shell and authentication remain W2-01 even when broader enterprise mockups exist.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Inherit the W2-02 operational-console visual language for W1-01 only; adapt it to the journey without importing global shell, full design-system migration, fake capacity, D&D, or broader equipment behavior.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c4",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "When a mandatory named reviewer cannot start because its fixed model is unsupported by the active Codex account, retry through an independent default sub-agent that loads the same reviewer persona and preserves the same read/write boundary.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Prefer stable list, create, and detail routes over a single workbench for operational journeys that require browser navigation, state recovery, and a shareable detail location.",
+      "source": "orchestrator"
+    }
+  ]
+}

@@ -108,7 +108,12 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${REFERENCE_DATA_DB_PASSWORD:-reference_data_local}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      MESSAGING_REQUIRE_REAL: "true"
       REFERENCE_DATA_EVENTS_TOPIC: referencedata.events
+      REFERENCE_DATA_BOOKING_TOKEN: ${REFERENCE_DATA_BOOKING_TOKEN:-reference_data_booking_local_token}
+      REFERENCE_DATA_BFF_TOKEN: ${REFERENCE_DATA_BFF_TOKEN:-reference_data_bff_local_token}
+      REFERENCE_DATA_SEED_TOKEN: ${REFERENCE_DATA_SEED_TOKEN:-reference_data_seed_local_token}
+      REFERENCE_DATA_CMM_TOKEN: ${REFERENCE_DATA_CMM_TOKEN:-reference_data_cmm_local_token}
     ports:
       - "8083:8083"
     depends_on:
@@ -134,6 +139,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${PRICING_DB_PASSWORD:-pricing_local}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      MESSAGING_REQUIRE_REAL: "true"
       CHARGE_AGREEMENT_EVENTS_TOPIC: charge-agreement.events
     ports:
       - "8084:8084"
@@ -160,14 +166,32 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_booking
       SPRING_DATASOURCE_USERNAME: linercore_booking
       SPRING_DATASOURCE_PASSWORD: ${BOOKING_DB_PASSWORD:-booking_local}
+      BOOKING_SERVICE_TOKEN: ${BOOKING_SERVICE_TOKEN:-booking_local_service_token}
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      REFERENCE_DATA_CLIENT_ID: booking-service
+      REFERENCE_DATA_BOOKING_TOKEN: ${REFERENCE_DATA_BOOKING_TOKEN:-reference_data_booking_local_token}
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
-      CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      MESSAGING_REQUIRE_REAL: "true"
       BOOKING_EVENTS_TOPIC: booking.events
     ports:
       - "8085:8085"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8085/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 768M
     depends_on:
       postgres:
         condition: service_healthy
@@ -194,10 +218,11 @@ services:
       SPRING_DATASOURCE_USERNAME: linercore_container_movement
       SPRING_DATASOURCE_PASSWORD: ${CONTAINER_MOVEMENT_DB_PASSWORD:-container_movement_local}
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
-      BOOKING_SERVICE_URL: http://booking-service:8085
+      REFERENCE_DATA_CMM_TOKEN: ${REFERENCE_DATA_CMM_TOKEN:-reference_data_cmm_local_token}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONTAINER_MOVEMENT_EVENTS_TOPIC: containermovement.events
+      MESSAGING_REQUIRE_REAL: "true"
+      CONTAINER_MOVEMENT_EVENTS_TOPIC: containermovement.status
     ports:
       - "8086:8086"
     depends_on:
@@ -219,6 +244,7 @@ services:
     environment:
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      REFERENCE_DATA_SEED_TOKEN: ${REFERENCE_DATA_SEED_TOKEN:-reference_data_seed_local_token}
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
       BOOKING_SERVICE_URL: http://booking-service:8085
       CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
@@ -274,6 +300,7 @@ services:
     environment:
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      REFERENCE_DATA_BFF_TOKEN: ${REFERENCE_DATA_BFF_TOKEN:-reference_data_bff_local_token}
     ports:
       - "${REFERENCE_DATA_UI_HOST_PORT:-3002}:3000"
     depends_on:
@@ -303,10 +330,27 @@ services:
     profiles: ["app", "full"]
     environment:
       BOOKING_SERVICE_URL: http://booking-service:8085
-      CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
+      BOOKING_SERVICE_TOKEN: ${BOOKING_SERVICE_TOKEN:-booking_local_service_token}
+    ports:
+      - "${BOOKING_APP_HOST_PORT:-3001}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/bookings"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.75"
+          memory: 512M
     depends_on:
-      - booking-service
-      - container-movement-service
+      booking-service:
+        condition: service_healthy
 
   apps-container-movement:
     image: linercore/apps-container-movement:local
@@ -357,7 +401,7 @@ services:
   grafana:
     image: grafana/grafana:11.4.0
     ports:
-      - "3001:3000"
+      - "${GRAFANA_HOST_PORT:-3003}:3000"
     volumes:
       - ./infrastructure/observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./infrastructure/observability/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro

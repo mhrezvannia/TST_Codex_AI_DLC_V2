@@ -6,11 +6,12 @@ test("classifies changed paths into gate scopes", () => {
   const scopes = classifyChangedPaths([
     "services/reference-data-service/domain-core/src/main/java/Foo.java",
     "apps/reference-data/app/page.tsx",
+    "apps/booking/app/bookings/page.tsx",
     "contracts/openapi/reference-data-service.yaml",
     "infrastructure/seeds/shared-platform-mvp-defaults.json"
   ]);
 
-  assert.deepEqual(scopes, ["apps/reference-data", "contracts", "seeds", "services", "workspace"]);
+  assert.deepEqual(scopes, ["apps/booking", "apps/reference-data", "contracts", "seeds", "services", "workspace"]);
 });
 
 test("selects workspace gates plus affected gates", () => {

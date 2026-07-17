@@ -56,8 +56,8 @@ class ContainerMovementApplicationServiceTest {
         assertEquals(1, journey.bookingRevision());
         assertEquals(MovementStatus.PLANNED, journey.status());
         assertEquals(2, journey.expectedMovements().size());
-        assertEquals("journey-1:PLANNED:0", outbox.events.get(0).deduplicationKey());
-        assertEquals("0", outbox.events.get(0).payload().get("sequenceNumber"));
+        assertEquals("status-1", outbox.events.get(0).deduplicationKey());
+        assertEquals("PLN", outbox.events.get(0).payload().get("data.eventClassifierCode"));
         assertEquals("CMM_JOURNEY_CREATED", audit.records.get(0).action);
     }
 
@@ -82,9 +82,9 @@ class ContainerMovementApplicationServiceTest {
         assertEquals(MovementStatus.IN_TRANSIT, moved.status());
         assertEquals(1, moved.history().size());
         MovementStatusEvent event = outbox.events.get(1);
-        assertEquals("IN_TRANSIT", event.payload().get("movementStatus"));
-        assertEquals("1", event.payload().get("sequenceNumber"));
-        assertEquals("SGSIN", event.payload().get("lastKnownLocationId"));
+        assertEquals("IN_TRANSIT", event.payload().get("data.derivedStatus"));
+        assertEquals("ACT", event.payload().get("data.eventClassifierCode"));
+        assertEquals("SGSIN", event.payload().get("data.location.unLocationCode"));
     }
 
     @Test
@@ -116,7 +116,7 @@ class ContainerMovementApplicationServiceTest {
         assertEquals("journey-1", journey.id().value());
         assertEquals("booking-1", journey.bookingId());
         assertEquals(1, journey.bookingRevision());
-        assertEquals("CONT0000001", journey.containerId());
+        assertEquals("MSCU6639870", journey.containerId());
         assertEquals(2, journey.expectedMovements().size());
         assertEquals("CMM_JOURNEY_CREATED_FROM_BOOKING", audit.records.get(0).action);
         assertEquals(1, outbox.events.size());
@@ -192,7 +192,7 @@ class ContainerMovementApplicationServiceTest {
     private BookingConfirmedEvent bookingConfirmed(String eventId, int revision, String idempotencyKey, String origin, String destination) {
         return new BookingConfirmedEvent(eventId, "booking.confirmed", "1.0.0", "booking-service",
                 now, "corr-1", idempotencyKey, "booking-1", revision, "quote-1", "customer-1",
-                origin, destination, "CONT0000001", "40HC");
+                origin, destination, "MSCU6639870", "40HC");
     }
 
     private static class FakeJourneyRepository implements JourneyRepository {

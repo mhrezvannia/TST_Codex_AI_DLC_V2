@@ -1,0 +1,18 @@
+gate=compose-start
+status=BLOCKED
+exitCode=1
+command=docker compose --profile full up -d --build
+
+Image docker.elastic.co/elasticsearch/elasticsearch:8.16.1 Pulling
+ Image docker.elastic.co/kibana/kibana:8.16.1 Pulling
+ Image otel/opentelemetry-collector:0.114.0 Pulling
+ Image grafana/grafana:11.4.0 Pulling
+ Image jaegertracing/all-in-one:1.63.0 Pulling
+ Image prom/prometheus:v2.55.1 Pulling
+ Image docker.elastic.co/elasticsearch/elasticsearch:8.16.1 Error failed to resolve reference "docker.elastic.co/elasticsearch/elasticsearch:8.16.1": failed to do request: Head "https://docker.elastic.co/v2/elasticsearch/elasticsearch/manifests/8.16.1": dialing docker.elastic.co:443 container via direct connection because Docker Desktop has no HTTPS proxy: connecting to docker.elastic.co:443: dial tcp 34.56.16.77:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+ Image jaegertracing/all-in-one:1.63.0 Interrupted
+ Image grafana/grafana:11.4.0 Interrupted
+ Image docker.elastic.co/kibana/kibana:8.16.1 Interrupted
+ Image otel/opentelemetry-collector:0.114.0 Interrupted
+ Image prom/prometheus:v2.55.1 Interrupted
+Error response from daemon: failed to resolve reference "docker.elastic.co/elasticsearch/elasticsearch:8.16.1": failed to do request: Head "https://docker.elastic.co/v2/elasticsearch/elasticsearch/manifests/8.16.1": dialing docker.elastic.co:443 container via direct connection because Docker Desktop has no HTTPS proxy: connecting to docker.elastic.co:443: dial tcp 34.56.16.77:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.

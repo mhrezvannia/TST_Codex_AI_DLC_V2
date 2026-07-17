@@ -1,0 +1,21 @@
+{
+  "stage_slug": "application-design",
+  "selections": [
+    {
+      "candidate_id": "c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Use a thin transport listener that invokes one transactional application-service boundary for event receipt, business state, and resulting outbox when a second generic inbox relay would add latency and no independent recovery value.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c6",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Testing Posture",
+      "text": "For brownfield service database changes, use an ordered Flyway baseline plus additive migrations and prove existing-data upgrade, backfill, restart, and restore or forward-repair behavior; destructive reset is not acceptance evidence.",
+      "source": "orchestrator"
+    }
+  ]
+}

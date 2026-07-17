@@ -19,10 +19,10 @@ spring:
 
 container-movement:
   reference-data-service-url: ${REFERENCE_DATA_SERVICE_URL:http://reference-data-service:8083}
-  booking-service-url: ${BOOKING_SERVICE_URL:http://booking-service:8085}
+  reference-data-service-token: ${REFERENCE_DATA_CMM_TOKEN}
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
-    topic: ${CONTAINER_MOVEMENT_EVENTS_TOPIC:containermovement.events}
+    topic: ${CONTAINER_MOVEMENT_EVENTS_TOPIC:containermovement.status}
     client-id: ${CONTAINER_MOVEMENT_KAFKA_CLIENT_ID:container-movement-service}
   schema-registry:
     url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}

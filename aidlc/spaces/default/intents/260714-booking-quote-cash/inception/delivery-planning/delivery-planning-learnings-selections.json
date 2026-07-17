@@ -1,0 +1,13 @@
+{
+  "stage_slug": "delivery-planning",
+  "selections": [
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "When economic value, time-cost, and job-size inputs are not supplied, use an explicit ordinal value, risk-reduction, time-criticality, and relative-size rationale instead of fabricating numeric WSJF precision.",
+      "source": "orchestrator"
+    }
+  ]
+}

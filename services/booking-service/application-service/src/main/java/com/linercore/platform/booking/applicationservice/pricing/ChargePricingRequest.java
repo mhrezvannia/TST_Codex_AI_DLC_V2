@@ -8,9 +8,17 @@ public record ChargePricingRequest(
         String pricingRequestId,
         String bookingId,
         String customerId,
+        String tradeLane,
         String originLocationId,
         String destinationLocationId,
         String equipmentType,
+        String commodityCode,
+        String cargoMode,
+        boolean reefer,
+        boolean dangerousGoods,
+        int amendmentSeq,
+        int equipmentQuantity,
+        int teu,
         Map<String, String> attributes,
         String idempotencyKey,
         String correlationId,
@@ -46,7 +54,12 @@ public record ChargePricingRequest(
             String requestHash,
             Instant requestedAt) {
         return new ChargePricingRequest(pricingRequestId, booking.id().value(), booking.customerId(),
+                booking.attributes().getOrDefault("tradeLaneId", "NA-EU"),
                 booking.originLocationId(), booking.destinationLocationId(), booking.equipmentType(),
-                booking.attributes(), idempotencyKey, correlationId, requestHash, requestedAt);
+                booking.attributes().getOrDefault("commodityCode",
+                        booking.attributes().getOrDefault("commodityId", "commodity-general")),
+                booking.cargoMode(), booking.reefer(), booking.dangerousGoods(), booking.revision(), 1,
+                booking.equipmentType().startsWith("4") ? 2 : 1, booking.attributes(), idempotencyKey,
+                correlationId, requestHash, requestedAt);
     }
 }

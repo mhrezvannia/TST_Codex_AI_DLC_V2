@@ -14,6 +14,10 @@ public final class NoopMessagingGuard {
         if (!noopActive) {
             return;
         }
+        if (environment.getProperty("messaging.require-real", Boolean.class, false)) {
+            throw new IllegalStateException(
+                    "real messaging is required; local-noop messaging adapters are not allowed");
+        }
         Set<String> profiles = Arrays.stream(environment.getActiveProfiles()).collect(Collectors.toSet());
         if (!profiles.contains("local")) {
             throw new IllegalStateException(

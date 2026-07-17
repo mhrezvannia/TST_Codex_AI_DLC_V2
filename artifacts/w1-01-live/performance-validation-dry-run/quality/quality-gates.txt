@@ -1,0 +1,6 @@
+gate=quality-gates
+status=PLANNED
+exitCode=
+command=node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_W1-01/artifacts/w1-01-live/performance-validation-dry-run/quality/evidence.json
+
+dry-run: command not executed

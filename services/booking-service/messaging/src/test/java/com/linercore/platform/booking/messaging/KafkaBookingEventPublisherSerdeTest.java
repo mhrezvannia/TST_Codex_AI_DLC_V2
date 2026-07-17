@@ -1,6 +1,7 @@
 package com.linercore.platform.booking.messaging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.linercore.platform.booking.domain.outbox.BookingOutboxEvent;
 import com.linercore.platform.booking.domain.outbox.OutboxStatus;
@@ -25,23 +26,25 @@ class KafkaBookingEventPublisherSerdeTest {
     void productionRecordRoundTripsEveryContractField() {
         Instant occurredAt = Instant.parse("2026-07-13T00:00:00Z");
         Map<String, String> payload = Map.ofEntries(
-                Map.entry("eventId", "evt-booking-1"),
-                Map.entry("eventType", EVENT_TYPE),
-                Map.entry("schemaVersion", "1.0.0"),
+                Map.entry("id", "8b472784-7636-5b18-8b9f-93414b33d72a"),
                 Map.entry("source", "booking-service"),
-                Map.entry("occurredAt", occurredAt.toString()),
+                Map.entry("type", EVENT_TYPE),
+                Map.entry("time", occurredAt.toString()),
                 Map.entry("correlationId", "corr-1"),
-                Map.entry("idempotencyKey", "booking-1:3:CONFIRMED"),
-                Map.entry("bookingId", "booking-1"),
-                Map.entry("bookingRevision", "3"),
-                Map.entry("pricingRef", "quote-1"),
-                Map.entry("customerId", "customer-1"),
-                Map.entry("originLocationId", "loc-origin"),
-                Map.entry("destinationLocationId", "loc-destination"),
-                Map.entry("containerId", "container-1"),
-                Map.entry("equipmentTypeId", "equipment-40hc"));
+                Map.entry("dataSchemaVersion", "1"),
+                Map.entry("data.bookingId", "booking-1"),
+                Map.entry("data.bookingRevision", "3"),
+                Map.entry("data.routing.count", "1"),
+                Map.entry("data.routing.0.legSequence", "1"),
+                Map.entry("data.routing.0.loadUnLocode", "USNYC"),
+                Map.entry("data.routing.0.dischargeUnLocode", "NLRTM"),
+                Map.entry("data.routing.0.voyageId", "voyage-1"),
+                Map.entry("data.equipment.count", "1"),
+                Map.entry("data.equipment.0.equipmentTypeCode", "45G1"),
+                Map.entry("data.equipment.0.quantity", "1"),
+                Map.entry("data.equipment.0.equipmentId", "MSCU6639870"));
         BookingOutboxEvent event = new BookingOutboxEvent(
-                "evt-booking-1", EVENT_TYPE, "1.0.0", "booking-1", "BKG-1", 3,
+                "8b472784-7636-5b18-8b9f-93414b33d72a", EVENT_TYPE, "1.0.0", "booking-1", "BKG-1", 3,
                 EVENT_TYPE + "-value", "booking-service", "booking-1:3:CONFIRMED",
                 "corr-1", occurredAt, payload, OutboxStatus.PENDING, 0,
                 null, null, null, null, null);
@@ -65,21 +68,26 @@ class KafkaBookingEventPublisherSerdeTest {
         }
 
         assertEquals(0, wire[0]);
-        assertEquals("evt-booking-1", string(received, "eventId"));
-        assertEquals(EVENT_TYPE, string(received, "eventType"));
-        assertEquals("1.0.0", string(received, "schemaVersion"));
+        assertEquals("8b472784-7636-5b18-8b9f-93414b33d72a", string(received, "id"));
         assertEquals("booking-service", string(received, "source"));
-        assertEquals(occurredAt.toString(), string(received, "occurredAt"));
+        assertEquals(EVENT_TYPE, string(received, "type"));
+        assertEquals(occurredAt.toString(), string(received, "time"));
         assertEquals("corr-1", string(received, "correlationId"));
-        assertEquals("booking-1:3:CONFIRMED", string(received, "idempotencyKey"));
-        assertEquals("booking-1", string(received, "bookingId"));
-        assertEquals(3, received.get("bookingRevision"));
-        assertEquals("quote-1", string(received, "pricingRef"));
-        assertEquals("customer-1", string(received, "customerId"));
-        assertEquals("loc-origin", string(received, "originLocationId"));
-        assertEquals("loc-destination", string(received, "destinationLocationId"));
-        assertEquals("container-1", string(received, "containerId"));
-        assertEquals("equipment-40hc", string(received, "equipmentTypeId"));
+        assertEquals(1, received.get("dataSchemaVersion"));
+        GenericRecord data = (GenericRecord) received.get("data");
+        assertEquals("booking-1", string(data, "bookingId"));
+        assertEquals(3, data.get("bookingRevision"));
+        GenericRecord leg = (GenericRecord) ((java.util.List<?>) data.get("routing")).get(0);
+        assertEquals(1, leg.get("legSequence"));
+        assertEquals("USNYC", string(leg, "loadUnLocode"));
+        assertEquals("NLRTM", string(leg, "dischargeUnLocode"));
+        assertEquals("voyage-1", string(leg, "voyageId"));
+        GenericRecord equipment = (GenericRecord) ((java.util.List<?>) data.get("equipment")).get(0);
+        assertEquals("45G1", string(equipment, "equipmentTypeCode"));
+        assertEquals(1, equipment.get("quantity"));
+        assertEquals("MSCU6639870", string(equipment, "equipmentId"));
+        assertNull(received.getSchema().getField("customerId"));
+        assertNull(received.getSchema().getField("pricingRef"));
     }
 
     private String string(GenericRecord record, String field) {

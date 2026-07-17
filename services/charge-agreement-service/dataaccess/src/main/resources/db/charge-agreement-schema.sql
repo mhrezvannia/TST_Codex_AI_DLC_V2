@@ -55,6 +55,25 @@ CREATE TABLE IF NOT EXISTS manual_pricing_cases (
 CREATE INDEX IF NOT EXISTS idx_manual_pricing_cases_request
     ON manual_pricing_cases(pricing_request_id);
 
+CREATE TABLE IF NOT EXISTS pricing_requests (
+    idempotency_key VARCHAR(160) PRIMARY KEY,
+    booking_ref VARCHAR(128) NOT NULL,
+    amendment_seq INTEGER NOT NULL,
+    request_hash VARCHAR(64) NOT NULL,
+    status VARCHAR(32) NOT NULL,
+    owner_token VARCHAR(128),
+    lease_until TIMESTAMP,
+    response_snapshot TEXT,
+    terminal_code VARCHAR(128),
+    correlation_id VARCHAR(128),
+    started_at TIMESTAMP NOT NULL,
+    completed_at TIMESTAMP,
+    UNIQUE (booking_ref, amendment_seq)
+);
+
+CREATE INDEX IF NOT EXISTS idx_pricing_requests_status_lease
+    ON pricing_requests(status, lease_until);
+
 CREATE TABLE IF NOT EXISTS charge_agreement_outbox (
     event_id VARCHAR(128) PRIMARY KEY,
     event_type VARCHAR(128) NOT NULL,

@@ -420,9 +420,19 @@ async function putJson(fetcher, url, body, correlationId) {
 
 async function requestJson(fetcher, url, init, correlationId) {
   try {
+    const referenceHeaders = new URL(url).pathname.startsWith("/reference-sets/")
+      ? {
+          "x-linercore-service-id": "seed-loader",
+          "x-linercore-local-token": process.env.REFERENCE_DATA_SEED_TOKEN ?? "reference_data_seed_local_token"
+        }
+      : {};
     const response = await fetcher(url, {
       ...init,
-      headers: { "x-correlation-id": correlationId, ...(init.headers ?? {}) }
+      headers: {
+        "x-correlation-id": correlationId,
+        ...referenceHeaders,
+        ...(init.headers ?? {})
+      }
     });
     const text = await response.text();
     const data = text ? JSON.parse(text) : null;

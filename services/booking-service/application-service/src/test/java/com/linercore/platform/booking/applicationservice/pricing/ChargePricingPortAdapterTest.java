@@ -6,6 +6,8 @@ import com.linercore.platform.booking.applicationservice.port.PricingOutcome;
 import com.linercore.platform.booking.applicationservice.port.PricingRequestResult;
 import com.linercore.platform.booking.domain.model.Booking;
 import com.linercore.platform.booking.domain.model.BookingId;
+import com.linercore.platform.booking.domain.model.EquipmentAssignment;
+import com.linercore.platform.booking.domain.model.RoutingLeg;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -93,9 +95,11 @@ class ChargePricingPortAdapterTest {
     }
 
     private Booking booking() {
-        return Booking.draft(new BookingId("booking-1"), "BKG-1", "customer-1", "loc-origin",
-                "loc-destination", "40HC", Map.of("commodityId", "commodity-1", "tradeLaneId", "lane-1"),
-                "booking-user", "corr-0", Instant.parse("2026-07-01T00:00:00Z"))
+        return Booking.draft(new BookingId("booking-1"), "BKG-1", "customer-1",
+                List.of(new RoutingLeg(1, "USNYC", "NLRTM", "voyage-1")),
+                List.of(new EquipmentAssignment("45G1", 1, "MSCU6639870")), "USD", "FCL_DRY", false, false,
+                Map.of("commodityId", "commodity-1", "tradeLaneId", "lane-1"), "booking-user", "corr-0",
+                Instant.parse("2026-07-01T00:00:00Z"))
                 .validated("booking-user", "corr-0", Instant.parse("2026-07-01T00:01:00Z"));
     }
 

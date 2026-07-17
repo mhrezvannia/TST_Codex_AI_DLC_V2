@@ -1,0 +1,6 @@
+gate=booking-ui-health
+status=PLANNED
+exitCode=
+command=node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings
+
+dry-run: command not executed

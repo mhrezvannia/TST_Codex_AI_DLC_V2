@@ -5,24 +5,19 @@
 > not directly.
 
 ## Way of Working
-
-The LinerCore enterprise program uses AI-DLC stage gates and short-lived delivery branches against the main integration line. The current working branch is `enterprise/linercore` for enterprise preparation, but feature and Bolt work should remain small, reviewed, and traceable back to the active enterprise intent, the completed Shared Platform MVP intent, the `shared-platform-mvp-complete` tag, Graphify analysis, and the authoritative program documents.
+The LinerCore program uses gated AI-DLC intents and short-lived intent/Bolt branches. W1-01 Construction Bolts base from and merge to `integ/main-reconciled`, use squash commits, and merge only after their quality evidence and the intent's live exit gate are green; Booking drives the vertical intent while Charge and CMM changes remain contract-governed contributor work.
 
 ## Walking Skeleton
-
-The first Construction Bolt must be an enterprise walking skeleton, not a Shared Platform-only continuation. It should prove a minimal real vertical slice across authentication, reference data, pricing/agreement readiness, booking confirmation, event publication/consumption, CMM journey/status handling, frontend access, and local runtime health before the remaining module ladder is accelerated.
+The first W1-01 Construction Bolt proves the highest-risk thin path: canonical `booking.confirmed` publication, real CMM Kafka consumption and journey creation, `containermovement.status` return, Booking projection, and a minimal Booking UI detail read. It is gated before the remaining Bolts and does not expand into D&D, amendments, global shell/auth, or broader CMM scope.
 
 ## Testing Posture
-
-Tests live with the code they validate and must run through blocking quality gates before merge. Unit tests, integration tests, contract tests, message contract tests, local readiness checks, and end-to-end enterprise flow checks are all required before any module is called complete; existing Java/JUnit, Vitest, Turbo, Maven, and contract scripts remain the default tooling unless later design stages replace them with stronger project evidence.
+Tests are written alongside code with an 80 percent line-coverage floor for W1-01. Numeric coverage is necessary but insufficient: exact contract/serde tests, provider-consumer checks, duplicate and stale-redelivery tests, transactional idempotency tests, service-restart persistence, and a live Compose Kafka round trip are mandatory.
 
 ## Deployment
-
-Local execution is the primary delivery environment for this program, with Docker Compose expected to evolve into `core`, `app`, `observability`, `devtools`, and `full` profiles. CI currently runs quality and readiness gates, but enterprise readiness cannot be claimed until PostgreSQL, Kafka, Schema Registry, Keycloak, all backend services, all frontend apps, reverse proxy, contracts, seed data, and observability are wired and health-checked together.
+The canonical W1 delivery environment is the local Docker Compose stack with PostgreSQL exposed on a non-default host port (55432 by default), plus Kafka, Schema Registry, services, UI, and nginx. CI blocks merges on the repository quality gates; completion additionally requires live evidence and both intent audits, while staging/production deployment remains later operation work with manual production approval.
 
 ## Code Style
-
-Backend services follow the existing Java 21, Spring Boot, Maven, and service-module pattern with domain-core kept free of Spring, persistence, messaging, and frontend concerns. Frontend code follows the Yarn/Turbo, Next.js, React, TypeScript strict, shared `@erp/*` package style, with ESLint enforcement including no explicit `any`; broad architectural or cross-module edits must use Graphify query, explain, or path first.
+Java follows the existing domain/application/adapter module boundaries, keeps `domain-core` framework-free, uses immutable records and explicit validation, and maps exceptions at HTTP boundaries. TypeScript stays strict and uses shared `@erp/*` packages; W1 domain, Avro, AsyncAPI, examples, and adapters use the frozen contract field names exactly, with Graphify-first discovery followed by source verification when its freshness marker is stale.
 
 ## Forbidden
 

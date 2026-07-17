@@ -1,0 +1,6 @@
+gate=compose-start
+status=PLANNED
+exitCode=
+command=docker compose --profile full up -d --build
+
+dry-run: command not executed

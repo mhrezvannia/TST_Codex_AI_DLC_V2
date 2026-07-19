@@ -1,0 +1,54 @@
+command=bash .claude/skills/aidlc-audit/detectors.sh
+status=PASS
+exitCode=0
+
+=== 1. Placeholder / no-op / stub adapters (are these wired into prod? is there a real sibling?) ===
+  none found
+
+=== 1b. Where placeholder beans are instantiated (check the profile — should be local-only) ===
+  none found
+
+=== 2. Gates that 'verify/validate' by existence only (includes/existsSync/!== undefined) ===
+  none found
+
+=== 3. Outbox producers (enqueue) — each needs a relay AND a scheduler draining it ===
+-- enqueue sites:
+  none
+-- relay methods (drain the outbox):
+  none — outbox may be write-only
+
+=== 4. Schedulers / background workers (without one, relays never run in prod) ===
+  NONE — no background dispatch exists
+
+=== 5. Async event contracts vs. synchronous delivery of the same event (drift) ===
+-- events declared async in contracts/docs:
+docs\aidlc-v2-slicing-playbook.md:12:Double-horizontal slicing means **the vertical thread that forces integration to be real is never pulled.** And because each unit's Definition of Done is layer-local ("domain tests pass," "API tests pass") — with `U10`'s DoD literally saying *"without requiring Kafka live proof"* — the facade/degenerate outcomes were **specified**, not accidental. The fix is not more documents. It is **vertical slicing + end-to-end Definitions of Done.**
+docs\codex-review-findings.md:31:## 🔴 C1 — The event-driven architecture is a facade; nothing publishes to Kafka
+docs\codex-review-findings.md:34:- The only event publisher in the entire codebase is [`PlaceholderKafkaReferenceEventPublisher`](services/reference-data-service/messaging/src/main/java/com/linercore/platform/referencedata/messaging/PlaceholderKafkaReferenceEventPublisher.java:11). Its `publish(...)` returns fabricated `BrokerMetadata("referencedata.events", 0, offset++, now)` and **does nothing** — no Kafka client, no network call.
+docs\codex-review-findings.md:35:- This placeholder, plus `PlaceholderSchemaRegistryAdapter`, are the beans wired in the **container (production) configuration** — [`ReferenceDataServiceConfiguration.java:42-49`](services/reference-data-service/container/src/main/java/com/linercore/platform/referencedata/container/ReferenceDataServiceConfiguration.java:42). There is no Spring profile that swaps in a real Kafka publisher.
+docs\codex-review-findings.md:36:- `compose.yaml` runs Kafka **and** Schema Registry containers, but no service ever connects to them. They are set dressing.
+docs\codex-review-findings.md:38:**Impact:** Every document describing this system as event-driven (the two `async-event-contract-*.md` files, the Avro schemas, the Schema Registry, the workflow map) describes a runtime that does not exist. `booking.confirmed` and `containermovement.status` are never emitted to any broker. This is not an accepted shortcut: `enterprise-technical-environment.md` explicitly **mandates** the `*-messaging` Kafka adapters (Spring for Apache Kafka, Confluent Avro Serializer against Schema Registry, Testcontainers with *real* Kafka in adapter tests). The placeholder-only reality is a direct deviation from the mandated technical environment.
+docs\codex-review-findings.md:40:**Fix:** Implement a real `KafkaReferenceEventPublisher` (and equivalents), wire it behind a `@Profile("kafka")`/`docker` profile, keep the placeholder only under an explicit `local-noop` profile, and add a startup assertion that fails fast if a no-op publisher is active outside local mode.
+docs\codex-review-findings.md:44:## 🔴 C2 — `booking.confirmed` is delivered as synchronous HTTP, contradicting its own async contract
+docs\codex-review-findings.md:47:- [`async-event-contract-booking-confirmed.md`](docs/enterprise-contracts/async-event-contract-booking-confirmed.md) specifies `booking.confirmed` as a **Kafka async event** with Schema Registry compatibility and a message-pact.
+docs\codex-review-findings.md:49:- So the confirmation travels point-to-point, HTTP, request-scoped — the exact opposite of the documented decoupled async event.
+docs\codex-review-findings.md:51:**Impact:** Hard temporal coupling. If container-movement is down or slow, booking confirmation returns an error to the caller **even though the booking is already persisted as CONFIRMED** (see C3). The decoupling, replayability, and ordering guarantees the async contract promises are absent.
+docs\codex-review-findings.md:53:**Fix:** Pick one architecture and make code + contract agree. Either (a) deliver `booking.confirmed` through the outbox → real Kafka publisher → container-movement consumer (matches the contract), or (b) change the contract to declare a synchronous bilateral REST interaction. Do not ship both a dead async contract and a live sync call.
+docs\codex-review-findings.md:65:**Fix:** Wrap the state change + outbox enqueue in a single transaction, remove the direct HTTP side effect from the request path, and let the outbox relay deliver asynchronously with retries and idempotency (the consumer already de-dupes — see C7-good).
+docs\codex-review-findings.md:106:- AsyncAPI/OpenAPI: `contents.includes(channel)` / `contents.includes(requiredPath)` — substring presence in a YAML file (lines 85-105).
+docs\codex-review-findings.md:131:The `erp-flow-checkpoint.md` marks every step `[x]` except the final "Docker-backed live full-flow smoke," which is the **one** check that would exercise real Kafka/Schema-Registry/cross-service delivery — i.e. the one that would have exposed C1–C5. Unit/integration tests pass because they run against the no-op placeholders and in-process wiring. Green tests here certify the scaffold, not the system.
+docs\codex-review-findings.md:163:3. **Doc-code architecture drift with no binding check.** Docs described async/event-driven; code did sync point-to-point; nothing reconciled them. **Prevention:** for every contract, add one executable test that fails if the code stops matching the contract. A contract with no test that can go red is just prose.
+docs\enterprise-gap-summary.md:19:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`
+docs\enterprise-gap-summary.md:21:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`
+docs\enterprise-gap-summary.md:43:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`: 15 graph nodes found.
+docs\enterprise-gap-summary.md:45:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`: 15 graph nodes found.
+-- direct HTTP calls that may be delivering those 'events':
+
+=== 6. State-change + outbox paths lacking a transactional boundary ===
+-- @Transactional usages (expect these around save+enqueue):
+  NONE — dual-write hazard likely
+
+=== 7. Definition-of-done: was live E2E actually run? ===
+  no unchecked live-E2E markers found (verify manually)
+
+Done. Each section lists LEADS. Confirm every hit against the source before reporting.

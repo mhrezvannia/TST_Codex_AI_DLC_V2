@@ -13,8 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 final class BookingLocalIdentityFilter extends OncePerRequestFilter {
     private static final long MAX_COMMAND_BODY_BYTES = 32 * 1024;
-    private static final Map<String, Set<String>> ALLOWED_ACTORS = Map.of(
-            "booking-bff", Set.of("local-user"),
+    private static final Map<String, Set<String>> FIXED_SERVICE_ACTORS = Map.of(
             "seed-loader", Set.of("local-seed"),
             "w1-live-proof", Set.of("local-user"));
     private final byte[] expectedToken;
@@ -40,8 +39,7 @@ final class BookingLocalIdentityFilter extends OncePerRequestFilter {
         String actorId = request.getHeader("X-LinerCore-Actor-Id");
         String correlationId = request.getHeader("X-Correlation-Id");
         byte[] supplied = value(request.getHeader("X-LinerCore-Service-Token"));
-        Set<String> allowedActors = serviceId == null ? Set.of() : ALLOWED_ACTORS.getOrDefault(serviceId, Set.of());
-        if (!allowedActors.contains(actorId)
+        if (!trustedServiceActor(serviceId, actorId)
                 || correlationId == null || correlationId.isBlank()
                 || !MessageDigest.isEqual(expectedToken, supplied)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -63,6 +61,16 @@ final class BookingLocalIdentityFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean trustedServiceActor(String serviceId, String actorId) {
+        if (serviceId == null) {
+            return false;
+        }
+        if ("booking-bff".equals(serviceId)) {
+            return actorId != null && !actorId.isBlank();
+        }
+        return FIXED_SERVICE_ACTORS.getOrDefault(serviceId, Set.of()).contains(actorId);
     }
 
     private void reject(HttpServletResponse response, int status, String code, String message) throws IOException {

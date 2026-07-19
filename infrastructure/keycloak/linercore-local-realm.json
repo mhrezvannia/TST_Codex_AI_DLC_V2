@@ -1,0 +1,103 @@
+{
+  "realm": "linercore-local",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "loginWithEmailAllowed": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "booking-desk",
+        "description": "Create, validate, confirm, and view bookings"
+      },
+      {
+        "name": "reference-admin",
+        "description": "Maintain shared reference data without Booking access"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "linercore-auth",
+      "name": "LinerCore application shell",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://127.0.0.1:8088/auth/api/auth/callback"
+      ],
+      "webOrigins": [
+        "http://127.0.0.1:8088"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://127.0.0.1:8088/signed-out"
+      },
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "protocolMappers": [
+        {
+          "name": "realm roles in ID token",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "local.booking.user",
+      "username": "booking.user",
+      "firstName": "Booking",
+      "lastName": "Operator",
+      "email": "booking.user@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "booking",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "booking-desk"
+      ]
+    },
+    {
+      "id": "local.reference.admin",
+      "username": "reference.admin",
+      "firstName": "Reference",
+      "lastName": "Administrator",
+      "email": "reference.admin@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "reference"
+        }
+      ],
+      "realmRoles": [
+        "reference-admin"
+      ]
+    }
+  ]
+}

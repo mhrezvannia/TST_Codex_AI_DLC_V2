@@ -24,6 +24,18 @@ class BookingLocalIdentityFilterTest {
     }
 
     @Test
+    void acceptsSessionDerivedBookingUserForBffIdentity() throws Exception {
+        MockHttpServletRequest request = request("secret-token");
+        request.removeHeader("X-LinerCore-Actor-Id");
+        request.addHeader("X-LinerCore-Actor-Id", "local.booking.user");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, new MockFilterChain());
+
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test
     void rejectsSpoofedOrMissingToken() throws Exception {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -34,10 +46,21 @@ class BookingLocalIdentityFilterTest {
     }
 
     @Test
-    void rejectsActorThatDoesNotBelongToTheCallingService() throws Exception {
+    void letsAuthenticatedBffActorReachPolicyAuthorization() throws Exception {
         MockHttpServletRequest request = request("secret-token");
         request.removeHeader("X-LinerCore-Actor-Id");
         request.addHeader("X-LinerCore-Actor-Id", "container-movement-service");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, new MockFilterChain());
+
+        assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    void rejectsMissingBffActor() throws Exception {
+        MockHttpServletRequest request = request("secret-token");
+        request.removeHeader("X-LinerCore-Actor-Id");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         filter.doFilter(request, response, new MockFilterChain());

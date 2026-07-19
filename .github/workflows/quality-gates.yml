@@ -9,7 +9,7 @@ on:
 
 jobs:
   quality-gates:
-    name: W1 quality gates
+    name: Program quality gates
     runs-on: [self-hosted, on-prem, linux]
     timeout-minutes: 60
     permissions:
@@ -40,7 +40,34 @@ jobs:
         run: mvn -f services/pom.xml -q test
 
       - name: Workspace script tests
-        run: node --test scripts/w1-live-acceptance.test.mjs scripts/replay-restart-proof.test.mjs scripts/local-readiness.test.mjs scripts/run-quality-gates.test.mjs scripts/seed-local.test.mjs
+        run: node --test scripts/w1-live-acceptance.test.mjs scripts/w2-01-live-acceptance.test.mjs scripts/replay-restart-proof.test.mjs scripts/local-readiness.test.mjs scripts/run-quality-gates.test.mjs scripts/seed-local.test.mjs
+
+      - name: Shared auth package tests
+        run: corepack yarn workspace @erp/auth test
+
+      - name: Shared auth package typecheck
+        run: corepack yarn workspace @erp/auth typecheck
+
+      - name: Shared auth package lint
+        run: corepack yarn workspace @erp/auth lint
+
+      - name: Shared types package tests
+        run: corepack yarn workspace @erp/shared-types test
+
+      - name: Shared types package typecheck
+        run: corepack yarn workspace @erp/shared-types typecheck
+
+      - name: Shared types package lint
+        run: corepack yarn workspace @erp/shared-types lint
+
+      - name: Auth frontend tests
+        run: corepack yarn workspace @erp/app-auth test
+
+      - name: Auth frontend typecheck
+        run: corepack yarn workspace @erp/app-auth typecheck
+
+      - name: Auth frontend lint
+        run: corepack yarn workspace @erp/app-auth lint
 
       - name: Booking frontend tests
         run: corepack yarn workspace @erp/app-booking test
@@ -54,11 +81,28 @@ jobs:
       - name: Booking frontend build
         run: corepack yarn workspace @erp/app-booking build
 
+      - name: Shell frontend tests
+        run: corepack yarn workspace @erp/app-shell test
+
+      - name: Shell frontend typecheck
+        run: corepack yarn workspace @erp/app-shell typecheck
+
+      - name: Shell frontend lint
+        run: corepack yarn workspace @erp/app-shell lint
+
+      - name: Shell frontend build
+        run: corepack yarn workspace @erp/app-shell build
+
       - name: Compose static validation
         run: docker compose config --quiet
 
       - name: W1 live acceptance dry run
         run: node scripts/w1-live-acceptance.mjs --dry-run --run-id ci-dry-run
+
+      - name: W2-01 live evidence package
+        run: |
+          node scripts/w2-01-live-acceptance.mjs --output-root artifacts/w2-01-live/app-shell-auth
+          node scripts/w2-01-live-acceptance.mjs --validate --output-root artifacts/w2-01-live/app-shell-auth
 
       - name: Run quality gate aggregator
         run: node scripts/run-quality-gates.mjs --all --evidence artifacts/quality-gates/evidence.json
@@ -68,10 +112,12 @@ jobs:
         run: node scripts/local-readiness.mjs --evidence artifacts/readiness/local-readiness.json
 
       - name: Run AI-DLC audit detector
-        run: bash .claude/skills/aidlc-audit/detectors.sh | tee artifacts/quality-gates/aidlc-audit.txt
+        if: always()
+        run: mkdir -p artifacts/quality-gates && bash .claude/skills/aidlc-audit/detectors.sh | tee artifacts/quality-gates/aidlc-audit.txt
 
       - name: Run ERP fidelity detector
-        run: bash .claude/skills/erp-fidelity-audit/detectors.sh | tee artifacts/quality-gates/erp-fidelity-audit.txt
+        if: always()
+        run: mkdir -p artifacts/quality-gates && bash .claude/skills/erp-fidelity-audit/detectors.sh | tee artifacts/quality-gates/erp-fidelity-audit.txt
 
       - name: Upload quality evidence
         if: always()
@@ -84,4 +130,5 @@ jobs:
             artifacts/contracts-live-verification.json
             artifacts/seed-apply-attempt.json
             artifacts/w1-01-live/ci-dry-run/**
+            artifacts/w2-01-live/app-shell-auth/**
             artifacts/quality-gates/*.txt

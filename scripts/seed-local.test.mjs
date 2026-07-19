@@ -78,7 +78,7 @@ test("builds live API commands for reference records and role assignments", () =
     reason: "local seed currency-usd",
     correlationId: "corr-test"
   });
-  assert.equal(buildRoleAssignmentCommands(seedPack, "local.reference.admin", "corr-test").length, 3);
+  assert.equal(buildRoleAssignmentCommands(seedPack, "local.reference.admin", "corr-test").length, 4);
 });
 
 test("apply mode creates missing reference records through live API shape", async () => {
@@ -103,9 +103,55 @@ test("apply mode creates missing reference records through live API shape", asyn
 
   assert.equal(summary.failed, 0);
   assert.equal(summary.created, orderedReferenceRecords(seedPack).length);
-  assert.equal(summary.identityAssignments.length, 3);
+  assert.equal(summary.identityAssignments.length, 4);
   assert.equal(calls.some((call) => call.url === "http://identity.test/internal/identity/roles/assign"), true);
   assert.equal(calls.some((call) => call.url.includes("http://reference.test/reference-sets/CURRENCY/records")), true);
+});
+
+test("apply mode reports HTTP 200 authorization denials as failures", async () => {
+  const fetcher = async (url, init) => {
+    if (url.includes("/internal/identity/roles/assign")) {
+      return Response.json({ result: "DENY", reasonCode: "DENY_NO_PERMISSION" });
+    }
+    if (init.method === "GET") return Response.json({ error: "not found" }, { status: 404 });
+    return Response.json({ id: { value: "created" }, version: 1 });
+  };
+
+  const summary = await applySeedPack(seedPack, {
+    fetcher,
+    identityServiceUrl: "http://identity.test",
+    referenceDataServiceUrl: "http://reference.test",
+    correlationId: "corr-test"
+  });
+
+  assert.equal(summary.identityAssignments.every((assignment) => assignment.status === "failed"), true);
+  assert.equal(summary.failed, 4);
+  assert.match(summary.failures[0], /DENY_NO_PERMISSION/);
+});
+
+test("apply mode accepts stale assignment only when effective role is present", async () => {
+  const fetcher = async (url, init) => {
+    if (url.includes("/internal/identity/roles/assign")) {
+      return Response.json({ result: "DENY", reasonCode: "DENY_STALE_ASSIGNMENT" });
+    }
+    if (url.includes("/internal/identity/effective-permissions")) {
+      const subject = JSON.parse(init.body).tokenReference;
+      const roles = subject === "local.booking.user" ? [{ code: "BOOKING_DESK" }] : [];
+      return Response.json({ roles });
+    }
+    if (init.method === "GET") return Response.json({ error: "not found" }, { status: 404 });
+    return Response.json({ id: { value: "created" }, version: 1 });
+  };
+
+  const summary = await applySeedPack(seedPack, {
+    fetcher,
+    identityServiceUrl: "http://identity.test",
+    referenceDataServiceUrl: "http://reference.test",
+    correlationId: "corr-test"
+  });
+
+  assert.equal(summary.identityAssignments.find((entry) => entry.targetSubjectId === "local.booking.user").status, "already-applied");
+  assert.equal(summary.failed, 3);
 });
 
 test("apply mode is idempotent when live records already match", async () => {

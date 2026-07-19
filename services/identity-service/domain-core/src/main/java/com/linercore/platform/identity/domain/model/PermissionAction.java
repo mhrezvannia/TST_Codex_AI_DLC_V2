@@ -3,6 +3,9 @@ package com.linercore.platform.identity.domain.model;
 public enum PermissionAction {
     READ("read"),
     CREATE("create"),
+    VALIDATE("validate"),
+    REQUEST_PRICING("request-pricing"),
+    CONFIRM("confirm"),
     UPDATE("update"),
     DEACTIVATE("deactivate"),
     REACTIVATE("reactivate"),

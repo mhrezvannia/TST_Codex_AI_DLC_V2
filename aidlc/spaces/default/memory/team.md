@@ -5,20 +5,19 @@
 > not directly.
 
 ## Way of Working
-The LinerCore program uses gated AI-DLC intents and short-lived intent/Bolt branches. W1-01 Construction Bolts base from and merge to `integ/main-reconciled`, use squash commits, and merge only after their quality evidence and the intent's live exit gate are green; Booking drives the vertical intent while Charge and CMM changes remain contract-governed contributor work.
+W2-01 uses the existing short-lived intent branch `intent/W2-01-app-shell-and-auth` from `integ/main-reconciled` and keeps one Platform+UI driver accountable for the full shell/auth/Booking vertical slice. Contributors work through owned seams rather than broad cross-module rewrites.
 
 ## Walking Skeleton
-The first W1-01 Construction Bolt proves the highest-risk thin path: canonical `booking.confirmed` publication, real CMM Kafka consumption and journey creation, `containermovement.status` return, Booking projection, and a minimal Booking UI detail read. It is gated before the remaining Bolts and does not expand into D&D, amendments, global shell/auth, or broader CMM scope.
+The first W2-01 Construction slice should prove the protected shell entry and session handoff before any shell chrome expansion. The risk-first path is login through Keycloak/auth, shell landing, and one Booking call that cannot fall back to `local-user`.
 
 ## Testing Posture
-Tests are written alongside code with an 80 percent line-coverage floor for W1-01. Numeric coverage is necessary but insufficient: exact contract/serde tests, provider-consumer checks, duplicate and stale-redelivery tests, transactional idempotency tests, service-restart persistence, and a live Compose Kafka round trip are mandatory.
+Tests are written alongside code and must include targeted coverage for session-derived actor propagation, denied authorization, sign-out/session clearing, and detector 6d hardcoded-auth evidence. Unit and integration tests are necessary but insufficient; live Compose proof through Nginx and Keycloak remains the exit gate.
 
 ## Deployment
-The canonical W1 delivery environment is the local Docker Compose stack with PostgreSQL exposed on a non-default host port (55432 by default), plus Kafka, Schema Registry, services, UI, and nginx. CI blocks merges on the repository quality gates; completion additionally requires live evidence and both intent audits, while staging/production deployment remains later operation work with manual production approval.
+W2-01 acceptance targets the local/on-prem Docker Compose topology with Nginx, Keycloak, identity-service, Booking service, and shell/auth app. Public-cloud deployment is not a release condition for this intent.
 
 ## Code Style
-Java follows the existing domain/application/adapter module boundaries, keeps `domain-core` framework-free, uses immutable records and explicit validation, and maps exceptions at HTTP boundaries. TypeScript stays strict and uses shared `@erp/*` packages; W1 domain, Avro, AsyncAPI, examples, and adapters use the frozen contract field names exactly, with Graphify-first discovery followed by source verification when its freshness marker is stale.
-
+Frontend work stays in strict TypeScript/Next.js/Yarn workspace patterns and reuses shared packages where practical. Backend changes preserve service ownership and Java/Spring boundaries; local auth bypass code must be explicit, logged, and fail closed outside local profiles.
 ## Forbidden
 
 <!-- Team-specific forbidden patterns -->

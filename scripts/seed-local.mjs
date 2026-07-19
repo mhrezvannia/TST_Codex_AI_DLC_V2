@@ -112,11 +112,20 @@ export async function applySeedPack(pack, options = {}) {
 
   for (const command of buildRoleAssignmentCommands(pack, actorTokenReference, correlationId)) {
     const result = await postJson(fetcher, `${identityUrl}/internal/identity/roles/assign`, command, correlationId);
-    const entry = { targetSubjectId: command.targetSubjectId, roleCode: command.roleCode, status: result.ok ? "applied" : "failed" };
+    const applied = result.ok && result.data?.result === "ALLOW";
+    const alreadyApplied = !applied
+      && result.ok
+      && result.data?.reasonCode === "DENY_STALE_ASSIGNMENT"
+      && await hasEffectiveRole(fetcher, identityUrl, command.targetSubjectId, command.roleCode, correlationId);
+    const entry = {
+      targetSubjectId: command.targetSubjectId,
+      roleCode: command.roleCode,
+      status: applied ? "applied" : alreadyApplied ? "already-applied" : "failed"
+    };
     summary.identityAssignments.push(entry);
-    if (!result.ok) {
+    if (!applied && !alreadyApplied) {
       summary.failed += 1;
-      summary.failures.push(`identity role ${command.roleCode} for ${command.targetSubjectId}: ${result.detail}`);
+      summary.failures.push(`identity role ${command.roleCode} for ${command.targetSubjectId}: ${result.detail ?? JSON.stringify(result.data)}`);
     }
   }
 
@@ -159,6 +168,18 @@ export async function applySeedPack(pack, options = {}) {
   }
 
   return summary;
+}
+
+async function hasEffectiveRole(fetcher, identityUrl, targetSubjectId, roleCode, correlationId) {
+  const effective = await postJson(
+    fetcher,
+    `${identityUrl}/internal/identity/effective-permissions`,
+    { tokenReference: targetSubjectId },
+    correlationId
+  );
+  if (!effective.ok || !Array.isArray(effective.data?.roles)) return false;
+  const expected = roleCode.replaceAll("-", "_").toUpperCase();
+  return effective.data.roles.some((role) => role?.code === expected);
 }
 
 export function buildReferenceMutationCommand(record, correlationId) {

@@ -19,6 +19,12 @@
         "displayName": "Local Carrier User",
         "email": "local.carrier.user@example.invalid",
         "roles": ["customer-service"]
+      },
+      {
+        "username": "local.booking.user",
+        "displayName": "Local Booking User",
+        "email": "local.booking.user@example.invalid",
+        "roles": ["booking-desk"]
       }
     ]
   },
@@ -39,17 +45,21 @@
       "reference-data:write",
       "identity:read",
       "identity:admin",
-      "authz:decision"
+      "authz:decision",
+      "booking:read",
+      "booking:create"
     ],
     "rolePermissions": [
       { "role": "customer-service", "permissions": ["reference-data:read"] },
+      { "role": "booking-desk", "permissions": ["reference-data:read", "booking:read", "booking:create"] },
       { "role": "reference-admin", "permissions": ["reference-data:read", "reference-data:write"] },
       { "role": "platform-operator", "permissions": ["reference-data:read", "identity:read"] },
       { "role": "security-admin", "permissions": ["identity:read", "identity:admin", "authz:decision"] }
     ],
     "localUsers": [
       { "username": "local.reference.admin", "roles": ["reference-admin", "platform-operator"] },
-      { "username": "local.carrier.user", "roles": ["customer-service"] }
+      { "username": "local.carrier.user", "roles": ["customer-service"] },
+      { "username": "local.booking.user", "roles": ["booking-desk"] }
     ]
   },
   "referenceData": {

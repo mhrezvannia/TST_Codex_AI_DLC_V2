@@ -6,6 +6,9 @@ import java.util.Set;
 
 final class BookingLocalAuthorization implements AuthorizationPort {
     private static final Map<String, Set<String>> ACTIONS = Map.of(
+            "local.booking.user", Set.of(
+                    "create", "read", "validate", "request-pricing", "confirm", "amend", "reconfirm",
+                    "request-dnd-pricing"),
             "local-user", Set.of(
                     "create", "read", "validate", "request-pricing", "confirm", "amend", "reconfirm",
                     "request-dnd-pricing"),

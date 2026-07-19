@@ -23,12 +23,16 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
     profiles: ["core", "app", "devtools", "full"]
-    command: ["start-dev"]
+    command: ["start-dev", "--import-realm"]
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_URL: http://127.0.0.1:8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
     ports:
       - "8080:8080"
+    volumes:
+      - ./infrastructure/keycloak/linercore-local-realm.json:/opt/keycloak/data/import/linercore-local-realm.json:ro
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/8080'"]
       interval: 10s
@@ -167,6 +171,7 @@ services:
       SPRING_DATASOURCE_USERNAME: linercore_booking
       SPRING_DATASOURCE_PASSWORD: ${BOOKING_DB_PASSWORD:-booking_local}
       BOOKING_SERVICE_TOKEN: ${BOOKING_SERVICE_TOKEN:-booking_local_service_token}
+      IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
       REFERENCE_DATA_CLIENT_ID: booking-service
       REFERENCE_DATA_BOOKING_TOKEN: ${REFERENCE_DATA_BOOKING_TOKEN:-reference_data_booking_local_token}
@@ -198,6 +203,8 @@ services:
       reference-data-service:
         condition: service_started
       charge-agreement-service:
+        condition: service_started
+      identity-service:
         condition: service_started
       kafka:
         condition: service_healthy
@@ -286,8 +293,47 @@ services:
     profiles: ["app", "full"]
     environment:
       IDENTITY_SERVICE_URL: http://identity-service:8082
+      AUTH_LOCAL_SUBJECT_ID: ${AUTH_LOCAL_SUBJECT_ID:-local.booking.user}
+      AUTH_REDIRECT_URI: ${AUTH_REDIRECT_URI:-http://127.0.0.1:8088/auth/api/auth/callback}
+      AUTH_PUBLIC_ORIGIN: ${AUTH_PUBLIC_ORIGIN:-http://127.0.0.1:8088}
+      AUTH_SESSION_SECRET: ${AUTH_SESSION_SECRET:-linercore-local-session-secret}
+      KEYCLOAK_PUBLIC_URL: ${KEYCLOAK_PUBLIC_URL:-http://127.0.0.1:8080}
+      KEYCLOAK_INTERNAL_URL: http://keycloak:8080
+      JWT_ISSUER_URI: ${JWT_ISSUER_URI:-http://127.0.0.1:8080/realms/linercore-local}
     depends_on:
       - identity-service
+
+  apps-shell:
+    image: linercore/apps-shell:local
+    build:
+      context: .
+      dockerfile: infrastructure/docker/next-app.Dockerfile
+      args:
+        WORKSPACE: "@erp/app-shell"
+    profiles: ["app", "full"]
+    environment:
+      BOOKING_APP_URL: http://apps-booking:3000
+      AUTH_SESSION_SECRET: ${AUTH_SESSION_SECRET:-linercore-local-session-secret}
+    ports:
+      - "${SHELL_APP_HOST_PORT:-3004}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.75"
+          memory: 512M
+    depends_on:
+      - apps-auth
+      - apps-booking
 
   apps-reference-data:
     image: linercore/apps-reference-data:local
@@ -331,6 +377,7 @@ services:
     environment:
       BOOKING_SERVICE_URL: http://booking-service:8085
       BOOKING_SERVICE_TOKEN: ${BOOKING_SERVICE_TOKEN:-booking_local_service_token}
+      AUTH_SESSION_SECRET: ${AUTH_SESSION_SECRET:-linercore-local-session-secret}
     ports:
       - "${BOOKING_APP_HOST_PORT:-3001}:3000"
     healthcheck:
@@ -374,6 +421,7 @@ services:
     volumes:
       - ./infrastructure/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
+      - apps-shell
       - apps-auth
       - apps-reference-data
       - apps-charge-agreements
@@ -414,16 +462,16 @@ services:
     image: jaegertracing/all-in-one:1.63.0
     ports:
       - "16686:16686"
-      - "4317:4317"
-      - "4318:4318"
+      - "${JAEGER_OTLP_GRPC_HOST_PORT:-4317}:4317"
+      - "${JAEGER_OTLP_HTTP_HOST_PORT:-4318}:4318"
     profiles: ["observability", "full"]
 
   otel-collector:
     image: otel/opentelemetry-collector:0.114.0
     command: ["--config=/etc/otelcol/config.yml"]
     ports:
-      - "4319:4317"
-      - "4320:4318"
+      - "${OTEL_GRPC_HOST_PORT:-4319}:4317"
+      - "${OTEL_HTTP_HOST_PORT:-4320}:4318"
     volumes:
       - ./infrastructure/observability/otel-collector.yml:/etc/otelcol/config.yml:ro
     depends_on:
@@ -436,13 +484,13 @@ services:
       discovery.type: single-node
       xpack.security.enabled: "false"
     ports:
-      - "9200:9200"
+      - "${ELASTICSEARCH_HOST_PORT:-9200}:9200"
     profiles: ["observability", "full"]
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.16.1
     ports:
-      - "5601:5601"
+      - "${KIBANA_HOST_PORT:-5601}:5601"
     depends_on:
       - elasticsearch
     profiles: ["observability", "full"]

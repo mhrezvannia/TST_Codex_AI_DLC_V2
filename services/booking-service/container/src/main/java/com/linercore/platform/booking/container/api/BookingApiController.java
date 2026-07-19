@@ -240,7 +240,7 @@ public class BookingApiController {
     }
 
     private String actor(String actorSubjectId) {
-        return actorSubjectId == null || actorSubjectId.isBlank() ? "local-user" : actorSubjectId;
+        return required(actorSubjectId, "X-LinerCore-Actor-Id header is required");
     }
 
     private String correlation(String headerCorrelationId, String bodyCorrelationId) {

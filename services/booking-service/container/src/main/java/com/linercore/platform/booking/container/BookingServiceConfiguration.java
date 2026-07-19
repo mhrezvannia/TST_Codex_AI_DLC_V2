@@ -17,6 +17,7 @@ import com.linercore.platform.booking.applicationservice.port.BookingEventPublis
 import com.linercore.platform.booking.applicationservice.port.SchemaRegistryPort;
 import com.linercore.platform.booking.applicationservice.pricing.ChargePricingPortAdapter;
 import com.linercore.platform.booking.container.integration.HttpChargePricingClient;
+import com.linercore.platform.booking.container.integration.HttpIdentityAuthorizationAdapter;
 import com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapter;
 import com.linercore.platform.booking.container.integration.HttpReferenceOptionAdapter;
 import com.linercore.platform.booking.dataaccess.jdbc.JdbcAuditRepository;
@@ -92,8 +93,10 @@ public class BookingServiceConfiguration {
     }
 
     @Bean
-    AuthorizationPort bookingAuthorizationPort() {
-        return new BookingLocalAuthorization();
+    AuthorizationPort bookingAuthorizationPort(
+            @Qualifier("bookingIdentityRestTemplate") RestTemplate restTemplate,
+            @Value("${booking.identity-service-url}") String identityServiceUrl) {
+        return new HttpIdentityAuthorizationAdapter(restTemplate, identityServiceUrl);
     }
 
     @Bean
@@ -104,6 +107,14 @@ public class BookingServiceConfiguration {
 
     @Bean("bookingReferenceRestTemplate")
     RestTemplate bookingReferenceRestTemplate() {
+        HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500)).build();
+        JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(client);
+        requestFactory.setReadTimeout(Duration.ofMillis(1500));
+        return new RestTemplate(requestFactory);
+    }
+
+    @Bean("bookingIdentityRestTemplate")
+    RestTemplate bookingIdentityRestTemplate() {
         HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500)).build();
         JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(client);
         requestFactory.setReadTimeout(Duration.ofMillis(1500));

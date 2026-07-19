@@ -1,0 +1,233 @@
+{
+  "generatedAt": "2026-07-19T20:23:32.492Z",
+  "baseUrl": "http://127.0.0.1:8088",
+  "composeProject": "linercore-w2-01",
+  "browser": {
+    "engine": "chromium",
+    "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+  },
+  "runtime": {
+    "status": "PASS",
+    "services": [
+      {
+        "name": "nginx",
+        "url": "http://127.0.0.1:8088/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "apps-shell",
+        "url": "http://127.0.0.1:8088/api/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "apps-auth",
+        "url": "http://127.0.0.1:8088/auth/api/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "apps-booking",
+        "url": "http://127.0.0.1:3001/",
+        "httpStatus": 307,
+        "status": "PASS"
+      },
+      {
+        "name": "identity-service",
+        "url": "http://127.0.0.1:8082/actuator/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "charge-agreement-service",
+        "url": "http://127.0.0.1:8084/actuator/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "booking-service",
+        "url": "http://127.0.0.1:8085/actuator/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      }
+    ]
+  },
+  "prerequisites": [
+    {
+      "name": "approved-charge-agreement",
+      "status": "PASS",
+      "agreementId": "ae3bba73-2acc-4a8e-b799-30609de559f1",
+      "agreementNumber": "W2-01-LIVE-NA-EU-GEN",
+      "correlationId": "673963bd-d4b5-466a-bea0-ceaca2a14bd1",
+      "source": "reused"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenarioId": "allow-booking-create-detail",
+      "actor": "local.booking.user",
+      "route": "/booking/1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "expectedResult": "create, validate, price, and confirm through the mounted shell",
+      "observedResult": "CONFIRMED with matching OIDC subject in booking_audit",
+      "status": "PASS",
+      "correlationId": "60ff2fa0-b16b-4150-a8af-86423c3c87a5",
+      "evidenceRefs": [
+        "browser-evidence.json",
+        "screenshots/booking-confirmed-desktop.png"
+      ],
+      "timings": {
+        "bookingReadMs": 109.15,
+        "createMs": 158.47,
+        "detailMs": 7.04,
+        "lifecycleMs": 3706.39
+      }
+    },
+    {
+      "scenarioId": "legacy-bookings-compatibility",
+      "actor": "local.booking.user",
+      "route": "/bookings, /bookings/new, /bookings/[id]",
+      "expectedResult": "308 redirects to canonical shell routes",
+      "observedResult": "all legacy routes returned the expected canonical redirect",
+      "status": "PASS",
+      "correlationId": "browser-http-observation",
+      "evidenceRefs": [
+        "browser-evidence.json"
+      ]
+    },
+    {
+      "scenarioId": "sign-out-reauth-stale-call",
+      "actor": "local.booking.user",
+      "route": "/api/auth/sign-out -> /booking",
+      "expectedResult": "session cleared, reauthentication required, stale API call fails closed",
+      "observedResult": "cookie cleared; stale call returned 401",
+      "status": "PASS",
+      "correlationId": "ba4e1c502daaebba8778b70adb3a8bf8",
+      "evidenceRefs": [
+        "browser-evidence.json"
+      ],
+      "timings": {
+        "signOutMs": 437.3,
+        "staleCallMs": 26.35,
+        "postSignOutGuardMs": 151.49
+      }
+    },
+    {
+      "scenarioId": "deny-booking-access",
+      "actor": "local.reference.admin",
+      "route": "/booking",
+      "expectedResult": "authenticated denial inside the shell",
+      "observedResult": "shell denial displays the authenticated Keycloak subject",
+      "status": "PASS",
+      "correlationId": "20bfe5ea9ddf206016f543252b0fc08d",
+      "evidenceRefs": [
+        "browser-evidence.json",
+        "screenshots/booking-access-denied.png"
+      ],
+      "timings": {
+        "denyMs": 113.51
+      }
+    }
+  ],
+  "actors": [
+    {
+      "scenarioId": "allow-booking-create-detail",
+      "source": "OIDC session",
+      "actorSubjectId": "local.booking.user",
+      "correlationId": "ba4e1c502daaebba8778b70adb3a8bf8"
+    },
+    {
+      "scenarioId": "allow-booking-create-detail",
+      "source": "linercore_booking.booking_audit",
+      "bookingId": "1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "eventType": "BOOKING_DRAFT_CREATED",
+      "actorSubjectId": "local.booking.user",
+      "result": "SUCCESS",
+      "correlationId": "1cb1e0bd-fe83-4d37-9f23-bb2f1dbc78b6"
+    },
+    {
+      "scenarioId": "allow-booking-create-detail",
+      "source": "linercore_booking.booking_audit",
+      "bookingId": "1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "eventType": "BOOKING_VALIDATED",
+      "actorSubjectId": "local.booking.user",
+      "result": "SUCCESS",
+      "correlationId": "83efa81b-655c-4157-be39-2ab31eefa826"
+    },
+    {
+      "scenarioId": "allow-booking-create-detail",
+      "source": "linercore_booking.booking_audit",
+      "bookingId": "1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "eventType": "BOOKING_PRICING_REQUESTED",
+      "actorSubjectId": "local.booking.user",
+      "result": "SUCCESS",
+      "correlationId": "dd9dee02-7d79-4313-b847-2c5ffb399f1c"
+    },
+    {
+      "scenarioId": "allow-booking-create-detail",
+      "source": "linercore_booking.booking_audit",
+      "bookingId": "1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "eventType": "BOOKING_CONFIRMED",
+      "actorSubjectId": "local.booking.user",
+      "result": "SUCCESS",
+      "correlationId": "60ff2fa0-b16b-4150-a8af-86423c3c87a5"
+    },
+    {
+      "scenarioId": "deny-booking-access",
+      "source": "OIDC session and shell denial",
+      "actorSubjectId": "local.reference.admin",
+      "correlationId": "20bfe5ea9ddf206016f543252b0fc08d"
+    }
+  ],
+  "signOut": {
+    "preSignOutSubject": "local.booking.user",
+    "signOutCorrelationId": "ba4e1c502daaebba8778b70adb3a8bf8",
+    "signOutCommand": "POST /api/auth/sign-out through shell/auth route",
+    "signOutExitOrHttpStatus": 200,
+    "cookieCleared": true,
+    "postSignOutRoute": "/booking",
+    "postSignOutDecision": "Keycloak reauthentication required",
+    "staleCallStatus": 401,
+    "staleCallCode": "AUTH_REQUIRED",
+    "staleCallCorrelationId": "response-body",
+    "backendLocalUserObserved": false,
+    "reauthRequired": true,
+    "timings": {
+      "signOutMs": 437.3,
+      "staleCallMs": 26.35,
+      "postSignOutGuardMs": 151.49
+    }
+  },
+  "compatibility": [
+    {
+      "legacyPath": "/bookings",
+      "canonicalPath": "/booking",
+      "httpStatus": 308,
+      "location": "/booking",
+      "durationMs": 35.75,
+      "status": "PASS"
+    },
+    {
+      "legacyPath": "/bookings/new",
+      "canonicalPath": "/booking/new",
+      "httpStatus": 308,
+      "location": "/booking/new",
+      "durationMs": 130.85,
+      "status": "PASS"
+    },
+    {
+      "legacyPath": "/bookings/1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "canonicalPath": "/booking/1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "httpStatus": 308,
+      "location": "/booking/1d8f9e74-eaa9-4308-bbf9-78905779132b",
+      "durationMs": 221.42,
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "screenshots/booking-confirmed-desktop.png",
+    "screenshots/booking-access-denied.png"
+  ],
+  "httpFailures": [],
+  "errors": []
+}

@@ -33,6 +33,34 @@ class AuthorizationPolicyEvaluatorTest {
     }
 
     @Test
+    void bookingDeskCanRunMountedBookingLifecycle() {
+        AuthenticatedSubject subject = subject("local.booking.user");
+        RoleAssignment assignment = assignment("local.booking.user", RoleCode.BOOKING_DESK);
+
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "read")).result());
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "create")).result());
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "validate")).result());
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "request-pricing")).result());
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "confirm")).result());
+    }
+
+    @Test
+    void referenceAdminDoesNotGainBookingPermissions() {
+        AuthenticatedSubject subject = subject("local.reference.admin");
+        RoleAssignment assignment = assignment("local.reference.admin", RoleCode.REFERENCE_ADMIN);
+
+        assertEquals(DecisionResult.DENY,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "create")).result());
+        assertEquals(DecisionResult.DENY,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "confirm")).result());
+    }
+
+    @Test
     void defaultUserWithoutAssignmentIsDenied() {
         AuthenticatedSubject subject = subject("bob");
 
@@ -88,5 +116,9 @@ class AuthorizationPolicyEvaluatorTest {
 
     private AuthorizationRequest request(String action) {
         return new AuthorizationRequest("req-1", "corr-1", "token-ref", "reference-data", action, null, Map.of());
+    }
+
+    private AuthorizationRequest request(String resource, String action) {
+        return new AuthorizationRequest("req-1", "corr-1", "token-ref", resource, action, null, Map.of());
     }
 }

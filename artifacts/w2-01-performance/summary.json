@@ -1,0 +1,298 @@
+{
+  "generatedAt": "2026-07-19T20:25:05.789Z",
+  "scope": "single-user sequential warm local proof",
+  "iterations": 10,
+  "passedRuns": 10,
+  "completionRate": 1,
+  "throughputClaim": "observed full-journey completion rate only; no acceptance target",
+  "status": "PASS",
+  "metrics": [
+    {
+      "key": "bookingReadMs",
+      "targetMs": 3000,
+      "requirement": "U01 authenticated Booking read p95",
+      "samples": 10,
+      "p50Ms": 119.4,
+      "p95Ms": 180.69,
+      "maxMs": 180.69,
+      "status": "PASS"
+    },
+    {
+      "key": "createMs",
+      "targetMs": 5000,
+      "requirement": "U02 Booking create p95",
+      "samples": 10,
+      "p50Ms": 204.11,
+      "p95Ms": 343.02,
+      "maxMs": 343.02,
+      "status": "PASS"
+    },
+    {
+      "key": "detailMs",
+      "targetMs": 3000,
+      "requirement": "U02 created Booking detail p95",
+      "samples": 10,
+      "p50Ms": 12.46,
+      "p95Ms": 34.15,
+      "maxMs": 34.15,
+      "status": "PASS"
+    },
+    {
+      "key": "denyMs",
+      "targetMs": 3000,
+      "requirement": "U03 authenticated deny render p95",
+      "samples": 10,
+      "p50Ms": 97.86,
+      "p95Ms": 222.96,
+      "maxMs": 222.96,
+      "status": "PASS"
+    },
+    {
+      "key": "signOutMs",
+      "targetMs": 3000,
+      "requirement": "U04 sign-out p95",
+      "samples": 10,
+      "p50Ms": 337.03,
+      "p95Ms": 437.3,
+      "maxMs": 437.3,
+      "status": "PASS"
+    },
+    {
+      "key": "postSignOutGuardMs",
+      "targetMs": 3000,
+      "requirement": "U04 protected-route reauth p95",
+      "samples": 10,
+      "p50Ms": 171.32,
+      "p95Ms": 372.69,
+      "maxMs": 372.69,
+      "status": "PASS"
+    },
+    {
+      "key": "staleCallMs",
+      "targetMs": 1000,
+      "requirement": "U04 stale BFF fail-closed p95",
+      "samples": 10,
+      "p50Ms": 21.89,
+      "p95Ms": 40.79,
+      "maxMs": 40.79,
+      "status": "PASS"
+    },
+    {
+      "key": "compatibilityListMs",
+      "targetMs": 1000,
+      "requirement": "U05 /bookings redirect p95",
+      "samples": 10,
+      "p50Ms": 23.91,
+      "p95Ms": 45.3,
+      "maxMs": 45.3,
+      "status": "PASS"
+    },
+    {
+      "key": "compatibilityNewMs",
+      "targetMs": 1000,
+      "requirement": "U05 /bookings/new redirect p95",
+      "samples": 10,
+      "p50Ms": 10.17,
+      "p95Ms": 130.85,
+      "maxMs": 130.85,
+      "status": "PASS"
+    },
+    {
+      "key": "compatibilityDetailMs",
+      "targetMs": 1000,
+      "requirement": "U05 /bookings/{id} redirect p95",
+      "samples": 10,
+      "p50Ms": 23.05,
+      "p95Ms": 221.42,
+      "maxMs": 221.42,
+      "status": "PASS"
+    }
+  ],
+  "fullJourney": {
+    "p50Ms": 9931.72,
+    "p95Ms": 11674.16,
+    "maxMs": 11674.16
+  },
+  "runs": [
+    {
+      "run": 1,
+      "status": "PASS",
+      "durationMs": 9519.21,
+      "timings": {
+        "bookingReadMs": 157.53,
+        "createMs": 214.13,
+        "detailMs": 9.44,
+        "denyMs": 97.86,
+        "signOutMs": 276.52,
+        "postSignOutGuardMs": 153.12,
+        "staleCallMs": 17.09,
+        "compatibilityListMs": 21.11,
+        "compatibilityNewMs": 9.02,
+        "compatibilityDetailMs": 16.87
+      },
+      "evidence": "run-01/browser-evidence.json"
+    },
+    {
+      "run": 2,
+      "status": "PASS",
+      "durationMs": 9931.72,
+      "timings": {
+        "bookingReadMs": 109.15,
+        "createMs": 158.47,
+        "detailMs": 7.04,
+        "denyMs": 113.51,
+        "signOutMs": 437.3,
+        "postSignOutGuardMs": 151.49,
+        "staleCallMs": 26.35,
+        "compatibilityListMs": 35.75,
+        "compatibilityNewMs": 130.85,
+        "compatibilityDetailMs": 221.42
+      },
+      "evidence": "run-02/browser-evidence.json"
+    },
+    {
+      "run": 3,
+      "status": "PASS",
+      "durationMs": 11035.91,
+      "timings": {
+        "bookingReadMs": 133.94,
+        "createMs": 217.32,
+        "detailMs": 8,
+        "denyMs": 222.96,
+        "signOutMs": 354.49,
+        "postSignOutGuardMs": 235.17,
+        "staleCallMs": 21.89,
+        "compatibilityListMs": 22.99,
+        "compatibilityNewMs": 11.61,
+        "compatibilityDetailMs": 27.42
+      },
+      "evidence": "run-03/browser-evidence.json"
+    },
+    {
+      "run": 4,
+      "status": "PASS",
+      "durationMs": 11674.16,
+      "timings": {
+        "bookingReadMs": 146.1,
+        "createMs": 343.02,
+        "detailMs": 22.01,
+        "denyMs": 98.64,
+        "signOutMs": 321.47,
+        "postSignOutGuardMs": 185.83,
+        "staleCallMs": 40.79,
+        "compatibilityListMs": 20.43,
+        "compatibilityNewMs": 10.17,
+        "compatibilityDetailMs": 23.05
+      },
+      "evidence": "run-04/browser-evidence.json"
+    },
+    {
+      "run": 5,
+      "status": "PASS",
+      "durationMs": 11542.77,
+      "timings": {
+        "bookingReadMs": 180.69,
+        "createMs": 337.78,
+        "detailMs": 34.15,
+        "denyMs": 167.12,
+        "signOutMs": 328.71,
+        "postSignOutGuardMs": 372.69,
+        "staleCallMs": 23.45,
+        "compatibilityListMs": 45.3,
+        "compatibilityNewMs": 13.14,
+        "compatibilityDetailMs": 28.71
+      },
+      "evidence": "run-05/browser-evidence.json"
+    },
+    {
+      "run": 6,
+      "status": "PASS",
+      "durationMs": 10517.2,
+      "timings": {
+        "bookingReadMs": 96.76,
+        "createMs": 255.82,
+        "detailMs": 14.92,
+        "denyMs": 104.54,
+        "signOutMs": 428.18,
+        "postSignOutGuardMs": 171.32,
+        "staleCallMs": 27.96,
+        "compatibilityListMs": 29.17,
+        "compatibilityNewMs": 13.18,
+        "compatibilityDetailMs": 24.43
+      },
+      "evidence": "run-06/browser-evidence.json"
+    },
+    {
+      "run": 7,
+      "status": "PASS",
+      "durationMs": 9541.1,
+      "timings": {
+        "bookingReadMs": 119.4,
+        "createMs": 179.65,
+        "detailMs": 12.46,
+        "denyMs": 74.44,
+        "signOutMs": 367.35,
+        "postSignOutGuardMs": 163.03,
+        "staleCallMs": 20.8,
+        "compatibilityListMs": 24.23,
+        "compatibilityNewMs": 9.55,
+        "compatibilityDetailMs": 22.27
+      },
+      "evidence": "run-07/browser-evidence.json"
+    },
+    {
+      "run": 8,
+      "status": "PASS",
+      "durationMs": 10436.3,
+      "timings": {
+        "bookingReadMs": 153.8,
+        "createMs": 204.11,
+        "detailMs": 15.79,
+        "denyMs": 83.95,
+        "signOutMs": 337.03,
+        "postSignOutGuardMs": 174.98,
+        "staleCallMs": 20.78,
+        "compatibilityListMs": 21.89,
+        "compatibilityNewMs": 12.99,
+        "compatibilityDetailMs": 27.21
+      },
+      "evidence": "run-08/browser-evidence.json"
+    },
+    {
+      "run": 9,
+      "status": "PASS",
+      "durationMs": 9666.74,
+      "timings": {
+        "bookingReadMs": 83.97,
+        "createMs": 141.35,
+        "detailMs": 10.54,
+        "denyMs": 95.25,
+        "signOutMs": 361.51,
+        "postSignOutGuardMs": 147.25,
+        "staleCallMs": 18.73,
+        "compatibilityListMs": 25.92,
+        "compatibilityNewMs": 8.32,
+        "compatibilityDetailMs": 15.93
+      },
+      "evidence": "run-09/browser-evidence.json"
+    },
+    {
+      "run": 10,
+      "status": "PASS",
+      "durationMs": 9535.46,
+      "timings": {
+        "bookingReadMs": 99.87,
+        "createMs": 193.47,
+        "detailMs": 16.51,
+        "denyMs": 91.2,
+        "signOutMs": 290.44,
+        "postSignOutGuardMs": 179.16,
+        "staleCallMs": 23.61,
+        "compatibilityListMs": 23.91,
+        "compatibilityNewMs": 8.47,
+        "compatibilityDetailMs": 17.54
+      },
+      "evidence": "run-10/browser-evidence.json"
+    }
+  ]
+}

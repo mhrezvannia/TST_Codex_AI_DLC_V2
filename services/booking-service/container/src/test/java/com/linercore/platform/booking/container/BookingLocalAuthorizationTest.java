@@ -10,6 +10,8 @@ class BookingLocalAuthorizationTest {
 
     @Test
     void grantsOnlyMappedSubjectActions() {
+        assertTrue(authorization.allowed("local.booking.user", "booking", "read", "corr-1"));
+        assertTrue(authorization.allowed("local.booking.user", "booking", "create", "corr-1"));
         assertTrue(authorization.allowed("local-user", "booking", "create", "corr-1"));
         assertTrue(authorization.allowed("local-seed", "booking", "read", "corr-1"));
         assertTrue(authorization.allowed(

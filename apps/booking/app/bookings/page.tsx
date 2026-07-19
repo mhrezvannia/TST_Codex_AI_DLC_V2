@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { headers } from "next/headers";
+import { actorSubjectFromSession, sessionFromCookieHeader } from "@erp/auth";
 import { bookingReturnTo, loadBookings, type BookingStatus } from "../../lib/bookings";
 
 type Search = { search?: string; status?: BookingStatus; page?: string };
@@ -9,7 +11,9 @@ export default async function BookingListPage({ searchParams }: { searchParams: 
   if (params.search) query.set("search", params.search);
   if (params.status) query.set("status", params.status);
   const returnTo = bookingReturnTo(params);
-  const result = await loadBookings(query);
+  const headerStore = await headers();
+  const actorSubjectId = actorSubjectFromSession(sessionFromCookieHeader(headerStore.get("cookie")));
+  const result = await loadBookings(query, actorSubjectId);
 
   return (
     <main className="booking-page">

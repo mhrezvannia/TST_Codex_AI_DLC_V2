@@ -27,11 +27,15 @@
     "w1:replay-restart:dry-run": "node scripts/replay-restart-proof.mjs --dry-run --evidence artifacts/w1-01-live/replay-restart/evidence.json",
     "w1:live-acceptance": "node scripts/w1-live-acceptance.mjs",
     "w1:live-acceptance:dry-run": "node scripts/w1-live-acceptance.mjs --dry-run",
+    "w2-01:live-acceptance": "node scripts/w2-01-live-acceptance.mjs",
+    "w2-01:live-acceptance:dry-run": "node scripts/w2-01-live-acceptance.mjs --dry-run",
+    "w2-01:live-acceptance:validate": "node scripts/w2-01-live-acceptance.mjs --validate",
     "skeleton:validate": "node scripts/validate-skeleton.mjs",
     "smoke:local": "node scripts/smoke-local.mjs",
     "smoke:observability": "node scripts/smoke-observability.mjs"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.1",

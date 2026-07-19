@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { actorSubjectFromSession, sessionFromCookieHeader } from "@erp/auth";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { loadBooking, safeBookingReturnTo } from "../../../lib/bookings";
 import { BookingValidationPanel } from "./BookingValidationPanel";
@@ -6,7 +8,9 @@ import { JourneyStatusPanel } from "./JourneyStatusPanel";
 
 export default async function BookingDetailPage({ params, searchParams }: { params: Promise<{ bookingId: string }>; searchParams: Promise<{ created?: string; returnTo?: string }> }) {
   const [{ bookingId }, query] = await Promise.all([params, searchParams]);
-  const result = await loadBooking(bookingId);
+  const headerStore = await headers();
+  const actorSubjectId = actorSubjectFromSession(sessionFromCookieHeader(headerStore.get("cookie")));
+  const result = await loadBooking(bookingId, actorSubjectId);
   if (!result.ok && result.status === 404) notFound();
   if (!result.ok) return <main className="booking-page"><section className="booking-state booking-state-error"><h1>Booking unavailable</h1><p>{result.message}</p><a href={`/bookings/${bookingId}`}>Retry</a></section></main>;
   const booking = result.value;

@@ -82,6 +82,11 @@ NEVER claim W1 complete from unit tests, outbox rows, local-noop publication, or
 NEVER change a contributor module's contract surface without producer/consumer review and synchronized OpenAPI/AsyncAPI/Avro/example/provider evidence. (affirmed 2026-07-15)
 NEVER import W2-01 shell/auth, W2-02 implementation scope, D&D, amendments, or broader journey behavior into the W1 thin slice. (affirmed 2026-07-15)
 NEVER describe the current CI as security-complete; no SAST, dependency vulnerability, secret scanning, or automated dependency-update workflow was found. (affirmed 2026-07-15)
+NEVER accept a mounted Booking path that still sends or falls back to `local-user` in production-like flows. (affirmed 2026-07-18)
+NEVER treat static local auth bypass behavior as acceptable outside explicit local/test profiles. (affirmed 2026-07-18)
+NEVER introduce a micro-frontend host, public-cloud deployment path, or third-party portal product for W2-01 without an approved scope change. (affirmed 2026-07-18)
+NEVER rewrite prior merged W0-01, W0-02, W1-01, or W2-02 work to make the shell slice easier. (affirmed 2026-07-18)
+NEVER claim completion from shell chrome, screenshots, unit tests, or container startup without real subject audit evidence and audit gates. (affirmed 2026-07-18)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -118,6 +123,12 @@ ALWAYS write tests alongside W1 code, enforce at least 80 percent line coverage,
 ALWAYS preserve service-owned databases, framework-free domain-core modules, and exact frozen contract field names across domain and wire representations. (affirmed 2026-07-15)
 ALWAYS use the shared `platform-messaging` publisher, schema registrar, scheduled relay, and noop safety rather than duplicating W0 infrastructure. (affirmed 2026-07-15)
 ALWAYS run the live W1 stack with PostgreSQL on a non-default host port and retain evidence under `artifacts/`. (affirmed 2026-07-15)
+ALWAYS keep W2-01 constrained to shell/auth plus Booking mount unless a later approved scope change says otherwise. (affirmed 2026-07-18)
+ALWAYS preserve W1-01 live-proof evidence as blocked or waived unless a new observed live run proves otherwise. (affirmed 2026-07-18)
+ALWAYS use the existing auth app, Keycloak/OIDC, and identity-service authorization seams before adding new identity mechanisms. (affirmed 2026-07-18)
+ALWAYS prove mounted Booking calls carry the authenticated subject through BFF and backend evidence. (affirmed 2026-07-18)
+ALWAYS run W2-01 acceptance through local Compose and Nginx with Keycloak available. (affirmed 2026-07-18)
+ALWAYS keep W2-02 design-system foundation and W4-01 broad module migration out of W2-01 implementation scope. (affirmed 2026-07-18)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->

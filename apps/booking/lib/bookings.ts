@@ -1,3 +1,5 @@
+import { actorSubjectFromSession, sessionFromRequest } from "@erp/auth";
+
 export type BookingStatus =
   | "DRAFT"
   | "VALIDATION_BLOCKED"
@@ -102,12 +104,12 @@ export type BookingLoad<T> =
 const backendUrl = () => process.env.BOOKING_SERVICE_URL ?? "http://booking-service:8085";
 const MAX_COMMAND_BODY_BYTES = 32 * 1024;
 
-export async function loadBookings(query: URLSearchParams): Promise<BookingLoad<BookingPage>> {
-  return loadJson<BookingPage>(`/api/bookings?${query.toString()}`);
+export async function loadBookings(query: URLSearchParams, actorSubjectId?: string | null): Promise<BookingLoad<BookingPage>> {
+  return loadJson<BookingPage>(`/api/bookings?${query.toString()}`, actorSubjectId);
 }
 
-export async function loadBooking(id: string): Promise<BookingLoad<BookingView>> {
-  return loadJson<BookingView>(`/api/bookings/${encodeURIComponent(id)}`);
+export async function loadBooking(id: string, actorSubjectId?: string | null): Promise<BookingLoad<BookingView>> {
+  return loadJson<BookingView>(`/api/bookings/${encodeURIComponent(id)}`, actorSubjectId);
 }
 
 export function bookingReturnTo(params: { search?: string; status?: string; page?: string }) {
@@ -125,7 +127,15 @@ export function safeBookingReturnTo(value?: string) {
 
 export async function proxyBooking(request: Request, path: string, method: "GET" | "POST") {
   const correlationId = crypto.randomUUID();
-  const headers = serviceHeaders(correlationId, request.headers.get("idempotency-key"));
+  const session = sessionFromRequest(request);
+  const actorSubjectId = actorSubjectFromSession(session);
+  if (!session) {
+    return safeError(401, "AUTH_REQUIRED", "Authentication is required for Booking", correlationId);
+  }
+  if (!actorSubjectId) {
+    return safeError(403, "BOOKING_ACTOR_REQUIRED", "A signed-in Booking actor is required", correlationId);
+  }
+  const headers = serviceHeaders(correlationId, actorSubjectId, request.headers.get("idempotency-key"));
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 2500);
   try {
@@ -137,6 +147,13 @@ export async function proxyBooking(request: Request, path: string, method: "GET"
       if (new TextEncoder().encode(body).byteLength > MAX_COMMAND_BODY_BYTES) {
         return safeError(413, "BODY_TOO_LARGE", "Booking command body exceeds 32768 bytes", correlationId);
       }
+      if (/\/(validate|price|confirm|amend|reconfirm)$/.test(path)) {
+        try {
+          body = JSON.stringify({ ...JSON.parse(body || "{}"), actorSubjectId, correlationId });
+        } catch {
+          return safeError(400, "JSON_INVALID", "Booking command body must be valid JSON", correlationId);
+        }
+      }
     }
     const response = await fetch(`${backendUrl()}${path}`, {
       method,
@@ -147,11 +164,14 @@ export async function proxyBooking(request: Request, path: string, method: "GET"
     });
     const payload = await response.json().catch(() => null);
     if (!response.ok) {
+      const responseCorrelationId = typeof payload?.correlationId === "string" && payload.correlationId !== "local-correlation"
+        ? payload.correlationId
+        : correlationId;
       return Response.json({
         code: typeof payload?.code === "string" ? payload.code : "BOOKING_REQUEST_FAILED",
         message: typeof payload?.message === "string" ? payload.message : "Booking request failed",
         fields: Array.isArray(payload?.fields) ? payload.fields : [],
-        correlationId: typeof payload?.correlationId === "string" ? payload.correlationId : correlationId
+        correlationId: responseCorrelationId
       }, { status: response.status });
     }
     return Response.json(payload, { status: response.status });
@@ -162,13 +182,15 @@ export async function proxyBooking(request: Request, path: string, method: "GET"
   }
 }
 
-export function serviceHeaders(correlationId: string, idempotencyKey?: string | null) {
+export function serviceHeaders(correlationId: string, actorSubjectId?: string | null, idempotencyKey?: string | null) {
   const serviceToken = process.env.BOOKING_SERVICE_TOKEN;
   if (!serviceToken) throw new Error("BOOKING_SERVICE_TOKEN is required");
+  const actor = actorSubjectId?.trim();
+  if (!actor) throw new Error("Booking actor subject is required");
   const headers = new Headers({
     "content-type": "application/json",
     "x-correlation-id": correlationId,
-    "x-linercore-actor-id": "local-user",
+    "x-linercore-actor-id": actor,
     "x-linercore-service-id": "booking-bff",
     "x-linercore-service-token": serviceToken
   });
@@ -213,13 +235,16 @@ function safeError(status: number, code: string, message: string, correlationId:
   return Response.json({ code, message, correlationId }, { status });
 }
 
-async function loadJson<T>(path: string): Promise<BookingLoad<T>> {
+async function loadJson<T>(path: string, actorSubjectId?: string | null): Promise<BookingLoad<T>> {
   const correlationId = crypto.randomUUID();
+  if (!actorSubjectId?.trim()) {
+    return { ok: false, status: 401, message: "A signed-in Booking actor is required" };
+  }
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 2500);
   try {
     const response = await fetch(`${backendUrl()}${path}`, {
-      headers: serviceHeaders(correlationId),
+      headers: serviceHeaders(correlationId, actorSubjectId),
       cache: "no-store",
       signal: controller.signal
     });

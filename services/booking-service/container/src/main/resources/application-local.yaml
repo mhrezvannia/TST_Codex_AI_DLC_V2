@@ -28,6 +28,7 @@ spring:
 booking:
   security:
     service-token: ${BOOKING_SERVICE_TOKEN}
+  identity-service-url: ${IDENTITY_SERVICE_URL:http://identity-service:8082}
   reference-data-service-url: ${REFERENCE_DATA_SERVICE_URL:http://reference-data-service:8083}
   reference-data:
     service-id: ${REFERENCE_DATA_CLIENT_ID:booking-service}

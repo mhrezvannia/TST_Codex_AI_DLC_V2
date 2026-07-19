@@ -66,6 +66,12 @@ class BookingApiControllerTest {
     }
 
     @Test
+    void readPathsRequireActorHeader() {
+        assertThrows(IllegalArgumentException.class, () -> controller.recent(null, null, null, 0, 25, "corr-1"));
+        assertThrows(IllegalArgumentException.class, () -> controller.detail("booking-1", " ", "corr-1"));
+    }
+
+    @Test
     void mapsDomainValidationToCanonicalFieldPaths() {
         BookingApiController.ApiErrorResponse response = controller.badRequest(
                 new IllegalArgumentException("load and discharge UN/LOCODE must differ")).getBody();

@@ -95,7 +95,7 @@ Your scenario — *"intent 3 of module A depends on intent 10 of module B"* — 
 | W0-01 | Platform eventing foundation — real Kafka/SR publisher, shared outbox relay + scheduler, kill placeholders (fixes C1–C5) | Shared Platform | — | [W0-01](W0-01-platform-eventing-foundation.md) |
 | W0-02 | Reference-data completeness — Vessel/Voyage, Equipment-type, Charge-code modeled + seeded + APIs | Shared Platform | — | [W0-02](W0-02-reference-data-completeness.md) — **Closed 2026-07-14** ([evidence](../../artifacts/w0-02-live/live-proof-summary.json)) |
 | W1-01 ★ | Booking quote-to-cash spine — create→validate→price→confirm→real event→journey→status back→detail page | Booking | W0-01 | [worked example](../examples/booking-quote-to-cash/intent-statement.md) *(questions answered)* |
-| W2-01 | App shell & auth — one shell, login gates it, session to all modules, kill `local-user` | Platform+UI | soft: W1-01 (migration unit) | [W2-01](W2-01-app-shell-and-auth.md) |
+| W2-01 | App shell & auth — one shell, login gates it, session to all modules, kill `local-user` | Platform+UI | soft: W1-01 (migration unit) | [W2-01](W2-01-app-shell-and-auth.md) — **Closed 2026-07-19** ([evidence](../../artifacts/w2-01-live/app-shell-auth/manifest.json)) |
 | W2-02 | Design-system foundation — @erp/ui tokens + primitives; Booking migrated as reference | UI | — | [W2-02](W2-02-design-system-foundation.md) |
 | W2-03 | Charge tariffs & agreements — tariff/surcharge/local-charge model, agreement versioning, real quote math | Charge | W0-02 | [W2-03](W2-03-charge-tariffs-and-agreements.md) |
 | W2-04 | Container journey & track-trace — DCSA T&T event model, journey detail, movement capture | CMM | W1-01, W0-01 | [W2-04](W2-04-container-journey-track-trace.md) |
@@ -144,4 +144,4 @@ Same rules as Phase 1: one Driver per intent, Contributors via frozen contracts 
 
 ## Test acceptance waivers
 
-- 2026-07-17: W1-01 was merged to `integ/main-reconciled` under explicit test-project authority. The real live-acceptance manifest `artifacts/w1-01-live/w1-merge-gate-20260716-200141/manifest.json` remains `BLOCKED` at `compose-start` because Docker could not pull Elastic images from `docker-auth.elastic.co`. Waiver evidence: `artifacts/w1-01-live/w1-test-acceptance-waiver-20260717/acceptance-waiver.md`.
+- 2026-07-17: W1-01 was merged to `integ/main-reconciled` under explicit test-project authority. The real live-acceptance manifest `artifacts/w1-01-live/w1-merge-gate-20260716-200141/manifest.json` remains `BLOCKED` at `compose-start`. Official Elasticsearch and Kibana images are now available locally; the current blocker is reproducible completion of a clean full-profile `docker compose --profile full up -d --build` within the acceptance run, not Elastic image availability. Waiver evidence: `artifacts/w1-01-live/w1-test-acceptance-waiver-20260717/acceptance-waiver.md`.

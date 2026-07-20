@@ -447,6 +447,8 @@ services:
     environment:
       NODE_OPTIONS: --max-old-space-size=160
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
+    ports:
+      - "${CHARGE_AGREEMENTS_UI_HOST_PORT:-3003}:3000"
     depends_on:
       - charge-agreement-service
     deploy:

@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <PlatformShell title="Reference Data" showRail={false}>{children}</PlatformShell>
+        <PlatformShell title="Reference Data">{children}</PlatformShell>
       </body>
     </html>
   );

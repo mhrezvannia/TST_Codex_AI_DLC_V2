@@ -15,7 +15,12 @@ export function ShellFrame({
   return (
     <div className="shell-frame">
       <header className="shell-topbar">
-        <a className="shell-brand" href="/" data-testid="shell-home-link">LinerCore</a>
+        <div className="shell-brand-block">
+          <a className="shell-brand" href="/" data-testid="shell-home-link">LinerCore</a>
+          <span className="shell-brand-divider" />
+          <span className="shell-brand-context">Commercial &amp; Equipment Platform</span>
+          <span className="shell-scope">MVP - ONE TRADE LANE</span>
+        </div>
         <div className="shell-user" data-testid="shell-user-menu" aria-label="Signed-in user">
           <div className="shell-user-identity">
             <span>{session.displayName || session.subject}</span>
@@ -28,6 +33,12 @@ export function ShellFrame({
           </form>
         </div>
       </header>
+      <div className="shell-journey" aria-label="MVP journey">
+        <div className="shell-journey-step shell-journey-complete"><span>1</span><div><strong>Agreement</strong><small>Charge module</small></div></div>
+        <div className="shell-journey-step shell-journey-active"><span>2</span><div><strong>Booking</strong><small>Booking module</small></div></div>
+        <div className="shell-journey-step"><span>3</span><div><strong>Track &amp; trace</strong><small>Movement module</small></div></div>
+        <div className="shell-journey-step"><span>4</span><div><strong>D&amp;D &amp; invoice</strong><small>Charge to Finance</small></div></div>
+      </div>
       <aside className="shell-sidebar">
         <nav aria-label="Application modules">
           <a
@@ -44,7 +55,7 @@ export function ShellFrame({
           >
             Booking
           </a>
-          <span className="shell-nav-disabled" aria-disabled="true">Reference data</span>
+          <a className="shell-nav-link" href="http://127.0.0.1:3002/">Reference data</a>
           <span className="shell-nav-disabled" aria-disabled="true">Charge agreements</span>
         </nav>
       </aside>

@@ -42,10 +42,17 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
   }
 
   return (
-    <section className="shell-panel shell-booking-actions" aria-labelledby="shell-booking-actions-title">
+    <section className="shell-workbench shell-booking-actions" aria-labelledby="shell-booking-actions-title">
       <div>
         <h2 id="shell-booking-actions-title">Booking actions</h2>
-        <p className="shell-muted">Complete the next available lifecycle step.</p>
+        <p className="shell-muted">Current lifecycle: {statusLabel(status)}</p>
+      </div>
+      <div className="shell-booking-flow" aria-label="Booking lifecycle">
+        {(["Draft", "Validate", "Price", "Confirm"] as const).map((label, index) => {
+          const current = workflowIndex(status);
+          const state = index < current ? "complete" : index === current ? "active" : "pending";
+          return <div className={`shell-booking-flow-step shell-booking-flow-${state}`} key={label}><span>{index < current ? "OK" : index + 1}</span><strong>{label}</strong></div>;
+        })}
       </div>
       <div className="shell-actions">
         <button
@@ -79,4 +86,16 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
       {error && <p className="shell-error" role="alert">{error}</p>}
     </section>
   );
+}
+
+function workflowIndex(status: ShellBookingStatus) {
+  if (status === "CONFIRMED" || status === "RECONFIRMED") return 4;
+  if (status === "PRICED") return 3;
+  if (status === "VALIDATED" || status === "PRICING_PENDING" || status === "MANUAL_PRICING") return 2;
+  if (status === "DRAFT" || status === "VALIDATION_BLOCKED") return 1;
+  return 0;
+}
+
+function statusLabel(status: ShellBookingStatus) {
+  return status.toLowerCase().replaceAll("_", " ");
 }

@@ -54,7 +54,8 @@ export default async function ShellBookingDetailPage({
             </div>
             <span className="shell-status">{result.value.status}</span>
           </section>
-          <section className="shell-grid" data-testid="shell-booking-detail">
+          <section className="shell-booking-workspace" data-testid="shell-booking-detail">
+            <div className="shell-booking-facts">
             <article className="shell-panel">
               <h2>Route</h2>
               {result.value.routing.map((leg, index) => <p key={`${leg.loadUnLocode}-${index}`}>{leg.loadUnLocode} to {leg.dischargeUnLocode}</p>)}
@@ -63,7 +64,21 @@ export default async function ShellBookingDetailPage({
               <h2>Equipment</h2>
               {result.value.equipment.map((item) => <p key={item.equipmentId}>{item.equipmentId}<br /><span className="shell-muted">{item.equipmentTypeCode}, quantity {item.quantity}</span></p>)}
             </article>
-            <article className="shell-panel">
+            </div>
+            <aside className="shell-booking-summary">
+              <p className="shell-summary-label">Booking summary</p>
+              <strong>{result.value.bookingNumber}</strong>
+              <dl>
+                <div><dt>Customer</dt><dd>{result.value.customerId}</dd></div>
+                <div><dt>Status</dt><dd>{result.value.status}</dd></div>
+                <div><dt>Equipment</dt><dd>{result.value.equipment.length}</dd></div>
+              </dl>
+              <div className="shell-summary-trace">
+                <span>Correlation</span>
+                <code>{result.correlationId}</code>
+              </div>
+            </aside>
+            <article className="shell-panel shell-trace-panel">
               <h2>Trace</h2>
               <p>{result.correlationId}</p>
             </article>

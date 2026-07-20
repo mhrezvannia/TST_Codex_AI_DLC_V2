@@ -28,10 +28,22 @@ export default async function ShellBookingPage({ searchParams }: { searchParams:
         <div>
           <p className="shell-eyebrow">Operations queue</p>
           <h1>Booking</h1>
-          <p className="shell-muted">Mounted Booking workspace using actor {shellSession.actorSubjectId}.</p>
+          <p className="shell-muted">{bookings.ok ? `${bookings.value.returned} bookings in the current queue` : "Live booking workspace"}</p>
         </div>
         <a className="shell-button shell-button-primary" href="/booking/new" data-testid="shell-new-booking">New booking</a>
       </section>
+      <form className="shell-filter-bar" method="get">
+        <label>Search<input name="q" defaultValue={params.q ?? ""} placeholder="Booking, customer or route" /></label>
+        <label>Status<select name="status" defaultValue={params.status ?? ""}>
+          <option value="">All statuses</option>
+          <option value="DRAFT">Draft</option>
+          <option value="VALIDATED">Validated</option>
+          <option value="PRICED">Priced</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="EXCEPTION">Exception</option>
+        </select></label>
+        <button className="shell-button" type="submit">Apply</button>
+      </form>
       {!bookings.ok && bookings.status === 403 ? (
         <AccessDeniedPanel
           action="read"
@@ -52,7 +64,9 @@ export default async function ShellBookingPage({ searchParams }: { searchParams:
           <p className="shell-muted">Create and compatibility paths are implemented in later W2-01 units.</p>
         </section>
       ) : (
-        <div className="shell-table-wrap" data-testid="shell-booking-list">
+        <section className="shell-workbench" data-testid="shell-booking-list">
+          <div className="shell-section-heading"><div><h2>Booking queue</h2><p>Live operational records</p></div><span>{bookings.value.items.length} shown</span></div>
+          <div className="shell-table-wrap">
           <table className="shell-table">
             <thead>
               <tr><th>Booking</th><th>Customer</th><th>Route</th><th>Status</th></tr>
@@ -68,7 +82,8 @@ export default async function ShellBookingPage({ searchParams }: { searchParams:
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+        </section>
       )}
     </ShellFrame>
   );

@@ -25,7 +25,9 @@ export default async function ShellBookingNewPage() {
           <p className="shell-muted">Actor {shellSession.actorSubjectId} is applied server-side.</p>
         </div>
       </section>
-      <BookingCreateForm />
+      <section className="shell-workbench shell-form-workbench">
+        <BookingCreateForm />
+      </section>
     </ShellFrame>
   );
 }

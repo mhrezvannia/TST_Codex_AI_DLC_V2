@@ -37,15 +37,23 @@ const railItems = [
   { key: "identity", label: "Auth", icon: "ID" }
 ];
 
-export function PlatformShell({ title, children }: { title: string; children: ReactNode }) {
+export function PlatformShell({
+  title,
+  children,
+  showRail = true
+}: {
+  title: string;
+  children: ReactNode;
+  showRail?: boolean;
+}) {
   const activeStage = title.toLowerCase().includes("charge") ? 0 : title.toLowerCase().includes("auth") ? -1 : 1;
   const activeRail = title.toLowerCase().includes("charge") ? "pricing" : title.toLowerCase().includes("auth") ? "identity" : "booking";
 
   return (
     <>
       <DesignSystemStyles />
-      <div style={styles.shell}>
-        <aside aria-label="LinerCore modules" style={styles.rail}>
+      <div style={{ ...styles.shell, gridTemplateColumns: showRail ? "72px minmax(0, 1fr)" : "minmax(0, 1fr)" }}>
+        {showRail ? <aside aria-label="LinerCore modules" style={styles.rail}>
           <div aria-hidden="true" style={styles.logoMark}>LC</div>
           <nav style={styles.railNav}>
             {railItems.map((item) => {
@@ -65,7 +73,7 @@ export function PlatformShell({ title, children }: { title: string; children: Re
             })}
           </nav>
           <div style={styles.avatar}>RT</div>
-        </aside>
+        </aside> : null}
 
         <section style={styles.application}>
           <header style={styles.topbar}>

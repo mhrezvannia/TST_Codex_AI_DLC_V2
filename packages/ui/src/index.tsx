@@ -79,25 +79,25 @@ export function PlatformShell({
           </nav>
         </aside> : null}
 
-        <section style={styles.application}>
-          <header style={styles.topbar}>
-            <div style={styles.brandBlock}>
+        <section className="erp-platform-application" style={styles.application}>
+          <header className="erp-platform-topbar" style={styles.topbar}>
+            <div className="erp-platform-brand" style={styles.brandBlock}>
               <span style={styles.brandName}>LinerCore</span>
               <span style={styles.brandDivider} />
               <span style={styles.brandSubcopy}>Commercial & Equipment Platform</span>
               <span style={styles.scopePill}>MVP - ONE TRADE LANE</span>
             </div>
-            <div style={styles.searchBar} aria-label="Global search">
+            <div className="erp-platform-search" style={styles.searchBar} aria-label="Global search">
               <span aria-hidden="true">Search</span>
               <span>Search bookings, containers...</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, justifySelf: "end" }}>
+            <div className="erp-platform-tools" style={{ display: "flex", alignItems: "center", gap: 12, justifySelf: "end" }}>
               <span style={styles.currency}>USD</span>
               <ThemeToggle />
             </div>
           </header>
 
-          <div style={styles.stageRibbon} aria-label="MVP journey">
+          <div className="erp-platform-stages" style={styles.stageRibbon} aria-label="MVP journey">
             {stages.map((stage, index) => {
               const active = index === activeStage;
               const complete = activeStage > index;
@@ -243,6 +243,7 @@ const styles: Record<string, CSSProperties> = {
     display: "flex",
     alignItems: "center",
     padding: "8px 10px",
+    boxSizing: "border-box",
     color: "var(--erp-color-text-muted)",
     textDecoration: "none",
     fontSize: 14,
@@ -255,6 +256,7 @@ const styles: Record<string, CSSProperties> = {
     display: "flex",
     alignItems: "center",
     padding: "8px 10px",
+    boxSizing: "border-box",
     background: "var(--erp-color-primary)",
     color: "var(--erp-color-on-primary)",
     textDecoration: "none",
@@ -472,6 +474,32 @@ const platformShellResponsiveCss = `
 
     .erp-module-nav {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .erp-platform-topbar {
+      min-height: auto !important;
+      grid-template-columns: minmax(0, 1fr) auto !important;
+      gap: 10px !important;
+      padding: 12px 18px !important;
+    }
+
+    .erp-platform-brand {
+      grid-column: 1 / -1;
+      flex-wrap: wrap;
+      white-space: normal !important;
+    }
+
+    .erp-platform-search {
+      min-width: 0;
+    }
+
+    .erp-platform-tools {
+      min-width: max-content;
+    }
+
+    .erp-platform-stages {
+      grid-template-columns: repeat(4, minmax(140px, 1fr)) !important;
+      padding: 10px 18px !important;
     }
   }
 `;

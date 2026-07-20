@@ -7,7 +7,7 @@ const args = process.argv.slice(2);
 const outputRoot = resolve(valueAfter("--output-root") ?? "artifacts/w2-01-live/app-shell-auth");
 const baseUrl = valueAfter("--base-url") ?? "http://127.0.0.1:8088";
 const chargeUrl = valueAfter("--charge-url") ?? "http://127.0.0.1:8084";
-const composeProject = valueAfter("--compose-project") ?? "linercore-w2-01";
+const composeProject = valueAfter("--compose-project") ?? "linercore-shared-platform";
 const chromePath = process.env.PLAYWRIGHT_CHROME_PATH ?? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const screenshotRoot = join(outputRoot, "screenshots");
 mkdirSync(screenshotRoot, { recursive: true });

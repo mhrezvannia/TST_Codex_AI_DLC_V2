@@ -190,7 +190,7 @@ export function syncBlockersFile(outputRoot, blockers) {
 function runtimeReadiness(now, dryRun) {
   return {
     timestamp: now,
-    composeProject: "linercore-w2-01",
+    composeProject: "linercore-shared-platform",
     entrypointUrl: "http://127.0.0.1:8088",
     status: "BLOCKED",
     services: ["nginx", "apps-shell", "apps-auth", "apps-booking", "booking-service", "identity-service", "keycloak"].map((name) => ({
@@ -209,7 +209,7 @@ function runBrowserDriver(outputRoot) {
     "--output-root",
     outputRoot,
     "--compose-project",
-    process.env.W2_01_COMPOSE_PROJECT ?? "linercore-w2-01"
+    process.env.W2_01_COMPOSE_PROJECT ?? "linercore-shared-platform"
   ], { encoding: "utf8", timeout: 240000 });
   try {
     return JSON.parse(readFileSync(join(outputRoot, "browser-evidence.json"), "utf8"));

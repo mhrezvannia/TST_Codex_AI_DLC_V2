@@ -24,6 +24,9 @@ container-movement:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     topic: ${CONTAINER_MOVEMENT_EVENTS_TOPIC:containermovement.status}
     client-id: ${CONTAINER_MOVEMENT_KAFKA_CLIENT_ID:container-movement-service}
+  booking-confirmed:
+    topic: ${BOOKING_EVENTS_TOPIC:booking.events}
+    group-id: ${CONTAINER_MOVEMENT_BOOKING_CONFIRMED_GROUP_ID:container-movement-booking-confirmed-v1}
   schema-registry:
     url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}
   outbox-relay:

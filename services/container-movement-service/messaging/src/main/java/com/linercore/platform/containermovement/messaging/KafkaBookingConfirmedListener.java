@@ -18,7 +18,7 @@ public class KafkaBookingConfirmedListener {
     }
 
     @KafkaListener(
-            topics = "${container-movement.booking-confirmed.topic:booking.confirmed}",
+            topics = "${container-movement.booking-confirmed.topic:booking.events}",
             groupId = "${container-movement.booking-confirmed.group-id:container-movement-booking-confirmed-v1}")
     public void onMessage(GenericRecord record) {
         service.consumeBookingConfirmed(mapper.toEvent(record));

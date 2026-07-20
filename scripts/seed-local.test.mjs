@@ -129,6 +129,29 @@ test("apply mode reports HTTP 200 authorization denials as failures", async () =
   assert.match(summary.failures[0], /DENY_NO_PERMISSION/);
 });
 
+test("apply mode retries transient transport failures", async () => {
+  let assignmentAttempts = 0;
+  const fetcher = async (url, init) => {
+    if (url.includes("/internal/identity/roles/assign")) {
+      assignmentAttempts += 1;
+      if (assignmentAttempts === 1) throw new TypeError("fetch failed");
+      return Response.json({ result: "ALLOW" });
+    }
+    if (init.method === "GET") return Response.json({ error: "not found" }, { status: 404 });
+    return Response.json({ id: { value: "created" }, version: 1 });
+  };
+
+  const summary = await applySeedPack(seedPack, {
+    fetcher,
+    identityServiceUrl: "http://identity.test",
+    referenceDataServiceUrl: "http://reference.test",
+    correlationId: "corr-test"
+  });
+
+  assert.equal(summary.failed, 0);
+  assert.equal(assignmentAttempts, 5);
+});
+
 test("apply mode accepts stale assignment only when effective role is present", async () => {
   const fetcher = async (url, init) => {
     if (url.includes("/internal/identity/roles/assign")) {

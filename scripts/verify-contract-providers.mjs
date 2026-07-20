@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { REQUIRED_EVENT_SCHEMAS, validateContractCatalog } from "./validate-contract-catalog.mjs";
+import { hasSchemaFieldPath, REQUIRED_EVENT_SCHEMAS, validateContractCatalog } from "./validate-contract-catalog.mjs";
 
 const REQUIRED_OPENAPI_PATHS = {
   "contracts/openapi/reference-data-service.yaml": [
@@ -110,9 +110,8 @@ function verifyAvroSchemas(root, checks, failures) {
       const schemaPath = resolve(root, "contracts/avro", `${eventType}.avsc`);
       const schema = existsSync(schemaPath) ? JSON.parse(readFileSync(schemaPath, "utf8")) : null;
       push(checks, failures, `${eventType} avro record`, schema?.type === "record" && Boolean(schema?.name), "invalid Avro record schema");
-      const fieldNames = new Set((schema?.fields ?? []).map((field) => field.name));
       for (const field of expected.requiredFields) {
-        push(checks, failures, `${contractId} ${eventType} field ${field}`, fieldNames.has(field), "missing required Avro field");
+        push(checks, failures, `${contractId} ${eventType} field ${field}`, hasSchemaFieldPath(schema, field), "missing required Avro field");
       }
     }
   }

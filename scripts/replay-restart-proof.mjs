@@ -11,12 +11,12 @@ export const replayRestartSteps = [
   },
   {
     id: "booking-health-before",
-    command: "node scripts/replay-restart-proof.mjs --probe http://localhost:8088/api/bookings",
+    command: "node scripts/replay-restart-proof.mjs --probe http://localhost:8085/actuator/health",
     blockedWhen: ["ECONNREFUSED", "fetch failed", "BOOKING_UNAVAILABLE"]
   },
   {
     id: "capture-business-counts-before",
-    command: "docker compose exec -T postgres psql -U linercore -d linercore_booking -c \"SELECT COUNT(*) AS bookings FROM bookings; SELECT COUNT(*) AS booking_outbox FROM booking_outbox; SELECT COUNT(*) AS booking_consumed_events FROM booking_consumed_events; SELECT COUNT(*) AS booking_movement_status FROM booking_movement_status;\"",
+    command: "docker exec linercore-shared-platform-postgres-1 psql -U linercore -d linercore_booking -t -A -c \"SELECT 'booking_records=' || COUNT(*) FROM booking_records; SELECT 'booking_outbox=' || COUNT(*) FROM booking_outbox; SELECT 'booking_consumed_events=' || COUNT(*) FROM booking_consumed_events; SELECT 'booking_movement_status=' || COUNT(*) FROM booking_movement_status;\"",
     blockedWhen: ["does not exist", "could not connect", "connection refused"]
   },
   {
@@ -26,7 +26,7 @@ export const replayRestartSteps = [
   },
   {
     id: "booking-health-after",
-    command: "node scripts/replay-restart-proof.mjs --probe http://localhost:8088/api/bookings",
+    command: "node scripts/replay-restart-proof.mjs --probe http://localhost:8085/actuator/health",
     blockedWhen: ["ECONNREFUSED", "fetch failed", "BOOKING_UNAVAILABLE"]
   },
   {
@@ -35,14 +35,19 @@ export const replayRestartSteps = [
     blockedWhen: ["Cannot connect to the Docker daemon", "No such service"]
   },
   {
+    id: "cmm-health-after",
+    command: "node scripts/replay-restart-proof.mjs --probe http://localhost:8086/actuator/health",
+    blockedWhen: ["ECONNREFUSED", "fetch failed", "CONTAINER_MOVEMENT_UNAVAILABLE"]
+  },
+  {
     id: "capture-business-counts-after",
-    command: "docker compose exec -T postgres psql -U linercore -d linercore_booking -c \"SELECT COUNT(*) AS bookings FROM bookings; SELECT COUNT(*) AS booking_outbox FROM booking_outbox; SELECT COUNT(*) AS booking_consumed_events FROM booking_consumed_events; SELECT COUNT(*) AS booking_movement_status FROM booking_movement_status;\"",
+    command: "docker exec linercore-shared-platform-postgres-1 psql -U linercore -d linercore_booking -t -A -c \"SELECT 'booking_records=' || COUNT(*) FROM booking_records; SELECT 'booking_outbox=' || COUNT(*) FROM booking_outbox; SELECT 'booking_consumed_events=' || COUNT(*) FROM booking_consumed_events; SELECT 'booking_movement_status=' || COUNT(*) FROM booking_movement_status;\"",
     blockedWhen: ["does not exist", "could not connect", "connection refused"]
   },
   {
     id: "topic-presence",
     command: "docker compose exec -T kafka kafka-topics --bootstrap-server kafka:9092 --list",
-    expectedOutput: ["booking.confirmed", "containermovement.status"],
+    expectedOutput: ["booking.events", "containermovement.status"],
     blockedWhen: ["No such service", "Timed out", "could not be established"]
   }
 ];
@@ -54,6 +59,9 @@ export function runReplayRestartProof(options = {}) {
     if (dryRun) return plannedStep(step);
     return classifyStep(step, runner(step.command));
   });
+  if (!dryRun && options.steps === undefined) {
+    steps.push(compareBusinessCounts(steps));
+  }
   const failed = steps.filter((step) => step.status === "failed");
   const blocked = steps.filter((step) => step.status === "blocked");
   const planned = steps.filter((step) => step.status === "planned");
@@ -64,7 +72,7 @@ export function runReplayRestartProof(options = {}) {
     status: failed.length > 0 ? "failed" : blocked.length > 0 ? "blocked" : planned.length > 0 ? "planned" : "passed",
     assertions: {
       postgresHostPort: "55432",
-      bookingTopic: "booking.confirmed",
+      bookingTopic: "booking.events",
       movementTopic: "containermovement.status",
       bookingDetailSource: "booking-local-projection",
       replayRequiresAuthorization: true,
@@ -100,6 +108,28 @@ export function classifyStep(step, result) {
   };
 }
 
+export function compareBusinessCounts(steps) {
+  const before = steps.find((step) => step.id === "capture-business-counts-before");
+  const after = steps.find((step) => step.id === "capture-business-counts-after");
+  const beforeCounts = parseBusinessCounts(before?.summary ?? "");
+  const afterCounts = parseBusinessCounts(after?.summary ?? "");
+  const comparable = before?.status === "passed" && after?.status === "passed" && beforeCounts.size === 4 && afterCounts.size === 4;
+  const stable = comparable && [...beforeCounts].every(([key, value]) => afterCounts.get(key) === value);
+  return {
+    id: "business-counts-stable",
+    command: "compare captured booking business counts before and after restarts",
+    status: stable ? "passed" : "failed",
+    exitCode: stable ? 0 : 1,
+    missingExpectedOutput: [],
+    summary: JSON.stringify({ before: Object.fromEntries(beforeCounts), after: Object.fromEntries(afterCounts) })
+  };
+}
+
+function parseBusinessCounts(output) {
+  return new Map([...output.matchAll(/^(booking_records|booking_outbox|booking_consumed_events|booking_movement_status)=(\d+)$/gm)]
+    .map((match) => [match[1], Number(match[2])]));
+}
+
 function plannedStep(step) {
   return {
     id: step.id,
@@ -119,15 +149,29 @@ function redact(value) {
 }
 
 function runCommand(command) {
-  return spawnSync(command, { shell: true, encoding: "utf8", timeout: 180000 });
+  return spawnSync(command, {
+    shell: true,
+    encoding: "utf8",
+    timeout: 300000,
+    maxBuffer: 16 * 1024 * 1024,
+    env: { ...process.env, COMPOSE_PARALLEL_LIMIT: process.env.COMPOSE_PARALLEL_LIMIT ?? "2" }
+  });
 }
 
 async function probe(url) {
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`probe failed ${response.status}`);
+  const deadline = Date.now() + 60000;
+  let detail = "probe did not complete";
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (response.ok) return response.text();
+      detail = `probe failed ${response.status}`;
+    } catch (error) {
+      detail = error instanceof Error ? error.message : String(error);
+    }
+    await new Promise((resolveTimer) => setTimeout(resolveTimer, 1000));
   }
-  return response.text();
+  throw new Error(detail);
 }
 
 function parseArgs(argv) {
@@ -153,7 +197,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
       })
       .catch((error) => {
         console.error(error.message);
-        process.exit(1);
+        process.exitCode = 1;
       });
   } else {
     const evidence = runReplayRestartProof(options);

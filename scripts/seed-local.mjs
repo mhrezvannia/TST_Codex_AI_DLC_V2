@@ -106,8 +106,8 @@ export async function applySeedPack(pack, options = {}) {
   }
 
   const fetcher = options.fetcher ?? fetch;
-  const identityUrl = trimUrl(options.identityServiceUrl ?? process.env.IDENTITY_SERVICE_URL ?? "http://localhost:8082");
-  const referenceUrl = trimUrl(options.referenceDataServiceUrl ?? process.env.REFERENCE_DATA_SERVICE_URL ?? "http://localhost:8083");
+  const identityUrl = trimUrl(options.identityServiceUrl ?? process.env.IDENTITY_SERVICE_URL ?? "http://127.0.0.1:8082");
+  const referenceUrl = trimUrl(options.referenceDataServiceUrl ?? process.env.REFERENCE_DATA_SERVICE_URL ?? "http://127.0.0.1:8083");
   const actorTokenReference = options.actorTokenReference ?? process.env.SEED_ACTOR_TOKEN_REFERENCE ?? "local.reference.admin";
 
   for (const command of buildRoleAssignmentCommands(pack, actorTokenReference, correlationId)) {
@@ -402,10 +402,10 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
   }
   if (args.wait) {
     await waitForHealth([
-      { name: "nginx", url: process.env.NGINX_HEALTH_URL ?? "http://localhost:8088/health" },
-      { name: "identity-service", url: `${process.env.IDENTITY_SERVICE_URL ?? "http://localhost:8082"}/actuator/health` },
-      { name: "reference-data-service", url: `${process.env.REFERENCE_DATA_SERVICE_URL ?? "http://localhost:8083"}/actuator/health` },
-      { name: "schema-registry", url: process.env.SCHEMA_REGISTRY_URL ?? "http://localhost:8081" }
+      { name: "nginx", url: process.env.NGINX_HEALTH_URL ?? "http://127.0.0.1:8088/health" },
+      { name: "identity-service", url: `${process.env.IDENTITY_SERVICE_URL ?? "http://127.0.0.1:8082"}/actuator/health` },
+      { name: "reference-data-service", url: `${process.env.REFERENCE_DATA_SERVICE_URL ?? "http://127.0.0.1:8083"}/actuator/health` },
+      { name: "schema-registry", url: process.env.SCHEMA_REGISTRY_URL ?? "http://127.0.0.1:8081" }
     ], { timeoutMs: Number(process.env.SEED_WAIT_TIMEOUT_MS ?? 30000) });
   }
   const summary = args.dryRun ? buildSeedRunSummary(pack) : await applySeedPack(pack);
@@ -440,28 +440,34 @@ async function putJson(fetcher, url, body, correlationId) {
 }
 
 async function requestJson(fetcher, url, init, correlationId) {
-  try {
-    const referenceHeaders = new URL(url).pathname.startsWith("/reference-sets/")
-      ? {
-          "x-linercore-service-id": "seed-loader",
-          "x-linercore-local-token": process.env.REFERENCE_DATA_SEED_TOKEN ?? "reference_data_seed_local_token"
-        }
-      : {};
-    const response = await fetcher(url, {
-      ...init,
-      headers: {
-        "x-correlation-id": correlationId,
-        ...referenceHeaders,
-        ...(init.headers ?? {})
+  const referenceHeaders = new URL(url).pathname.startsWith("/reference-sets/")
+    ? {
+        "x-linercore-service-id": "seed-loader",
+        "x-linercore-local-token": process.env.REFERENCE_DATA_SEED_TOKEN ?? "reference_data_seed_local_token"
       }
-    });
-    const text = await response.text();
-    const data = text ? JSON.parse(text) : null;
-    return response.ok
-      ? { ok: true, status: response.status, data }
-      : { ok: false, status: response.status, detail: JSON.stringify(data) };
-  } catch (error) {
-    return { ok: false, status: 503, detail: error instanceof Error ? error.message : String(error) };
+    : {};
+  const attempts = 3;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetcher(url, {
+        ...init,
+        headers: {
+          "x-correlation-id": correlationId,
+          ...referenceHeaders,
+          ...(init.headers ?? {})
+        }
+      });
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : null;
+      return response.ok
+        ? { ok: true, status: response.status, data }
+        : { ok: false, status: response.status, detail: JSON.stringify(data) };
+    } catch (error) {
+      if (attempt === attempts) {
+        return { ok: false, status: 503, detail: error instanceof Error ? error.message : String(error) };
+      }
+      await new Promise((resolveTimer) => setTimeout(resolveTimer, 250 * attempt));
+    }
   }
 }
 

@@ -19,6 +19,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
@@ -27,6 +31,7 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      JAVA_OPTS_KC_HEAP: -Xms64m -Xmx256m
       KC_HOSTNAME_URL: http://127.0.0.1:8080
       KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
     ports:
@@ -38,6 +43,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   kafka:
     image: confluentinc/cp-kafka:7.7.1
@@ -51,6 +60,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_HEAP_OPTS: -Xms128m -Xmx256m
     ports:
       - "9092:9092"
     healthcheck:
@@ -58,6 +68,30 @@ services:
       interval: 10s
       timeout: 10s
       retries: 20
+    deploy:
+      resources:
+        limits:
+          memory: 640M
+
+  kafka-init:
+    image: confluentinc/cp-kafka:7.7.1
+    profiles: ["app", "full"]
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_HEAP_OPTS: -Xms32m -Xmx96m
+    command:
+      - "bash"
+      - "-ec"
+      - |
+        for topic in booking.events containermovement.status referencedata.events charge-agreement.events; do
+          kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic "$$topic" --partitions 1 --replication-factor 1
+        done
+    deploy:
+      resources:
+        limits:
+          memory: 192M
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.7.1
@@ -68,6 +102,7 @@ services:
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+      SCHEMA_REGISTRY_HEAP_OPTS: -Xms64m -Xmx160m
     ports:
       - "8081:8081"
     healthcheck:
@@ -75,6 +110,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
+    deploy:
+      resources:
+        limits:
+          memory: 320M
 
   identity-service:
     image: linercore/identity-service:local
@@ -85,6 +124,7 @@ services:
         JAR_FILE: services/identity-service/container/target/identity-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
+      JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=20 -XX:MaxRAMPercentage=55
       SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_identity
       SPRING_DATASOURCE_USERNAME: linercore_identity
@@ -96,6 +136,10 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 384M
 
   reference-data-service:
     image: linercore/reference-data-service:local
@@ -106,6 +150,7 @@ services:
         JAR_FILE: services/reference-data-service/container/target/reference-data-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
+      JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=20 -XX:MaxRAMPercentage=55
       SPRING_PROFILES_ACTIVE: local,kafka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_reference_data
       SPRING_DATASOURCE_USERNAME: linercore_reference_data
@@ -127,6 +172,10 @@ services:
         condition: service_healthy
       schema-registry:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 384M
 
   charge-agreement-service:
     image: linercore/charge-agreement-service:local
@@ -137,6 +186,7 @@ services:
         JAR_FILE: services/charge-agreement-service/container/target/charge-agreement-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
+      JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=20 -XX:MaxRAMPercentage=55
       SPRING_PROFILES_ACTIVE: local,kafka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_pricing
       SPRING_DATASOURCE_USERNAME: linercore_pricing
@@ -156,6 +206,10 @@ services:
         condition: service_healthy
       schema-registry:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 384M
 
   booking-service:
     image: linercore/booking-service:local
@@ -166,6 +220,7 @@ services:
         JAR_FILE: services/booking-service/container/target/booking-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
+      JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=20 -XX:MaxRAMPercentage=55
       SPRING_PROFILES_ACTIVE: local,kafka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_booking
       SPRING_DATASOURCE_USERNAME: linercore_booking
@@ -196,7 +251,7 @@ services:
       resources:
         limits:
           cpus: "1.0"
-          memory: 768M
+          memory: 512M
     depends_on:
       postgres:
         condition: service_healthy
@@ -220,6 +275,7 @@ services:
         JAR_FILE: services/container-movement-service/container/target/container-movement-container-0.1.0-SNAPSHOT.jar
     profiles: ["app", "full"]
     environment:
+      JAVA_TOOL_OPTIONS: -XX:InitialRAMPercentage=20 -XX:MaxRAMPercentage=55
       SPRING_PROFILES_ACTIVE: local,kafka
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linercore_container_movement
       SPRING_DATASOURCE_USERNAME: linercore_container_movement
@@ -229,6 +285,7 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
       MESSAGING_REQUIRE_REAL: "true"
+      BOOKING_EVENTS_TOPIC: booking.events
       CONTAINER_MOVEMENT_EVENTS_TOPIC: containermovement.status
     ports:
       - "8086:8086"
@@ -241,6 +298,10 @@ services:
         condition: service_healthy
       schema-registry:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 384M
 
   seed-loader:
     image: node:24-alpine
@@ -249,12 +310,14 @@ services:
     env_file:
       - ./infrastructure/env/local.env.example
     environment:
+      NODE_OPTIONS: --max-old-space-size=160
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
       REFERENCE_DATA_SEED_TOKEN: ${REFERENCE_DATA_SEED_TOKEN:-reference_data_seed_local_token}
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
       BOOKING_SERVICE_URL: http://booking-service:8085
       CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
+      NGINX_HEALTH_URL: http://nginx/health
     command:
       - "node"
       - "scripts/seed-local.mjs"
@@ -270,6 +333,8 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
       schema-registry:
         condition: service_healthy
       identity-service:
@@ -282,6 +347,12 @@ services:
         condition: service_started
       container-movement-service:
         condition: service_started
+      nginx:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   apps-auth:
     image: linercore/apps-auth:local
@@ -292,6 +363,7 @@ services:
         WORKSPACE: "@erp/app-auth"
     profiles: ["app", "full"]
     environment:
+      NODE_OPTIONS: --max-old-space-size=160
       IDENTITY_SERVICE_URL: http://identity-service:8082
       AUTH_LOCAL_SUBJECT_ID: ${AUTH_LOCAL_SUBJECT_ID:-local.booking.user}
       AUTH_REDIRECT_URI: ${AUTH_REDIRECT_URI:-http://127.0.0.1:8088/auth/api/auth/callback}
@@ -302,6 +374,10 @@ services:
       JWT_ISSUER_URI: ${JWT_ISSUER_URI:-http://127.0.0.1:8080/realms/linercore-local}
     depends_on:
       - identity-service
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   apps-shell:
     image: linercore/apps-shell:local
@@ -312,6 +388,7 @@ services:
         WORKSPACE: "@erp/app-shell"
     profiles: ["app", "full"]
     environment:
+      NODE_OPTIONS: --max-old-space-size=160
       BOOKING_APP_URL: http://apps-booking:3000
       AUTH_SESSION_SECRET: ${AUTH_SESSION_SECRET:-linercore-local-session-secret}
     ports:
@@ -330,7 +407,7 @@ services:
       resources:
         limits:
           cpus: "0.75"
-          memory: 512M
+          memory: 256M
     depends_on:
       - apps-auth
       - apps-booking
@@ -344,6 +421,7 @@ services:
         WORKSPACE: "@erp/app-reference-data"
     profiles: ["app", "full"]
     environment:
+      NODE_OPTIONS: --max-old-space-size=160
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
       REFERENCE_DATA_BFF_TOKEN: ${REFERENCE_DATA_BFF_TOKEN:-reference_data_bff_local_token}
@@ -352,6 +430,10 @@ services:
     depends_on:
       - reference-data-service
       - identity-service
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   apps-charge-agreements:
     image: linercore/apps-charge-agreements:local
@@ -362,9 +444,14 @@ services:
         WORKSPACE: "@erp/app-charge-agreements"
     profiles: ["app", "full"]
     environment:
+      NODE_OPTIONS: --max-old-space-size=160
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
     depends_on:
       - charge-agreement-service
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   apps-booking:
     image: linercore/apps-booking:local
@@ -375,6 +462,7 @@ services:
         WORKSPACE: "@erp/app-booking"
     profiles: ["app", "full"]
     environment:
+      NODE_OPTIONS: --max-old-space-size=160
       BOOKING_SERVICE_URL: http://booking-service:8085
       BOOKING_SERVICE_TOKEN: ${BOOKING_SERVICE_TOKEN:-booking_local_service_token}
       AUTH_SESSION_SECRET: ${AUTH_SESSION_SECRET:-linercore-local-session-secret}
@@ -394,25 +482,10 @@ services:
       resources:
         limits:
           cpus: "0.75"
-          memory: 512M
+          memory: 256M
     depends_on:
       booking-service:
         condition: service_healthy
-
-  apps-container-movement:
-    image: linercore/apps-container-movement:local
-    build:
-      context: .
-      dockerfile: infrastructure/docker/next-app.Dockerfile
-      args:
-        WORKSPACE: "@erp/app-container-movement"
-    profiles: ["app", "full"]
-    environment:
-      CONTAINER_MOVEMENT_SERVICE_URL: http://container-movement-service:8086
-      BOOKING_SERVICE_URL: http://booking-service:8085
-    depends_on:
-      - container-movement-service
-      - booking-service
 
   nginx:
     image: nginx:1.27
@@ -426,8 +499,11 @@ services:
       - apps-reference-data
       - apps-charge-agreements
       - apps-booking
-      - apps-container-movement
     profiles: ["app", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 64M
 
   contract-devtools:
     image: node:24-alpine
@@ -437,6 +513,10 @@ services:
     volumes:
       - ./contracts:/workspace/contracts:ro
       - ./scripts:/workspace/scripts:ro
+    deploy:
+      resources:
+        limits:
+          memory: 64M
 
   prometheus:
     image: prom/prometheus:v2.55.1
@@ -445,6 +525,10 @@ services:
     volumes:
       - ./infrastructure/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     profiles: ["observability", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   grafana:
     image: grafana/grafana:11.4.0
@@ -457,6 +541,10 @@ services:
       - prometheus
       - jaeger
     profiles: ["observability", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 192M
 
   jaeger:
     image: jaegertracing/all-in-one:1.63.0
@@ -465,6 +553,10 @@ services:
       - "${JAEGER_OTLP_GRPC_HOST_PORT:-4317}:4317"
       - "${JAEGER_OTLP_HTTP_HOST_PORT:-4318}:4318"
     profiles: ["observability", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 192M
 
   otel-collector:
     image: otel/opentelemetry-collector:0.114.0
@@ -477,23 +569,38 @@ services:
     depends_on:
       - jaeger
     profiles: ["observability", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.16.1
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms256m -Xmx256m
     ports:
       - "${ELASTICSEARCH_HOST_PORT:-9200}:9200"
     profiles: ["observability", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 768M
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.16.1
+    environment:
+      NODE_OPTIONS: --max-old-space-size=384
     ports:
       - "${KIBANA_HOST_PORT:-5601}:5601"
     depends_on:
       - elasticsearch
     profiles: ["observability", "full"]
+    deploy:
+      resources:
+        limits:
+          memory: 640M
 
 networks:
   default:

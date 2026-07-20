@@ -100,13 +100,14 @@ test("validation fails when required event schema fields are missing", () => {
   usingFixture((root) => {
     const schemaPath = join(root, "contracts/avro/booking.confirmed.avsc");
     const schema = JSON.parse(readFileSync(schemaPath, "utf8"));
-    schema.fields = schema.fields.filter((field) => field.name !== "idempotencyKey");
+    const data = schema.fields.find((field) => field.name === "data").type;
+    data.fields = data.fields.filter((field) => field.name !== "bookingId");
     writeFileSync(schemaPath, `${JSON.stringify(schema, null, 2)}\n`);
 
     const result = validateContractCatalog(root);
 
     assert.equal(result.valid, false);
-    assert.match(result.failures.join("\n"), /booking.confirmed schema missing field idempotencyKey/);
+    assert.match(result.failures.join("\n"), /booking.confirmed schema missing field data.bookingId/);
   });
 });
 
@@ -139,14 +140,14 @@ test("validation writes a red health snapshot for blocking failures", () => {
   });
 });
 
-test("validation blocks still out-of-scope downstream runtime creation", () => {
+test("validation permits runtimes delivered by later vertical intents", () => {
   usingFixture((root) => {
     mkdirSync(join(root, "services/container-movement-service"), { recursive: true });
+    mkdirSync(join(root, "apps/booking"), { recursive: true });
 
     const result = validateContractCatalog(root);
 
-    assert.equal(result.valid, false);
-    assert.match(result.failures.join("\n"), /downstream runtime out of scope: services\/container-movement-service/);
+    assert.equal(result.valid, true, result.failures.join("\n"));
   });
 });
 

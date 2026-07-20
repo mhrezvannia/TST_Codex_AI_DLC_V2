@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const liveAcceptanceGates = [
@@ -34,6 +34,13 @@ export const liveAcceptanceGates = [
     ]
   },
   {
+    id: "observability-health",
+    section: "compose",
+    mapsTo: ["BR-U07-003"],
+    command: "node scripts/w1-live-acceptance.mjs --observability-health",
+    blockedWhen: ["ECONNREFUSED", "fetch failed", "observability health timed out"]
+  },
+  {
     id: "contracts",
     section: "quality",
     mapsTo: ["BR-U07-004"],
@@ -49,14 +56,14 @@ export const liveAcceptanceGates = [
     id: "seed-live",
     section: "seed",
     mapsTo: ["BR-U07-001"],
-    command: "node scripts/seed-local.mjs --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file artifacts/w1-01-live/current/seed/seed-apply.json",
+    command: "node scripts/seed-local.mjs --wait --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file artifacts/w1-01-live/current/seed/seed-apply.json",
     blockedWhen: ["ECONNREFUSED", "fetch failed", "REFERENCE_DATA_UNAVAILABLE"]
   },
   {
     id: "booking-ui-health",
     section: "journey",
     mapsTo: ["BR-U07-001"],
-    command: "node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings",
+    command: "node scripts/w1-live-acceptance.mjs --probe http://127.0.0.1:8088/bookings",
     blockedWhen: ["ECONNREFUSED", "fetch failed", "probe failed"]
   },
   {
@@ -87,6 +94,7 @@ export const liveAcceptanceGates = [
 ];
 
 export function runLiveAcceptance(options = {}) {
+  const startedAt = options.startedAt ?? new Date().toISOString();
   const dryRun = options.dryRun ?? false;
   const runId = options.runId ?? `w1-01-live-${new Date().toISOString().replace(/[:.]/g, "-")}`;
   const outputRoot = resolve(options.outputRoot ?? "artifacts/w1-01-live");
@@ -113,7 +121,7 @@ export function runLiveAcceptance(options = {}) {
         : "PASSED";
   const manifest = {
     runId,
-    startedAt: options.startedAt ?? new Date().toISOString(),
+    startedAt,
     completedAt: new Date().toISOString(),
     status,
     branch: options.branch ?? "unknown",
@@ -176,8 +184,16 @@ export function classifyGate(gate, resolved, result) {
     startedAt: new Date().toISOString(),
     completedAt: new Date().toISOString(),
     artifactPath: `${gate.section}/${gate.id}.txt`,
-    summary: output.trim().slice(0, 2000)
+    summary: summarizeOutput(output)
   };
+}
+
+function summarizeOutput(output) {
+  const trimmed = output.trim();
+  const maxLength = 8000;
+  const headLength = 2000;
+  if (trimmed.length <= maxLength) return trimmed;
+  return `${trimmed.slice(0, headLength)}\n\n... output truncated ...\n\n${trimmed.slice(-(maxLength - headLength))}`;
 }
 
 function resolveGateCommand(gate, runDir) {
@@ -270,7 +286,39 @@ function renderIndex(manifest) {
 }
 
 function runCommand(command) {
-  return spawnSync(command, { shell: true, encoding: "utf8", timeout: 300000 });
+  const configuredTimeout = Number(process.env.W1_ACCEPTANCE_COMMAND_TIMEOUT_MS ?? 900000);
+  const timeout = Number.isFinite(configuredTimeout) && configuredTimeout > 0 ? configuredTimeout : 900000;
+  const options = {
+    encoding: "utf8",
+    timeout,
+    maxBuffer: 64 * 1024 * 1024,
+    env: {
+      ...process.env,
+      BUILDKIT_PROGRESS: process.env.BUILDKIT_PROGRESS ?? "plain",
+      COMPOSE_PROGRESS: process.env.COMPOSE_PROGRESS ?? "plain",
+      COMPOSE_PARALLEL_LIMIT: process.env.COMPOSE_PARALLEL_LIMIT ?? "2"
+    }
+  };
+  if (command.startsWith("bash ")) {
+    return spawnSync(resolveW1BashExecutable(), [command.slice(5).trim()], options);
+  }
+  return spawnSync(command, { ...options, shell: true });
+}
+
+export function resolveW1BashExecutable({
+  platform = process.platform,
+  env = process.env,
+  pathExists = existsSync
+} = {}) {
+  const override = env.W1_ACCEPTANCE_BASH_PATH?.trim();
+  if (override) return override;
+  if (platform !== "win32") return "bash";
+
+  const candidates = [
+    join(env.ProgramFiles ?? "C:\\Program Files", "Git", "bin", "bash.exe"),
+    join(env["ProgramFiles(x86)"] ?? "C:\\Program Files (x86)", "Git", "bin", "bash.exe")
+  ];
+  return candidates.find((candidate) => pathExists(candidate)) ?? "bash";
 }
 
 function redact(value) {
@@ -290,6 +338,7 @@ function normalizeForManifest(value) {
 
 function parseArgs(argv) {
   if (argv.includes("--preflight")) return { preflight: true };
+  if (argv.includes("--observability-health")) return { observabilityHealth: true };
   const probeIndex = argv.indexOf("--probe");
   if (probeIndex >= 0) return { probe: argv[probeIndex + 1] };
   return {
@@ -297,6 +346,22 @@ function parseArgs(argv) {
     outputRoot: valueAfter(argv, "--output-root") ?? "artifacts/w1-01-live",
     runId: valueAfter(argv, "--run-id")
   };
+}
+
+export async function waitForUrl(url, timeoutMs = 180000, fetcher = fetch, intervalMs = 2000) {
+  const deadline = Date.now() + timeoutMs;
+  let detail = "not attempted";
+  while (Date.now() < deadline) {
+    try {
+      const response = await fetcher(url, { cache: "no-store" });
+      if (response.ok) return { url, status: response.status };
+      detail = `HTTP ${response.status}`;
+    } catch (error) {
+      detail = error instanceof Error ? error.message : String(error);
+    }
+    await new Promise((resolveTimer) => setTimeout(resolveTimer, intervalMs));
+  }
+  throw new Error(`observability health timed out for ${url}: ${detail}`);
 }
 
 function valueAfter(argv, flag) {
@@ -313,20 +378,26 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
       process.exit(1);
     }
     console.log(JSON.stringify(result, null, 2));
-  } else if (options.probe) {
-    fetch(options.probe, { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`probe failed ${response.status}`);
-        }
-        return response.text();
-      })
-      .then((body) => {
-        console.log(body.slice(0, 2000));
-      })
+  } else if (options.observabilityHealth) {
+    const elasticsearchPort = process.env.ELASTICSEARCH_HOST_PORT ?? "9200";
+    const kibanaPort = process.env.KIBANA_HOST_PORT ?? "5601";
+    Promise.all([
+      waitForUrl(`http://127.0.0.1:${elasticsearchPort}/_cluster/health`),
+      waitForUrl(`http://127.0.0.1:${kibanaPort}/api/status`)
+    ])
+      .then((services) => console.log(JSON.stringify({ status: "PASS", services }, null, 2)))
       .catch((error) => {
         console.error(error.message);
-        process.exit(1);
+        process.exitCode = 1;
+      });
+  } else if (options.probe) {
+    const configuredTimeout = Number(process.env.W1_PROBE_TIMEOUT_MS ?? 180000);
+    const timeout = Number.isFinite(configuredTimeout) && configuredTimeout > 0 ? configuredTimeout : 180000;
+    waitForUrl(options.probe, timeout)
+      .then((result) => console.log(JSON.stringify(result, null, 2)))
+      .catch((error) => {
+        console.error(error.message);
+        process.exitCode = 1;
       });
   } else {
     const manifest = runLiveAcceptance(options);

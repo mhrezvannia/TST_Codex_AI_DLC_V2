@@ -9,9 +9,25 @@ Before building a page, check `design-system/linercore/pages/<page>.md`. A page
 file may document a domain-specific override, but it must not replace the shell,
 token vocabulary, typography, or interaction rules in this master.
 
+## Authority Order
+
+Resolve UI decisions in this order:
+
+1. The active intent statement, its Context Pack, and observable Definition of Done.
+2. `docs/program-vision-document.md` and `docs/erp-workflow-map.md`.
+3. `docs/enterprise-technical-environment.md` frontend standards.
+4. This master and the executable `@erp/ui` implementation.
+5. A page-specific file under `design-system/linercore/pages/`.
+6. `design-inputs/claude-ui-export/` as visual direction only.
+
+Record conflicts in the active intent and follow the higher authority. Skill output
+is expert input, not permission to replace binding project decisions.
+
 ## Product Character
 
 - Product: enterprise liner-shipping ERP and operations workspace.
+- Users: pricing analysts, booking desk and customer-service users, equipment
+  controllers, supervisors, platform administrators, and auditors.
 - Experience: quiet, dense, predictable, accessible, and optimized for repeated work.
 - Primary composition: persistent shell, filters, data tables, list/detail workspaces,
   forms, status evidence, and exception handling.
@@ -26,10 +42,13 @@ token vocabulary, typography, or interaction rules in this master.
   `/charge-agreements`, and `/container-movement` under the shared edge URL.
 - A module owns its routed content and domain workflows, but must not recreate
   shell chrome or expose a second canonical UI.
-- Workflow ribbons appear only on transactional journey pages. Overview and
-  Reference Data do not select Booking or show a misleading journey stage.
+- Workflow ribbons appear only on transactional journey pages. Overview,
+  Reference Data, authentication, access-denied, and administration pages do not
+  select Booking or show a misleading journey stage.
 - Sidebar order is Overview, Booking, Charge Agreements, Container Movement,
   then Reference Data.
+- Active module and journey state come from route metadata or explicit context,
+  never title-string inference.
 
 ## Design Tokens
 
@@ -72,10 +91,29 @@ from the same token file. New hardcoded colors in module applications are forbid
   toggles/checkboxes, and option sets use selects or menus.
 - Cards are reserved for repeated records, modals, or framed tools. Do not nest cards
   or turn every page section into a floating card.
+- Cards and panels use an 8px maximum radius unless an existing shared primitive
+  requires otherwise.
 - Data tables provide filtering, stable column dimensions, status badges, row hover,
   keyboard access, empty/error/loading states, and horizontal handling on small screens.
 - Hover feedback uses color, border, or shadow transitions of 150-250ms. Do not scale
   elements or shift the layout.
+
+## Page Patterns
+
+- List pages use a compact page header, command bar, search/filters, table or
+  responsive record list, result count, and pagination.
+- Create/edit pages use grouped labelled fields, inline validation, reference-data
+  lookup, dirty-state protection, and explicit save/cancel actions.
+- Detail pages show object identity, status, permitted actions, summary facts,
+  domain sections or tabs, lifecycle evidence, and a collapsed audit surface.
+- Timeline pages show expected and actual milestones, code plus readable label,
+  occurred/received times, source, validation state, and ordering warnings.
+- Overview pages show operational queues and exceptions with direct links into
+  the owning module. They contain no journey ribbon or marketing composition.
+- Money pages show currency, line-item basis, source rate/agreement version,
+  total, and pricing reference. Movement pages show DCSA code and readable meaning.
+- Kafka topics, schema details, and raw payloads stay out of the primary operator
+  workflow and appear only in an audit/evidence disclosure when useful.
 
 ## Workflow And State
 
@@ -109,11 +147,45 @@ Verify every changed screen at 375px, 768px, 1024px, and 1440px.
 
 ## Next.js Rules
 
+- Next.js App Router, React, and strict TypeScript are binding.
 - Prefer server-rendered reads and focused client components for interaction.
 - Reserve dimensions for async content to prevent layout shift.
 - Use loading boundaries and Skeleton primitives for routed and deferred data.
 - Keep large optional visualizations behind dynamic imports.
 - Run production builds and inspect bundle impact for new libraries.
+- Apps import shared packages only; app-to-app imports are prohibited.
+- Shared tokens and primitives belong in `packages/ui`; domain compositions stay
+  in the owning app.
+- The Enterprise Technical Environment's Tailwind plus `clsx` standard remains
+  binding. CSS Modules require an approved standards waiver; W2-02 must resolve
+  any older artifact that says otherwise.
+
+## Required UI/UX Skill Invocation
+
+Before rough mockups, refined mockups, application design, code generation, or UI
+review, load this file and invoke `ui-ux-pro-max` with this project framing:
+
+```powershell
+python .codex\skills\ui-ux-pro-max\scripts\search.py `
+  "internal enterprise liner shipping carrier ERP operational dashboard dense data tables forms master-detail workflow exception management accessible light-first shared shell" `
+  --design-system -p "LinerCore Enterprise Carrier Platform" -f markdown
+```
+
+Run focused follow-up searches for the active page's table, form, timeline,
+accessibility, and `nextjs` needs. Reject marketing, hero, conversion, decorative,
+OLED-default, or generic SaaS recommendations that conflict with this master.
+
+## Wave A Parallel Ownership
+
+- W2-02 owns `packages/ui`, shared tokens/primitives, Booking reference migration,
+  and this master file.
+- W2-03 owns Charge domain pages and may add
+  `design-system/linercore/pages/charge-and-agreements.md`.
+- W2-04 owns Container Movement domain pages and may add
+  `design-system/linercore/pages/container-movement.md`.
+- W2-03 and W2-04 do not independently redesign `packages/ui` or the global shell.
+  Missing shared primitives are recorded for W2-02 and integrated through the
+  program merge protocol.
 
 ## Forbidden Patterns
 
@@ -133,5 +205,6 @@ Verify every changed screen at 375px, 768px, 1024px, and 1440px.
 - [ ] Keyboard-only primary workflow passes with visible focus.
 - [ ] Light and dark contrast checks pass.
 - [ ] Screenshots pass at 375, 768, 1024, and 1440px with no overlap or overflow.
+- [ ] Playwright verifies the real running route and journey-ribbon visibility.
 - [ ] Cross-module navigation uses canonical shell routes.
 - [ ] Production build, relevant tests, `aidlc-audit`, and `erp-fidelity-audit` are green.

@@ -78,3 +78,17 @@ Before starting any intent:
 4. Exit gate for every intent: DoD observed on the live Compose stack + `aidlc-audit` + `erp-fidelity-audit` green (see `.claude/skills/`).
 
 Review context: `docs/codex-review-findings.md`, `docs/erp-business-ui-gap-analysis.md`, `docs/erp-workflow-map.md`.
+
+## UI/UX Contract
+
+For every UI-bearing intent or code change, invoke the project `ui-ux-pro-max`
+skill and load `design-system/linercore/MASTER.md` plus
+`design-system/linercore/SESSION-PROMPT.md` before producing mockups, application
+design, or frontend code. These files define the one shared shell, token system,
+page patterns, responsive/a11y evidence, and Wave A ownership boundaries.
+
+Skill output is advisory. Reject marketing, hero, conversion, decorative, or
+dark-default recommendations that conflict with the active intent, enterprise
+technical standards, or the LinerCore operational-console contract. Domain
+sessions may add only their named page override under
+`design-system/linercore/pages/`; W2-02 owns the master and `packages/ui`.

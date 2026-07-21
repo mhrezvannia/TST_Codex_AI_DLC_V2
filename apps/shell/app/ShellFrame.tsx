@@ -44,8 +44,8 @@ export function ShellFrame({
           >
             Booking
           </a>
-          <a className="shell-nav-link" href="http://127.0.0.1:3003/">Charge agreements</a>
-          <a className="shell-nav-link" href="http://127.0.0.1:3002/">Reference data</a>
+          <span className="shell-nav-disabled" aria-disabled="true">Reference data</span>
+          <span className="shell-nav-disabled" aria-disabled="true">Charge agreements</span>
         </nav>
       </aside>
       <main className="shell-main">

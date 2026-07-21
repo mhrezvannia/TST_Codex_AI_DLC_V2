@@ -1,8 +1,8 @@
 :root {
   color-scheme: light;
-  font-family: var(--erp-font-sans);
-  color: var(--erp-color-text);
-  background: var(--erp-color-bg);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color: #17212b;
+  background: #f4f6f8;
 }
 
 * {
@@ -14,14 +14,14 @@ body {
 }
 
 a {
-  color: var(--erp-color-primary);
+  color: #125a78;
   text-underline-offset: 3px;
 }
 
 a:focus,
 button:focus,
 input:focus {
-  outline: 3px solid var(--erp-color-accent);
+  outline: 3px solid #f2c14e;
   outline-offset: 2px;
 }
 
@@ -44,13 +44,12 @@ input {
   justify-content: space-between;
   gap: 18px;
   padding: 0 24px;
-  background: var(--erp-color-surface);
-  color: var(--erp-color-text);
-  border-bottom: 1px solid var(--erp-color-border);
+  background: #17212b;
+  color: white;
 }
 
 .shell-brand {
-  color: var(--erp-color-text);
+  color: white;
   text-decoration: none;
   font-weight: 750;
 }
@@ -79,18 +78,18 @@ input {
 
 .shell-sign-out {
   min-height: 34px;
-  border: 1px solid var(--erp-color-border-strong);
+  border: 1px solid #b8c6d0;
   border-radius: 5px;
-  background: var(--erp-color-surface);
-  color: var(--erp-color-text);
+  background: #ffffff;
+  color: #17212b;
   padding: 6px 10px;
   cursor: pointer;
 }
 
 .shell-sidebar {
   padding: 18px;
-  background: var(--erp-color-surface);
-  border-right: 1px solid var(--erp-color-border);
+  background: #ffffff;
+  border-right: 1px solid #d9e1e7;
 }
 
 .shell-sidebar nav {
@@ -98,7 +97,8 @@ input {
   gap: 6px;
 }
 
-.shell-nav-link {
+.shell-nav-link,
+.shell-nav-disabled {
   min-height: 38px;
   display: flex;
   align-items: center;
@@ -108,13 +108,18 @@ input {
 }
 
 .shell-nav-link {
-  color: var(--erp-color-text);
+  color: #17212b;
   font-weight: 700;
 }
 
 .shell-nav-link-active {
-  background: var(--erp-color-info-bg);
-  color: var(--erp-color-primary);
+  background: #e8f2f5;
+  color: #125a78;
+}
+
+.shell-nav-disabled {
+  color: #71808d;
+  background: #f0f3f5;
 }
 
 .shell-main {
@@ -136,7 +141,7 @@ input {
 
 .shell-breadcrumbs {
   margin-bottom: 18px;
-  color: var(--erp-color-text-muted);
+  color: #5f6f7b;
   font-size: 13px;
 }
 
@@ -156,7 +161,7 @@ input {
 
 .shell-eyebrow {
   margin: 0 0 6px;
-  color: var(--erp-color-success);
+  color: #3e6b3f;
   font-size: 12px;
   font-weight: 750;
   letter-spacing: 0;
@@ -171,11 +176,10 @@ input {
 
 .shell-panel,
 .shell-state {
-  background: var(--erp-color-surface);
-  border: 1px solid var(--erp-color-border);
-  border-radius: var(--erp-radius-md);
+  background: white;
+  border: 1px solid #d9e1e7;
+  border-radius: 8px;
   padding: 18px;
-  box-shadow: var(--erp-shadow-1);
 }
 
 .shell-panel h2,
@@ -186,25 +190,25 @@ input {
 
 .shell-table-wrap {
   overflow-x: auto;
-  border-top: 1px solid var(--erp-color-border);
+  border-top: 1px solid #c7d0d7;
 }
 
 .shell-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--erp-color-surface);
+  background: white;
 }
 
 .shell-table th,
 .shell-table td {
   padding: 13px 12px;
   text-align: left;
-  border-bottom: 1px solid var(--erp-color-border);
+  border-bottom: 1px solid #dfe5e9;
   vertical-align: top;
 }
 
 .shell-table th {
-  color: var(--erp-color-text-muted);
+  color: #52616d;
   font-size: 12px;
   text-transform: uppercase;
 }
@@ -212,15 +216,15 @@ input {
 .shell-status {
   display: inline-block;
   white-space: nowrap;
-  border-left: 4px solid var(--erp-color-border-strong);
+  border-left: 4px solid #7c8790;
   padding: 4px 8px;
-  background: var(--erp-color-surface-2);
+  background: #edf0f2;
   font-size: 12px;
   font-weight: 750;
 }
 
 .shell-muted {
-  color: var(--erp-color-text-muted);
+  color: #64717d;
 }
 
 .shell-booking-form {
@@ -235,7 +239,7 @@ input {
   margin: 0;
   padding: 20px 0;
   border: 0;
-  border-top: 1px solid var(--erp-color-border);
+  border-top: 1px solid #c7d0d7;
 }
 
 .shell-booking-form legend {
@@ -254,11 +258,11 @@ input {
 .shell-booking-form input {
   min-height: 42px;
   width: 100%;
-  border: 1px solid var(--erp-color-border-strong);
+  border: 1px solid #9aa7b2;
   border-radius: 4px;
-  background: var(--erp-color-surface);
+  background: white;
   padding: 9px 10px;
-  color: var(--erp-color-text);
+  color: #17212b;
 }
 
 .shell-actions {
@@ -291,18 +295,18 @@ input {
   align-items: center;
   justify-content: center;
   padding: 9px 14px;
-  border: 1px solid var(--erp-color-border-strong);
+  border: 1px solid #9aa7b2;
   border-radius: 5px;
-  background: var(--erp-color-surface);
-  color: var(--erp-color-text);
+  background: white;
+  color: #17212b;
   text-decoration: none;
   cursor: pointer;
 }
 
 .shell-button-primary {
-  border-color: var(--erp-color-primary);
-  background: var(--erp-color-primary);
-  color: var(--erp-color-on-primary);
+  border-color: #125a78;
+  background: #125a78;
+  color: white;
 }
 
 .shell-button:disabled {
@@ -311,11 +315,11 @@ input {
 }
 
 .shell-error {
-  color: var(--erp-color-danger);
+  color: #812f24;
 }
 
 .shell-denied {
-  border-left: 4px solid var(--erp-color-danger);
+  border-left: 4px solid #a23a2a;
 }
 
 .shell-denied-facts {
@@ -327,14 +331,14 @@ input {
 
 .shell-denied-facts div {
   min-width: 0;
-  border: 1px solid var(--erp-color-danger-bg);
+  border: 1px solid #f1d6c8;
   border-radius: 6px;
   padding: 12px;
-  background: var(--erp-color-danger-bg);
+  background: #fff7f3;
 }
 
 .shell-denied-facts dt {
-  color: var(--erp-color-danger);
+  color: #8b4426;
   font-size: 12px;
   font-weight: 750;
   text-transform: uppercase;
@@ -360,7 +364,7 @@ input {
 
   .shell-sidebar {
     border-right: 0;
-    border-bottom: 1px solid var(--erp-color-border);
+    border-bottom: 1px solid #d9e1e7;
   }
 
   .shell-sidebar nav,

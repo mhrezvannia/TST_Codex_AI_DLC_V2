@@ -11,6 +11,11 @@ git -C D:\TST_Codex_phase1_preflight rev-parse integ/main-reconciled
 Every intent gets a separate branch, worktree, AI-DLC record, acceptance
 package, review, and integration merge.
 
+The manager demo remains on `http://127.0.0.1:8088`. All Wave A live runtime
+work must follow `docs/demo-wave-a-runbook.md` and use the isolated Compose
+wrapper; acceptance runs are serialized even though implementation worktrees
+remain parallel.
+
 ## Wave A
 
 ```powershell

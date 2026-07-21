@@ -361,6 +361,8 @@ services:
       args:
         WORKSPACE: "@erp/app-charge-agreements"
     profiles: ["app", "full"]
+    ports:
+      - "${CHARGE_AGREEMENTS_UI_HOST_PORT:-3003}:3000"
     environment:
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
     depends_on:

@@ -92,11 +92,11 @@ Your scenario — *"intent 3 of module A depends on intent 10 of module B"* — 
 
 | Id | Intent | Driver | Depends on | Statement |
 |---|---|---|---|---|
-| W0-01 | Platform eventing foundation — real Kafka/SR publisher, shared outbox relay + scheduler, kill placeholders (fixes C1–C5) | Shared Platform | — | [W0-01](W0-01-platform-eventing-foundation.md) |
+| W0-01 | Platform eventing foundation — real Kafka/SR publisher, shared outbox relay + scheduler, kill placeholders (fixes C1–C5) | Shared Platform | — | [W0-01](W0-01-platform-eventing-foundation.md) — **Closed 2026-07-13** ([evidence](../../artifacts/w0-01-live/README.md)) |
 | W0-02 | Reference-data completeness — Vessel/Voyage, Equipment-type, Charge-code modeled + seeded + APIs | Shared Platform | — | [W0-02](W0-02-reference-data-completeness.md) — **Closed 2026-07-14** ([evidence](../../artifacts/w0-02-live/live-proof-summary.json)) |
 | W1-01 ★ | Booking quote-to-cash spine — create→validate→price→confirm→real event→journey→status back→detail page | Booking | W0-01 | [worked example](../examples/booking-quote-to-cash/intent-statement.md) *(questions answered)* — **Closed 2026-07-20** ([real live evidence](../../artifacts/w1-01-live/w1-real-pass-20260720-verified/manifest.json)) |
 | W2-01 | App shell & auth — one shell, login gates it, session to all modules, kill `local-user` | Platform+UI | soft: W1-01 (migration unit) | [W2-01](W2-01-app-shell-and-auth.md) — **Closed 2026-07-19** ([evidence](../../artifacts/w2-01-live/app-shell-auth/manifest.json)) |
-| W2-02 | Design-system foundation — @erp/ui tokens + primitives; Booking migrated as reference | UI | — | [W2-02](W2-02-design-system-foundation.md) |
+| W2-02 | Design-system foundation — @erp/ui tokens + primitives; Booking migrated as reference | UI | — | [W2-02](W2-02-design-system-foundation.md) — **Acceptance pending** ([preflight gap](../../artifacts/phase1-preflight-20260721/w2-02-closure-gap.md)) |
 | W2-03 | Charge tariffs & agreements — tariff/surcharge/local-charge model, agreement versioning, real quote math | Charge | W0-02 | [W2-03](W2-03-charge-tariffs-and-agreements.md) |
 | W2-04 | Container journey & track-trace — DCSA T&T event model, journey detail, movement capture | CMM | W1-01, W0-01 | [W2-04](W2-04-container-journey-track-trace.md) |
 | W3-01 | D&D rules & rates — rule types (move-pair bounded), free time, daily rates | Charge | W2-03 | [W3-01](W3-01-dnd-rules-and-rates.md) |

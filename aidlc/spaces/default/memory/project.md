@@ -87,6 +87,7 @@ NEVER treat static local auth bypass behavior as acceptable outside explicit loc
 NEVER introduce a micro-frontend host, public-cloud deployment path, or third-party portal product for W2-01 without an approved scope change. (affirmed 2026-07-18)
 NEVER rewrite prior merged W0-01, W0-02, W1-01, or W2-02 work to make the shell slice easier. (affirmed 2026-07-18)
 NEVER claim completion from shell chrome, screenshots, unit tests, or container startup without real subject audit evidence and audit gates. (affirmed 2026-07-18)
+NEVER create a second canonical frontend for a Phase 1 module or give a module independent shell chrome, navigation, authentication, typography, or palette. (affirmed 2026-07-21)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -129,6 +130,8 @@ ALWAYS use the existing auth app, Keycloak/OIDC, and identity-service authorizat
 ALWAYS prove mounted Booking calls carry the authenticated subject through BFF and backend evidence. (affirmed 2026-07-18)
 ALWAYS run W2-01 acceptance through local Compose and Nginx with Keycloak available. (affirmed 2026-07-18)
 ALWAYS keep W2-02 design-system foundation and W4-01 broad module migration out of W2-01 implementation scope. (affirmed 2026-07-18)
+ALWAYS invoke the project `ui-ux-pro-max` skill for every UI-bearing intent, load `design-system/linercore/MASTER.md` before design or code generation, and record any page-specific override under `design-system/linercore/pages/`. (affirmed 2026-07-21)
+ALWAYS deliver Phase 1 module UI through the shared authenticated shell and verify changed screens at 375px, 768px, 1024px, and 1440px with keyboard, loading, empty, error, denied, light-theme, and dark-theme evidence. (affirmed 2026-07-21)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->

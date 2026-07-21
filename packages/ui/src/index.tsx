@@ -34,12 +34,13 @@ const railItems = [
   { key: "pricing", label: "Pricing", icon: "PR" },
   { key: "booking", label: "Booking", icon: "BK" },
   { key: "equipment", label: "Equip.", icon: "EQ" },
-  { key: "identity", label: "Auth", icon: "ID" }
+  { key: "identity", label: "Auth", icon: "ID" },
+  { key: "reference", label: "Reference", icon: "RD" }
 ];
 
-export function PlatformShell({ title, children }: { title: string; children: ReactNode }) {
+export function PlatformShell({ title, children, showWorkflow = true }: { title: string; children: ReactNode; showWorkflow?: boolean }) {
   const activeStage = title.toLowerCase().includes("charge") ? 0 : title.toLowerCase().includes("auth") ? -1 : 1;
-  const activeRail = title.toLowerCase().includes("charge") ? "pricing" : title.toLowerCase().includes("auth") ? "identity" : "booking";
+  const activeRail = title.toLowerCase().includes("charge") ? "pricing" : title.toLowerCase().includes("auth") ? "identity" : title.toLowerCase().includes("reference") ? "reference" : "booking";
 
   return (
     <>
@@ -85,7 +86,7 @@ export function PlatformShell({ title, children }: { title: string; children: Re
             </div>
           </header>
 
-          <div style={styles.stageRibbon} aria-label="MVP journey">
+          {showWorkflow ? <div style={styles.stageRibbon} aria-label="MVP journey">
             {stages.map((stage, index) => {
               const active = index === activeStage;
               const complete = activeStage > index;
@@ -101,7 +102,7 @@ export function PlatformShell({ title, children }: { title: string; children: Re
                 </div>
               );
             })}
-          </div>
+          </div> : null}
 
           <div style={styles.content}>{children}</div>
         </section>
@@ -180,7 +181,8 @@ function railHref(key: string) {
     pricing: "/charge-agreements/",
     booking: "/booking/",
     equipment: "/container-movement/",
-    identity: "http://localhost:3000"
+    identity: "http://localhost:3000",
+    reference: "http://127.0.0.1:3002/"
   };
   return hrefs[key] ?? "#";
 }

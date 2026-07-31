@@ -87,11 +87,11 @@ test("Wave A UI ports use the fixed infrastructure band above observed Windows D
   );
 
   assert.deepEqual(ports, {
-    SHELL_APP_HOST_PORT: "18104",
-    REFERENCE_DATA_UI_HOST_PORT: "18102",
-    BOOKING_APP_HOST_PORT: "18101"
+    SHELL_APP_HOST_PORT: "127.0.0.1:18104",
+    REFERENCE_DATA_UI_HOST_PORT: "127.0.0.1:18102",
+    BOOKING_APP_HOST_PORT: "127.0.0.1:18101"
   });
-  for (const port of Object.values(ports).map(Number)) {
+  for (const port of Object.values(ports).map((binding) => Number(binding.split(":").at(-1)))) {
     assert.equal(port >= 18100 && port <= 18199, true);
   }
   assert.equal(new Set(Object.values(ports)).size, 3);

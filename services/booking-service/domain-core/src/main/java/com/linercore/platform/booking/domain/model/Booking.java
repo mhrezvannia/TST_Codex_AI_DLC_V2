@@ -179,6 +179,34 @@ public record Booking(
                 exceptions, dndTriggerCandidates, attributes, "BOOKING_PRICING_STORED");
     }
 
+    public Booking typedPriced(BookingPricingSnapshot snapshot, String actorSubjectId, Instant now) {
+        if (!id.value().equals(snapshot.bookingRef()) && !bookingNumber.equals(snapshot.bookingRef())) {
+            throw new IllegalArgumentException("pricing snapshot booking reference does not match Booking");
+        }
+        if (snapshot.bookingRevision() != revision
+                || snapshot.amendmentSeq() != pricingAmendmentSeq()
+                || (!pricingInputFingerprint().isBlank()
+                        && !snapshot.inputFingerprint().equals(pricingInputFingerprint()))) {
+            throw new IllegalStateException("BOOKING_CHANGED");
+        }
+        requireStatus(
+                BookingStatus.VALIDATED,
+                BookingStatus.PRICING_PENDING,
+                BookingStatus.MANUAL_PRICING,
+                BookingStatus.AMENDED);
+        java.util.HashMap<String, String> nextAttributes = new java.util.HashMap<>(attributes);
+        nextAttributes.put("pricingStatus", "PRICED");
+        nextAttributes.put("pricingAmendmentSeq", Integer.toString(snapshot.amendmentSeq()));
+        nextAttributes.put("pricingInputFingerprint", snapshot.inputFingerprint());
+        nextAttributes.put("currentPricingRequestId", snapshot.pricingRequestId());
+        nextAttributes.put("currentPriceAmendmentSeq", Integer.toString(snapshot.amendmentSeq()));
+        nextAttributes.put("currentPriceInputFingerprint", snapshot.inputFingerprint());
+        BookingStatus nextStatus = status == BookingStatus.AMENDED ? BookingStatus.AMENDED : BookingStatus.PRICED;
+        return withStatus(nextStatus, revision, actorSubjectId, snapshot.correlationId(), now,
+                PricingSnapshot.typed(snapshot), exceptions, dndTriggerCandidates, nextAttributes,
+                "BOOKING_PRICING_STORED");
+    }
+
     public Booking manualPricing(
             String pricingRequestId,
             String reasonCode,
@@ -198,6 +226,9 @@ public record Booking(
 
     public Booking confirmed(String actorSubjectId, String correlationId, Instant now) {
         requireStatus(BookingStatus.PRICED);
+        if (!confirmationPricingEligible()) {
+            throw new IllegalStateException("PRICING_REQUIRED");
+        }
         return withStatus(BookingStatus.CONFIRMED, revision, actorSubjectId, correlationId, now, pricingSnapshot,
                 exceptions, dndTriggerCandidates, attributes, "BOOKING_CONFIRMED");
     }
@@ -208,10 +239,68 @@ public record Booking(
                 exceptions, dndTriggerCandidates, nextAttributes, "BOOKING_AMENDED");
     }
 
+    public Booking pricingInputsAmended(
+            Map<String, String> nextAttributes,
+            String nextPricingFingerprint,
+            String requestedDepartureDate,
+            String actorSubjectId,
+            String correlationId,
+            Instant now) {
+        if (nextPricingFingerprint == null || !nextPricingFingerprint.matches("[0-9a-f]{64}")) {
+            throw new IllegalArgumentException("pricing input fingerprint must be lowercase SHA-256");
+        }
+        java.util.HashMap<String, String> merged = new java.util.HashMap<>(
+                nextAttributes == null ? Map.of() : nextAttributes);
+        boolean changed = !nextPricingFingerprint.equals(pricingInputFingerprint());
+        merged.put("pricingInputFingerprint", nextPricingFingerprint);
+        merged.put("pricingAmendmentSeq", Integer.toString(pricingAmendmentSeq() + (changed ? 1 : 0)));
+        merged.put("requestedDepartureDate", required(requestedDepartureDate, "requested departure date"));
+        if (changed && pricingSnapshot != null) {
+            merged.put("pricingStatus", "REPRICE_REQUIRED");
+        }
+        if (status == BookingStatus.CONFIRMED || status == BookingStatus.RECONFIRMED) {
+            return amended(merged, actorSubjectId, correlationId, now);
+        }
+        requireStatus(
+                BookingStatus.DRAFT,
+                BookingStatus.VALIDATED,
+                BookingStatus.PRICED,
+                BookingStatus.MANUAL_PRICING);
+        BookingStatus nextStatus = changed && pricingSnapshot != null ? BookingStatus.VALIDATED : status;
+        return withStatus(nextStatus, revision + 1, actorSubjectId, correlationId, now, pricingSnapshot,
+                exceptions, dndTriggerCandidates, merged, "BOOKING_AMENDED");
+    }
+
     public Booking reconfirmed(String actorSubjectId, String correlationId, Instant now) {
         requireStatus(BookingStatus.AMENDED);
+        if (!confirmationPricingEligible()) {
+            throw new IllegalStateException("PRICING_REQUIRED");
+        }
         return withStatus(BookingStatus.RECONFIRMED, revision, actorSubjectId, correlationId, now, pricingSnapshot,
                 exceptions, dndTriggerCandidates, attributes, "BOOKING_RECONFIRMED");
+    }
+
+    public int pricingAmendmentSeq() {
+        String value = attributes.get("pricingAmendmentSeq");
+        if (value == null || value.isBlank()) {
+            return 0;
+        }
+        return Integer.parseInt(value);
+    }
+
+    public String pricingInputFingerprint() {
+        return attributes.getOrDefault("pricingInputFingerprint", "");
+    }
+
+    public boolean confirmationPricingEligible() {
+        if (pricingSnapshot == null) {
+            return false;
+        }
+        if (pricingSnapshot.typed() == null) {
+            return false;
+        }
+        return pricingSnapshot.confirmationEligible(pricingAmendmentSeq(), pricingInputFingerprint())
+                && !"REPRICE_REQUIRED".equals(attributes.get("pricingStatus"));
     }
 
     public Booking exception(String code, String message, String actorSubjectId, String correlationId, Instant now) {

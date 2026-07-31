@@ -1,16 +1,30 @@
 package com.linercore.platform.chargeagreement.applicationservice.port;
 
-import com.linercore.platform.chargeagreement.domain.model.PricingResult;
-import java.time.Instant;
+import java.time.Duration;
 import java.util.Optional;
 
 public interface PricingRequestRepository {
-    Optional<StoredPricingRequest> findByIdempotencyKey(String idempotencyKey);
+    Optional<StoredPricingReceipt> findReceiptByIdempotencyKey(String idempotencyKey);
 
-    boolean insertClaim(StoredPricingRequest claim);
+    boolean insertClaim(PricingClaim claim, Duration leaseDuration);
 
-    boolean takeOverExpiredClaim(String idempotencyKey, String ownerToken, Instant leaseUntil, Instant now);
+    boolean takeOverExpiredClaim(String idempotencyKey, String ownerToken, Duration leaseDuration);
 
-    boolean completeOwned(String idempotencyKey, String ownerToken, PricingResult result, String terminalCode,
-            Instant completedAt);
+    CompletionResult completeOwned(OwnedPricingCompletion completion);
+
+    record CompletionResult(boolean completed, PricingTerminalReceipt receipt) {
+        public CompletionResult {
+            if (completed != (receipt != null)) {
+                throw new IllegalArgumentException("completed result must contain exactly one receipt");
+            }
+        }
+
+        public static CompletionResult staleOwner() {
+            return new CompletionResult(false, null);
+        }
+
+        public static CompletionResult completed(PricingTerminalReceipt receipt) {
+            return new CompletionResult(true, receipt);
+        }
+    }
 }

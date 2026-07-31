@@ -1,10 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { verifyContractProviders } from "./verify-contract-providers.mjs";
+import { runVerifyContractProvidersCli, verifyContractProviders } from "./verify-contract-providers.mjs";
 
 test("verifies offline provider contract coverage", async () => {
   const result = await verifyContractProviders();
@@ -32,6 +31,27 @@ test("verifies HTTP Pact and message-pact fixtures", async () => {
   assert.equal(result.checks.some((check) => check.name.includes("booking-charge-pricing-fixtures.json response status") && check.status === "ok"), true);
   assert.equal(result.checks.some((check) => check.name.includes("booking-confirmed-message-fixtures.json payload example exists") && check.status === "ok"), true);
   assert.equal(result.checks.some((check) => check.name.includes("container-movement-status-message-fixtures.json payload example exists") && check.status === "ok"), true);
+  assert.equal(result.checks.some((check) => check.name === "U04 pricing terminal/Pact matrix" && check.status === "ok"), true);
+});
+
+test("verification fails when U04 Pact ownership or terminal correlation drifts", async () => {
+  await usingFixture(async (root) => {
+    const catalogPath = join(root, "contracts/catalog/contract-catalog.json");
+    const matrixPath = join(root, "contracts/examples/pricing-u04-terminal-matrix.json");
+    const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+    const matrix = JSON.parse(readFileSync(matrixPath, "utf8"));
+    catalog.contracts.find((contract) => contract.contractId === "pact-booking-charge-pricing").consumerService =
+      "another-consumer";
+    matrix.scenarios.find((scenario) => scenario.scenarioId === "no-rate").response.correlationId = "";
+    writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`);
+    writeFileSync(matrixPath, `${JSON.stringify(matrix, null, 2)}\n`);
+
+    const result = await verifyContractProviders({ root });
+
+    assert.equal(result.valid, false);
+    assert.match(result.failures.join("\n"), /OpenAPI and Pact ownership must be synchronized/);
+    assert.match(result.failures.join("\n"), /no-rate.correlationId is required/);
+  });
 });
 
 test("verification fails when required OpenAPI path is missing", async () => {
@@ -77,14 +97,15 @@ test("verification fails when message-pact payload example is missing", async ()
 });
 
 test("CLI writes evidence file", async () => {
-  await usingFixture((root) => {
+  await usingFixture(async (root) => {
     const evidenceFile = join(root, "artifacts/contracts-verification.json");
-    execFileSync(process.execPath, [join(process.cwd(), "scripts/verify-contract-providers.mjs"), "--evidence-file", evidenceFile], {
-      cwd: root,
-      stdio: "pipe"
+    const outcome = await runVerifyContractProvidersCli(["--evidence-file", evidenceFile], {
+      root,
+      log: () => {}
     });
     const evidence = JSON.parse(readFileSync(evidenceFile, "utf8"));
 
+    assert.equal(outcome.exitCode, 0);
     assert.equal(evidence.status, "ok");
     assert.equal(evidence.healthSnapshot.overallStatus, "green");
   });

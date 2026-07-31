@@ -7,15 +7,15 @@ import com.linercore.platform.chargeagreement.applicationservice.port.AgreementE
 import com.linercore.platform.chargeagreement.applicationservice.port.AgreementRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.AuthorizationPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.IdGenerator;
+import com.linercore.platform.chargeagreement.applicationservice.port.LegacyPricingRequestRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.ManualPricingCaseRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.EventPublicationException;
 import com.linercore.platform.chargeagreement.applicationservice.port.OutboxRepository;
-import com.linercore.platform.chargeagreement.applicationservice.port.PricingRequestRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.PricingRequestStatus;
 import com.linercore.platform.chargeagreement.applicationservice.port.ReferenceValidationPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.ReferenceValidationRequest;
 import com.linercore.platform.chargeagreement.applicationservice.port.SchemaRegistryPort;
-import com.linercore.platform.chargeagreement.applicationservice.port.StoredPricingRequest;
+import com.linercore.platform.chargeagreement.applicationservice.port.StoredLegacyPricingRequest;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupQuery;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupResult;
 import com.linercore.platform.chargeagreement.applicationservice.query.AgreementSearchQuery;
@@ -27,6 +27,7 @@ import com.linercore.platform.chargeagreement.domain.model.ChargeTerm;
 import com.linercore.platform.chargeagreement.domain.model.CustomerAgreement;
 import com.linercore.platform.chargeagreement.domain.model.MoneyAmount;
 import com.linercore.platform.chargeagreement.domain.model.ManualPricingCase;
+import com.linercore.platform.chargeagreement.domain.model.LegacyPricingOutcome;
 import com.linercore.platform.chargeagreement.domain.model.PricingLine;
 import com.linercore.platform.chargeagreement.domain.model.PricingRequest;
 import com.linercore.platform.chargeagreement.domain.model.PricingResult;
@@ -61,7 +62,7 @@ public class ChargeAgreementApplicationService {
     private final OutboxRepository outbox;
     private final SchemaRegistryPort schemaRegistry;
     private final ManualPricingCaseRepository manualPricingCases;
-    private final PricingRequestRepository pricingRequests;
+    private final LegacyPricingRequestRepository pricingRequests;
 
     public ChargeAgreementApplicationService(
             AgreementRepository agreements,
@@ -118,7 +119,7 @@ public class ChargeAgreementApplicationService {
             AgreementEventPublisherPort eventPublisher,
             SchemaRegistryPort schemaRegistry,
             ManualPricingCaseRepository manualPricingCases,
-            PricingRequestRepository pricingRequests) {
+            LegacyPricingRequestRepository pricingRequests) {
         this.agreements = agreements;
         this.authorization = authorization;
         this.referenceValidation = referenceValidation;
@@ -231,7 +232,7 @@ public class ChargeAgreementApplicationService {
                 .orElseGet(ActiveAgreementLookupResult::noMatch);
     }
 
-    public PricingResult price(PricingRequest request, String actorSubjectId) {
+    public LegacyPricingOutcome price(PricingRequest request, String actorSubjectId) {
         requireAllowed(actorSubjectId, "price", request.correlationId());
         List<CustomerAgreement> candidates = agreements.findActiveCandidates(request.customerId(), request.effectiveDate()).stream()
                 .filter(agreement -> agreement.isActiveOn(request.effectiveDate()))
@@ -240,7 +241,8 @@ public class ChargeAgreementApplicationService {
                 .filter(agreement -> agreement.commodityId().equals(request.commodityId()))
                 .toList();
         if (candidates.isEmpty()) {
-            PricingResult manual = PricingResult.manual(request.requestId(), "NO_RATE", request.correlationId());
+            LegacyPricingOutcome.Manual manual = new LegacyPricingOutcome.Manual(
+                    request.requestId(), "NO_RATE", request.correlationId());
             recordManualPricingCase(request, manual.reasonCode());
             return manual;
         }
@@ -258,8 +260,8 @@ public class ChargeAgreementApplicationService {
                         request.correlationId())) == highestSpecificity)
                 .toList();
         if (highest.size() > 1) {
-            PricingResult manual = PricingResult.manual(request.requestId(), "AMBIGUOUS_ACTIVE_AGREEMENT",
-                    request.correlationId());
+            LegacyPricingOutcome.Manual manual = new LegacyPricingOutcome.Manual(
+                    request.requestId(), "AMBIGUOUS_ACTIVE_AGREEMENT", request.correlationId());
             recordManualPricingCase(request, manual.reasonCode());
             return manual;
         }
@@ -269,14 +271,16 @@ public class ChargeAgreementApplicationService {
                 .map(term -> toPricingLine(term, request))
                 .toList();
         if (lines.isEmpty()) {
-            PricingResult manual = PricingResult.manual(request.requestId(), "NO_APPLICABLE_TERMS", request.correlationId());
+            LegacyPricingOutcome.Manual manual = new LegacyPricingOutcome.Manual(
+                    request.requestId(), "NO_APPLICABLE_TERMS", request.correlationId());
             recordManualPricingCase(request, manual.reasonCode());
             return manual;
         }
-        return PricingResult.priced(request.requestId(), authority.id(), lines, request.correlationId());
+        return new LegacyPricingOutcome.Automatic(
+                PricingResult.priced(request.requestId(), authority.id(), lines, request.correlationId()));
     }
 
-    public PricingResult requestPricing(PricingRequest request, String idempotencyKey, String actorSubjectId) {
+    public LegacyPricingOutcome requestPricing(PricingRequest request, String idempotencyKey, String actorSubjectId) {
         String expectedKey = request.bookingRef() + ":" + request.quantities().amendmentSeq();
         if (!expectedKey.equals(idempotencyKey)) {
             throw new IllegalArgumentException("Idempotency-Key must equal bookingRef:amendmentSeq");
@@ -285,7 +289,7 @@ public class ChargeAgreementApplicationService {
             return price(request, actorSubjectId);
         }
         String requestHash = requestHash(request);
-        StoredPricingRequest existing = pricingRequests.findByIdempotencyKey(idempotencyKey).orElse(null);
+        StoredLegacyPricingRequest existing = pricingRequests.findByIdempotencyKey(idempotencyKey).orElse(null);
         if (existing != null) {
             if (!existing.requestHash().equals(requestHash)) {
                 throw new PricingConflictException("IDEMPOTENCY_CONFLICT",
@@ -294,27 +298,29 @@ public class ChargeAgreementApplicationService {
             if (existing.status() == PricingRequestStatus.IN_PROGRESS && existing.leaseUntil().isAfter(now())) {
                 throw new PricingRequestInProgressException(Duration.between(now(), existing.leaseUntil()));
             }
-            if (existing.result() != null) {
-                return existing.result();
+            if (existing.outcome() != null) {
+                return existing.outcome();
             }
             String ownerToken = ids.nextId();
             Instant leaseUntil = now().plus(Duration.ofSeconds(10));
             if (!pricingRequests.takeOverExpiredClaim(idempotencyKey, ownerToken, leaseUntil, now())) {
                 throw new PricingRequestInProgressException(Duration.ofSeconds(1));
             }
-            PricingResult result = price(request, actorSubjectId);
-            if (!pricingRequests.completeOwned(idempotencyKey, ownerToken, result, result.reasonCode(), now())) {
-                StoredPricingRequest winner = pricingRequests.findByIdempotencyKey(idempotencyKey).orElseThrow();
-                if (winner.result() != null) {
-                    return winner.result();
+            LegacyPricingOutcome outcome = price(request, actorSubjectId);
+            if (!pricingRequests.completeOwned(
+                    idempotencyKey, ownerToken, outcome, terminalCode(outcome), now())) {
+                StoredLegacyPricingRequest winner =
+                        pricingRequests.findByIdempotencyKey(idempotencyKey).orElseThrow();
+                if (winner.outcome() != null) {
+                    return winner.outcome();
                 }
                 throw new PricingRequestInProgressException(Duration.ofSeconds(1));
             }
-            return result;
+            return outcome;
         }
         Instant startedAt = now();
         String ownerToken = ids.nextId();
-        StoredPricingRequest claim = new StoredPricingRequest(
+        StoredLegacyPricingRequest claim = new StoredLegacyPricingRequest(
                 idempotencyKey,
                 request.bookingRef(),
                 request.quantities().amendmentSeq(),
@@ -330,15 +336,21 @@ public class ChargeAgreementApplicationService {
         if (!pricingRequests.insertClaim(claim)) {
             throw new PricingRequestInProgressException(Duration.ofSeconds(1));
         }
-        PricingResult result = price(request, actorSubjectId);
-        if (!pricingRequests.completeOwned(idempotencyKey, ownerToken, result, result.reasonCode(), now())) {
-            StoredPricingRequest winner = pricingRequests.findByIdempotencyKey(idempotencyKey).orElseThrow();
-            if (winner.result() != null) {
-                return winner.result();
+        LegacyPricingOutcome outcome = price(request, actorSubjectId);
+        if (!pricingRequests.completeOwned(
+                idempotencyKey, ownerToken, outcome, terminalCode(outcome), now())) {
+            StoredLegacyPricingRequest winner =
+                    pricingRequests.findByIdempotencyKey(idempotencyKey).orElseThrow();
+            if (winner.outcome() != null) {
+                return winner.outcome();
             }
             throw new PricingRequestInProgressException(Duration.ofSeconds(1));
         }
-        return result;
+        return outcome;
+    }
+
+    private static String terminalCode(LegacyPricingOutcome outcome) {
+        return outcome instanceof LegacyPricingOutcome.Manual manual ? manual.reasonCode() : "PRICED";
     }
 
     @Transactional

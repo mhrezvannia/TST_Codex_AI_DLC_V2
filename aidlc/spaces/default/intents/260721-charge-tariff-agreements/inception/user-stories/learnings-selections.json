@@ -1,0 +1,29 @@
+{
+  "stage_slug": "user-stories",
+  "selections": [
+    {
+      "candidate_id": "260721-us-c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03 product stories, treat Pricing Analyst, Booking Desk Operator, and Charge Reader/Auditor as the human personas; Charge and Booking services are collaborating systems and must not be invented as human personas or used to broaden authorization.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-us-c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Prefer end-to-end outcome stories with executable UI/API/persistence evidence over component-level UI or API task stories; implementation decomposition belongs in later design and planning stages.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-us-c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Keep migration, isolated-live, performance, coverage, audit, and architecture obligations as mandatory release quality constraints rather than inventing a release persona or claiming an omnibus constraint is an INVEST user story.",
+      "source": "orchestrator"
+    }
+  ]
+}

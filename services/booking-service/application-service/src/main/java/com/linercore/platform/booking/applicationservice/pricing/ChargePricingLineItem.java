@@ -1,23 +1,46 @@
 package com.linercore.platform.booking.applicationservice.pricing;
 
+import java.math.BigDecimal;
+
 public record ChargePricingLineItem(
         String chargeCode,
         String category,
+        BigDecimal amount,
+        String currency,
+        String rateCategory,
         String basis,
-        int quantity,
-        String amount,
-        String currencyId) {
-    public ChargePricingLineItem(String chargeCode, String basis, int quantity, String amount, String currencyId) {
-        this(chargeCode, "FREIGHT", basis, quantity, amount, currencyId);
-    }
+        Integer quantity,
+        BigDecimal unitRate,
+        String sourceRateVersionId) {
 
     public ChargePricingLineItem {
         if (chargeCode == null || chargeCode.isBlank()) {
             throw new IllegalArgumentException("charge code is required");
         }
-        category = category == null || category.isBlank() ? "FREIGHT" : category;
-        if (amount == null || amount.isBlank()) {
+        if (category == null || category.isBlank()) {
+            throw new IllegalArgumentException("category is required");
+        }
+        if (amount == null) {
             throw new IllegalArgumentException("amount is required");
         }
+        if (currency == null || currency.isBlank()) {
+            throw new IllegalArgumentException("currency is required");
+        }
+    }
+
+    public boolean hasAnyTypedEnrichment() {
+        return rateCategory != null
+                || basis != null
+                || quantity != null
+                || unitRate != null
+                || sourceRateVersionId != null;
+    }
+
+    public boolean hasCompleteTypedEnrichment() {
+        return rateCategory != null
+                && basis != null
+                && quantity != null
+                && unitRate != null
+                && sourceRateVersionId != null;
     }
 }

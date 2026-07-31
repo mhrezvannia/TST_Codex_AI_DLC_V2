@@ -24,6 +24,17 @@ export const gateDefinitions = [
   { id: "frontend-auth-build", scope: "apps/auth", required: true, command: "corepack yarn workspace @erp/app-auth build" },
   { id: "frontend-charge-agreements-test", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements test" },
   { id: "frontend-charge-agreements-typecheck", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements typecheck" },
+  { id: "frontend-charge-agreements-lint", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements lint" },
+  { id: "frontend-charge-agreements-build", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements build" },
+  { id: "u02-route-preservation", scope: "apps/charge-agreements", required: true, command: "node scripts/u02-route-preservation.mjs" },
+  { id: "u02-subject-assertion-contract", scope: "apps/charge-agreements", required: true, command: "mvn -f services/pom.xml -pl charge-agreement-service/container -am -Dtest=ChargeSubjectAssertionVerifierTest -Dsurefire.failIfNoSpecifiedTests=false test" },
+  { id: "u02-security", scope: "apps/charge-agreements", required: true, command: "node scripts/run-u02-security-gates.mjs" },
+  { id: "u02-performance", scope: "apps/charge-agreements", required: true, command: "node scripts/u02-bff-performance.mjs --input artifacts/u02/performance.json" },
+  { id: "u03-agreement-preservation", scope: "apps/charge-agreements", required: true, command: "node scripts/u03-agreement-preservation.test.mjs" },
+  { id: "u03-agreement-performance-contract", scope: "apps/charge-agreements", required: true, command: "node scripts/u03-agreement-performance.test.mjs" },
+  { id: "u04-pricing-preservation", scope: "apps/charge-agreements", required: true, command: "node scripts/u04-pricing-preservation.test.mjs" },
+  { id: "u04-pricing-performance-contract", scope: "apps/charge-agreements", required: true, command: "node scripts/u04-pricing-performance.test.mjs" },
+  { id: "u04-rollback-policy", scope: "apps/charge-agreements", required: true, command: "node scripts/u04-rollback-policy.test.mjs" },
   { id: "frontend-booking-test", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking test" },
   { id: "frontend-booking-typecheck", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking typecheck" },
   { id: "frontend-booking-lint", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking lint" },
@@ -85,7 +96,9 @@ export function runPolicyChecks(root = process.cwd()) {
       "-Command",
       `Select-String -Path '${resolve(root, domainPath)}\\**\\*.java' -Pattern 'org.springframework|jakarta.persistence|javax.persistence|org.apache.kafka|com.fasterxml.jackson|lombok|dataaccess|messaging' -CaseSensitive:$false`
     ], { encoding: "utf8" });
-    if (result.stdout.trim()) {
+    if (result.error) {
+      failures.push(`domain-core purity check unavailable under ${domainPath}: ${result.error.message}`);
+    } else if ((result.stdout ?? "").trim()) {
       failures.push(`domain-core impurity detected under ${domainPath}`);
     }
   }

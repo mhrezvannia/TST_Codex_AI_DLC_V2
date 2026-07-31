@@ -27,8 +27,8 @@ public class JdbcAgreementRepository implements AgreementRepository {
         jdbc.update("""
                 INSERT INTO charge_agreements
                     (id, agreement_number, customer_id, trade_lane_id, commodity_id,
-                     valid_from, valid_to, status, version, snapshot)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     valid_from, valid_to, status, version, snapshot, authority_model)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'LEGACY')
                 ON CONFLICT (id) DO UPDATE SET
                     agreement_number = EXCLUDED.agreement_number,
                     customer_id = EXCLUDED.customer_id,
@@ -39,6 +39,7 @@ public class JdbcAgreementRepository implements AgreementRepository {
                     status = EXCLUDED.status,
                     version = EXCLUDED.version,
                     snapshot = EXCLUDED.snapshot
+                WHERE charge_agreements.authority_model = 'LEGACY'
                 """,
                 agreement.id().value(),
                 agreement.agreementNumber().value(),
@@ -54,13 +55,17 @@ public class JdbcAgreementRepository implements AgreementRepository {
     }
 
     public Optional<CustomerAgreement> findById(AgreementId id) {
-        List<CustomerAgreement> rows = jdbc.query("SELECT snapshot FROM charge_agreements WHERE id = ?",
+        List<CustomerAgreement> rows = jdbc.query("""
+                SELECT snapshot FROM charge_agreements
+                WHERE id = ? AND authority_model = 'LEGACY'
+                """,
                 (rs, rowNum) -> read(rs), id.value());
         return rows.stream().findFirst();
     }
 
     public List<CustomerAgreement> search(AgreementSearchQuery query) {
-        StringBuilder sql = new StringBuilder("SELECT snapshot FROM charge_agreements WHERE 1=1");
+        StringBuilder sql = new StringBuilder(
+                "SELECT snapshot FROM charge_agreements WHERE authority_model = 'LEGACY'");
         List<Object> args = new ArrayList<>();
         if (query.customerId() != null) {
             sql.append(" AND customer_id = ?");
@@ -98,6 +103,7 @@ public class JdbcAgreementRepository implements AgreementRepository {
         return jdbc.query("""
                 SELECT snapshot FROM charge_agreements
                 WHERE customer_id = ?
+                  AND authority_model = 'LEGACY'
                   AND status = ?
                   AND valid_from <= ?
                   AND valid_to >= ?

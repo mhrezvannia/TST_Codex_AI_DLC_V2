@@ -26,12 +26,22 @@ paths:
       responses:
         "200":
           description: Search results
+          content:
+            application/vnd.linercore.charge-agreement-v2+json:
+              schema: { $ref: "#/components/schemas/W2AgreementPage" }
     post:
       tags: [Agreements]
       summary: Create a draft agreement
+      requestBody:
+        content:
+          application/vnd.linercore.charge-agreement-v2+json:
+            schema: { $ref: "#/components/schemas/W2AgreementCreate" }
       responses:
         "201":
           description: Created agreement
+          content:
+            application/vnd.linercore.charge-agreement-v2+json:
+              schema: { $ref: "#/components/schemas/W2AgreementDetail" }
   /api/charge-agreements/{id}:
     get:
       tags: [Agreements]
@@ -44,6 +54,9 @@ paths:
       responses:
         "200":
           description: Agreement detail
+          content:
+            application/vnd.linercore.charge-agreement-v2+json:
+              schema: { $ref: "#/components/schemas/W2AgreementDetail" }
         "404":
           description: Agreement not found
     put:
@@ -58,6 +71,10 @@ paths:
           name: version
           required: true
           schema: { type: integer, format: int64 }
+      requestBody:
+        content:
+          application/vnd.linercore.charge-agreement-v2+json:
+            schema: { $ref: "#/components/schemas/W2AgreementUpdate" }
       responses:
         "200":
           description: Updated agreement
@@ -106,6 +123,221 @@ paths:
       responses:
         "200":
           description: Active match or no-match response
+  /api/charge-agreements/{agreementId}/versions:
+    post:
+      tags: [Agreement W2 Authority]
+      summary: Create a Draft successor from an Approved version
+      description: Exact vendor media only; LEGACY agreements are read-only.
+      parameters:
+        - { in: path, name: agreementId, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/vnd.linercore.charge-agreement-v2+json:
+            schema: { $ref: "#/components/schemas/W2AgreementSuccessor" }
+      responses:
+        "201":
+          description: Draft successor
+          content:
+            application/vnd.linercore.charge-agreement-v2+json:
+              schema: { $ref: "#/components/schemas/W2AgreementDetail" }
+        "409": { $ref: "#/components/responses/W2AgreementError" }
+        "422": { $ref: "#/components/responses/W2AgreementError" }
+  /api/charge-agreements/{agreementId}/versions/{agreementVersionId}/approve:
+    post:
+      tags: [Agreement W2 Authority]
+      summary: Approve an exact Draft Agreement version
+      parameters:
+        - { in: path, name: agreementId, required: true, schema: { type: string } }
+        - { in: path, name: agreementVersionId, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/vnd.linercore.charge-agreement-v2+json:
+            schema: { $ref: "#/components/schemas/W2AgreementAction" }
+      responses:
+        "200":
+          description: Approved immutable Agreement version
+          content:
+            application/vnd.linercore.charge-agreement-v2+json:
+              schema: { $ref: "#/components/schemas/W2AgreementDetail" }
+        "409": { $ref: "#/components/responses/W2AgreementError" }
+        "422": { $ref: "#/components/responses/W2AgreementError" }
+  /api/charge-rates:
+    get:
+      tags: [Rate Authority]
+      summary: Search versioned Rate authority
+      description: The authenticated Charge BFF asserts the signed-session actor; direct actor assertions are rejected.
+      security:
+        - RateServiceToken: []
+      parameters:
+        - { in: query, name: q, schema: { type: string } }
+        - { in: query, name: category, schema: { $ref: "#/components/schemas/RateCategory" } }
+        - { in: query, name: lifecycle, schema: { $ref: "#/components/schemas/RatePresentationState" } }
+        - { in: query, name: asOf, schema: { type: string, format: date } }
+        - { in: query, name: originId, schema: { type: string } }
+        - { in: query, name: destinationId, schema: { type: string } }
+        - { in: query, name: equipmentTypeId, schema: { type: string } }
+        - { in: query, name: page, schema: { type: integer, minimum: 0, default: 0 } }
+        - { in: query, name: size, schema: { type: integer, minimum: 1, maximum: 100, default: 25 } }
+        - $ref: "#/components/parameters/RateServiceId"
+        - $ref: "#/components/parameters/ActorSubject"
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: History-aware Rate summaries
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RatePage" }
+        "401": { $ref: "#/components/responses/RateError" }
+        "403": { $ref: "#/components/responses/RateError" }
+        "503": { $ref: "#/components/responses/RateError" }
+    post:
+      tags: [Rate Authority]
+      summary: Create a Rate with its first Draft version
+      description: The authenticated Charge BFF asserts the signed-session actor; direct actor assertions are rejected.
+      security:
+        - RateServiceToken: []
+      parameters:
+        - $ref: "#/components/parameters/RateServiceId"
+        - $ref: "#/components/parameters/ActorSubject"
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RateCreateRequest" }
+      responses:
+        "201":
+          description: Created Rate Draft
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RateDetail" }
+        "400": { $ref: "#/components/responses/RateError" }
+        "401": { $ref: "#/components/responses/RateError" }
+        "403": { $ref: "#/components/responses/RateError" }
+        "409": { $ref: "#/components/responses/RateError" }
+        "422": { $ref: "#/components/responses/RateError" }
+        "503": { $ref: "#/components/responses/RateError" }
+  /api/charge-rates/{rateId}:
+    get:
+      tags: [Rate Authority]
+      summary: Read stable Rate identity, version history, and activity evidence
+      security:
+        - RateServiceToken: []
+      parameters:
+        - $ref: "#/components/parameters/RateId"
+        - { in: query, name: asOf, schema: { type: string, format: date } }
+        - $ref: "#/components/parameters/RateServiceId"
+        - $ref: "#/components/parameters/ActorSubject"
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Rate detail
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RateDetail" }
+        "401": { $ref: "#/components/responses/RateError" }
+        "403": { $ref: "#/components/responses/RateError" }
+        "404": { $ref: "#/components/responses/RateError" }
+        "503": { $ref: "#/components/responses/RateError" }
+  /api/charge-rates/{rateId}/history:
+    get:
+      tags: [Rate Authority]
+      summary: Read immutable Rate version history
+      security:
+        - RateServiceToken: []
+      parameters:
+        - $ref: "#/components/parameters/RateId"
+        - { in: query, name: asOf, schema: { type: string, format: date } }
+        - $ref: "#/components/parameters/RateServiceId"
+        - $ref: "#/components/parameters/ActorSubject"
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Newest-first Rate versions
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/RateVersion" } }
+        "404": { $ref: "#/components/responses/RateError" }
+  /api/charge-rates/{rateId}/versions/{versionId}:
+    put:
+      tags: [Rate Authority]
+      summary: Update Draft commercial fields with optimistic concurrency
+      security:
+        - RateServiceToken: []
+      parameters:
+        - $ref: "#/components/parameters/RateId"
+        - $ref: "#/components/parameters/RateVersionId"
+        - $ref: "#/components/parameters/RateServiceId"
+        - $ref: "#/components/parameters/ActorSubject"
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RateUpdateRequest" }
+      responses:
+        "200":
+          description: Updated Rate Draft
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RateDetail" }
+        "409": { $ref: "#/components/responses/RateError" }
+        "422": { $ref: "#/components/responses/RateError" }
+        "503": { $ref: "#/components/responses/RateError" }
+  /api/charge-rates/{rateId}/versions/{versionId}/approve:
+    post:
+      tags: [Rate Authority]
+      summary: Approve a Draft as immutable Rate authority
+      security:
+        - RateServiceToken: []
+      parameters:
+        - $ref: "#/components/parameters/RateId"
+        - $ref: "#/components/parameters/RateVersionId"
+        - $ref: "#/components/parameters/RateServiceId"
+        - $ref: "#/components/parameters/ActorSubject"
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ExpectedRateVersion" }
+      responses:
+        "200":
+          description: Approved Rate version
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RateDetail" }
+        "409": { $ref: "#/components/responses/RateError" }
+        "422": { $ref: "#/components/responses/RateError" }
+        "503": { $ref: "#/components/responses/RateError" }
+  /api/charge-rates/{rateId}/versions/{versionId}/successor:
+    post:
+      tags: [Rate Authority]
+      summary: Create a successor Draft from an Approved version
+      security:
+        - RateServiceToken: []
+      parameters:
+        - $ref: "#/components/parameters/RateId"
+        - $ref: "#/components/parameters/RateVersionId"
+        - $ref: "#/components/parameters/RateServiceId"
+        - $ref: "#/components/parameters/ActorSubject"
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RateSuccessorRequest" }
+      responses:
+        "201":
+          description: Successor Draft created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RateDetail" }
+        "409": { $ref: "#/components/responses/RateError" }
+        "422": { $ref: "#/components/responses/RateError" }
+        "503": { $ref: "#/components/responses/RateError" }
   /api/pricing/quote:
     post:
       tags: [Pricing]
@@ -171,7 +403,329 @@ paths:
         "409":
           description: Manual review required
 components:
+  securitySchemes:
+    RateServiceToken:
+      type: apiKey
+      in: header
+      name: X-LinerCore-Service-Token
+      description: Local Wave A credential for the authenticated Charge BFF; deployments replace this with the platform service-identity mechanism.
+  parameters:
+    RateServiceId:
+      in: header
+      name: X-LinerCore-Service-Id
+      required: true
+      description: Authenticated caller identity. U01 Rate routes accept only the Charge BFF.
+      schema: { type: string, enum: [charge-agreements-bff] }
+    ActorSubject:
+      in: header
+      name: X-Actor-Subject
+      required: true
+      description: Signed-session subject asserted only by the authenticated Charge BFF and bound at the Charge boundary.
+      schema: { type: string, maxLength: 128 }
+    CorrelationId:
+      in: header
+      name: X-Correlation-Id
+      required: false
+      schema: { type: string, maxLength: 128 }
+    RateId:
+      in: path
+      name: rateId
+      required: true
+      schema: { type: string, maxLength: 64 }
+    RateVersionId:
+      in: path
+      name: versionId
+      required: true
+      schema: { type: string, maxLength: 64 }
+  responses:
+    W2AgreementError:
+      description: Typed, correlated W2 Agreement failure
+      content:
+        application/vnd.linercore.charge-agreement-v2+json:
+          schema: { $ref: "#/components/schemas/W2AgreementError" }
+    RateError:
+      description: Typed Rate failure
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/RateError" }
   schemas:
+    W2AgreementCommercial:
+      type: object
+      additionalProperties: false
+      required: [customerId, tradeLaneId, originLocationId, destinationLocationId,
+        equipmentTypeId, validFrom, validTo, baseRateVersionId,
+        surchargeRateVersionId, localRateVersionId]
+      properties:
+        customerId: { type: string, maxLength: 64 }
+        tradeLaneId: { type: string, maxLength: 64 }
+        originLocationId: { type: string, maxLength: 64 }
+        destinationLocationId: { type: string, maxLength: 64 }
+        equipmentTypeId: { type: string, maxLength: 64 }
+        validFrom: { type: string, format: date }
+        validTo: { type: string, format: date }
+        baseRateVersionId: { type: string, maxLength: 64 }
+        surchargeRateVersionId: { type: string, maxLength: 64 }
+        localRateVersionId: { type: string, maxLength: 64 }
+    W2AgreementCreate:
+      type: object
+      additionalProperties: false
+      required: [agreementNumber, commercial]
+      properties:
+        agreementNumber: { type: string, maxLength: 64 }
+        commercial: { $ref: "#/components/schemas/W2AgreementCommercial" }
+        reason: { type: string, maxLength: 512 }
+    W2AgreementUpdate:
+      type: object
+      additionalProperties: false
+      required: [agreementVersionId, expectedRowVersion, commercial, reason]
+      properties:
+        agreementVersionId: { type: string, maxLength: 64 }
+        expectedRowVersion: { type: integer, format: int64, minimum: 0 }
+        commercial: { $ref: "#/components/schemas/W2AgreementCommercial" }
+        reason: { type: string, minLength: 1, maxLength: 512 }
+    W2AgreementSuccessor:
+      type: object
+      additionalProperties: false
+      required: [sourceAgreementVersionId, commercial, reason]
+      properties:
+        sourceAgreementVersionId: { type: string, maxLength: 64 }
+        commercial: { $ref: "#/components/schemas/W2AgreementCommercial" }
+        reason: { type: string, minLength: 1, maxLength: 512 }
+    W2AgreementAction:
+      type: object
+      additionalProperties: false
+      required: [expectedRowVersion, reason]
+      properties:
+        expectedRowVersion: { type: integer, format: int64, minimum: 0 }
+        reason: { type: string, minLength: 1, maxLength: 512 }
+    W2AgreementRateLink:
+      type: object
+      additionalProperties: false
+      required: [category, rateVersionId]
+      properties:
+        category: { type: string, enum: [BASE, SURCHARGE, LOCAL] }
+        rateVersionId: { type: string }
+    W2AgreementVersion:
+      type: object
+      required: [agreementVersionId, versionNo, lifecycle, rowVersion, customerId,
+        tradeLaneId, validFrom, validTo, rateLinks]
+      properties:
+        agreementVersionId: { type: string }
+        versionNo: { type: integer, format: int64, minimum: 1 }
+        lifecycle: { type: string, enum: [LEGACY, DRAFT, APPROVED, SUSPENDED, EXPIRED] }
+        rowVersion: { type: integer, format: int64, minimum: 0 }
+        sourceAgreementVersionId: { type: string, nullable: true }
+        customerId: { type: string }
+        tradeLaneId: { type: string }
+        originLocationId: { type: string, nullable: true }
+        destinationLocationId: { type: string, nullable: true }
+        equipmentTypeId: { type: string, nullable: true }
+        commodityId: { type: string, nullable: true }
+        validFrom: { type: string, format: date }
+        validTo: { type: string, format: date }
+        rateLinks:
+          type: array
+          minItems: 0
+          maxItems: 3
+          items: { $ref: "#/components/schemas/W2AgreementRateLink" }
+    W2AgreementDetail:
+      type: object
+      required: [agreementId, agreementNumber, authorityModel, versions, activity,
+        capabilities, w2AuthorityEligible, readOnly]
+      properties:
+        agreementId: { type: string }
+        agreementNumber: { type: string }
+        authorityModel: { type: string, enum: [LEGACY, W2_VERSIONED] }
+        selectedVersion: { $ref: "#/components/schemas/W2AgreementVersion" }
+        approvedVersion: { $ref: "#/components/schemas/W2AgreementVersion" }
+        versions: { type: array, items: { $ref: "#/components/schemas/W2AgreementVersion" } }
+        activity: { type: array, items: { type: object } }
+        capabilities: { type: object }
+        w2AuthorityEligible: { type: boolean }
+        readOnly: { type: boolean }
+    W2AgreementPage:
+      type: object
+      required: [items, page, size, total, hasMore, canCreate]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/W2AgreementDetail" } }
+        page: { type: integer, minimum: 0 }
+        size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, format: int64, minimum: 0 }
+        hasMore: { type: boolean }
+        canCreate: { type: boolean }
+    W2AgreementError:
+      type: object
+      required: [code, message, fields, correlationId]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        correlationId: { type: string }
+        fields:
+          type: array
+          items:
+            type: object
+            required: [field, reason]
+            properties:
+              field: { type: string }
+              reason: { type: string }
+    RateCategory:
+      type: string
+      enum: [BASE, SURCHARGE, LOCAL]
+    RatePresentationState:
+      type: string
+      enum: [DRAFT, SCHEDULED, EFFECTIVE, EXPIRED]
+    RateCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [category, chargeCodeId, chargeCode, unitRate, currencyId, currency,
+        effectiveFrom, effectiveTo, originLocationId, equipmentTypeId]
+      properties:
+        category: { $ref: "#/components/schemas/RateCategory" }
+        chargeCodeId: { type: string }
+        chargeCode: { type: string, enum: [OFR, BAF, THC] }
+        unitRate: { type: number, minimum: 0, multipleOf: 0.01 }
+        currencyId: { type: string }
+        currency: { type: string, enum: [USD] }
+        effectiveFrom: { type: string, format: date }
+        effectiveTo: { type: string, format: date }
+        originLocationId: { type: string }
+        destinationLocationId: { type: string, nullable: true }
+        equipmentTypeId: { type: string }
+    RateUpdateRequest:
+      allOf:
+        - $ref: "#/components/schemas/RateCreateRequest"
+        - type: object
+          required: [expectedRowVersion]
+          properties:
+            expectedRowVersion: { type: integer, format: int64, minimum: 0 }
+    RateSuccessorRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        unitRate: { type: number, minimum: 0, multipleOf: 0.01 }
+        effectiveFrom: { type: string, format: date }
+        effectiveTo: { type: string, format: date }
+        originLocationId: { type: string }
+        destinationLocationId: { type: string, nullable: true }
+        equipmentTypeId: { type: string }
+    ExpectedRateVersion:
+      type: object
+      additionalProperties: false
+      required: [expectedRowVersion]
+      properties:
+        expectedRowVersion: { type: integer, format: int64, minimum: 0 }
+    RateVersion:
+      type: object
+      additionalProperties: false
+      required: [versionId, versionNo, lifecycle, presentationState, basis, currencyId,
+        currency, unitRate, effectiveFrom, effectiveTo, originLocationId, equipmentTypeId,
+        rowVersion, createdBy, createdAt, correlationId]
+      properties:
+        versionId: { type: string }
+        versionNo: { type: integer, format: int64, minimum: 1 }
+        lifecycle: { type: string, enum: [DRAFT, APPROVED] }
+        presentationState: { $ref: "#/components/schemas/RatePresentationState" }
+        basis: { type: string, enum: [PER_CONTAINER] }
+        currencyId: { type: string }
+        currency: { type: string, enum: [USD] }
+        unitRate: { type: number, minimum: 0, multipleOf: 0.01 }
+        effectiveFrom: { type: string, format: date }
+        effectiveTo: { type: string, format: date }
+        originLocationId: { type: string }
+        destinationLocationId: { type: string, nullable: true }
+        equipmentTypeId: { type: string }
+        rowVersion: { type: integer, format: int64, minimum: 0 }
+        sourceVersionId: { type: string, nullable: true }
+        createdBy: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedBy: { type: string, nullable: true }
+        updatedAt: { type: string, format: date-time, nullable: true }
+        approvedBy: { type: string, nullable: true }
+        approvedAt: { type: string, format: date-time, nullable: true }
+        correlationId: { type: string }
+    RateActions:
+      type: object
+      additionalProperties: false
+      required: [canEdit, canApprove, canCreateSuccessor]
+      properties:
+        canEdit: { type: boolean }
+        canApprove: { type: boolean }
+        canCreateSuccessor: { type: boolean }
+    RateActivity:
+      type: object
+      required: [activityId, versionId, versionNo, action, actorSubjectId, occurredAt,
+        correlationId, resultingRowVersion]
+      properties:
+        activityId: { type: string }
+        versionId: { type: string }
+        versionNo: { type: integer, format: int64 }
+        action:
+          type: string
+          enum: [RATE_CREATED, RATE_DRAFT_UPDATED, RATE_SUCCESSOR_CREATED, RATE_VERSION_APPROVED]
+        actorSubjectId: { type: string }
+        occurredAt: { type: string, format: date-time }
+        correlationId: { type: string }
+        reason: { type: string, nullable: true }
+        resultingRowVersion: { type: integer, format: int64 }
+    RateDetail:
+      type: object
+      required: [rateId, category, chargeCodeId, chargeCode, versions, activities, actions, evaluatedAsOf]
+      properties:
+        rateId: { type: string }
+        category: { $ref: "#/components/schemas/RateCategory" }
+        chargeCodeId: { type: string }
+        chargeCode: { type: string, enum: [OFR, BAF, THC] }
+        versions: { type: array, items: { $ref: "#/components/schemas/RateVersion" } }
+        activities: { type: array, items: { $ref: "#/components/schemas/RateActivity" } }
+        actions: { $ref: "#/components/schemas/RateActions" }
+        evaluatedAsOf: { type: string, format: date }
+    RatePage:
+      type: object
+      additionalProperties: false
+      required: [items, page, size, total, hasMore, canCreate, evaluatedAsOf]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/RateListItem" } }
+        page: { type: integer, minimum: 0 }
+        size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, format: int64, minimum: 0 }
+        hasMore: { type: boolean }
+        canCreate: { type: boolean }
+        evaluatedAsOf: { type: string, format: date }
+    RateListItem:
+      type: object
+      additionalProperties: false
+      required: [rateId, category, chargeCodeId, chargeCode, latestVersion,
+        selectedSummaryVersion, effectiveApprovedVersion, hasDraft, versionCount,
+        actions, evaluatedAsOf]
+      properties:
+        rateId: { type: string }
+        category: { $ref: "#/components/schemas/RateCategory" }
+        chargeCodeId: { type: string }
+        chargeCode: { type: string, enum: [OFR, BAF, THC] }
+        latestVersion: { $ref: "#/components/schemas/RateVersion" }
+        selectedSummaryVersion: { $ref: "#/components/schemas/RateVersion" }
+        effectiveApprovedVersion:
+          allOf:
+            - $ref: "#/components/schemas/RateVersion"
+          nullable: true
+        hasDraft: { type: boolean }
+        versionCount: { type: integer, minimum: 1 }
+        actions: { $ref: "#/components/schemas/RateActions" }
+        evaluatedAsOf: { type: string, format: date }
+    RateError:
+      type: object
+      required: [code, message, fields]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        fields:
+          type: array
+          items:
+            type: object
+            required: [field, reason]
+            properties:
+              field: { type: string }
+              reason: { type: string }
     PricingQuoteRequest:
       type: object
       required: [bookingId, customerId, correlationId, idempotencyKey, requestedAt]

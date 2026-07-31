@@ -10,16 +10,17 @@ import com.linercore.platform.chargeagreement.applicationservice.command.CreateA
 import com.linercore.platform.chargeagreement.applicationservice.command.UpdateAgreementCommand;
 import com.linercore.platform.chargeagreement.applicationservice.port.AuthorizationPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.IdGenerator;
-import com.linercore.platform.chargeagreement.applicationservice.port.PricingRequestRepository;
+import com.linercore.platform.chargeagreement.applicationservice.port.LegacyPricingRequestRepository;
 import com.linercore.platform.chargeagreement.applicationservice.port.PricingRequestStatus;
 import com.linercore.platform.chargeagreement.applicationservice.port.ReferenceValidationPort;
-import com.linercore.platform.chargeagreement.applicationservice.port.StoredPricingRequest;
+import com.linercore.platform.chargeagreement.applicationservice.port.StoredLegacyPricingRequest;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupQuery;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupResult;
 import com.linercore.platform.chargeagreement.domain.model.AgreementId;
 import com.linercore.platform.chargeagreement.domain.model.AgreementStatus;
 import com.linercore.platform.chargeagreement.domain.model.ChargeBasis;
 import com.linercore.platform.chargeagreement.domain.model.CustomerAgreement;
+import com.linercore.platform.chargeagreement.domain.model.LegacyPricingOutcome;
 import com.linercore.platform.chargeagreement.domain.model.ManualPricingCase;
 import com.linercore.platform.chargeagreement.domain.model.PricingRequest;
 import com.linercore.platform.chargeagreement.domain.model.PricingResult;
@@ -112,20 +113,23 @@ class ChargeAgreementApplicationServiceTest {
     void pricesItemisedRequestFromActiveAgreementTerms() {
         approveAgreement("agr-price", "cust-1", "lane-1", "cmdty-1");
 
-        PricingResult result = service.price(new PricingRequest("price-req-1", ref("cust-1"), ref("lane-1"), ref("cmdty-1"),
-                LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 2), "corr-price"), "pricing-user");
+        LegacyPricingOutcome.Automatic outcome = (LegacyPricingOutcome.Automatic) service.price(
+                new PricingRequest("price-req-1", ref("cust-1"), ref("lane-1"), ref("cmdty-1"),
+                        LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 2), "corr-price"),
+                "pricing-user");
+        PricingResult result = outcome.result();
 
-        assertFalse(result.manualPricingRequired());
         assertEquals(new BigDecimal("84.00"), result.total().amount());
         assertEquals(1, result.lines().size());
     }
 
     @Test
     void recordsManualPricingCaseWhenNoActiveAgreementMatches() {
-        PricingResult result = service.price(new PricingRequest("price-req-2", ref("cust-missing"), ref("lane-1"), ref("cmdty-1"),
-                LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 1), "corr-manual"), "pricing-user");
+        LegacyPricingOutcome.Manual result = (LegacyPricingOutcome.Manual) service.price(
+                new PricingRequest("price-req-2", ref("cust-missing"), ref("lane-1"), ref("cmdty-1"),
+                        LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 1), "corr-manual"),
+                "pricing-user");
 
-        assertTrue(result.manualPricingRequired());
         assertEquals("NO_RATE", result.reasonCode());
         assertEquals(1, manualCases.size());
         assertEquals("price-req-2:0", manualCases.get(0).pricingRequestId());
@@ -138,11 +142,12 @@ class ChargeAgreementApplicationServiceTest {
         ChargeAgreementApplicationService pricedService = serviceWithPricingRequests(pricingRequests);
         PricingRequest request = pricingRequest("booking-1", "lane-1", "cust-1", "cmdty-1", 7);
 
-        PricingResult first = pricedService.requestPricing(request, "booking-1:7", "pricing-user");
-        PricingResult replay = pricedService.requestPricing(request, "booking-1:7", "pricing-user");
+        LegacyPricingOutcome.Automatic first = (LegacyPricingOutcome.Automatic) pricedService.requestPricing(
+                request, "booking-1:7", "pricing-user");
+        LegacyPricingOutcome.Automatic replay = (LegacyPricingOutcome.Automatic) pricedService.requestPricing(
+                request, "booking-1:7", "pricing-user");
 
-        assertFalse(first.manualPricingRequired());
-        assertEquals(first.pricingRef(), replay.pricingRef());
+        assertEquals(first.result().pricingRef(), replay.result().pricingRef());
         assertEquals(1, pricingRequests.insertCount);
         assertThrows(PricingConflictException.class, () -> pricedService.requestPricing(
                 pricingRequest("booking-1", "lane-1", "cust-1", "cmdty-other", 7), "booking-1:7",
@@ -176,15 +181,20 @@ class ChargeAgreementApplicationServiceTest {
 
         ChargeAgreementApplicationService takeover = serviceWithPricingRequests(pricingRequests,
                 Clock.fixed(Instant.parse("2026-07-08T00:00:11Z"), ZoneOffset.UTC));
-        PricingResult result = takeover.requestPricing(request, "booking-3:3", "pricing-user");
+        LegacyPricingOutcome.Automatic outcome = (LegacyPricingOutcome.Automatic) takeover.requestPricing(
+                request, "booking-3:3", "pricing-user");
+        PricingResult result = outcome.result();
 
-        assertFalse(result.manualPricingRequired());
         assertEquals(1, pricingRequests.insertCount);
         assertEquals(1, pricingRequests.takeoverCount);
         assertEquals(PricingRequestStatus.COMPLETED, pricingRequests.records.get("booking-3:3").status());
-        assertFalse(pricingRequests.completeOwned("booking-3:3", originalOwner, PricingResult.manual(
-                "late-result", "LATE_OWNER", "corr"), "LATE_OWNER", Instant.parse("2026-07-08T00:00:12Z")));
-        assertEquals(result.pricingRef(), pricingRequests.records.get("booking-3:3").result().pricingRef());
+        assertFalse(pricingRequests.completeOwned(
+                "booking-3:3", originalOwner,
+                new LegacyPricingOutcome.Manual("late-result", "LATE_OWNER", "corr"),
+                "LATE_OWNER", Instant.parse("2026-07-08T00:00:12Z")));
+        LegacyPricingOutcome.Automatic stored =
+                (LegacyPricingOutcome.Automatic) pricingRequests.records.get("booking-3:3").outcome();
+        assertEquals(result.pricingRef(), stored.result().pricingRef());
     }
 
     private CustomerAgreement approveAgreement(String number, String customerId, String tradeLaneId, String commodityId) {
@@ -193,12 +203,14 @@ class ChargeAgreementApplicationServiceTest {
         return service.approve(updated.id(), updated.version(), "approver-1", "approved", "corr");
     }
 
-    private ChargeAgreementApplicationService serviceWithPricingRequests(PricingRequestRepository pricingRequests) {
+    private ChargeAgreementApplicationService serviceWithPricingRequests(
+            LegacyPricingRequestRepository pricingRequests) {
         return serviceWithPricingRequests(pricingRequests,
                 Clock.fixed(Instant.parse("2026-07-08T00:00:00Z"), ZoneOffset.UTC));
     }
 
-    private ChargeAgreementApplicationService serviceWithPricingRequests(PricingRequestRepository pricingRequests, Clock clock) {
+    private ChargeAgreementApplicationService serviceWithPricingRequests(
+            LegacyPricingRequestRepository pricingRequests, Clock clock) {
         return new ChargeAgreementApplicationService(
                 agreements,
                 allowAll(),
@@ -262,8 +274,8 @@ class ChargeAgreementApplicationServiceTest {
         }
     }
 
-    private static class InMemoryPricingRequests implements PricingRequestRepository {
-        private final Map<String, StoredPricingRequest> records = new LinkedHashMap<>();
+    private static class InMemoryPricingRequests implements LegacyPricingRequestRepository {
+        private final Map<String, StoredLegacyPricingRequest> records = new LinkedHashMap<>();
         private boolean completeEnabled;
         private int insertCount;
         private int takeoverCount;
@@ -272,11 +284,11 @@ class ChargeAgreementApplicationServiceTest {
             this.completeEnabled = completeEnabled;
         }
 
-        public Optional<StoredPricingRequest> findByIdempotencyKey(String idempotencyKey) {
+        public Optional<StoredLegacyPricingRequest> findByIdempotencyKey(String idempotencyKey) {
             return Optional.ofNullable(records.get(idempotencyKey));
         }
 
-        public boolean insertClaim(StoredPricingRequest claim) {
+        public boolean insertClaim(StoredLegacyPricingRequest claim) {
             if (records.containsKey(claim.idempotencyKey())) {
                 return false;
             }
@@ -286,13 +298,13 @@ class ChargeAgreementApplicationServiceTest {
         }
 
         public boolean takeOverExpiredClaim(String idempotencyKey, String ownerToken, Instant leaseUntil, Instant now) {
-            StoredPricingRequest existing = records.get(idempotencyKey);
+            StoredLegacyPricingRequest existing = records.get(idempotencyKey);
             if (existing == null
                     || existing.status() != PricingRequestStatus.IN_PROGRESS
                     || existing.leaseUntil().isAfter(now)) {
                 return false;
             }
-            records.put(idempotencyKey, new StoredPricingRequest(
+            records.put(idempotencyKey, new StoredLegacyPricingRequest(
                     existing.idempotencyKey(),
                     existing.bookingRef(),
                     existing.amendmentSeq(),
@@ -300,7 +312,7 @@ class ChargeAgreementApplicationServiceTest {
                     existing.status(),
                     ownerToken,
                     leaseUntil,
-                    existing.result(),
+                    existing.outcome(),
                     existing.terminalCode(),
                     existing.correlationId(),
                     existing.startedAt(),
@@ -309,26 +321,32 @@ class ChargeAgreementApplicationServiceTest {
             return true;
         }
 
-        public boolean completeOwned(String idempotencyKey, String ownerToken, PricingResult result, String terminalCode,
+        public boolean completeOwned(
+                String idempotencyKey,
+                String ownerToken,
+                LegacyPricingOutcome outcome,
+                String terminalCode,
                 Instant completedAt) {
             if (!completeEnabled) {
                 return false;
             }
-            StoredPricingRequest existing = records.get(idempotencyKey);
+            StoredLegacyPricingRequest existing = records.get(idempotencyKey);
             if (existing == null
                     || existing.status() != PricingRequestStatus.IN_PROGRESS
                     || !existing.ownerToken().equals(ownerToken)) {
                 return false;
             }
-            records.put(idempotencyKey, new StoredPricingRequest(
+            records.put(idempotencyKey, new StoredLegacyPricingRequest(
                     existing.idempotencyKey(),
                     existing.bookingRef(),
                     existing.amendmentSeq(),
                     existing.requestHash(),
-                    result.manualPricingRequired() ? PricingRequestStatus.MANUAL : PricingRequestStatus.COMPLETED,
+                    outcome instanceof LegacyPricingOutcome.Manual
+                            ? PricingRequestStatus.MANUAL
+                            : PricingRequestStatus.COMPLETED,
                     existing.ownerToken(),
                     existing.leaseUntil(),
-                    result,
+                    outcome,
                     terminalCode,
                     existing.correlationId(),
                     existing.startedAt(),

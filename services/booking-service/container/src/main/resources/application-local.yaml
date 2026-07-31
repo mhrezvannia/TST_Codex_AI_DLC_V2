@@ -34,6 +34,10 @@ booking:
     service-id: ${REFERENCE_DATA_CLIENT_ID:booking-service}
     service-token: ${REFERENCE_DATA_BOOKING_TOKEN}
   charge-agreement-service-url: ${CHARGE_AGREEMENT_SERVICE_URL:http://charge-agreement-service:8084}
+  charge:
+    service-id: ${BOOKING_CHARGE_SERVICE_ID:booking-service}
+    # No secret default: local Compose supplies the bilateral value; every other launch fails closed.
+    service-token: ${BOOKING_CHARGE_SERVICE_TOKEN:}
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     topic: ${BOOKING_EVENTS_TOPIC:booking.events}

@@ -47,5 +47,12 @@
     "dirName": "260721-design-system-closure",
     "scope": "feature",
     "status": "complete"
+  },
+  {
+    "uuid": "019f8495-6e69-7c56-a525-2d531aaec19d",
+    "slug": "charge-tariff-agreements",
+    "dirName": "260721-charge-tariff-agreements",
+    "scope": "feature",
+    "status": "complete"
   }
 ]

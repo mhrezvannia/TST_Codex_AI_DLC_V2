@@ -12,12 +12,51 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/linercore_pricing}
     username: ${SPRING_DATASOURCE_USERNAME:linercore_pricing}
     password: ${SPRING_DATASOURCE_PASSWORD:pricing_local}
+    hikari:
+      minimum-idle: ${CHARGE_DATASOURCE_MIN_IDLE:2}
+      maximum-pool-size: ${CHARGE_DATASOURCE_MAX_POOL_SIZE:10}
+      connection-timeout: ${CHARGE_DATASOURCE_CONNECTION_TIMEOUT_MS:2000}
   sql:
     init:
-      mode: always
-      schema-locations: classpath:db/charge-agreement-schema.sql
+      mode: never
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-version: 1
+    baseline-description: exact-charge-v1-catalog
+    validate-on-migrate: true
 
 charge-agreement:
+  pricing:
+    inbound:
+      service-id: ${CHARGE_PRICING_SERVICE_ID:booking-service}
+      service-token: ${CHARGE_PRICING_SERVICE_TOKEN:}
+  bff-assertion:
+    kid: ${CHARGE_BFF_ASSERTION_KID:w2-03-local-v1}
+    secret: ${CHARGE_BFF_ASSERTION_SECRET:linercore-local-assertion-secret-change-me}
+    replay-capacity: ${CHARGE_BFF_ASSERTION_REPLAY_CAPACITY:4096}
+  agreement:
+    identity:
+      base-url: ${IDENTITY_SERVICE_URL:http://identity-service:8082}
+      service-id: ${CHARGE_IDENTITY_SERVICE_ID:charge-agreement-service}
+      service-token: ${CHARGE_IDENTITY_SERVICE_TOKEN:}
+    reference-data:
+      base-url: ${REFERENCE_DATA_SERVICE_URL:http://reference-data-service:8083}
+      service-id: ${CHARGE_REFERENCE_SERVICE_ID:charge-agreement-service}
+      service-token: ${CHARGE_REFERENCE_SERVICE_TOKEN:}
+  rate:
+    authorization-mode: ${CHARGE_RATE_AUTHORIZATION_MODE}
+    inbound:
+      service-id: ${CHARGE_BFF_SERVICE_ID:charge-agreements-bff}
+      service-token: ${CHARGE_SERVICE_TOKEN:}
+    identity:
+      base-url: ${IDENTITY_SERVICE_URL:http://identity-service:8082}
+      service-id: ${CHARGE_IDENTITY_SERVICE_ID:charge-agreement-service}
+      service-token: ${CHARGE_IDENTITY_SERVICE_TOKEN:}
+    reference-data:
+      base-url: ${REFERENCE_DATA_SERVICE_URL:http://reference-data-service:8083}
+      service-id: ${CHARGE_REFERENCE_SERVICE_ID:charge-agreement-service}
+      service-token: ${CHARGE_REFERENCE_SERVICE_TOKEN:}
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     topic: ${CHARGE_AGREEMENT_EVENTS_TOPIC:charge-agreement.events}
@@ -25,7 +64,7 @@ charge-agreement:
   schema-registry:
     url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}
   outbox-relay:
-    enabled: ${CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED:true}
+    enabled: ${CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED:false}
     worker-id: ${CHARGE_AGREEMENT_OUTBOX_RELAY_WORKER_ID:charge-agreement-relay}
     batch-size: ${CHARGE_AGREEMENT_OUTBOX_RELAY_BATCH_SIZE:50}
 

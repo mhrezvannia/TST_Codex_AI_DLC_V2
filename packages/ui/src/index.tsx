@@ -30,62 +30,74 @@ const stages: Stage[] = [
   { label: "D&D & invoice", module: "Charge -> Finance" }
 ];
 
-const railItems = [
-  { key: "pricing", label: "Pricing", icon: "PR" },
-  { key: "booking", label: "Booking", icon: "BK" },
-  { key: "equipment", label: "Equip.", icon: "EQ" },
-  { key: "identity", label: "Auth", icon: "ID" }
+const moduleItems = [
+  { key: "overview", label: "Overview", href: "http://127.0.0.1:8088/" },
+  { key: "booking", label: "Booking", href: "http://127.0.0.1:8088/booking" },
+  { key: "reference", label: "Reference data", href: "http://127.0.0.1:3002/" },
+  { key: "charge", label: "Charge agreements", href: "http://127.0.0.1:3003/" }
 ];
 
-export function PlatformShell({ title, children }: { title: string; children: ReactNode }) {
+export function PlatformShell({
+  title,
+  children,
+  showRail = true
+}: {
+  title: string;
+  children: ReactNode;
+  showRail?: boolean;
+}) {
   const activeStage = title.toLowerCase().includes("charge") ? 0 : title.toLowerCase().includes("auth") ? -1 : 1;
-  const activeRail = title.toLowerCase().includes("charge") ? "pricing" : title.toLowerCase().includes("auth") ? "identity" : "booking";
+  const activeModule = title.toLowerCase().includes("charge")
+    ? "charge"
+    : title.toLowerCase().includes("reference")
+      ? "reference"
+      : title.toLowerCase().includes("booking")
+        ? "booking"
+        : "overview";
 
   return (
     <>
       <DesignSystemStyles />
-      <div style={styles.shell}>
-        <aside aria-label="LinerCore modules" style={styles.rail}>
-          <div aria-hidden="true" style={styles.logoMark}>LC</div>
-          <nav style={styles.railNav}>
-            {railItems.map((item) => {
-              const active = item.key === activeRail;
+      <style>{platformShellResponsiveCss}</style>
+      <div className="erp-platform-shell" style={{ ...styles.shell, gridTemplateColumns: showRail ? "236px minmax(0, 1fr)" : "minmax(0, 1fr)" }}>
+        {showRail ? <aside style={styles.rail}>
+          <a href="http://127.0.0.1:8088/" style={styles.sidebarBrand}>LinerCore</a>
+          <nav aria-label="LinerCore modules" className="erp-module-nav" style={styles.railNav}>
+            {moduleItems.map((item) => {
+              const active = item.key === activeModule;
               return (
                 <a
                   key={item.key}
                   aria-current={active ? "page" : undefined}
-                  href={railHref(item.key)}
-                  title={item.label}
+                  href={item.href}
                   style={active ? styles.railItemActive : styles.railItem}
                 >
-                  <span style={styles.railIcon}>{item.icon}</span>
                   <span style={styles.railLabel}>{item.label}</span>
                 </a>
               );
             })}
           </nav>
-          <div style={styles.avatar}>RT</div>
-        </aside>
+        </aside> : null}
 
-        <section style={styles.application}>
-          <header style={styles.topbar}>
-            <div style={styles.brandBlock}>
+        <section className="erp-platform-application" style={styles.application}>
+          <header className="erp-platform-topbar" style={styles.topbar}>
+            <div className="erp-platform-brand" style={styles.brandBlock}>
               <span style={styles.brandName}>LinerCore</span>
               <span style={styles.brandDivider} />
               <span style={styles.brandSubcopy}>Commercial & Equipment Platform</span>
               <span style={styles.scopePill}>MVP - ONE TRADE LANE</span>
             </div>
-            <div style={styles.searchBar} aria-label="Global search">
+            <div className="erp-platform-search" style={styles.searchBar} aria-label="Global search">
               <span aria-hidden="true">Search</span>
               <span>Search bookings, containers...</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, justifySelf: "end" }}>
+            <div className="erp-platform-tools" style={{ display: "flex", alignItems: "center", gap: 12, justifySelf: "end" }}>
               <span style={styles.currency}>USD</span>
               <ThemeToggle />
             </div>
           </header>
 
-          <div style={styles.stageRibbon} aria-label="MVP journey">
+          <div className="erp-platform-stages" style={styles.stageRibbon} aria-label="MVP journey">
             {stages.map((stage, index) => {
               const active = index === activeStage;
               const complete = activeStage > index;
@@ -175,16 +187,6 @@ export function WorkflowCommandCenter({
   );
 }
 
-function railHref(key: string) {
-  const hrefs: Record<string, string> = {
-    pricing: "/charge-agreements/",
-    booking: "/booking/",
-    equipment: "/container-movement/",
-    identity: "http://localhost:3000"
-  };
-  return hrefs[key] ?? "#";
-}
-
 function severityStyle(severity: WorkflowQueueItem["severity"] = "normal"): CSSProperties {
   const color = severity === "blocked" ? "var(--erp-color-danger)" : severity === "attention" ? "var(--erp-color-warning)" : "var(--erp-color-success)";
   return {
@@ -214,73 +216,56 @@ const styles: Record<string, CSSProperties> = {
     borderRight: "1px solid var(--erp-color-border)",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    gap: 18,
-    padding: "18px 10px"
+    alignItems: "stretch",
+    gap: 24,
+    padding: 18
   },
-  logoMark: {
-    width: 34,
-    height: 34,
-    borderRadius: 8,
-    background: "linear-gradient(135deg, #082b4c, #185f8f)",
-    color: "var(--erp-color-on-primary)",
-    display: "grid",
-    placeItems: "center",
-    fontSize: 11,
+  sidebarBrand: {
+    minHeight: 38,
+    display: "flex",
+    alignItems: "center",
+    color: "var(--erp-color-text)",
+    textDecoration: "none",
+    fontSize: 16,
     fontWeight: 700,
-    letterSpacing: 0
+    padding: "0 10px"
   },
   railNav: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 10,
+    display: "grid",
+    alignContent: "start",
+    gap: 6,
     width: "100%"
   },
   railItem: {
-    width: 52,
-    minHeight: 54,
-    borderRadius: 8,
-    display: "grid",
-    placeItems: "center",
-    gap: 3,
+    width: "100%",
+    minHeight: 38,
+    borderRadius: 6,
+    display: "flex",
+    alignItems: "center",
+    padding: "8px 10px",
+    boxSizing: "border-box",
     color: "var(--erp-color-text-muted)",
     textDecoration: "none",
-    fontSize: 10,
-    fontWeight: 600
+    fontSize: 14,
+    fontWeight: 700
   },
   railItemActive: {
-    width: 52,
-    minHeight: 54,
-    borderRadius: 8,
-    display: "grid",
-    placeItems: "center",
-    gap: 3,
+    width: "100%",
+    minHeight: 38,
+    borderRadius: 6,
+    display: "flex",
+    alignItems: "center",
+    padding: "8px 10px",
+    boxSizing: "border-box",
     background: "var(--erp-color-primary)",
     color: "var(--erp-color-on-primary)",
     textDecoration: "none",
-    fontSize: 10,
-    fontWeight: 600,
+    fontSize: 14,
+    fontWeight: 700,
     boxShadow: "0 8px 18px rgba(12, 39, 66, 0.2)"
-  },
-  railIcon: {
-    fontFamily: "\"IBM Plex Mono\", Consolas, monospace",
-    fontSize: 11
   },
   railLabel: {
     lineHeight: 1
-  },
-  avatar: {
-    marginTop: "auto",
-    width: 34,
-    height: 34,
-    borderRadius: "50%",
-    display: "grid",
-    placeItems: "center",
-    background: "#0e8079",
-    color: "#ffffff",
-    fontSize: 11,
-    fontWeight: 700
   },
   application: {
     minWidth: 0,
@@ -473,3 +458,48 @@ const styles: Record<string, CSSProperties> = {
     fontSize: 13
   }
 };
+
+const platformShellResponsiveCss = `
+  @media (max-width: 820px) {
+    .erp-platform-shell {
+      grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .erp-platform-shell > aside {
+      position: static !important;
+      height: auto !important;
+      border-right: 0 !important;
+      border-bottom: 1px solid var(--erp-color-border);
+    }
+
+    .erp-module-nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .erp-platform-topbar {
+      min-height: auto !important;
+      grid-template-columns: minmax(0, 1fr) auto !important;
+      gap: 10px !important;
+      padding: 12px 18px !important;
+    }
+
+    .erp-platform-brand {
+      grid-column: 1 / -1;
+      flex-wrap: wrap;
+      white-space: normal !important;
+    }
+
+    .erp-platform-search {
+      min-width: 0;
+    }
+
+    .erp-platform-tools {
+      min-width: max-content;
+    }
+
+    .erp-platform-stages {
+      grid-template-columns: repeat(4, minmax(140px, 1fr)) !important;
+      padding: 10px 18px !important;
+    }
+  }
+`;

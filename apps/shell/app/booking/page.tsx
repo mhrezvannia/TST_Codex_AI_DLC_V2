@@ -36,7 +36,7 @@ export default async function ShellBookingPage({ searchParams }: { searchParams:
         </div>
         <a className="erp-btn erp-btn--primary" href="/booking/new" data-testid="shell-new-booking">New booking</a>
       </section>
-      <form className="shell-booking-filters" method="get" aria-label="Booking filters">
+      <form className="shell-booking-filters shell-filter-bar" method="get" aria-label="Booking filters">
         <Field label="Search" htmlFor="booking-search">
           <Input id="booking-search" name="q" defaultValue={params.q ?? ""} type="search" />
         </Field>
@@ -74,11 +74,14 @@ export default async function ShellBookingPage({ searchParams }: { searchParams:
           <a href="/booking/new">Create booking</a>
         </EmptyState>
       ) : (
-        <>
+        <section className="shell-workbench" data-testid="shell-booking-list" data-state={presentation.state}>
           {presentation.state === "degraded" ? <StatusStrip tone="warning" role="status" data-state="degraded">{presentation.message}</StatusStrip> : null}
-          <p className="shell-muted" role="status">{presentation.items.length} bookings shown</p>
-          <TableContainer data-testid="shell-booking-list" data-state={presentation.state}>
-          <Table aria-label="Bookings">
+          <div className="shell-section-heading">
+            <div><h2>Booking queue</h2><p>Live operational records</p></div>
+            <span role="status">{presentation.items.length} shown</span>
+          </div>
+          <TableContainer className="shell-table-wrap">
+          <Table className="shell-table" aria-label="Bookings">
             <thead>
               <tr><th>Booking</th><th>Customer</th><th>Route</th><th>Status</th></tr>
             </thead>
@@ -94,7 +97,7 @@ export default async function ShellBookingPage({ searchParams }: { searchParams:
             </tbody>
           </Table>
           </TableContainer>
-        </>
+        </section>
       )}
     </>
   );

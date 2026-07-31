@@ -17,7 +17,12 @@ export function ShellFrame({
     <div className="shell-frame">
       <a className="shell-skip-link" href="#shell-main">Skip to main content</a>
       <header className="shell-topbar">
-        <a className="shell-brand" href="/" data-testid="shell-home-link">LinerCore</a>
+        <div className="shell-brand-block">
+          <a className="shell-brand" href="/" data-testid="shell-home-link">LinerCore</a>
+          <span className="shell-brand-divider" />
+          <span className="shell-brand-context">Commercial &amp; Equipment Platform</span>
+          <span className="shell-scope">MVP - ONE TRADE LANE</span>
+        </div>
         <div className="shell-user" data-testid="shell-user-menu" aria-label="Signed-in user">
           <ThemeToggle />
           <div className="shell-user-identity">
@@ -31,6 +36,12 @@ export function ShellFrame({
           </form>
         </div>
       </header>
+      <div className="shell-journey" aria-label="MVP journey">
+        <div className="shell-journey-step shell-journey-complete"><span>1</span><div><strong>Agreement</strong><small>Charge module</small></div></div>
+        <div className="shell-journey-step shell-journey-active"><span>2</span><div><strong>Booking</strong><small>Booking module</small></div></div>
+        <div className="shell-journey-step"><span>3</span><div><strong>Track &amp; trace</strong><small>Movement module</small></div></div>
+        <div className="shell-journey-step"><span>4</span><div><strong>D&amp;D &amp; invoice</strong><small>Charge to Finance</small></div></div>
+      </div>
       <aside className="shell-sidebar">
         <nav aria-label="Application modules">
           <a
@@ -47,9 +58,8 @@ export function ShellFrame({
           >
             Booking
           </a>
-          <span className="shell-nav-disabled" aria-disabled="true">Charge agreements</span>
-          <span className="shell-nav-disabled" aria-disabled="true">Container movement</span>
-          <span className="shell-nav-disabled" aria-disabled="true">Reference data</span>
+          <a className="shell-nav-link" href="/reference-data/">Reference data</a>
+          <a className="shell-nav-link" href="/charge-agreements/">Charge agreements</a>
         </nav>
       </aside>
       <main className="shell-main" id="shell-main">

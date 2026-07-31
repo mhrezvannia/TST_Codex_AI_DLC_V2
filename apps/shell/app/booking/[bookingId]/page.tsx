@@ -82,7 +82,7 @@ export default async function ShellBookingDetailPage({
               </>
             ) : <p className="shell-muted">Not yet verified.</p>}
           </Card>
-          <section className="shell-grid" data-testid="shell-booking-detail">
+          <section className="shell-grid shell-workbench" data-testid="shell-booking-detail">
             <Card>
               <h2>Route</h2>
               {result.value.routing.map((leg, index) => <p key={`${leg.loadUnLocode}-${index}`}>{leg.loadUnLocode} to {leg.dischargeUnLocode}</p>)}

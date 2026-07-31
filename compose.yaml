@@ -445,6 +445,7 @@ services:
       IDENTITY_SERVICE_URL: http://identity-service:8082
       REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
       REFERENCE_DATA_BFF_TOKEN: ${REFERENCE_DATA_BFF_TOKEN:-reference_data_bff_local_token}
+      LOCAL_REFERENCE_DATA_TOKEN: ${LOCAL_REFERENCE_DATA_TOKEN:-}
     ports:
       - "${REFERENCE_DATA_UI_HOST_PORT:-3002}:3000"
     depends_on:
@@ -485,6 +486,8 @@ services:
       CHARGE_BFF_REQUEST_BODY_BYTES: "32768"
       CHARGE_BFF_RESPONSE_BYTES: "524288"
       CHARGE_REFERENCE_RESPONSE_BYTES: "131072"
+    ports:
+      - "${CHARGE_AGREEMENTS_UI_HOST_PORT:-3003}:3000"
     depends_on:
       charge-agreement-service:
         condition: service_started

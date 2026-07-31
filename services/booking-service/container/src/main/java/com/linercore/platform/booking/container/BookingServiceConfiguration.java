@@ -12,11 +12,18 @@ import com.linercore.platform.booking.applicationservice.port.IdempotencyReposit
 import com.linercore.platform.booking.applicationservice.port.MovementStatusProjectionRepository;
 import com.linercore.platform.booking.applicationservice.port.OutboxRepository;
 import com.linercore.platform.booking.applicationservice.port.PricingPort;
+import com.linercore.platform.booking.applicationservice.port.PricingOperationReceiptPort;
+import com.linercore.platform.booking.applicationservice.port.PricingSnapshotRepository;
 import com.linercore.platform.booking.applicationservice.port.ReferenceValidationPort;
 import com.linercore.platform.booking.applicationservice.port.BookingEventPublisherPort;
 import com.linercore.platform.booking.applicationservice.port.SchemaRegistryPort;
 import com.linercore.platform.booking.applicationservice.pricing.ChargePricingPortAdapter;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingCaptureService;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingCompletionService;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingOrchestrator;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingTelemetry;
 import com.linercore.platform.booking.container.integration.HttpChargePricingClient;
+import com.linercore.platform.booking.container.observability.MicrometerBookingPricingTelemetry;
 import com.linercore.platform.booking.container.integration.HttpIdentityAuthorizationAdapter;
 import com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapter;
 import com.linercore.platform.booking.container.integration.HttpReferenceOptionAdapter;
@@ -25,6 +32,8 @@ import com.linercore.platform.booking.dataaccess.jdbc.JdbcBookingRepository;
 import com.linercore.platform.booking.dataaccess.jdbc.JdbcIdempotencyRepository;
 import com.linercore.platform.booking.dataaccess.jdbc.JdbcMovementStatusProjectionRepository;
 import com.linercore.platform.booking.dataaccess.jdbc.JdbcOutboxRepository;
+import com.linercore.platform.booking.dataaccess.jdbc.JdbcPricingOperationReceiptRepository;
+import com.linercore.platform.booking.dataaccess.jdbc.JdbcPricingSnapshotRepository;
 import java.time.Clock;
 import java.time.Duration;
 import java.net.http.HttpClient;
@@ -32,6 +41,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.UUID;
 import javax.sql.DataSource;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -93,6 +103,51 @@ public class BookingServiceConfiguration {
     }
 
     @Bean
+    PricingSnapshotRepository bookingPricingSnapshotRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcPricingSnapshotRepository(jdbc, mapper);
+    }
+
+    @Bean
+    PricingOperationReceiptPort bookingPricingOperationReceiptPort(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcPricingOperationReceiptRepository(jdbc, mapper);
+    }
+
+    @Bean
+    BookingPricingCaptureService bookingPricingCaptureService(
+            BookingRepository bookings,
+            AuthorizationPort authorization,
+            PricingOperationReceiptPort receipts) {
+        return new BookingPricingCaptureService(
+                bookings, authorization, receipts, () -> UUID.randomUUID().toString());
+    }
+
+    @Bean
+    BookingPricingCompletionService bookingPricingCompletionService(
+            BookingRepository bookings,
+            PricingOperationReceiptPort receipts,
+            PricingSnapshotRepository snapshots) {
+        return new BookingPricingCompletionService(
+                bookings, receipts, snapshots, Clock.systemUTC());
+    }
+
+    @Bean
+    BookingPricingOrchestrator bookingPricingOrchestrator(
+            BookingPricingCaptureService capture,
+            BookingPricingCompletionService completion,
+            PricingPort pricing,
+            PricingOperationReceiptPort receipts,
+            PricingSnapshotRepository history,
+            BookingPricingTelemetry telemetry) {
+        return new BookingPricingOrchestrator(
+                capture, completion, pricing, receipts, history, Clock.systemUTC(), telemetry);
+    }
+
+    @Bean
+    BookingPricingTelemetry bookingPricingTelemetry(MeterRegistry registry) {
+        return new MicrometerBookingPricingTelemetry(registry);
+    }
+
+    @Bean
     AuthorizationPort bookingAuthorizationPort(
             @Qualifier("bookingIdentityRestTemplate") RestTemplate restTemplate,
             @Value("${booking.identity-service-url}") String identityServiceUrl) {
@@ -151,10 +206,32 @@ public class BookingServiceConfiguration {
     }
 
     @Bean
+    @Qualifier("bookingChargeRestTemplate")
+    RestTemplate bookingChargeRestTemplate() {
+        HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofMillis(500)).build();
+        JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(client);
+        requestFactory.setReadTimeout(Duration.ofSeconds(2));
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        restTemplate.getInterceptors().add((request, body, execution) ->
+                new com.linercore.platform.booking.container.integration.BoundedClientHttpResponse(
+                        execution.execute(request, body)));
+        return restTemplate;
+    }
+
+    @Bean("bookingChargeOutboundPermits")
+    Semaphore bookingChargeOutboundPermits() {
+        return new Semaphore(10, true);
+    }
+
+    @Bean
     PricingPort bookingPricingPort(
-            RestTemplate restTemplate,
-            @Value("${booking.charge-agreement-service-url}") String chargeAgreementServiceUrl) {
-        return new ChargePricingPortAdapter(new HttpChargePricingClient(restTemplate, chargeAgreementServiceUrl),
+            @Qualifier("bookingChargeRestTemplate") RestTemplate restTemplate,
+            @Qualifier("bookingChargeOutboundPermits") Semaphore permits,
+            @Value("${booking.charge-agreement-service-url}") String chargeAgreementServiceUrl,
+            @Value("${booking.charge.service-id:booking-service}") String serviceId,
+            @Value("${booking.charge.service-token:}") String serviceToken) {
+        return new ChargePricingPortAdapter(new HttpChargePricingClient(
+                restTemplate, chargeAgreementServiceUrl, serviceId, serviceToken, permits),
                 Clock.systemUTC());
     }
 

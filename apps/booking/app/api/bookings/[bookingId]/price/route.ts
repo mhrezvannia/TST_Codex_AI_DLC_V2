@@ -1,6 +1,6 @@
-import { proxyBooking } from "../../../../../lib/bookings";
+import { proxyBookingPrice } from "../../../../../lib/bookings";
 
 export async function POST(request: Request, context: { params: Promise<{ bookingId: string }> }) {
   const { bookingId } = await context.params;
-  return proxyBooking(request, `/api/bookings/${encodeURIComponent(bookingId)}/price`, "POST");
+  return proxyBookingPrice(request, bookingId);
 }

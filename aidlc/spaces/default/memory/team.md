@@ -5,19 +5,20 @@
 > not directly.
 
 ## Way of Working
-W2-01 uses the existing short-lived intent branch `intent/W2-01-app-shell-and-auth` from `integ/main-reconciled` and keeps one Platform+UI driver accountable for the full shell/auth/Booking vertical slice. Contributors work through owned seams rather than broad cross-module rewrites.
+W2-03 stays on the short-lived `intent/W2-03-charge-tariffs-and-agreements` branch from the common Wave A baseline and integrates through `integ/main-reconciled` under `docs/intents/00-INTENT-BACKLOG.md`. One stream-aligned intent mob owns the vertical flow; this scoped program practice does not rewrite the repository as plain trunk-to-`main` or invent an unobserved merge style.
 
 ## Walking Skeleton
-The first W2-01 Construction slice should prove the protected shell entry and session handoff before any shell chrome expansion. The risk-first path is login through Keycloak/auth, shell landing, and one Booking call that cannot fall back to `local-user`.
+The first Construction slice is a gated risk-first Charge-to-Booking walking skeleton: one real approved rate produces one attributable itemised line, Booking stores and renders it, and evidence remains honest about live-runtime status. Full OFR, BAF, POL THC, repricing, and no-rate behavior build on that spine rather than arriving as disconnected horizontal batches.
 
 ## Testing Posture
-Tests are written alongside code and must include targeted coverage for session-derived actor propagation, denied authorization, sign-out/session clearing, and detector 6d hardcoded-auth evidence. Unit and integration tests are necessary but insufficient; live Compose proof through Nginx and Keycloak remains the exit gate.
+Tests are written alongside code with at least 80 percent line coverage for changed Charge and Booking code. Coverage is necessary but insufficient: domain/version/matching, additive migration, producer-consumer contract, typed snapshot compatibility, repricing, explicit `MANUAL_PRICING_REQUIRED`, Charge UI, Playwright, isolated Compose, demo-guard, `aidlc-audit`, and `erp-fidelity-audit` evidence are required, and Charge lint/build join the blocking quality path.
 
 ## Deployment
-W2-01 acceptance targets the local/on-prem Docker Compose topology with Nginx, Keycloak, identity-service, Booking service, and shell/auth app. Public-cloud deployment is not a release condition for this intent.
+The canonical W2-03 acceptance environment is the isolated `linercore-wave-a` stack driven only through `scripts/wave-a-compose.mjs`, with `npm run demo:guard` before and after to protect the manager demo. Current CI is validation, not an established production deployment pipeline; staging topology, production cadence, cloud deployment, and continuous delivery remain unclaimed and out of this feature.
 
 ## Code Style
-Frontend work stays in strict TypeScript/Next.js/Yarn workspace patterns and reuses shared packages where practical. Backend changes preserve service ownership and Java/Spring boundaries; local auth bypass code must be explicit, logged, and fail closed outside local profiles.
+Java preserves the existing ports-and-adapters structure, framework-free domain core, service-owned databases, immutable value objects, explicit identifiers/statuses, and typed boundary outcomes or translated exceptions with correlation data. TypeScript remains strict and feature-local in `apps/charge-agreements`, reuses shared auth and `@erp/ui`, and does not redesign `packages/ui`, shell, navigation, typography, or palette; an unobserved `Result<T,E>` convention is not imposed.
+
 ## Forbidden
 
 <!-- Team-specific forbidden patterns -->

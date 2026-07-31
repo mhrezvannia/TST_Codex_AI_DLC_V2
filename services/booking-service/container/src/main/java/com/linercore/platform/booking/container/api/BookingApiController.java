@@ -1,6 +1,8 @@
 package com.linercore.platform.booking.container.api;
 
 import com.linercore.platform.booking.applicationservice.BookingApplicationService;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingOrchestrator;
+import com.linercore.platform.booking.applicationservice.pricing.PricingCommandResult;
 import com.linercore.platform.booking.applicationservice.command.CreateBookingCommand;
 import com.linercore.platform.booking.applicationservice.command.PricingSnapshotCommand;
 import com.linercore.platform.booking.domain.model.Booking;
@@ -10,6 +12,7 @@ import com.linercore.platform.booking.domain.model.BookingStatus;
 import com.linercore.platform.booking.domain.model.DndTriggerCandidate;
 import com.linercore.platform.booking.domain.model.LifecycleEvent;
 import com.linercore.platform.booking.domain.model.PricingSnapshot;
+import com.linercore.platform.booking.domain.model.PricingHistoryPage;
 import com.linercore.platform.booking.domain.model.EquipmentAssignment;
 import com.linercore.platform.booking.domain.model.RoutingLeg;
 import com.linercore.platform.booking.applicationservice.CommandInProgressException;
@@ -26,6 +29,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,9 +44,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/bookings")
 public class BookingApiController {
     private final BookingApplicationService service;
+    private final BookingPricingOrchestrator pricing;
 
     public BookingApiController(BookingApplicationService service) {
+        this(service, null);
+    }
+
+    @Autowired
+    public BookingApiController(
+            BookingApplicationService service,
+            BookingPricingOrchestrator pricing) {
         this.service = service;
+        this.pricing = pricing;
     }
 
     @PostMapping
@@ -83,7 +96,7 @@ public class BookingApiController {
         String resolvedCorrelation = correlation(correlationId, null);
         BookingId bookingId = new BookingId(id);
         return toResponse(service.detail(bookingId, actor(actor), resolvedCorrelation),
-                service.movementStatuses(bookingId, actor(actor), resolvedCorrelation));
+                service.movementStatuses(bookingId, actor(actor), resolvedCorrelation), true);
     }
 
     @GetMapping
@@ -111,13 +124,26 @@ public class BookingApiController {
     }
 
     @PostMapping("/{id}/price")
-    public BookingResponse price(
+    public ResponseEntity<?> price(
             @PathVariable("id") String id,
             @RequestBody PricingRequest request,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
-        return toResponse(service.requestPricing(new BookingId(id), actor(request.actorSubjectId()),
-                required(request.idempotencyKey(), "idempotency key is required"),
-                correlation(correlationId, request.correlationId())));
+        String resolvedCorrelation = correlation(correlationId, request.correlationId());
+        if (pricing == null) {
+            return ResponseEntity.ok(toResponse(service.requestPricing(
+                    new BookingId(id),
+                    actor(request.actorSubjectId()),
+                    required(request.idempotencyKey(), "idempotency key is required"),
+                    resolvedCorrelation)));
+        }
+        PricingCommandResult result =
+                pricing.price(new BookingId(id), actor(request.actorSubjectId()), resolvedCorrelation);
+        PricingHistoryPage history = pricing.history(new BookingId(id), null, 25);
+        ResponseEntity.BodyBuilder response = ResponseEntity.status(pricingStatus(result));
+        if (result.retryAfterSeconds() > 0) {
+            response.header("Retry-After", String.valueOf(result.retryAfterSeconds()));
+        }
+        return response.body(new PricingCommandResponse(result, history, result.confirmationEligible()));
     }
 
     @PostMapping("/{id}/pricing-snapshot")
@@ -168,12 +194,22 @@ public class BookingApiController {
     }
 
     private BookingResponse toResponse(Booking booking) {
-        return toResponse(booking, List.of());
+        return toResponse(booking, List.of(), false);
     }
 
     private BookingResponse toResponse(Booking booking, List<MovementStatusProjection> movementStatuses) {
+        return toResponse(booking, movementStatuses, false);
+    }
+
+    private BookingResponse toResponse(
+            Booking booking,
+            List<MovementStatusProjection> movementStatuses,
+            boolean includePricingHistory) {
         PricingSnapshot snapshot = booking.pricingSnapshot();
         ReferenceValidationSnapshot validation = booking.referenceValidationSnapshot();
+        PricingHistoryPage history = includePricingHistory && pricing != null
+                ? pricing.history(booking.id(), null, 25)
+                : null;
         return new BookingResponse(
                 booking.id().value(),
                 booking.bookingNumber(),
@@ -193,12 +229,30 @@ public class BookingApiController {
                         validation.checkedAt(), validation.correlationId()),
                 snapshot == null ? null : new PricingSnapshotResponse(snapshot.pricingRequestId(),
                         snapshot.pricingQuoteId(), snapshot.status(), snapshot.quotedAmounts(), snapshot.receivedAt(),
-                        snapshot.correlationId()),
+                        snapshot.correlationId(), snapshot.typed(), snapshot.legacy()),
+                history,
+                booking.attributes().getOrDefault(
+                        "pricingStatus", snapshot == null ? "UNPRICED" : snapshot.typed() == null
+                                ? "LEGACY_PRICED"
+                                : "PRICED"),
+                booking.confirmationPricingEligible(),
                 booking.exceptions().stream().map(this::toException).toList(),
                 booking.dndTriggerCandidates().stream().map(this::toDndCandidate).toList(),
                 booking.lifecycleEvents().stream().map(this::toLifecycle).toList(),
                 movementStatuses.stream().map(this::toMovementStatus).toList(),
                 booking.attributes());
+    }
+
+    private static HttpStatus pricingStatus(PricingCommandResult result) {
+        return switch (result.outcome()) {
+            case PRICED, LEGACY_PRICED -> HttpStatus.OK;
+            case MANUAL_PRICING_REQUIRED, VALIDATION_FAILED -> HttpStatus.UNPROCESSABLE_ENTITY;
+            case DENIED -> HttpStatus.FORBIDDEN;
+            case CONFLICT, IN_PROGRESS, BOOKING_CHANGED -> HttpStatus.CONFLICT;
+            case TIMEOUT -> HttpStatus.GATEWAY_TIMEOUT;
+            case UNAVAILABLE, CIRCUIT_OPEN -> HttpStatus.SERVICE_UNAVAILABLE;
+            case MALFORMED -> HttpStatus.BAD_GATEWAY;
+        };
     }
 
     private MovementStatusProjectionResponse toMovementStatus(MovementStatusProjection projection) {
@@ -433,6 +487,9 @@ public class BookingApiController {
             boolean legacyIncomplete,
             ReferenceValidationResponse referenceValidation,
             PricingSnapshotResponse pricingSnapshot,
+            PricingHistoryPage pricingHistory,
+            String pricingStatus,
+            boolean confirmationEligible,
             List<BookingExceptionResponse> exceptions,
             List<DndTriggerCandidateResponse> dndTriggerCandidates,
             List<LifecycleEventResponse> lifecycleEvents,
@@ -466,7 +523,15 @@ public class BookingApiController {
             String status,
             Map<String, String> quotedAmounts,
             Instant quotedAt,
-            String correlationId) {
+            String correlationId,
+            com.linercore.platform.booking.domain.model.BookingPricingSnapshot typed,
+            com.linercore.platform.booking.domain.model.LegacyPricingSnapshot legacy) {
+    }
+
+    public record PricingCommandResponse(
+            PricingCommandResult result,
+            PricingHistoryPage history,
+            boolean confirmationEligible) {
     }
 
     public record ReferenceValidationResponse(

@@ -46,7 +46,33 @@ test("auth bypass returns local session without a cookie", () => {
 test("local subject selection is allowlisted for live proof fixtures", () => {
   expect(localSubjectId("local.reference.admin")).toBe("local.reference.admin");
   expect(localSubjectId("local.booking.user")).toBe("local.booking.user");
+  expect(localSubjectId("local.pricing.analyst")).toBe("local.pricing.analyst");
+  expect(localSubjectId("local.charge.reader")).toBe("local.charge.reader");
   expect(localSubjectId("attacker")).toBe("local.booking.user");
+});
+
+test("creates least-privilege local Rate sessions", () => {
+  expect(createLocalSession("local.pricing.analyst")).toMatchObject({
+    roles: ["pricing"],
+    permissions: [
+      "charge-rates:read",
+      "charge-rates:create",
+      "charge-rates:update",
+      "charge-rates:approve",
+      "charge-rates:create-successor",
+      "charge-agreements:read",
+      "charge-agreements:create",
+      "charge-agreements:update",
+      "charge-agreements:approve",
+      "charge-agreements:create-successor",
+      "charge-agreements:suspend",
+      "charge-agreements:expire"
+    ]
+  });
+  expect(createLocalSession("local.charge.reader")).toMatchObject({
+    roles: ["finance-read"],
+    permissions: ["charge-rates:read", "charge-agreements:read"]
+  });
 });
 
 test("creates a standards-compliant PKCE transaction", () => {

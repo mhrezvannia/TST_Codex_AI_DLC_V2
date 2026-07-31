@@ -1,0 +1,438 @@
+{
+  "generatedAt": "2026-07-29T08:12:01.402Z",
+  "changedPaths": [
+    "<all>"
+  ],
+  "scopes": [
+    "workspace",
+    "services",
+    "apps/reference-data",
+    "apps/auth",
+    "apps/charge-agreements",
+    "apps/booking",
+    "apps/shell",
+    "packages",
+    "packages/auth",
+    "packages/shared-types",
+    "contracts",
+    "seeds",
+    "w2-01-live"
+  ],
+  "results": [
+    {
+      "gateId": "policy-package-manager",
+      "scope": "workspace",
+      "command": "policy",
+      "required": true,
+      "status": "failed",
+      "summary": "domain-core purity check unavailable under services/identity-service/domain-core/src/main/java: spawnSync powershell EPERM; domain-core purity check unavailable under services/reference-data-service/domain-core/src/main/java: spawnSync powershell EPERM; domain-core purity check unavailable under services/charge-agreement-service/domain-core/src/main/java: spawnSync powershell EPERM",
+      "evidencePath": "artifacts/quality-gates/policy-package-manager.log"
+    },
+    {
+      "gateId": "backend-domain-purity",
+      "scope": "services",
+      "command": "policy",
+      "required": true,
+      "status": "failed",
+      "summary": "domain-core purity check unavailable under services/identity-service/domain-core/src/main/java: spawnSync powershell EPERM; domain-core purity check unavailable under services/reference-data-service/domain-core/src/main/java: spawnSync powershell EPERM; domain-core purity check unavailable under services/charge-agreement-service/domain-core/src/main/java: spawnSync powershell EPERM",
+      "evidencePath": "artifacts/quality-gates/backend-domain-purity.log"
+    },
+    {
+      "gateId": "contracts-validate",
+      "scope": "contracts",
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/contracts-validate.log"
+    },
+    {
+      "gateId": "contracts-verify",
+      "scope": "contracts",
+      "command": "node scripts/verify-contract-providers.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/contracts-verify.log"
+    },
+    {
+      "gateId": "seed-validate",
+      "scope": "seeds",
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/seed-validate.log"
+    },
+    {
+      "gateId": "skeleton-validate",
+      "scope": "workspace",
+      "command": "node scripts/validate-skeleton.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/skeleton-validate.log"
+    },
+    {
+      "gateId": "frontend-reference-data-test",
+      "scope": "apps/reference-data",
+      "command": "node node_modules/vitest/vitest.mjs run apps/reference-data/app/page.test.tsx apps/reference-data/lib/reference-data.test.ts apps/reference-data/lib/contract-catalog.test.ts --config vitest.config.ts",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-test.log"
+    },
+    {
+      "gateId": "frontend-reference-data-typecheck",
+      "scope": "apps/reference-data",
+      "command": "corepack yarn workspace @erp/app-reference-data typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-typecheck.log"
+    },
+    {
+      "gateId": "package-auth-test",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/package-auth-test.log"
+    },
+    {
+      "gateId": "package-auth-typecheck",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/package-auth-typecheck.log"
+    },
+    {
+      "gateId": "package-auth-lint",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth lint",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/package-auth-lint.log"
+    },
+    {
+      "gateId": "package-shared-types-test",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-test.log"
+    },
+    {
+      "gateId": "package-shared-types-typecheck",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-typecheck.log"
+    },
+    {
+      "gateId": "package-shared-types-lint",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types lint",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-lint.log"
+    },
+    {
+      "gateId": "frontend-auth-test",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-test.log"
+    },
+    {
+      "gateId": "frontend-auth-typecheck",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-typecheck.log"
+    },
+    {
+      "gateId": "frontend-auth-lint",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth lint",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-lint.log"
+    },
+    {
+      "gateId": "frontend-auth-build",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth build",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-build.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-test",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-test.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-typecheck",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-typecheck.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-lint",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements lint",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-lint.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-build",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements build",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-build.log"
+    },
+    {
+      "gateId": "u02-route-preservation",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u02-route-preservation.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u02-route-preservation.log"
+    },
+    {
+      "gateId": "u02-subject-assertion-contract",
+      "scope": "apps/charge-agreements",
+      "command": "mvn -f services/pom.xml -pl charge-agreement-service/container -am -Dtest=ChargeSubjectAssertionVerifierTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u02-subject-assertion-contract.log"
+    },
+    {
+      "gateId": "u02-security",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/run-u02-security-gates.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u02-security.log"
+    },
+    {
+      "gateId": "u02-performance",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u02-bff-performance.mjs --input artifacts/u02/performance.json",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u02-performance.log"
+    },
+    {
+      "gateId": "u03-agreement-preservation",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u03-agreement-preservation.test.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u03-agreement-preservation.log"
+    },
+    {
+      "gateId": "u03-agreement-performance-contract",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u03-agreement-performance.test.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u03-agreement-performance-contract.log"
+    },
+    {
+      "gateId": "u04-pricing-preservation",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u04-pricing-preservation.test.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u04-pricing-preservation.log"
+    },
+    {
+      "gateId": "u04-pricing-performance-contract",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u04-pricing-performance.test.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u04-pricing-performance-contract.log"
+    },
+    {
+      "gateId": "u04-rollback-policy",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u04-rollback-policy.test.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/u04-rollback-policy.log"
+    },
+    {
+      "gateId": "frontend-booking-test",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-test.log"
+    },
+    {
+      "gateId": "frontend-booking-typecheck",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-typecheck.log"
+    },
+    {
+      "gateId": "frontend-booking-lint",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking lint",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-lint.log"
+    },
+    {
+      "gateId": "frontend-booking-build",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking build",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-build.log"
+    },
+    {
+      "gateId": "frontend-shell-test",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-test.log"
+    },
+    {
+      "gateId": "frontend-shell-typecheck",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-typecheck.log"
+    },
+    {
+      "gateId": "frontend-shell-lint",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell lint",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-lint.log"
+    },
+    {
+      "gateId": "frontend-shell-build",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell build",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-build.log"
+    },
+    {
+      "gateId": "w2-01-live-acceptance",
+      "scope": "w2-01-live",
+      "command": "node scripts/w2-01-live-acceptance.mjs --output-root artifacts/w2-01-live/app-shell-auth && node scripts/w2-01-live-acceptance.mjs --validate --require-pass --output-root artifacts/w2-01-live/app-shell-auth",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/w2-01-live-acceptance.log"
+    },
+    {
+      "gateId": "backend-test",
+      "scope": "services",
+      "command": "mvn -f services/pom.xml test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/backend-test.log"
+    }
+  ],
+  "aggregate": {
+    "status": "failed",
+    "failedRequired": [
+      "policy-package-manager",
+      "backend-domain-purity",
+      "contracts-validate",
+      "contracts-verify",
+      "seed-validate",
+      "skeleton-validate",
+      "frontend-reference-data-test",
+      "frontend-reference-data-typecheck",
+      "package-auth-test",
+      "package-auth-typecheck",
+      "package-auth-lint",
+      "package-shared-types-test",
+      "package-shared-types-typecheck",
+      "package-shared-types-lint",
+      "frontend-auth-test",
+      "frontend-auth-typecheck",
+      "frontend-auth-lint",
+      "frontend-auth-build",
+      "frontend-charge-agreements-test",
+      "frontend-charge-agreements-typecheck",
+      "frontend-charge-agreements-lint",
+      "frontend-charge-agreements-build",
+      "u02-route-preservation",
+      "u02-subject-assertion-contract",
+      "u02-security",
+      "u02-performance",
+      "u03-agreement-preservation",
+      "u03-agreement-performance-contract",
+      "u04-pricing-preservation",
+      "u04-pricing-performance-contract",
+      "u04-rollback-policy",
+      "frontend-booking-test",
+      "frontend-booking-typecheck",
+      "frontend-booking-lint",
+      "frontend-booking-build",
+      "frontend-shell-test",
+      "frontend-shell-typecheck",
+      "frontend-shell-lint",
+      "frontend-shell-build",
+      "w2-01-live-acceptance",
+      "backend-test"
+    ]
+  }
+}

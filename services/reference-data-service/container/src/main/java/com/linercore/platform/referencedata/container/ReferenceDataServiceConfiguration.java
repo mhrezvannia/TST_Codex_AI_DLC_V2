@@ -31,12 +31,14 @@ public class ReferenceDataServiceConfiguration {
             @Value("${reference-data.security.booking-token}") String bookingToken,
             @Value("${reference-data.security.bff-token}") String bffToken,
             @Value("${reference-data.security.seed-token}") String seedToken,
-            @Value("${reference-data.security.cmm-token}") String cmmToken) {
+            @Value("${reference-data.security.cmm-token}") String cmmToken,
+            @Value("${reference-data.security.charge-token}") String chargeToken) {
         return new ReferenceDataLocalIdentityFilter(Map.of(
                 "booking-service", bookingToken,
                 "apps-reference-data", bffToken,
                 "seed-loader", seedToken,
-                "container-movement-service", cmmToken));
+                "container-movement-service", cmmToken,
+                "charge-agreement-service", chargeToken));
     }
 
     @Bean

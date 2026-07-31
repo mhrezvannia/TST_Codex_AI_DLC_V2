@@ -13,6 +13,11 @@
     { "name": "idempotencyKey", "type": "string" },
     { "name": "agreementId", "type": "string" },
     { "name": "agreementStatus", "type": "string" },
-    { "name": "agreementVersion", "type": "long" }
+    { "name": "agreementVersion", "type": "long" },
+    { "name": "agreementVersionId", "type": ["null", "string"], "default": null },
+    { "name": "agreementVersionNo", "type": ["null", "long"], "default": null },
+    { "name": "authorityModel", "type": ["null", "string"], "default": null },
+    { "name": "sourceAgreementVersionId", "type": ["null", "string"], "default": null },
+    { "name": "lifecycleAction", "type": ["null", "string"], "default": null }
   ]
 }

@@ -35,6 +35,58 @@ test("catalog includes booking and container movement event schemas", () => {
   }
 });
 
+test("catalog synchronizes the additive U04 provider, consumer, Pact, and terminal matrix", () => {
+  const result = validateContractCatalog();
+  const api = result.catalog.contracts.find((contract) => contract.contractId === "api-charge-agreement-service");
+  const pact = result.catalog.contracts.find((contract) => contract.contractId === "pact-booking-charge-pricing");
+
+  assert.equal(result.valid, true, result.failures.join("\n"));
+  assert.equal(api.version, "1.1.0");
+  assert.equal(pact.version, "1.1.0");
+  assert.equal(api.sourceService, pact.sourceService);
+  assert.equal(api.consumerService, pact.consumerService);
+  assert.ok(api.examples.includes("contracts/examples/pricing-u04-terminal-matrix.json"));
+});
+
+test("U04 matrix rejects partial enrichment and string money", () => {
+  usingFixture((root) => {
+    const path = join(root, "contracts/examples/pricing-u04-terminal-matrix.json");
+    const matrix = JSON.parse(readFileSync(path, "utf8"));
+    const success = matrix.scenarios.find((scenario) => scenario.scenarioId === "agreement-success");
+    delete success.response.charges[0].sourceRateVersionId;
+    success.response.charges[1].unitRate = "20.01";
+    writeFileSync(path, `${JSON.stringify(matrix, null, 2)}\n`);
+
+    const result = validateContractCatalog(root);
+
+    assert.equal(result.valid, false);
+    assert.match(result.failures.join("\n"), /all-or-none enriched line fields/);
+    assert.match(result.failures.join("\n"), /amount\/unitRate\/quantity must be JSON numbers/);
+  });
+});
+
+test("U04 matrix rejects terminal status, reason, and retry drift", () => {
+  usingFixture((root) => {
+    const matrixPath = join(root, "contracts/examples/pricing-u04-terminal-matrix.json");
+    const fixturePath = join(root, "contracts/pact/booking-charge-pricing-fixtures.json");
+    const matrix = JSON.parse(readFileSync(matrixPath, "utf8"));
+    const fixture = JSON.parse(readFileSync(fixturePath, "utf8"));
+    matrix.scenarios.find((scenario) => scenario.scenarioId === "no-rate").status = 422;
+    matrix.scenarios.find((scenario) => scenario.scenarioId === "ambiguous-base-rate").response.reasonCode = "NO_RATE";
+    matrix.scenarios.find((scenario) => scenario.scenarioId === "pricing-in-progress").expectedHeaders["Retry-After"] = "3";
+    fixture.interactions.find((interaction) => interaction.scenarioId === "pricing-in-progress").expectedHeaders["Retry-After"] = "3";
+    writeFileSync(matrixPath, `${JSON.stringify(matrix, null, 2)}\n`);
+    writeFileSync(fixturePath, `${JSON.stringify(fixture, null, 2)}\n`);
+
+    const result = validateContractCatalog(root);
+
+    assert.equal(result.valid, false);
+    assert.match(result.failures.join("\n"), /no-rate.status must be 404/);
+    assert.match(result.failures.join("\n"), /ambiguous-base-rate.reasonCode must be AMBIGUOUS_BASE_RATE/);
+    assert.match(result.failures.join("\n"), /Retry-After: 1/);
+  });
+});
+
 test("validation fails when required metadata is missing", () => {
   usingFixture((root) => {
     const catalog = readCatalog(root);

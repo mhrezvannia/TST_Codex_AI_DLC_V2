@@ -5,7 +5,7 @@
     "build": "next build",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node ../../node_modules/vitest/vitest.mjs --root ../.. run apps/charge-agreements/app/page.test.tsx"
+    "test": "node ../../node_modules/vitest/vitest.mjs --root ../.. run apps/charge-agreements"
   },
   "dependencies": {
     "@erp/api-core": "workspace:*",

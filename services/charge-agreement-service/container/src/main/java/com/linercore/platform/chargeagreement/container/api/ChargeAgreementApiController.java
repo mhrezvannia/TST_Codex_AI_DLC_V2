@@ -18,7 +18,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +42,7 @@ public class ChargeAgreementApiController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementSearchResponse search(
             @RequestParam(name = "customerId", required = false) String customerId,
             @RequestParam(name = "tradeLaneId", required = false) String tradeLaneId,
@@ -60,7 +62,7 @@ public class ChargeAgreementApiController {
         return new AgreementSearchResponse(items, page, Math.max(1, Math.min(size, 100)), items.size());
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AgreementResponse> create(
             @RequestBody AgreementRequest request,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
@@ -70,7 +72,7 @@ public class ChargeAgreementApiController {
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(agreement));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementResponse detail(
             @PathVariable("id") String id,
             @RequestParam(name = "actor", defaultValue = "local-user") String actor,
@@ -78,7 +80,10 @@ public class ChargeAgreementApiController {
         return toResponse(service.detail(new AgreementId(id), actor, correlation(correlationId)));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(
+            path = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementResponse update(
             @PathVariable("id") String id,
             @RequestParam(name = "version") long version,
@@ -91,7 +96,10 @@ public class ChargeAgreementApiController {
         return toResponse(agreement);
     }
 
-    @PostMapping("/{id}/approve")
+    @PostMapping(
+            path = "/{id}/approve",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementResponse approve(
             @PathVariable("id") String id,
             @RequestParam(name = "version") long version,
@@ -101,7 +109,10 @@ public class ChargeAgreementApiController {
                 request.reason(), correlation(correlationId)));
     }
 
-    @PostMapping("/{id}/suspend")
+    @PostMapping(
+            path = "/{id}/suspend",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementResponse suspend(
             @PathVariable("id") String id,
             @RequestParam(name = "version") long version,
@@ -111,7 +122,10 @@ public class ChargeAgreementApiController {
                 request.reason(), correlation(correlationId)));
     }
 
-    @PostMapping("/{id}/expire")
+    @PostMapping(
+            path = "/{id}/expire",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public AgreementResponse expire(
             @PathVariable("id") String id,
             @RequestParam(name = "version") long version,
@@ -121,7 +135,7 @@ public class ChargeAgreementApiController {
                 request.reason(), correlation(correlationId)));
     }
 
-    @GetMapping("/active-lookup")
+    @GetMapping(path = "/active-lookup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ActiveLookupResponse activeLookup(
             @RequestParam(name = "customerId") String customerId,
             @RequestParam(name = "tradeLaneId", required = false) String tradeLaneId,
@@ -169,11 +183,13 @@ public class ChargeAgreementApiController {
     }
 
     private String actor(String actorSubjectId) {
-        return actorSubjectId == null || actorSubjectId.isBlank() ? "local-user" : actorSubjectId;
+        // The legacy grammar retains the field for byte compatibility, but it
+        // is never accepted as authentication or audit provenance.
+        return "legacy-unverified";
     }
 
     private String correlation(String correlationId) {
-        return correlationId == null || correlationId.isBlank() ? "local-correlation" : correlationId;
+        return correlationId == null || correlationId.isBlank() ? UUID.randomUUID().toString() : correlationId;
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -197,7 +213,7 @@ public class ChargeAgreementApiController {
     }
 
     private ApiErrorResponse error(String code, String message) {
-        return new ApiErrorResponse(code, message == null ? code : message, List.of(), "local-correlation");
+        return new ApiErrorResponse(code, message == null ? code : message, List.of(), UUID.randomUUID().toString());
     }
 
     public record AgreementRequest(

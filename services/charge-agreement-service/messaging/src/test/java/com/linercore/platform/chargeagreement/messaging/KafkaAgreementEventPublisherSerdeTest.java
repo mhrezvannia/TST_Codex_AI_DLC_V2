@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.Schema;
 import org.junit.jupiter.api.Test;
 
 class KafkaAgreementEventPublisherSerdeTest {
@@ -70,6 +71,48 @@ class KafkaAgreementEventPublisherSerdeTest {
         assertEquals("agreement-1", string(received, "agreementId"));
         assertEquals("APPROVED", string(received, "agreementStatus"));
         assertEquals(3L, received.get("agreementVersion"));
+        assertEquals(null, received.get("agreementVersionId"));
+    }
+
+    @Test
+    void w2RecordAddsOnlyLifecycleIdentityAndOldSchemaStillMaps() {
+        Instant occurredAt = Instant.parse("2026-07-28T00:00:00Z");
+        AgreementOutboxEvent event = new AgreementOutboxEvent(
+                "w2agr-1", EVENT_TYPE, "1.1.0", "agreement-1", "APPROVED", 4,
+                EVENT_TYPE + "-value", "charge-agreement-service",
+                "agreement-1:version-2:4:" + EVENT_TYPE, "corr-w2", occurredAt,
+                Map.of(
+                        "agreementVersionId", "version-2",
+                        "agreementVersionNo", "2",
+                        "authorityModel", "W2_VERSIONED",
+                        "lifecycleAction", "APPROVED"),
+                OutboxStatus.PENDING, 0, occurredAt, null, null, null, null);
+        AvroSchemaRepository schemas = new AvroSchemaRepository("avro", Path.of("contracts", "avro"));
+
+        GenericRecord w2 = KafkaAgreementEventPublisher.toGenericRecord(
+                schemas.schemaFor(EVENT_TYPE), event);
+        assertEquals("version-2", string(w2, "agreementVersionId"));
+        assertEquals(2L, w2.get("agreementVersionNo"));
+        assertEquals("W2_VERSIONED", string(w2, "authorityModel"));
+        assertEquals("APPROVED", string(w2, "lifecycleAction"));
+        assertEquals(null, w2.get("sourceAgreementVersionId"));
+
+        Schema oldSchema = new Schema.Parser().parse("""
+                {"type":"record","name":"OldAgreementLifecycle","fields":[
+                  {"name":"eventId","type":"string"},
+                  {"name":"eventType","type":"string"},
+                  {"name":"schemaVersion","type":"string"},
+                  {"name":"source","type":"string"},
+                  {"name":"occurredAt","type":"string"},
+                  {"name":"correlationId","type":"string"},
+                  {"name":"idempotencyKey","type":"string"},
+                  {"name":"agreementId","type":"string"},
+                  {"name":"agreementStatus","type":"string"},
+                  {"name":"agreementVersion","type":"long"}]}
+                """);
+        GenericRecord old = KafkaAgreementEventPublisher.toGenericRecord(oldSchema, event);
+        assertEquals("w2agr-1", string(old, "eventId"));
+        assertEquals(4L, old.get("agreementVersion"));
     }
 
     private String string(GenericRecord record, String field) {

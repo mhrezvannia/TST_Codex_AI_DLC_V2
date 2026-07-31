@@ -24,6 +24,7 @@ reference-data:
     bff-token: ${REFERENCE_DATA_BFF_TOKEN}
     seed-token: ${REFERENCE_DATA_SEED_TOKEN}
     cmm-token: ${REFERENCE_DATA_CMM_TOKEN}
+    charge-token: ${REFERENCE_DATA_CHARGE_TOKEN}
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
     topic: ${REFERENCE_DATA_EVENTS_TOPIC:referencedata.events}

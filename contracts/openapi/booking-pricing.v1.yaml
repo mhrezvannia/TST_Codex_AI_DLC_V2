@@ -1,0 +1,295 @@
+openapi: 3.1.0
+info:
+  title: Booking Pricing Consumer API
+  version: 1.0.0
+paths:
+  /api/bookings/{bookingId}/price:
+    post:
+      operationId: priceOrRepriceBooking
+      parameters:
+        - in: path
+          name: bookingId
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: X-Correlation-Id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [idempotencyKey, actorSubjectId, correlationId]
+              properties:
+                idempotencyKey: { type: string, minLength: 1, maxLength: 128 }
+                actorSubjectId: { type: string, minLength: 1 }
+                correlationId: { type: string, minLength: 1 }
+      responses:
+        '200':
+          description: Current typed or legacy price
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingCommandResponse'
+        '422':
+          description: Manual pricing or semantic validation evidence without a total
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingCommandResponse'
+        '409':
+          description: Conflict, in-progress, or Booking-changed evidence
+          headers:
+            Retry-After:
+              description: Normalized delta seconds, present only for in-progress outcomes.
+              schema: { type: integer, minimum: 1, maximum: 30 }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingCommandResponse'
+        '503':
+          description: Provider or circuit outage evidence
+          headers:
+            Retry-After:
+              description: Normalized circuit probe delay when applicable.
+              schema: { type: integer, minimum: 1, maximum: 30 }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingCommandResponse'
+        '504':
+          description: Exhausted provider timeout evidence
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingCommandResponse'
+        '403':
+          description: Booking pricing authorization denied before existence disclosure
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiError' }
+        '502':
+          description: Provider denial or malformed provider response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/PricingCommandResponse'
+                  - $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    PricingCommandResponse:
+      type: object
+      additionalProperties: false
+      required: [result, history, confirmationEligible]
+      properties:
+        result:
+          $ref: '#/components/schemas/PricingResult'
+        history:
+          $ref: '#/components/schemas/PricingHistory'
+        confirmationEligible:
+          type: boolean
+    PricingResult:
+      type: object
+      additionalProperties: false
+      required:
+        - outcome
+        - amendmentSeq
+        - inputFingerprint
+        - typedSnapshot
+        - legacySnapshot
+        - failureEvidence
+        - retryAfterSeconds
+        - correlationId
+      properties:
+        outcome:
+          enum:
+            - PRICED
+            - LEGACY_PRICED
+            - MANUAL_PRICING_REQUIRED
+            - DENIED
+            - MALFORMED
+            - VALIDATION_FAILED
+            - CONFLICT
+            - IN_PROGRESS
+            - TIMEOUT
+            - UNAVAILABLE
+            - CIRCUIT_OPEN
+            - BOOKING_CHANGED
+        pricingRequestId: { type: [string, 'null'] }
+        amendmentSeq: { type: integer, minimum: 0 }
+        inputFingerprint: { type: string, pattern: '^[0-9a-f]{64}$' }
+        typedSnapshot:
+          oneOf:
+            - $ref: '#/components/schemas/TypedPricingSnapshot'
+            - type: 'null'
+        legacySnapshot:
+          oneOf:
+            - $ref: '#/components/schemas/PricingSnapshotEnvelope'
+            - type: 'null'
+        failureEvidence:
+          oneOf:
+            - $ref: '#/components/schemas/PricingFailureEvidence'
+            - type: 'null'
+        retryAfterSeconds: { type: integer, minimum: 0, maximum: 30 }
+        correlationId: { type: string }
+    PricingHistory:
+      type: object
+      additionalProperties: false
+      required: [current, prior, nextCursor]
+      properties:
+        current:
+          oneOf:
+            - $ref: '#/components/schemas/PricingSnapshotEnvelope'
+            - type: 'null'
+        prior:
+          type: array
+          maxItems: 50
+          items: { $ref: '#/components/schemas/PricingSnapshotEnvelope' }
+        nextCursor: { type: [string, 'null'] }
+    PricingSnapshotEnvelope:
+      type: object
+      additionalProperties: false
+      required: [pricingRequestId, pricingQuoteId, status, quotedAmounts, receivedAt, correlationId, typed, legacy]
+      properties:
+        pricingRequestId: { type: [string, 'null'] }
+        pricingQuoteId: { type: string, minLength: 1 }
+        status: { type: string, minLength: 1 }
+        quotedAmounts:
+          type: object
+          additionalProperties: { type: string }
+        receivedAt: { type: string, format: date-time }
+        correlationId: { type: string, minLength: 1 }
+        typed:
+          oneOf:
+            - $ref: '#/components/schemas/TypedPricingSnapshot'
+            - type: 'null'
+        legacy:
+          oneOf:
+            - $ref: '#/components/schemas/LegacyPricingSnapshot'
+            - type: 'null'
+      x-linercore-exactly-one: [typed, legacy]
+    TypedPricingSnapshot:
+      type: object
+      additionalProperties: false
+      required:
+        - schemaVersion
+        - pricingRequestId
+        - bookingRef
+        - amendmentSeq
+        - bookingRevision
+        - inputFingerprint
+        - requestedDepartureDate
+        - pricingBasis
+        - pricingRef
+        - agreementVersionId
+        - lines
+        - applicableDndRuleTypes
+        - total
+        - currency
+        - pricedAt
+        - correlationId
+        - createdAt
+      properties:
+        schemaVersion: { const: 2 }
+        pricingRequestId: { type: string, minLength: 1 }
+        bookingRef: { type: string, minLength: 1 }
+        amendmentSeq: { type: integer, minimum: 0 }
+        bookingRevision: { type: integer, minimum: 0 }
+        inputFingerprint: { type: string, pattern: '^[0-9a-f]{64}$' }
+        requestedDepartureDate: { type: string, format: date }
+        pricingBasis: { enum: [AGREEMENT, TARIFF] }
+        pricingRef: { type: string, minLength: 1 }
+        agreementVersionId: { type: [string, 'null'] }
+        lines:
+          type: array
+          minItems: 3
+          maxItems: 3
+          prefixItems:
+            - $ref: '#/components/schemas/BasePricingLine'
+            - $ref: '#/components/schemas/SurchargePricingLine'
+            - $ref: '#/components/schemas/LocalPricingLine'
+        applicableDndRuleTypes:
+          type: array
+          items: { type: string }
+        total: { type: number, minimum: 0 }
+        currency: { const: USD }
+        pricedAt: { type: string, format: date-time }
+        correlationId: { type: string, minLength: 1 }
+        createdAt: { type: string, format: date-time }
+      x-linercore-all-or-none:
+        - [lines, total, currency, pricingBasis, pricingRef, agreementVersionId]
+    PricingLine:
+      type: object
+      additionalProperties: false
+      required: [chargeCode, category, rateCategory, basis, quantity, unitRate, amount, currency, sourceRateVersionId]
+      properties:
+        chargeCode: { type: string, minLength: 1 }
+        category: { enum: [FREIGHT, SURCHARGE, LOCAL] }
+        rateCategory: { enum: [BASE, SURCHARGE, LOCAL] }
+        basis: { const: PER_CONTAINER }
+        quantity: { type: integer, minimum: 1 }
+        unitRate: { type: number, minimum: 0 }
+        amount: { type: number, minimum: 0 }
+        currency: { const: USD }
+        sourceRateVersionId: { type: string, minLength: 1 }
+    BasePricingLine:
+      allOf:
+        - $ref: '#/components/schemas/PricingLine'
+        - type: object
+          properties: { rateCategory: { const: BASE } }
+    SurchargePricingLine:
+      allOf:
+        - $ref: '#/components/schemas/PricingLine'
+        - type: object
+          properties: { rateCategory: { const: SURCHARGE } }
+    LocalPricingLine:
+      allOf:
+        - $ref: '#/components/schemas/PricingLine'
+        - type: object
+          properties: { rateCategory: { const: LOCAL } }
+    LegacyPricingSnapshot:
+      type: object
+      additionalProperties: false
+      required: [pricingRequestId, pricingQuoteId, status, quotedAmounts, receivedAt, correlationId]
+      properties:
+        pricingRequestId: { type: [string, 'null'] }
+        pricingQuoteId: { type: string, minLength: 1 }
+        status: { type: string, minLength: 1 }
+        quotedAmounts:
+          type: object
+          additionalProperties: { type: string }
+        receivedAt: { type: string, format: date-time }
+        correlationId: { type: string, minLength: 1 }
+    PricingFailureEvidence:
+      type: object
+      additionalProperties: false
+      description: Safe manual/outage evidence; monetary properties are prohibited.
+      required: [reasonCode, reasonMessage, pricingRequestId, manualCaseId, attempts, circuitState, nextProbeAt, correlationId, occurredAt, amendmentSeq]
+      properties:
+        reasonCode: { type: string, minLength: 1 }
+        reasonMessage: { type: string, minLength: 1 }
+        pricingRequestId: { type: [string, 'null'] }
+        manualCaseId: { type: [string, 'null'] }
+        attempts: { type: integer, minimum: 0 }
+        circuitState: { type: [string, 'null'] }
+        nextProbeAt: { type: [string, 'null'], format: date-time }
+        correlationId: { type: string, minLength: 1 }
+        occurredAt: { type: string, format: date-time }
+        amendmentSeq: { type: integer, minimum: 0 }
+    ApiError:
+      type: object
+      additionalProperties: false
+      required: [code, message, fields, correlationId]
+      properties:
+        code: { type: string, minLength: 1 }
+        message: { type: string, minLength: 1 }
+        fields:
+          type: array
+          items: { type: string }
+        correlationId: { type: string, minLength: 1 }

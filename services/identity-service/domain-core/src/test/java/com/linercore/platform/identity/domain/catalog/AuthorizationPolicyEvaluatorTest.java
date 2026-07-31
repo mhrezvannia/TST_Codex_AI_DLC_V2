@@ -61,6 +61,43 @@ class AuthorizationPolicyEvaluatorTest {
     }
 
     @Test
+    void pricingCanAdministerRatesAndFinanceReadCannotMutate() {
+        AuthenticatedSubject analyst = subject("pricing-analyst");
+        RoleAssignment pricing = assignment("pricing-analyst", RoleCode.PRICING);
+        for (String action : List.of("read", "create", "update", "approve", "create-successor")) {
+            assertEquals(DecisionResult.ALLOW,
+                    evaluator.evaluate(analyst, List.of(pricing), request("charge-rates", action)).result());
+        }
+
+        AuthenticatedSubject reader = subject("finance-reader");
+        RoleAssignment finance = assignment("finance-reader", RoleCode.FINANCE_READ);
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(reader, List.of(finance), request("charge-rates", "read")).result());
+        assertEquals(DecisionResult.DENY,
+                evaluator.evaluate(reader, List.of(finance), request("charge-rates", "approve")).result());
+    }
+
+    @Test
+    void pricingCanAdministerAgreementsAndFinanceRemainsReadOnly() {
+        AuthenticatedSubject analyst = subject("pricing-analyst");
+        RoleAssignment pricing = assignment("pricing-analyst", RoleCode.PRICING);
+        for (String action : List.of(
+                "read", "create", "update", "approve", "create-successor", "suspend", "expire")) {
+            assertEquals(DecisionResult.ALLOW,
+                    evaluator.evaluate(analyst, List.of(pricing), request("charge-agreements", action)).result());
+        }
+
+        AuthenticatedSubject reader = subject("finance-reader");
+        RoleAssignment finance = assignment("finance-reader", RoleCode.FINANCE_READ);
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(reader, List.of(finance), request("charge-agreements", "read")).result());
+        for (String action : List.of("create", "update", "approve", "create-successor", "suspend", "expire")) {
+            assertEquals(DecisionResult.DENY,
+                    evaluator.evaluate(reader, List.of(finance), request("charge-agreements", action)).result());
+        }
+    }
+
+    @Test
     void defaultUserWithoutAssignmentIsDenied() {
         AuthenticatedSubject subject = subject("bob");
 

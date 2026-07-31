@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-29",
+  "scope": "U05 Booking consumption and repricing",
+  "bookingOwnershipWasClean": true,
+  "ownedRoots": [
+    "services/booking-service",
+    "apps/booking",
+    "artifacts/u05",
+    "docs/u05-booking-consumption-repricing.md",
+    "scripts/u05-*"
+  ],
+  "excludedImplementationRoots": [
+    "services/charge-agreement-service",
+    "packages/ui",
+    "apps/shell",
+    "infrastructure/nginx"
+  ],
+  "baselineHashes": {
+    "services/booking-service/dataaccess/src/main/resources/db/migration/V1__booking_baseline.sql": "2b94af954745fc54c0323d1b6f950ca18b13b1b263d04e1f8d2e1040a3136443",
+    "services/booking-service/dataaccess/src/main/resources/db/migration/V2__booking_w1.sql": "5524fd5bb9ce3ac604c85c9496cc139b264040aefca603846b3e6030a15cc134",
+    "contracts/openapi/pricing.v1.yaml": "2a040c61a4c0ac566cf058d5b1b6bf52fcbc90a33ef02edd6fbece0898c0251a",
+    "contracts/catalog/contract-catalog.json": "079a460d308915f0eb4163ab47ace567ab697448d606c863dcff6b634d88e614",
+    "contracts/pact/booking-charge-pricing-fixtures.json": "aba789813334f4d076b8ffb63613a81129a0503cb33fd891c9f397703b2f5ada",
+    "contracts/examples/pricing-u04-terminal-matrix.json": "d1a4c5656f0b5013f12925478d795354da681df59e1a41ed2d35722b8c3aa324"
+  },
+  "legacyFixture": "artifacts/w0-01-live/booking-responses.json",
+  "existingPriceRoute": "POST /api/bookings/{id}/price",
+  "managerPort": 8088,
+  "waveAEdgePort": 18088,
+  "notes": [
+    "The shared worktree already contained U01-U04, workflow, design-system, auth, reference-data, Compose, and contract edits.",
+    "U05 does not revert, rewrite, or claim ownership of those pre-existing changes.",
+    "The pre-U05 Booking price path authorized before lookup, called PricingPort, flattened a successful provider response, saved one embedded snapshot, and had no local receipt/fence or trusted Charge service token."
+  ]
+}

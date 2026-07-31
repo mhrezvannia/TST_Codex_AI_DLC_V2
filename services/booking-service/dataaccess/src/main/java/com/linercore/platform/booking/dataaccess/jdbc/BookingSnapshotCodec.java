@@ -36,7 +36,9 @@ final class BookingSnapshotCodec {
         try {
             JsonNode root = mapper.readTree(snapshot);
             if (root.has("routing") && root.has("equipment")) {
-                return mapper.treeToValue(root, Booking.class);
+                Booking booking = mapper.treeToValue(root, Booking.class);
+                rejectMixedPricingEvidence(booking.pricingSnapshot());
+                return booking;
             }
             LegacyBooking legacy = mapper.treeToValue(root, LegacyBooking.class);
             Map<String, String> attributes = new HashMap<>(legacy.attributes() == null ? Map.of() : legacy.attributes());
@@ -52,6 +54,18 @@ final class BookingSnapshotCodec {
                     legacy.lifecycleEvents(), attributes);
         } catch (JsonProcessingException ex) {
             throw new IllegalStateException("cannot deserialize booking snapshot", ex);
+        }
+    }
+
+    private static void rejectMixedPricingEvidence(PricingSnapshot pricing) {
+        if (pricing == null) {
+            return;
+        }
+        if (pricing.typed() != null && pricing.legacy() != null) {
+            throw new IllegalStateException("pricing snapshot mixes typed and legacy evidence");
+        }
+        if (pricing.typed() != null && !pricing.quotedAmounts().isEmpty()) {
+            throw new IllegalStateException("typed pricing snapshot cannot carry flattened quoted amounts");
         }
     }
 

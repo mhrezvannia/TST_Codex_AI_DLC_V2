@@ -2,6 +2,7 @@ package com.linercore.platform.chargeagreement.domain.model;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Objects;
 
 public record PricingRequest(
         String bookingRef,
@@ -34,24 +35,32 @@ public record PricingRequest(
     }
 
     public PricingRequest {
-        bookingRef = required(bookingRef, "booking ref");
-        tradeLane = required(tradeLane, "trade lane");
-        pol = required(pol, "POL");
-        pod = required(pod, "POD");
-        equipmentType = required(equipmentType, "equipment type");
-        partyId = required(partyId, "party id");
-        commodityCode = required(commodityCode, "commodity code");
+        bookingRef = required(bookingRef, "booking ref", 96);
+        tradeLane = required(tradeLane, "trade lane", 128);
+        pol = required(pol, "POL", 32);
+        pod = required(pod, "POD", 32);
+        equipmentType = required(equipmentType, "equipment type", 64);
+        partyId = required(partyId, "party id", 128);
+        commodityCode = required(commodityCode, "commodity code", 128);
         if (dates == null) {
             throw new IllegalArgumentException("pricing dates are required");
         }
         if (quantities == null) {
             throw new IllegalArgumentException("pricing quantities are required");
         }
-        correlationId = required(correlationId, "correlation id");
+        correlationId = required(correlationId, "correlation id", 128);
     }
 
-    public String requestId() {
+    public String pricingRequestId() {
         return bookingRef + ":" + quantities.amendmentSeq();
+    }
+
+    /**
+     * Retained for the legacy pricing administration seam. New provider code
+     * uses {@link #pricingRequestId()} explicitly.
+     */
+    public String requestId() {
+        return pricingRequestId();
     }
 
     public ReferenceId customerId() {
@@ -70,6 +79,10 @@ public record PricingRequest(
         return dates.effectiveDate();
     }
 
+    public LocalDate requestedDepartureDate() {
+        return dates.requestedDepartureDate();
+    }
+
     public int quantityFor(ChargeBasis basis) {
         return switch (basis) {
             case CONTAINER, SHIPMENT, BL -> quantities.equipmentQuantity();
@@ -77,17 +90,23 @@ public record PricingRequest(
         };
     }
 
-    private static String required(String value, String label) {
+    private static String required(String value, String label, int maxLength) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(label + " is required");
         }
-        return value.trim();
+        String normalized = value.trim();
+        if (normalized.length() > maxLength) {
+            throw new IllegalArgumentException(label + " must not exceed " + maxLength + " characters");
+        }
+        return normalized;
     }
 
     public record PricingDates(LocalDate effectiveDate, LocalDate requestedDepartureDate) {
         public PricingDates {
-            if (effectiveDate == null || requestedDepartureDate == null) {
-                throw new IllegalArgumentException("effective and requested departure dates are required");
+            Objects.requireNonNull(effectiveDate, "effective date is required");
+            Objects.requireNonNull(requestedDepartureDate, "requested departure date is required");
+            if (!effectiveDate.equals(requestedDepartureDate)) {
+                throw new IllegalArgumentException("effective date must equal requested departure date");
             }
         }
     }

@@ -1,12 +1,16 @@
 package com.linercore.platform.chargeagreement.container.api;
 
-import com.linercore.platform.chargeagreement.applicationservice.ChargeAgreementApplicationService;
 import com.linercore.platform.chargeagreement.applicationservice.PricingConflictException;
 import com.linercore.platform.chargeagreement.applicationservice.PricingRequestInProgressException;
+import com.linercore.platform.chargeagreement.applicationservice.pricing.PricingApplicationService;
+import com.linercore.platform.chargeagreement.applicationservice.pricing.PricingApplicationService.PricingUnavailableException;
+import com.linercore.platform.chargeagreement.container.PricingServiceIdentityFilter;
 import com.linercore.platform.chargeagreement.domain.model.PricingLine;
 import com.linercore.platform.chargeagreement.domain.model.PricingRequest;
 import com.linercore.platform.chargeagreement.domain.model.PricingResult;
+import jakarta.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PricingApiController {
     static final String PRICING_MEDIA_TYPE = "application/vnd.api.v1+json";
 
-    private final ChargeAgreementApplicationService service;
+    private final PricingApplicationService service;
 
-    public PricingApiController(ChargeAgreementApplicationService service) {
+    public PricingApiController(PricingApplicationService service) {
         this.service = service;
     }
 
@@ -33,60 +38,76 @@ public class PricingApiController {
             @RequestBody PricingRequestBody body,
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @RequestHeader("X-Correlation-Id") String correlationId,
-            @RequestHeader(name = "X-LinerCore-Actor-Id", defaultValue = "booking-service") String actorSubjectId) {
+            @RequestAttribute(PricingServiceIdentityFilter.VERIFIED_SERVICE_ATTRIBUTE) String actorSubjectId) {
         PricingRequest request = body.toDomain(correlationId);
-        PricingResult result = service.requestPricing(request, idempotencyKey, actorSubjectId);
-        if (result.manualPricingRequired()) {
-            HttpStatus status = "NO_RATE".equals(result.reasonCode()) ? HttpStatus.NOT_FOUND : HttpStatus.UNPROCESSABLE_ENTITY;
-            return ResponseEntity.status(status)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(new ErrorResponse(result.reasonCode().equals("NO_RATE") ? "NO_RATE" : "PRICING_VALIDATION",
-                            safeMessage(result.reasonCode()), result.correlationId()));
-        }
-        return ResponseEntity.ok(new PricingResultResponse(bookingRefFrom(result.pricingRequestId()), result.pricingBasis(),
-                result.pricingRef(), result.lines().stream().map(PricingApiController::line).toList(),
-                List.of()));
-    }
-
-    private static String bookingRefFrom(String pricingRequestId) {
-        if (pricingRequestId == null) {
-            return "";
-        }
-        int delimiter = pricingRequestId.lastIndexOf(':');
-        return delimiter < 0 ? pricingRequestId : pricingRequestId.substring(0, delimiter);
+        var result = service.requestPricing(request, idempotencyKey, actorSubjectId);
+        return ResponseEntity.status(result.httpStatus())
+                .contentType(MediaType.parseMediaType(result.contentType()))
+                .header("X-Pricing-Replayed", Boolean.toString(result.replayed()))
+                .body(result.body());
     }
 
     private static String safeMessage(String reasonCode) {
         return switch (reasonCode) {
             case "NO_RATE" -> "No active agreement or tariff rate matched the pricing request";
-            case "AMBIGUOUS_ACTIVE_AGREEMENT" -> "Multiple active agreements matched the pricing request";
-            case "NO_APPLICABLE_TERMS" -> "No applicable agreement terms matched the pricing request";
+            case "AMBIGUOUS_AGREEMENT_AUTHORITY" -> "Multiple approved agreements matched the pricing request";
+            case "AMBIGUOUS_BASE_RATE", "AMBIGUOUS_SURCHARGE_RATE", "AMBIGUOUS_LOCAL_RATE" ->
+                    "Multiple approved tariff rates matched the pricing request";
             default -> "Pricing validation failed";
         };
     }
 
     private static ChargeLineResponse line(PricingLine line) {
         return new ChargeLineResponse(line.chargeCodeId().value(), line.category().name(),
-                line.amount().amount().setScale(2), line.amount().currencyId().value().toUpperCase());
+                line.amount().amount().setScale(2), "USD", line.rateCategory().name(),
+                line.providerBasis().name(), line.quantity(), line.unitRate(),
+                line.sourceRateVersionId());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> badRequest(IllegalArgumentException exception) {
+    public ResponseEntity<ErrorResponse> badRequest(
+            IllegalArgumentException exception,
+            HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse("PRICING_BAD_REQUEST", exception.getMessage(), "local-correlation"));
+                .body(error("PRICING_BAD_REQUEST", exception.getMessage(), request));
     }
 
     @ExceptionHandler(PricingConflictException.class)
-    public ResponseEntity<ErrorResponse> conflict(PricingConflictException exception) {
+    public ResponseEntity<ErrorResponse> conflict(
+            PricingConflictException exception,
+            HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse(exception.code(), exception.getMessage(), "local-correlation"));
+                .body(error(exception.code(), exception.getMessage(), request));
     }
 
     @ExceptionHandler(PricingRequestInProgressException.class)
-    public ResponseEntity<ErrorResponse> inProgress(PricingRequestInProgressException exception) {
+    public ResponseEntity<ErrorResponse> inProgress(
+            PricingRequestInProgressException exception,
+            HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .header("Retry-After", String.valueOf(Math.max(1, exception.retryAfter().toSeconds())))
-                .body(new ErrorResponse("PRICING_IN_PROGRESS", exception.getMessage(), "local-correlation"));
+                .body(error("PRICING_IN_PROGRESS", exception.getMessage(), request));
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ErrorResponse> forbidden(SecurityException exception, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(error("PRICING_FORBIDDEN", "Pricing access denied", request));
+    }
+
+    @ExceptionHandler(PricingUnavailableException.class)
+    public ResponseEntity<ErrorResponse> unavailable(
+            PricingUnavailableException exception,
+            HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(error("PRICING_UNAVAILABLE", "Pricing is unavailable", request));
+    }
+
+    private static ErrorResponse error(String code, String message, HttpServletRequest request) {
+        String correlationId = request.getHeader("X-Correlation-Id");
+        return new ErrorResponse(code, message,
+                correlationId == null || correlationId.isBlank() ? "rejected" : correlationId,
+                null, null, null);
     }
 
     public record PricingRequestBody(
@@ -122,12 +143,34 @@ public class PricingApiController {
             String pricingBasis,
             String pricingRef,
             List<ChargeLineResponse> charges,
-            List<Object> applicableDndRuleTypes) {
+            List<String> applicableDndRuleTypes,
+            BigDecimal total,
+            String currency,
+            LocalDate requestedDepartureDate,
+            String pricingRequestId,
+            String correlationId,
+            Instant pricedAt,
+            String agreementVersionId) {
     }
 
-    public record ChargeLineResponse(String chargeCode, String category, BigDecimal amount, String currency) {
+    public record ChargeLineResponse(
+            String chargeCode,
+            String category,
+            BigDecimal amount,
+            String currency,
+            String rateCategory,
+            String basis,
+            int quantity,
+            BigDecimal unitRate,
+            String sourceRateVersionId) {
     }
 
-    public record ErrorResponse(String code, String message, String correlationId) {
+    public record ErrorResponse(
+            String code,
+            String message,
+            String correlationId,
+            String reasonCode,
+            String pricingRequestId,
+            String manualCaseId) {
     }
 }

@@ -34,7 +34,8 @@ public final class ReferenceDataLocalIdentityFilter extends OncePerRequestFilter
             deny(response, HttpServletResponse.SC_UNAUTHORIZED, "REFERENCE_SERVICE_IDENTITY_REQUIRED");
             return;
         }
-        if (("booking-service".equals(clientId) || "container-movement-service".equals(clientId))
+        if (("booking-service".equals(clientId) || "container-movement-service".equals(clientId)
+                || "charge-agreement-service".equals(clientId))
                 && !"GET".equals(request.getMethod())) {
             deny(response, HttpServletResponse.SC_FORBIDDEN, "REFERENCE_READ_ONLY");
             return;

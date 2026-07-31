@@ -1,11 +1,5 @@
-import { ChargeAgreementWorkbench } from "./ChargeAgreementWorkbench";
-import { skeletonAgreements, skeletonRuntimeStatus } from "../lib/charge-agreements";
+import { AgreementList } from "./AgreementList";
 
 export default function ChargeAgreementsHomePage() {
-  return (
-    <ChargeAgreementWorkbench
-      initialAgreements={skeletonAgreements}
-      initialStatus={skeletonRuntimeStatus}
-    />
-  );
+  return <AgreementList />;
 }

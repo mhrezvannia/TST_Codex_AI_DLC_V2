@@ -11,7 +11,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 class ReferenceDataLocalIdentityFilterTest {
     private final ReferenceDataLocalIdentityFilter filter = new ReferenceDataLocalIdentityFilter(Map.of(
             "booking-service", "booking-token",
-            "apps-reference-data", "bff-token"));
+            "apps-reference-data", "bff-token",
+            "charge-agreement-service", "charge-token"));
 
     @Test
     void requiresKnownConstantTimeLocalIdentity() throws Exception {
@@ -27,6 +28,8 @@ class ReferenceDataLocalIdentityFilterTest {
     @Test
     void bookingIsReadOnlyWhileReferenceBffMayMutate() throws Exception {
         assertEquals(403, invoke("PUT", "booking-service", "booking-token").getStatus());
+        assertEquals(403, invoke("PUT", "charge-agreement-service", "charge-token").getStatus());
+        assertEquals(200, invoke("GET", "charge-agreement-service", "charge-token").getStatus());
         assertEquals(200, invoke("PUT", "apps-reference-data", "bff-token").getStatus());
     }
 

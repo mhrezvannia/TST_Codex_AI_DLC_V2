@@ -1,0 +1,29 @@
+{
+  "schema": "linercore.u04-u06-handoff/v1",
+  "status": "source-ready-live-evidence-blocked",
+  "verified": {
+    "mavenBuild": "passed-with-docker-skips",
+    "testsDiscovered": 165,
+    "failures": 0,
+    "errors": 0,
+    "dockerSkipped": 28,
+    "deterministicEvaluatorTests": 13,
+    "contracts": "passed",
+    "chargeLint": "passed",
+    "chargeTypecheck": "passed",
+    "diffCheck": "passed",
+    "migrationHashes": "matched"
+  },
+  "blocked": [
+    "Docker/Testcontainers/PostgreSQL live execution",
+    "Booking consumer trusted-service header ownership",
+    "Vitest/esbuild spawn EPERM before test discovery",
+    "full quality-gate execution withheld after the repeated sandbox spawn failure; dry-run inventory retained",
+    "U02 pinned security toolchain lock absent",
+    "changed-line coverage measurement",
+    "isolated Compose and demo-guard evidence",
+    "Playwright width/theme/keyboard/state and DS-03 evidence",
+    "live performance, correlation, replay, restart, aidlc-audit, and erp-fidelity-audit"
+  ],
+  "handoffDocument": "docs/u04-pricing-provider-u06-handoff.md"
+}

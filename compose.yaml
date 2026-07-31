@@ -163,6 +163,7 @@ services:
       REFERENCE_DATA_BFF_TOKEN: ${REFERENCE_DATA_BFF_TOKEN:-reference_data_bff_local_token}
       REFERENCE_DATA_SEED_TOKEN: ${REFERENCE_DATA_SEED_TOKEN:-reference_data_seed_local_token}
       REFERENCE_DATA_CMM_TOKEN: ${REFERENCE_DATA_CMM_TOKEN:-reference_data_cmm_local_token}
+      REFERENCE_DATA_CHARGE_TOKEN: ${REFERENCE_DATA_CHARGE_TOKEN:-reference_data_charge_local_token}
     ports:
       - "${REFERENCE_DATA_SERVICE_HOST_PORT:-8083}:8083"
     depends_on:
@@ -195,12 +196,29 @@ services:
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
       MESSAGING_REQUIRE_REAL: "true"
       CHARGE_AGREEMENT_EVENTS_TOPIC: charge-agreement.events
+      CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED: "false"
+      CHARGE_PRICING_SERVICE_ID: ${CHARGE_PRICING_SERVICE_ID:-booking-service}
+      CHARGE_PRICING_SERVICE_TOKEN: ${CHARGE_PRICING_SERVICE_TOKEN:-pricing_booking_local_token}
+      CHARGE_RATE_AUTHORIZATION_MODE: ${CHARGE_RATE_AUTHORIZATION_MODE}
+      CHARGE_BFF_SERVICE_ID: charge-agreements-bff
+      CHARGE_SERVICE_TOKEN: ${CHARGE_SERVICE_TOKEN:-charge_bff_local_token}
+      CHARGE_BFF_ASSERTION_SECRET: ${CHARGE_BFF_ASSERTION_SECRET:-linercore-local-assertion-secret-change-me}
+      CHARGE_BFF_ASSERTION_KID: ${CHARGE_BFF_ASSERTION_KID:-w2-03-local-v1}
+      CHARGE_BFF_ASSERTION_REPLAY_CAPACITY: ${CHARGE_BFF_ASSERTION_REPLAY_CAPACITY:-4096}
+      IDENTITY_SERVICE_URL: http://identity-service:8082
+      CHARGE_IDENTITY_SERVICE_ID: charge-agreement-service
+      CHARGE_IDENTITY_SERVICE_TOKEN: ${CHARGE_IDENTITY_SERVICE_TOKEN}
+      REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      CHARGE_REFERENCE_SERVICE_ID: charge-agreement-service
+      CHARGE_REFERENCE_SERVICE_TOKEN: ${CHARGE_REFERENCE_SERVICE_TOKEN:-reference_data_charge_local_token}
     ports:
       - "${CHARGE_AGREEMENT_SERVICE_HOST_PORT:-8084}:8084"
     depends_on:
       postgres:
         condition: service_healthy
       reference-data-service:
+        condition: service_started
+      identity-service:
         condition: service_started
       kafka:
         condition: service_healthy
@@ -231,6 +249,8 @@ services:
       REFERENCE_DATA_CLIENT_ID: booking-service
       REFERENCE_DATA_BOOKING_TOKEN: ${REFERENCE_DATA_BOOKING_TOKEN:-reference_data_booking_local_token}
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
+      BOOKING_CHARGE_SERVICE_ID: ${CHARGE_PRICING_SERVICE_ID:-booking-service}
+      BOOKING_CHARGE_SERVICE_TOKEN: ${CHARGE_PRICING_SERVICE_TOKEN:-pricing_booking_local_token}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
       MESSAGING_REQUIRE_REAL: "true"
@@ -445,9 +465,38 @@ services:
     profiles: ["app", "full"]
     environment:
       NODE_OPTIONS: --max-old-space-size=160
+      AUTH_RUNTIME_PROFILE: ${AUTH_RUNTIME_PROFILE:-local}
+      AUTH_SESSION_SECRET: ${AUTH_SESSION_SECRET:-linercore-local-session-secret}
+      CHARGE_BASE_PATH: /charge-agreements
       CHARGE_AGREEMENT_SERVICE_URL: http://charge-agreement-service:8084
+      CHARGE_SERVICE_TOKEN: ${CHARGE_SERVICE_TOKEN:-charge_bff_local_token}
+      REFERENCE_DATA_SERVICE_URL: http://reference-data-service:8083
+      REFERENCE_DATA_BFF_SERVICE_ID: charge-agreements-bff
+      REFERENCE_DATA_BFF_TOKEN: ${REFERENCE_DATA_CHARGE_TOKEN:-reference_data_charge_local_token}
+      CHARGE_PUBLIC_ORIGINS: ${CHARGE_PUBLIC_ORIGINS:-http://127.0.0.1:18088}
+      CHARGE_BFF_ASSERTION_SECRET: ${CHARGE_BFF_ASSERTION_SECRET:-linercore-local-assertion-secret-change-me}
+      CHARGE_BFF_ASSERTION_KID: ${CHARGE_BFF_ASSERTION_KID:-w2-03-local-v1}
+      CHARGE_BFF_PROTECTED_PERMITS: "20"
+      CHARGE_BFF_REFERENCE_PERMITS: "10"
+      CHARGE_BFF_PERMIT_WAIT_MS: "100"
+      CHARGE_BFF_DEADLINE_MS: "2500"
+      CHARGE_REFERENCE_DEADLINE_MS: "2000"
+      CHARGE_BFF_EGRESS_DEADLINE_MS: "5000"
+      CHARGE_BFF_REQUEST_BODY_BYTES: "32768"
+      CHARGE_BFF_RESPONSE_BYTES: "524288"
+      CHARGE_REFERENCE_RESPONSE_BYTES: "131072"
     depends_on:
-      - charge-agreement-service
+      charge-agreement-service:
+        condition: service_started
+      reference-data-service:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/charge-agreements/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    stop_grace_period: 10s
     deploy:
       resources:
         limits:

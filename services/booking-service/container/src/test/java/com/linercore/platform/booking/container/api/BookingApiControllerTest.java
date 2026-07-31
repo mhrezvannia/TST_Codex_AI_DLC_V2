@@ -5,17 +5,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linercore.platform.booking.applicationservice.BookingApplicationService;
 import com.linercore.platform.booking.applicationservice.command.CreateBookingCommand;
+import com.linercore.platform.booking.applicationservice.port.AuthorizationPort;
+import com.linercore.platform.booking.applicationservice.port.BookingRepository;
+import com.linercore.platform.booking.applicationservice.port.PricingHistoryPort;
+import com.linercore.platform.booking.applicationservice.port.PricingOperationReceiptPort;
+import com.linercore.platform.booking.applicationservice.port.PricingPort;
+import com.linercore.platform.booking.applicationservice.port.PricingSnapshotRepository;
 import com.linercore.platform.booking.applicationservice.port.ReferenceProviderFailureCategory;
 import com.linercore.platform.booking.applicationservice.port.ReferenceProviderUnavailable;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingOrchestrator;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingCaptureService;
+import com.linercore.platform.booking.applicationservice.pricing.BookingPricingCompletionService;
+import com.linercore.platform.booking.applicationservice.pricing.PricingCommandResult;
 import com.linercore.platform.booking.domain.model.Booking;
 import com.linercore.platform.booking.domain.model.BookingId;
+import com.linercore.platform.booking.domain.model.BookingPricingOutcome;
 import com.linercore.platform.booking.domain.model.EquipmentAssignment;
+import com.linercore.platform.booking.domain.model.PricingFailureEvidence;
+import com.linercore.platform.booking.domain.model.PricingHistoryPage;
+import com.linercore.platform.booking.domain.model.PricingSnapshot;
 import com.linercore.platform.booking.domain.model.RoutingLeg;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.Duration;
 import java.util.List;
@@ -103,6 +120,113 @@ class BookingApiControllerTest {
         assertEquals("booking-1", response.id());
         assertThrows(IllegalArgumentException.class, () -> controller.confirm("booking-1",
                 new BookingApiController.ActorRequest("local-user", null), null, "corr-1"));
+    }
+
+    @Test
+    void deniesPricingBeforeBookingExistenceIsReadAndSerializesOnlySafeContract() throws Exception {
+        BookingRepository bookings = mock(BookingRepository.class);
+        AuthorizationPort authorization = mock(AuthorizationPort.class);
+        when(authorization.allowed("denied-user", "booking", "request-pricing", "corr-denied"))
+                .thenReturn(false);
+        PricingOperationReceiptPort receipts = mock(PricingOperationReceiptPort.class);
+        PricingSnapshotRepository snapshots = mock(PricingSnapshotRepository.class);
+        BookingPricingOrchestrator orchestrator = new BookingPricingOrchestrator(
+                new BookingPricingCaptureService(bookings, authorization, receipts, () -> "owner-1"),
+                new BookingPricingCompletionService(bookings, receipts, snapshots, Clock.systemUTC()),
+                mock(PricingPort.class),
+                receipts,
+                mock(PricingHistoryPort.class),
+                Clock.systemUTC());
+        BookingApiController pricingController = new BookingApiController(service, orchestrator);
+
+        SecurityException denied = assertThrows(SecurityException.class, () -> pricingController.price(
+                "missing-booking",
+                new BookingApiController.PricingRequest("idem-1", "denied-user", "corr-denied"),
+                "corr-denied"));
+        var serialized = new ObjectMapper().findAndRegisterModules()
+                .writeValueAsString(pricingController.forbidden(denied).getBody());
+
+        verifyNoInteractions(bookings);
+        org.junit.jupiter.api.Assertions.assertTrue(serialized.contains("\"code\":\"forbidden\""));
+        org.junit.jupiter.api.Assertions.assertFalse(serialized.contains("missing-booking"));
+        org.junit.jupiter.api.Assertions.assertFalse(serialized.contains("idem-1"));
+    }
+
+    @Test
+    void serializesManualEvidenceAndBoundedCurrentPriorHistoryWithRealJackson() throws Exception {
+        BookingPricingOrchestrator orchestrator = mock(BookingPricingOrchestrator.class);
+        PricingCommandResult manual = failure(BookingPricingOutcome.MANUAL_PRICING_REQUIRED, "NO_RATE", 0);
+        PricingSnapshot current = legacy("price-current", "quote-current", "corr-current");
+        PricingSnapshot prior = legacy("price-prior", "quote-prior", "corr-prior");
+        when(orchestrator.price(any(), eq("booking-user"), eq("corr-manual"))).thenReturn(manual);
+        when(orchestrator.history(any(), eq(null), eq(25)))
+                .thenReturn(new PricingHistoryPage(current, List.of(prior), "next-cursor"));
+        BookingApiController pricingController = new BookingApiController(service, orchestrator);
+
+        var response = pricingController.price(
+                "booking-1",
+                new BookingApiController.PricingRequest("idem-price", "booking-user", "corr-manual"),
+                "corr-manual");
+        String json = new ObjectMapper().findAndRegisterModules().writeValueAsString(response.getBody());
+
+        assertEquals(422, response.getStatusCode().value());
+        org.junit.jupiter.api.Assertions.assertTrue(json.contains("\"outcome\":\"MANUAL_PRICING_REQUIRED\""));
+        org.junit.jupiter.api.Assertions.assertTrue(json.contains("\"reasonCode\":\"NO_RATE\""));
+        org.junit.jupiter.api.Assertions.assertTrue(json.contains("\"current\""));
+        org.junit.jupiter.api.Assertions.assertTrue(json.contains("\"prior\""));
+        org.junit.jupiter.api.Assertions.assertFalse(json.contains("\"total\""));
+    }
+
+    @Test
+    void preservesTypedNegativeStatusesAndRetryGuidance() {
+        BookingPricingOrchestrator orchestrator = mock(BookingPricingOrchestrator.class);
+        when(orchestrator.history(any(), eq(null), eq(25)))
+                .thenReturn(new PricingHistoryPage(null, List.of(), null));
+        BookingApiController pricingController = new BookingApiController(service, orchestrator);
+        Map<BookingPricingOutcome, Integer> expected = Map.of(
+                BookingPricingOutcome.DENIED, 403,
+                BookingPricingOutcome.MALFORMED, 502,
+                BookingPricingOutcome.VALIDATION_FAILED, 422,
+                BookingPricingOutcome.CONFLICT, 409,
+                BookingPricingOutcome.TIMEOUT, 504,
+                BookingPricingOutcome.CIRCUIT_OPEN, 503);
+
+        expected.forEach((outcome, status) -> {
+            when(orchestrator.price(any(), eq("booking-user"), eq("corr-negative")))
+                    .thenReturn(failure(outcome, outcome.name(), outcome == BookingPricingOutcome.CIRCUIT_OPEN ? 5 : 0));
+            var response = pricingController.price(
+                    "booking-1",
+                    new BookingApiController.PricingRequest("idem-price", "booking-user", "corr-negative"),
+                    "corr-negative");
+            assertEquals(status, response.getStatusCode().value());
+            if (outcome == BookingPricingOutcome.CIRCUIT_OPEN) {
+                assertEquals("5", response.getHeaders().getFirst("Retry-After"));
+            }
+        });
+    }
+
+    private PricingCommandResult failure(BookingPricingOutcome outcome, String reason, int retryAfter) {
+        return new PricingCommandResult(
+                outcome,
+                outcome == BookingPricingOutcome.MANUAL_PRICING_REQUIRED ? "price-1" : null,
+                1,
+                "a".repeat(64),
+                null,
+                null,
+                new PricingFailureEvidence(reason, reason, null, null, 1, null, null,
+                        "corr-" + reason.toLowerCase(), Instant.parse("2026-07-29T10:00:00Z"), 1),
+                retryAfter,
+                outcome == BookingPricingOutcome.MANUAL_PRICING_REQUIRED ? "corr-manual" : "corr-negative");
+    }
+
+    private PricingSnapshot legacy(String requestId, String quoteId, String correlationId) {
+        return new PricingSnapshot(
+                requestId,
+                quoteId,
+                "QUOTED",
+                Map.of("currency", "USD"),
+                Instant.parse("2026-07-01T00:00:00Z"),
+                correlationId);
     }
 
     private Booking booking() {

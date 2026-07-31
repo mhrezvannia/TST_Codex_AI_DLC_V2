@@ -40,16 +40,33 @@ public class KafkaAgreementEventPublisher implements AgreementEventPublisherPort
     static GenericRecord toGenericRecord(Schema schema, AgreementOutboxEvent event) {
         Map<String, String> payload = event.payload();
         GenericRecord record = new GenericData.Record(schema);
-        record.put("eventId", payload.get("eventId"));
-        record.put("eventType", payload.get("eventType"));
-        record.put("schemaVersion", payload.get("schemaVersion"));
-        record.put("source", payload.get("source"));
-        record.put("occurredAt", payload.get("occurredAt"));
-        record.put("correlationId", payload.get("correlationId"));
-        record.put("idempotencyKey", payload.get("idempotencyKey"));
-        record.put("agreementId", payload.get("agreementId"));
-        record.put("agreementStatus", payload.get("agreementStatus"));
-        record.put("agreementVersion", Long.parseLong(payload.get("agreementVersion")));
+        record.put("eventId", event.eventId());
+        record.put("eventType", event.eventType());
+        record.put("schemaVersion", event.schemaVersion());
+        record.put("source", event.producerIdentity());
+        record.put("occurredAt", event.occurredAt().toString());
+        record.put("correlationId", event.correlationId());
+        record.put("idempotencyKey", event.deduplicationKey());
+        record.put("agreementId", event.agreementId());
+        record.put("agreementStatus", event.agreementStatus());
+        record.put("agreementVersion", event.agreementVersion());
+        optional(schema, record, "agreementVersionId", payload.get("agreementVersionId"));
+        optionalLong(schema, record, "agreementVersionNo", payload.get("agreementVersionNo"));
+        optional(schema, record, "authorityModel", payload.get("authorityModel"));
+        optional(schema, record, "sourceAgreementVersionId", payload.get("sourceAgreementVersionId"));
+        optional(schema, record, "lifecycleAction", payload.get("lifecycleAction"));
         return record;
+    }
+
+    private static void optional(Schema schema, GenericRecord record, String field, String value) {
+        if (schema.getField(field) != null) {
+            record.put(field, value);
+        }
+    }
+
+    private static void optionalLong(Schema schema, GenericRecord record, String field, String value) {
+        if (schema.getField(field) != null) {
+            record.put(field, value == null ? null : Long.parseLong(value));
+        }
     }
 }

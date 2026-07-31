@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.linercore.platform.booking.applicationservice.command.CreateBookingCommand;
-import com.linercore.platform.booking.applicationservice.command.PricingSnapshotCommand;
 import com.linercore.platform.booking.applicationservice.dnd.ChargeDndPricingClientException;
 import com.linercore.platform.booking.applicationservice.dnd.ChargeDndPricingFailureType;
 import com.linercore.platform.booking.applicationservice.dnd.ChargeDndPricingPortAdapter;
@@ -30,14 +29,18 @@ import com.linercore.platform.booking.applicationservice.port.ReferenceProviderF
 import com.linercore.platform.booking.applicationservice.port.ReferenceProviderUnavailable;
 import com.linercore.platform.booking.domain.model.Booking;
 import com.linercore.platform.booking.domain.model.BookingId;
+import com.linercore.platform.booking.domain.model.BookingPricingSnapshot;
 import com.linercore.platform.booking.domain.model.BookingStatus;
 import com.linercore.platform.booking.domain.model.EquipmentAssignment;
+import com.linercore.platform.booking.domain.model.PricingLineSnapshot;
 import com.linercore.platform.booking.domain.model.RoutingLeg;
 import com.linercore.platform.booking.domain.model.ReferenceFieldResult;
 import com.linercore.platform.booking.domain.model.ReferenceValidationFieldOutcome;
 import com.linercore.platform.booking.domain.outbox.BookingOutboxEvent;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -105,8 +108,7 @@ class BookingApplicationServiceTest {
         Booking booking = service.createDraft(command("idem-3", "customer-1", "loc-origin", "loc-destination"));
         service.validate(booking.id(), "booking-user", "corr-3");
         service.requestPricing(booking.id(), "booking-user", "price-idem-1", "corr-3");
-        service.storePricingSnapshot(booking.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
-                Map.of("total", "100.00 USD"), "pricing-service", "corr-3"));
+        storeConfirmablePricing(booking.id(), "corr-3");
 
         Booking confirmed = service.confirm(booking.id(), "booking-user", "confirm-idem-1", "corr-3");
 
@@ -123,8 +125,7 @@ class BookingApplicationServiceTest {
                 "loc-destination"));
         service.validate(booking.id(), "booking-user", "corr-confirm");
         service.requestPricing(booking.id(), "booking-user", "price-idem-confirm", "corr-confirm");
-        service.storePricingSnapshot(booking.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
-                Map.of("total", "100.00 USD"), "pricing-service", "corr-confirm"));
+        storeConfirmablePricing(booking.id(), "corr-confirm");
 
         Booking first = service.confirm(booking.id(), "booking-user", "confirm-idem-replay", "corr-confirm");
         Booking replay = service.confirm(booking.id(), "booking-user", "confirm-idem-replay", "corr-confirm");
@@ -140,15 +141,13 @@ class BookingApplicationServiceTest {
                 "loc-destination"));
         service.validate(first.id(), "booking-user", "corr-confirm");
         service.requestPricing(first.id(), "booking-user", "price-idem-confirm-1", "corr-confirm");
-        service.storePricingSnapshot(first.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
-                Map.of("total", "100.00 USD"), "pricing-service", "corr-confirm"));
+        storeConfirmablePricing(first.id(), "corr-confirm");
         service.confirm(first.id(), "booking-user", "confirm-idem-conflict", "corr-confirm");
         Booking second = service.createDraft(command("idem-confirm-conflict-2", "customer-1", "loc-origin",
                 "loc-destination"));
         service.validate(second.id(), "booking-user", "corr-confirm");
         service.requestPricing(second.id(), "booking-user", "price-idem-confirm-2", "corr-confirm");
-        service.storePricingSnapshot(second.id(), new PricingSnapshotCommand("price-req-2", "quote-2", "QUOTED",
-                Map.of("total", "100.00 USD"), "pricing-service", "corr-confirm"));
+        storeConfirmablePricing(second.id(), "corr-confirm");
 
         assertThrows(IdempotencyConflictException.class,
                 () -> service.confirm(second.id(), "booking-user", "confirm-idem-conflict", "corr-confirm"));
@@ -349,9 +348,28 @@ class BookingApplicationServiceTest {
         Booking booking = targetService.createDraft(command(idempotencyKey, "customer-1", "loc-origin", "loc-destination"));
         targetService.validate(booking.id(), "booking-user", "corr-confirmed");
         targetService.requestPricing(booking.id(), "booking-user", idempotencyKey + "-pricing", "corr-confirmed");
-        targetService.storePricingSnapshot(booking.id(), new PricingSnapshotCommand("price-req-1", "quote-1", "QUOTED",
-                Map.of("total", "100.00 USD"), "pricing-service", "corr-confirmed"));
+        storeConfirmablePricing(booking.id(), "corr-confirmed");
         return targetService.confirm(booking.id(), "booking-user", idempotencyKey + "-confirm", "corr-confirmed");
+    }
+
+    private void storeConfirmablePricing(BookingId bookingId, String correlationId) {
+        Booking booking = bookings.findById(bookingId).orElseThrow();
+        List<PricingLineSnapshot> lines = List.of(
+                line("OFR", "FREIGHT", "BASE", "100.00"),
+                line("BAF", "SURCHARGE", "SURCHARGE", "20.00"),
+                line("THC", "LOCAL", "LOCAL", "5.00"));
+        BookingPricingSnapshot snapshot = new BookingPricingSnapshot(
+                2, "price-" + bookingId.value(), booking.bookingNumber(), booking.pricingAmendmentSeq(),
+                booking.revision(), "a".repeat(64), LocalDate.parse("2026-08-01"), "TARIFF", "tariff:NA-EU",
+                null, lines, List.of(), new BigDecimal("125.00"), "USD",
+                Instant.parse("2026-07-01T00:00:00Z"), correlationId, Instant.parse("2026-07-01T00:00:00Z"));
+        bookings.save(booking.typedPriced(snapshot, "pricing-service", Instant.parse("2026-07-01T00:00:00Z")));
+    }
+
+    private PricingLineSnapshot line(String code, String category, String rateCategory, String amount) {
+        BigDecimal money = new BigDecimal(amount);
+        return new PricingLineSnapshot(
+                code, category, rateCategory, "PER_CONTAINER", 1, money, money, "USD", "rate-version-1");
     }
 
     private BookingApplicationService dndService(DndPricingResult result) {

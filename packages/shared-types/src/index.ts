@@ -7,6 +7,7 @@ export type BookingDraftFields = {
   loadUnLocode: string;
   dischargeUnLocode: string;
   voyageId: string;
+  requestedDepartureDate: string;
   equipmentTypeCode: string;
   equipmentId: string;
   commodityCode: string;
@@ -23,6 +24,14 @@ export function validateBookingDraft(fields: BookingDraftFields) {
   if (fields.dischargeUnLocode && !/^[A-Za-z]{2}[A-Za-z0-9]{3}$/.test(fields.dischargeUnLocode)) {
     errors.dischargeUnLocode = "Use a five-character UN/LOCODE";
   }
+  if (fields.requestedDepartureDate) {
+    const parsedDate = new Date(`${fields.requestedDepartureDate}T00:00:00Z`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fields.requestedDepartureDate)
+      || Number.isNaN(parsedDate.valueOf())
+      || parsedDate.toISOString().slice(0, 10) !== fields.requestedDepartureDate) {
+      errors.requestedDepartureDate = "Use a valid departure date";
+    }
+  }
   if (fields.loadUnLocode.toUpperCase() === fields.dischargeUnLocode.toUpperCase()) {
     errors.dischargeUnLocode = "Discharge must differ from load";
   }
@@ -38,6 +47,7 @@ const bookingServerFieldMap: Record<string, keyof BookingDraftFields> = {
   "routing[0].loadUnLocode": "loadUnLocode",
   "routing[0].dischargeUnLocode": "dischargeUnLocode",
   "routing[0].voyageId": "voyageId",
+  "attributes.requestedDepartureDate": "requestedDepartureDate",
   "equipment[0].equipmentTypeCode": "equipmentTypeCode",
   equipment: "equipmentTypeCode",
   "equipment[0].quantity": "equipmentTypeCode",

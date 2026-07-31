@@ -1,9 +1,9 @@
 package com.linercore.platform.booking.container.integration;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -33,8 +33,8 @@ class HttpChargePricingClientTest {
                 .andExpect(header("X-LinerCore-Service-Id", "booking-service"))
                 .andExpect(header("X-LinerCore-Service-Token", "trusted-token"))
                 .andExpect(header("X-Correlation-Id", "corr-1"))
+                .andExpect(content().bytes(CANONICAL_BODY))
                 .andExpect(request -> {
-                    assertArrayEquals(CANONICAL_BODY, request.getBody().readAllBytes());
                     assertNull(request.getHeaders().getFirst("X-LinerCore-Actor-Id"));
                 })
                 .andRespond(withSuccess(successBody(), pricingMediaType()));

@@ -25,6 +25,12 @@
         "displayName": "Local Booking User",
         "email": "local.booking.user@example.invalid",
         "roles": ["booking-desk"]
+      },
+      {
+        "username": "local.pricing.analyst",
+        "displayName": "Local Pricing Analyst",
+        "email": "local.pricing.analyst@example.invalid",
+        "roles": ["pricing"]
       }
     ]
   },
@@ -59,7 +65,8 @@
     "localUsers": [
       { "username": "local.reference.admin", "roles": ["reference-admin", "platform-operator"] },
       { "username": "local.carrier.user", "roles": ["customer-service"] },
-      { "username": "local.booking.user", "roles": ["booking-desk"] }
+      { "username": "local.booking.user", "roles": ["booking-desk"] },
+      { "username": "local.pricing.analyst", "roles": ["pricing"] }
     ]
   },
   "referenceData": {

@@ -21,12 +21,14 @@ describe("Shell BookingActions", () => {
     { action: "price", status: "VALIDATED" },
     { action: "confirm", status: "PRICED" }
   ] as const) {
-    it(`forwards ${scenario.action} with idempotency and refreshes the detail`, async () => {
+    it(`forwards ${scenario.action} with header-owned idempotency and refreshes the detail`, async () => {
       let calledUrl = "";
       let idempotencyKey = "";
+      let body: BodyInit | null | undefined;
       global.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
         calledUrl = String(input);
         idempotencyKey = new Headers(init?.headers).get("idempotency-key") ?? "";
+        body = init?.body;
         const statuses = { validate: "VALIDATED", price: "PRICED", confirm: "CONFIRMED" } as const;
         return Promise.resolve(Response.json({ status: statuses[scenario.action] }));
       }) as typeof fetch;
@@ -39,6 +41,7 @@ describe("Shell BookingActions", () => {
       expect(screen.getByTestId("booking-authoritative-status")).toHaveTextContent(statuses[scenario.action]);
       expect(calledUrl).toBe(`/api/booking/bookings/booking%2Fone/${scenario.action}`);
       expect(idempotencyKey).toBeTruthy();
+      expect(body).toBe("{}");
     });
   }
 

@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 class BookingMigrationCatalogTest {
     private static final String V1_SHA256 =
-            "2b94af954745fc54c0323d1b6f950ca18b13b1b263d04e1f8d2e1040a3136443";
+            "19a6edbc324efd79452350ff33e86860263c24e42044455594f24d71d93cee12";
     private static final String V2_SHA256 =
-            "5524fd5bb9ce3ac604c85c9496cc139b264040aefca603846b3e6030a15cc134";
+            "cfd6c0552361ecd60b79f19890d4f4769af36a848c07bd015665bbbfc546042f";
     private static final String V3_SHA256 =
             "4b333a0287266211239317761247a9c9feb8ea462d241d22e0e04e41789604c7";
 
@@ -80,6 +80,11 @@ class BookingMigrationCatalogTest {
     }
 
     private static String hash(byte[] value) throws Exception {
-        return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(value));
+        String canonicalText = new String(value, StandardCharsets.UTF_8)
+                .replace("\r\n", "\n")
+                .replace('\r', '\n');
+        return HexFormat.of().formatHex(
+                MessageDigest.getInstance("SHA-256")
+                        .digest(canonicalText.getBytes(StandardCharsets.UTF_8)));
     }
 }

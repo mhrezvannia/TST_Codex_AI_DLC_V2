@@ -21,6 +21,7 @@ describe("Shell BookingCreateForm", () => {
 
   it("submits to the shell BFF and redirects to canonical shell detail", async () => {
     const originalFetch = global.fetch;
+    let submittedBody: Record<string, unknown> | undefined;
     global.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       if (url.includes("/api/booking/reference-options")) {
@@ -28,6 +29,7 @@ describe("Shell BookingCreateForm", () => {
       }
       expect(url).toBe("/api/booking/bookings");
       expect(new Headers(init?.headers).get("idempotency-key")).toBeTruthy();
+      submittedBody = JSON.parse(String(init?.body));
       return Promise.resolve(Response.json({ id: "booking-1" }, { status: 201 }));
     }) as typeof fetch;
 
@@ -37,12 +39,16 @@ describe("Shell BookingCreateForm", () => {
       fireEvent.change(screen.getByTestId("booking-loadUnLocode"), { target: { value: "USNYC" } });
       fireEvent.change(screen.getByTestId("booking-dischargeUnLocode"), { target: { value: "NLRTM" } });
       fireEvent.change(screen.getByTestId("booking-voyageId"), { target: { value: "voyage-1" } });
+      fireEvent.change(screen.getByTestId("booking-requestedDepartureDate"), { target: { value: "2026-08-01" } });
       fireEvent.change(screen.getByTestId("booking-equipmentTypeCode"), { target: { value: "45G1" } });
       fireEvent.change(screen.getByTestId("booking-equipmentId"), { target: { value: "MSCU6639870" } });
       fireEvent.change(screen.getByTestId("booking-commodityCode"), { target: { value: "GENERAL" } });
       fireEvent.click(screen.getByTestId("booking-submit"));
 
       await waitFor(() => expect(push).toHaveBeenCalledWith("/booking/booking-1?created=1"));
+      expect(submittedBody).toMatchObject({
+        attributes: { commodityCode: "GENERAL", requestedDepartureDate: "2026-08-01" }
+      });
     } finally {
       global.fetch = originalFetch;
       push.mockReset();
@@ -59,6 +65,7 @@ describe("Shell BookingCreateForm", () => {
       for (const [testId, value] of [
         ["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"],
         ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"],
+        ["booking-requestedDepartureDate", "2026-08-01"],
         ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"],
         ["booking-commodityCode", "GENERAL"]
       ]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
@@ -83,7 +90,7 @@ describe("Shell BookingCreateForm", () => {
     }) as typeof fetch;
     try {
       render(<BookingCreateForm />);
-      for (const [testId, value] of [["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"], ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"], ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"], ["booking-commodityCode", "GENERAL"]]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
+      for (const [testId, value] of [["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"], ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"], ["booking-requestedDepartureDate", "2026-08-01"], ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"], ["booking-commodityCode", "GENERAL"]]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
       fireEvent.click(screen.getByTestId("booking-submit"));
       const retry = await screen.findByTestId("booking-create-retry");
       expect(screen.getByTestId("booking-customerId")).toHaveValue("customer-1");
@@ -102,7 +109,7 @@ describe("Shell BookingCreateForm", () => {
     global.fetch = ((input: RequestInfo | URL) => String(input).includes("reference-options") ? Promise.resolve(Response.json([])) : Promise.resolve(Response.json({ message: "Denied" }, { status: 403 }))) as typeof fetch;
     try {
       render(<BookingCreateForm />);
-      for (const [testId, value] of [["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"], ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"], ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"], ["booking-commodityCode", "GENERAL"]]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
+      for (const [testId, value] of [["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"], ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"], ["booking-requestedDepartureDate", "2026-08-01"], ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"], ["booking-commodityCode", "GENERAL"]]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
       fireEvent.click(screen.getByTestId("booking-submit"));
       expect(await screen.findByRole("alert")).toHaveTextContent("Denied");
       expect(screen.queryByTestId("booking-create-retry")).toBeNull();

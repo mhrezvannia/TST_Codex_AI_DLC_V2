@@ -57,16 +57,31 @@ class BookingFlywayMigrationStrategyLiveTest {
         List<HistoryRow> firstHistory = history(schemaDataSource);
         strategy.migrate(flyway(schemaDataSource));
 
-        assertThat(firstHistory).extracting(HistoryRow::version).containsExactly("1", "2");
+        assertThat(firstHistory).extracting(HistoryRow::version).containsExactly("1", "2", "3");
         assertThat(history(schemaDataSource)).isEqualTo(firstHistory);
         assertThat(columns(schemaDataSource, "booking_records"))
                 .contains("equipment_type_code", "snapshot_version");
         assertThat(columns(schemaDataSource, "booking_idempotency"))
-                .contains("operation", "request_hash", "state", "response_revision", "updated_at");
+                .contains(
+                        "operation",
+                        "request_hash",
+                        "state",
+                        "response_revision",
+                        "provider_key",
+                        "response_snapshot",
+                        "updated_at");
+        assertThat(columns(schemaDataSource, "booking_pricing_snapshots"))
+                .contains(
+                        "booking_id",
+                        "pricing_request_id",
+                        "amendment_seq",
+                        "booking_revision",
+                        "schema_version",
+                        "snapshot");
     }
 
     @Test
-    void baselinesOnlyTheExactLegacyCatalogThenMigratesV2() throws Exception {
+    void baselinesOnlyTheExactLegacyCatalogThenMigratesRemainingCatalog() throws Exception {
         DataSource schemaDataSource = schemaDataSource();
         try (var connection = schemaDataSource.getConnection()) {
             ScriptUtils.executeSqlScript(connection, new ClassPathResource("db/migration/V1__booking_baseline.sql"));
@@ -74,9 +89,11 @@ class BookingFlywayMigrationStrategyLiveTest {
 
         new BookingFlywayMigrationStrategy(schemaDataSource).migrate(flyway(schemaDataSource));
 
-        assertThat(history(schemaDataSource)).extracting(HistoryRow::version).containsExactly("1", "2");
+        assertThat(history(schemaDataSource)).extracting(HistoryRow::version).containsExactly("1", "2", "3");
         assertThat(columns(schemaDataSource, "booking_snapshot_migration"))
                 .contains("booking_id", "from_version", "to_version", "outcome");
+        assertThat(columns(schemaDataSource, "booking_pricing_snapshots"))
+                .contains("booking_id", "pricing_request_id", "snapshot", "correlation_id");
     }
 
     @Test

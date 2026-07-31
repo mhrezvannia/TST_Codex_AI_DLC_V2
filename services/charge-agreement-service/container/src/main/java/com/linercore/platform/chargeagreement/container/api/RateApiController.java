@@ -74,7 +74,7 @@ public final class RateApiController {
 
     @GetMapping("/{rateId}")
     public RateDetailResponse detail(
-            @PathVariable String rateId,
+            @PathVariable("rateId") String rateId,
             @RequestParam(name = "asOf", required = false) LocalDate asOf,
             @RequestAttribute(name = RateServiceIdentityFilter.AUTHENTICATED_ACTOR_ATTRIBUTE) String subjectId,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
@@ -83,7 +83,7 @@ public final class RateApiController {
 
     @GetMapping("/{rateId}/history")
     public List<RateVersionResponse> history(
-            @PathVariable String rateId,
+            @PathVariable("rateId") String rateId,
             @RequestParam(name = "asOf", required = false) LocalDate asOf,
             @RequestAttribute(name = RateServiceIdentityFilter.AUTHENTICATED_ACTOR_ATTRIBUTE) String subjectId,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
@@ -92,8 +92,8 @@ public final class RateApiController {
 
     @PutMapping("/{rateId}/versions/{versionId}")
     public RateDetailResponse updateDraft(
-            @PathVariable String rateId,
-            @PathVariable String versionId,
+            @PathVariable("rateId") String rateId,
+            @PathVariable("versionId") String versionId,
             @RequestBody RateUpdateRequest request,
             @RequestAttribute(name = RateServiceIdentityFilter.AUTHENTICATED_ACTOR_ATTRIBUTE) String subjectId,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
@@ -105,8 +105,8 @@ public final class RateApiController {
 
     @PostMapping("/{rateId}/versions/{versionId}/approve")
     public RateDetailResponse approve(
-            @PathVariable String rateId,
-            @PathVariable String versionId,
+            @PathVariable("rateId") String rateId,
+            @PathVariable("versionId") String versionId,
             @RequestBody ExpectedVersionRequest request,
             @RequestAttribute(name = RateServiceIdentityFilter.AUTHENTICATED_ACTOR_ATTRIBUTE) String subjectId,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
@@ -116,8 +116,8 @@ public final class RateApiController {
 
     @PostMapping("/{rateId}/versions/{versionId}/successor")
     public ResponseEntity<RateDetailResponse> createSuccessor(
-            @PathVariable String rateId,
-            @PathVariable String versionId,
+            @PathVariable("rateId") String rateId,
+            @PathVariable("versionId") String versionId,
             @RequestBody RateSuccessorRequest request,
             @RequestAttribute(name = RateServiceIdentityFilter.AUTHENTICATED_ACTOR_ATTRIBUTE) String subjectId,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {

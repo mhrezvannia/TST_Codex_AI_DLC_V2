@@ -98,6 +98,20 @@ class JdbcRateRepositoryConcurrencyPostgresTest {
     }
 
     @Test
+    void localRateApprovalSupportsAnAbsentDestination() {
+        JdbcRateRepository repository = repository();
+        Rate rate = localDraft("local");
+        repository.create(rate, activity(rate.latestVersion(), "create-local", RateActivity.Action.RATE_CREATED));
+        RateVersion approved = approve(rate.latestVersion(), "approve-local");
+
+        Rate persisted = repository.approveUnderLock(rate, approved,
+                activity(approved, "approval-local", RateActivity.Action.RATE_VERSION_APPROVED));
+
+        assertEquals(RateLifecycle.APPROVED, persisted.latestVersion().lifecycle());
+        assertEquals(2, repository.activities(rate.id()).size());
+    }
+
+    @Test
     void draftUpdateAndApprovalRaceHasOneWinnerAndPublishedConflictCode() throws Exception {
         JdbcRateRepository setup = repository();
         Rate rate = draft("update-approve");
@@ -262,6 +276,25 @@ class JdbcRateRepositoryConcurrencyPostgresTest {
                 new RateApplicability(
                         new ReferenceId("location-origin"),
                         new ReferenceId("location-destination"),
+                        new ReferenceId("equipment-40hc")),
+                "pricing-user",
+                NOW,
+                "corr-" + suffix);
+    }
+
+    private static Rate localDraft(String suffix) {
+        return Rate.firstDraft(
+                new RateId("rate-" + suffix),
+                new RateVersionId("version-" + suffix),
+                RateCategory.LOCAL,
+                new ReferenceId("charge-code-thc"),
+                "THC",
+                new RateMoney(new BigDecimal("75.00"), new ReferenceId("currency-usd"), "USD"),
+                FROM,
+                TO,
+                new RateApplicability(
+                        new ReferenceId("location-origin"),
+                        null,
                         new ReferenceId("equipment-40hc")),
                 "pricing-user",
                 NOW,

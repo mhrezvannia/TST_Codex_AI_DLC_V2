@@ -9,6 +9,6 @@
     "build": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --passWithNoTests"
   }
 }

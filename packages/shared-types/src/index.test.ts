@@ -6,6 +6,7 @@ const valid = {
   loadUnLocode: "USNYC",
   dischargeUnLocode: "NLRTM",
   voyageId: "VOY-001",
+  requestedDepartureDate: "2026-08-01",
   equipmentTypeCode: "45G1",
   equipmentId: "MSCU6639870",
   commodityCode: "GENERAL"
@@ -17,9 +18,15 @@ describe("Booking draft shared contract", () => {
   });
 
   it("returns field-addressable route and equipment errors", () => {
-    const errors = validateBookingDraft({ ...valid, dischargeUnLocode: "USNYC", equipmentId: "bad" });
+    const errors = validateBookingDraft({
+      ...valid,
+      dischargeUnLocode: "USNYC",
+      requestedDepartureDate: "2026-02-30",
+      equipmentId: "bad"
+    });
 
     expect(errors.dischargeUnLocode).toContain("differ");
+    expect(errors.requestedDepartureDate).toContain("valid departure date");
     expect(errors.equipmentId).toContain("ISO 6346");
   });
 

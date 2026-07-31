@@ -162,17 +162,15 @@ public final class JdbcRateRepository implements RateRepository {
                       AND stable.charge_code_id = ?
                       AND candidate.origin_location_id = ?
                       AND candidate.equipment_type_id = ?
-                      AND (
-                          (? IS NULL AND candidate.destination_location_id IS NULL)
-                          OR candidate.destination_location_id = ?
-                      )
+                      AND candidate.destination_location_id
+                          IS NOT DISTINCT FROM CAST(? AS VARCHAR)
                       AND candidate.effective_from <= ?
                       AND candidate.effective_to >= ?
                       AND candidate.version_id <> ?
                     """, Integer.class, stableRate.category().name(), stableRate.chargeCodeId().value(),
                     approvedVersion.applicability().originLocationId().value(),
                     approvedVersion.applicability().equipmentTypeId().value(),
-                    destination(approvedVersion), destination(approvedVersion),
+                    destination(approvedVersion),
                     approvedVersion.effectiveTo(), approvedVersion.effectiveFrom(), approvedVersion.id().value());
             if (overlaps != null && overlaps > 0) {
                 throw new RateRepositoryException("RATE_AUTHORITY_CONFLICT", "Approved authority overlaps");

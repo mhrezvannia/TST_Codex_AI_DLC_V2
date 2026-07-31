@@ -5,9 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.linercore.platform.booking.domain.model.Booking;
 import com.linercore.platform.booking.domain.model.BookingId;
+import com.linercore.platform.booking.domain.model.BookingPricingSnapshot;
 import com.linercore.platform.booking.domain.model.EquipmentAssignment;
+import com.linercore.platform.booking.domain.model.PricingLineSnapshot;
 import com.linercore.platform.booking.domain.model.RoutingLeg;
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,14 +21,14 @@ class BookingEventMapperTest {
     @Test
     void mapsConfirmedBookingToOutboxEventEvidence() {
         Instant now = Instant.parse("2026-07-01T00:00:00Z");
-        Booking booking = Booking.draft(new BookingId("booking-1"), "BKG-0001", "customer-1",
+        Booking validated = Booking.draft(new BookingId("booking-1"), "BKG-0001", "customer-1",
                 List.of(new RoutingLeg(1, "USNYC", "NLRTM", "voyage-1")),
                 List.of(new EquipmentAssignment("45G1", 1, "MSCU6639870")), "USD", "FCL_DRY", false, false,
                 Map.of("containerId", "CONT0000001"), "booking-user", "corr-1", now)
-                .validated("booking-user", "corr-1", now)
+                .validated("booking-user", "corr-1", now);
+        Booking booking = validated
                 .pricingPending("price-req-1", "booking-user", "corr-1", now)
-                .priced(new com.linercore.platform.booking.domain.model.PricingSnapshot("price-req-1", "quote-1",
-                        "QUOTED", Map.of("total", "100.00 USD"), now, "corr-1"), "pricing-service", now)
+                .typedPriced(pricingSnapshot(validated, now), "pricing-service", now)
                 .confirmed("booking-user", "corr-1", now);
 
         BookingOutboxEvent event = new BookingEventMapper().confirmedEvent("event-1", booking, "corr-1", now);
@@ -55,5 +59,22 @@ class BookingEventMapperTest {
         assertFalse(event.payload().containsKey("pricingRef"));
         assertFalse(event.payload().containsKey("customerId"));
         assertFalse(event.payload().containsKey("originLocationId"));
+    }
+
+    private BookingPricingSnapshot pricingSnapshot(Booking booking, Instant now) {
+        List<PricingLineSnapshot> lines = List.of(
+                line("OFR", "FREIGHT", "BASE", "100.00"),
+                line("BAF", "SURCHARGE", "SURCHARGE", "20.00"),
+                line("THC", "LOCAL", "LOCAL", "5.00"));
+        return new BookingPricingSnapshot(
+                2, "price-req-1", booking.bookingNumber(), booking.pricingAmendmentSeq(), booking.revision(),
+                "a".repeat(64), LocalDate.parse("2026-08-01"), "TARIFF", "tariff:NA-EU",
+                null, lines, List.of(), new BigDecimal("125.00"), "USD", now, "corr-1", now);
+    }
+
+    private PricingLineSnapshot line(String code, String category, String rateCategory, String amount) {
+        BigDecimal money = new BigDecimal(amount);
+        return new PricingLineSnapshot(
+                code, category, rateCategory, "PER_CONTAINER", 1, money, money, "USD", "rate-version-1");
     }
 }

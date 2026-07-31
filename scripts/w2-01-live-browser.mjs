@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { createHmac, randomBytes } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { chromium } from "@playwright/test";
@@ -100,80 +101,172 @@ async function waitForRuntimeService(name, url) {
 
 async function ensurePricingAgreement() {
   const agreementNumber = "W2-01-LIVE-NA-EU-GEN";
-  const correlationId = crypto.randomUUID();
-  const search = new URL(`${chargeUrl}/api/charge-agreements`);
-  search.searchParams.set("customerId", "party-customer-local-carrier");
-  search.searchParams.set("tradeLaneId", "NA-EU");
-  search.searchParams.set("commodityId", "GEN");
-  search.searchParams.set("includeInactive", "true");
-  const searched = await checkedJson(await fetch(search, {
-    headers: { "X-Correlation-Id": correlationId }
-  }), "search pricing fixture");
-  const existing = searched.items?.find((item) => item.agreementNumber === agreementNumber);
-  let agreement = existing
-    ? await checkedJson(await fetch(`${chargeUrl}/api/charge-agreements/${existing.id}?actor=w2-01-live`, {
-        headers: { "X-Correlation-Id": correlationId }
-      }), "read pricing fixture")
-    : await checkedJson(await fetch(`${chargeUrl}/api/charge-agreements`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Correlation-Id": correlationId },
-        body: JSON.stringify({
-          agreementNumber,
-          customerId: "party-customer-local-carrier",
-          tradeLaneId: "NA-EU",
-          commodityId: "GEN",
-          validFrom: "2020-01-01",
-          validTo: "2099-12-31",
-          terms: [],
-          actorSubjectId: "w2-01-live",
-          reason: "W2-01 live acceptance fixture"
-        })
-      }), "create pricing fixture");
+  const pricingActor = "local.pricing.analyst";
+  const rateVersionIds = {};
+  const rateDefinitions = [
+    { category: "BASE", chargeCodeId: "charge-code-ofr", chargeCode: "OFR", unitRate: 1000, destinationLocationId: "location-nlrot" },
+    { category: "SURCHARGE", chargeCodeId: "charge-code-baf", chargeCode: "BAF", unitRate: 150, destinationLocationId: "location-nlrot" },
+    { category: "LOCAL", chargeCodeId: "charge-code-thc", chargeCode: "THC", unitRate: 75, destinationLocationId: null }
+  ];
 
-  if (agreement.status === "DRAFT" && agreement.terms.length === 0) {
-    agreement = await checkedJson(await fetch(`${chargeUrl}/api/charge-agreements/${agreement.id}?version=${agreement.version}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "X-Correlation-Id": correlationId },
-      body: JSON.stringify({
-        agreementNumber,
+  for (const definition of rateDefinitions) {
+    rateVersionIds[definition.category] = await ensureApprovedRate(definition, pricingActor);
+  }
+
+  const searchPath = "/api/charge-agreements";
+  const searchUrl = new URL(`${chargeUrl}${searchPath}`);
+  searchUrl.searchParams.set("customerId", "party-customer-local-carrier");
+  searchUrl.searchParams.set("tradeLaneId", "trade-lane-na-eu");
+  searchUrl.searchParams.set("size", "100");
+  const searched = await agreementRequest(searchPath, "GET", undefined, pricingActor, searchUrl);
+  const existing = searched.items?.find((item) => item.agreementNumber === agreementNumber);
+  let agreement;
+
+  if (existing) {
+    const detailPath = `/api/charge-agreements/${existing.agreementId}`;
+    agreement = await agreementRequest(detailPath, "GET", undefined, pricingActor);
+  } else {
+    agreement = await agreementRequest(searchPath, "POST", {
+      agreementNumber,
+      commercial: {
         customerId: "party-customer-local-carrier",
-        tradeLaneId: "NA-EU",
-        commodityId: "GEN",
+        tradeLaneId: "trade-lane-na-eu",
+        originLocationId: "location-usnyc",
+        destinationLocationId: "location-nlrot",
+        equipmentTypeId: "equipment-type-22g1",
         validFrom: "2020-01-01",
         validTo: "2099-12-31",
-        terms: [{
-          id: "w2-01-ocean-freight",
-          chargeCodeId: "charge-code-ofr",
-          basis: "TEU",
-          amount: 1000,
-          currencyId: "currency-usd",
-          validFrom: "2020-01-01",
-          validTo: "2099-12-31",
-          notes: "W2-01 deterministic live rate"
-        }],
-        actorSubjectId: "w2-01-live",
-        reason: "Add deterministic live rate"
-      })
-    }), "add pricing fixture term");
+        baseRateVersionId: rateVersionIds.BASE,
+        surchargeRateVersionId: rateVersionIds.SURCHARGE,
+        localRateVersionId: rateVersionIds.LOCAL
+      },
+      reason: "W2-01 live acceptance fixture"
+    }, pricingActor);
   }
-  if (agreement.status === "DRAFT") {
-    agreement = await checkedJson(await fetch(`${chargeUrl}/api/charge-agreements/${agreement.id}/approve?version=${agreement.version}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Correlation-Id": correlationId },
-      body: JSON.stringify({ actorSubjectId: "w2-01-live", reason: "Approve live acceptance rate" })
-    }), "approve pricing fixture");
+
+  const draft = agreement.selectedVersion?.lifecycle === "DRAFT"
+    ? agreement.selectedVersion
+    : agreement.versions?.find((version) => version.lifecycle === "DRAFT");
+  if (draft) {
+    const approvePath = `/api/charge-agreements/${agreement.agreementId}/versions/${draft.agreementVersionId}/approve`;
+    agreement = await agreementRequest(approvePath, "POST", {
+      expectedRowVersion: draft.rowVersion,
+      reason: "Approve W2-01 live acceptance agreement"
+    }, pricingActor);
   }
-  if (agreement.status !== "APPROVED") {
-    throw new Error(`Pricing fixture ${agreement.id} is ${agreement.status}, expected APPROVED`);
+  if (agreement.approvedVersion?.lifecycle !== "APPROVED") {
+    throw new Error(`Pricing fixture ${agreement.agreementId} has no approved version`);
   }
+  const correlationId = agreement.approvedVersion.correlationId;
   return {
     name: "approved-charge-agreement",
     status: "PASS",
-    agreementId: agreement.id,
+    agreementId: agreement.agreementId,
     agreementNumber,
     correlationId,
-    source: existing ? "reused" : "created"
+    source: existing ? "reused" : "created",
+    rateVersionIds
   };
+}
+
+async function ensureApprovedRate(definition, pricingActor) {
+  const searchPath = "/api/charge-rates";
+  const correlationId = crypto.randomUUID();
+  const searchUrl = new URL(`${chargeUrl}${searchPath}`);
+  searchUrl.searchParams.set("q", definition.chargeCode);
+  searchUrl.searchParams.set("size", "100");
+  const searched = await checkedJson(await fetch(searchUrl, {
+    headers: rateHeaders(pricingActor, correlationId)
+  }), `search ${definition.category} rate fixture`);
+  const existing = searched.items?.find((item) =>
+    item.category === definition.category
+    && item.chargeCode === definition.chargeCode
+    && item.latestVersion?.originLocationId === "location-usnyc"
+    && item.latestVersion?.destinationLocationId === definition.destinationLocationId
+    && item.latestVersion?.equipmentTypeId === "equipment-type-22g1");
+
+  let rate = existing
+    ? await checkedJson(await fetch(`${chargeUrl}${searchPath}/${existing.rateId}`, {
+        headers: rateHeaders(pricingActor, crypto.randomUUID())
+      }), `read ${definition.category} rate fixture`)
+    : await checkedJson(await fetch(`${chargeUrl}${searchPath}`, {
+        method: "POST",
+        headers: rateHeaders(pricingActor, crypto.randomUUID(), true),
+        body: JSON.stringify({
+          ...definition,
+          currencyId: "currency-usd",
+          currency: "USD",
+          effectiveFrom: "2020-01-01",
+          effectiveTo: "2099-12-31",
+          originLocationId: "location-usnyc",
+          equipmentTypeId: "equipment-type-22g1"
+        })
+      }), `create ${definition.category} rate fixture`);
+
+  const draft = rate.versions?.find((version) => version.lifecycle === "DRAFT");
+  if (draft) {
+    const approvePath = `${searchPath}/${rate.rateId}/versions/${draft.versionId}/approve`;
+    rate = await checkedJson(await fetch(`${chargeUrl}${approvePath}`, {
+      method: "POST",
+      headers: rateHeaders(pricingActor, crypto.randomUUID(), true),
+      body: JSON.stringify({ expectedRowVersion: draft.rowVersion })
+    }), `approve ${definition.category} rate fixture`);
+  }
+  const approved = rate.versions?.find((version) => version.lifecycle === "APPROVED");
+  if (!approved) throw new Error(`${definition.category} rate fixture has no approved version`);
+  return approved.versionId;
+}
+
+function rateHeaders(pricingActor, correlationId, hasBody = false) {
+  const headers = {
+    "X-LinerCore-Service-Id": process.env.CHARGE_BFF_SERVICE_ID ?? "charge-agreements-bff",
+    "X-LinerCore-Service-Token": process.env.CHARGE_SERVICE_TOKEN ?? "charge_bff_local_token",
+    "X-Actor-Subject": pricingActor,
+    "X-Correlation-Id": correlationId
+  };
+  if (hasBody) headers["Content-Type"] = "application/json";
+  return headers;
+}
+
+async function agreementRequest(path, method, body, subjectId, url = new URL(`${chargeUrl}${path}`)) {
+  const correlationId = crypto.randomUUID();
+  const mediaType = "application/vnd.linercore.charge-agreement-v2+json";
+  const headers = {
+    "Accept": mediaType,
+    "X-Correlation-Id": correlationId,
+    "X-LinerCore-Subject-Assertion": issueSubjectAssertion(subjectId, method, path, correlationId)
+  };
+  if (body !== undefined) headers["Content-Type"] = mediaType;
+  return checkedJson(await fetch(url, {
+    method,
+    headers,
+    body: body === undefined ? undefined : JSON.stringify(body)
+  }), `${method} ${path}`);
+}
+
+function issueSubjectAssertion(subjectId, method, path, correlationId) {
+  const kid = process.env.CHARGE_BFF_ASSERTION_KID ?? "w2-03-local-v1";
+  const secret = process.env.CHARGE_BFF_ASSERTION_SECRET ?? "linercore-local-assertion-secret-change-me";
+  const now = Math.floor(Date.now() / 1000);
+  const claims = [
+    ["iss", "charge-agreements-bff"],
+    ["kid", kid],
+    ["sub", subjectId],
+    ["mth", method.toUpperCase()],
+    ["pth", path],
+    ["cid", correlationId],
+    ["iat", String(now)],
+    ["exp", String(now + 30)],
+    ["nonce", randomBytes(16).toString("base64url")]
+  ];
+  let payload = "lc-bff-assertion:v1\n";
+  for (const [name, value] of claims) {
+    payload += `${name}:${Buffer.byteLength(value, "utf8")}:${value}\n`;
+  }
+  const payloadBase64 = Buffer.from(payload, "utf8").toString("base64url");
+  const signingInput = `v1.${kid}.${payloadBase64}`;
+  const signature = createHmac("sha256", secret).update(signingInput, "ascii").digest("base64url");
+  return `${signingInput}.${signature}`;
 }
 
 async function checkedJson(response, operation) {
@@ -197,8 +290,9 @@ async function runAllowedJourney(browserInstance) {
   await page.getByTestId("booking-loadUnLocode").fill("USNYC");
   await page.getByTestId("booking-dischargeUnLocode").fill("NLRTM");
   await page.getByTestId("booking-voyageId").fill("voyage-local-001");
-  await page.getByTestId("booking-equipmentTypeCode").fill("45G1");
-  await page.getByTestId("booking-equipmentId").fill("MSCU6639870");
+  await page.getByTestId("booking-requestedDepartureDate").fill("2026-08-01");
+  await page.getByTestId("booking-equipmentTypeCode").fill("22G1");
+  await page.getByTestId("booking-equipmentId").fill("LCRU1000055");
   await page.getByTestId("booking-commodityCode").fill("GEN");
   const createStarted = performance.now();
   await page.getByTestId("booking-submit").click();

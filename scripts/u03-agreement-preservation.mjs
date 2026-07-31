@@ -1,7 +1,7 @@
-import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { sha256CanonicalText } from "./canonical-sha256.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -75,7 +75,7 @@ export function verifyU03AgreementPreservation(root = repositoryRoot) {
   for (const [name, expected] of Object.entries(fixture.chargeFlywaySha256)) {
     const migration = path.join(migrationDir, name);
     if (!existsSync(migration)) continue;
-    const actual = createHash("sha256").update(readFileSync(migration)).digest("hex");
+    const actual = sha256CanonicalText(migration);
     if (actual !== expected) failures.push(`U01-owned migration changed: ${name}`);
   }
 

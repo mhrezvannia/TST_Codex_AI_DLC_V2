@@ -14,6 +14,7 @@ const initial: BookingDraftFields = {
   loadUnLocode: "",
   dischargeUnLocode: "",
   voyageId: "",
+  requestedDepartureDate: "",
   equipmentTypeCode: "",
   equipmentId: "",
   commodityCode: ""
@@ -81,7 +82,10 @@ export function BookingCreateForm() {
           cargoMode: "FCL_DRY",
           reefer: false,
           dangerousGoods: false,
-          attributes: { commodityCode: fields.commodityCode }
+          attributes: {
+            commodityCode: fields.commodityCode,
+            requestedDepartureDate: fields.requestedDepartureDate
+          }
         })
       });
       const payload = await response.json().catch(() => ({}));
@@ -140,13 +144,15 @@ export function BookingCreateForm() {
     label: string,
     hint?: string,
     choices?: Array<{ value: string; label: string }>,
-    onValue?: (value: string) => void
+    onValue?: (value: string) => void,
+    inputType: "text" | "date" = "text"
   ) => (
     <Field label={label} hint={hint} error={errors[name]} htmlFor={`booking-${name}`} hintId={`${name}-hint`} errorId={`${name}-error`}>
       <Input
         id={`booking-${name}`}
         data-testid={`booking-${name}`}
         list={choices ? `booking-${name}-options` : undefined}
+        type={inputType}
         value={fields[name]}
         onChange={(event) => (onValue ?? ((value) => change(name, value)))(event.target.value)}
         invalid={Boolean(errors[name])}
@@ -174,6 +180,7 @@ export function BookingCreateForm() {
         {field("loadUnLocode", "Load UN/LOCODE", "Example: USNYC", options.locations.map((option) => ({ value: option.code, label: option.displayName })))}
         {field("dischargeUnLocode", "Discharge UN/LOCODE", "Example: NLRTM", options.locations.map((option) => ({ value: option.code, label: option.displayName })))}
         {field("voyageId", "Voyage", undefined, options.voyages.filter((option) => option.attributes.recordType === "VOYAGE").map((option) => ({ value: option.id, label: `${option.code} - ${option.displayName}` })), selectVoyage)}
+        {field("requestedDepartureDate", "Requested departure date", "Used to select the effective agreement and rate versions", undefined, undefined, "date")}
       </fieldset>
       <fieldset>
         <legend>Equipment and cargo</legend>

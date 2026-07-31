@@ -67,7 +67,7 @@ public final class ManualPricingCaseApiController {
     public ManualCaseResponse detail(
             @RequestAttribute(ChargeSubjectAssertionFilter.VERIFIED_SUBJECT_ATTRIBUTE) String subjectId,
             @RequestHeader("X-Correlation-Id") String correlationId,
-            @PathVariable String caseId) {
+            @PathVariable("caseId") String caseId) {
         return response(service.detail(subjectId, correlationId, caseId));
     }
 

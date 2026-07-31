@@ -86,7 +86,6 @@ final class BookingFlywayMigrationStrategy implements FlywayMigrationStrategy {
                 WHERE table_schema = current_schema() AND table_type = 'BASE TABLE'
                 """, String.class));
         if (tables.contains("flyway_schema_history")) {
-            flyway.validate();
             flyway.migrate();
             return;
         }

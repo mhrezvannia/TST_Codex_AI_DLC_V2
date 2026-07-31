@@ -1,7 +1,7 @@
-import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { sha256CanonicalText } from "./canonical-sha256.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -30,8 +30,7 @@ export function verifyU04PricingPreservation(root = repositoryRoot) {
     failures.push("V1-V4 migration catalog changed");
   }
   for (const [name, expected] of Object.entries(fixture.chargeFlywaySha256)) {
-    const actual = createHash("sha256")
-      .update(readFileSync(path.join(migrationDir, name))).digest("hex");
+    const actual = sha256CanonicalText(path.join(migrationDir, name));
     if (actual !== expected) failures.push(`immutable migration changed: ${name}`);
   }
 

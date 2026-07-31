@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -14,15 +16,14 @@ class BookingTest {
 
     @Test
     void confirmsBookingOnlyAfterValidationAndPricingSnapshot() {
-        Booking booking = draft()
-                .validated("booking-user", "corr-1", now)
+        Booking validated = draft().validated("booking-user", "corr-1", now);
+        Booking booking = validated
                 .pricingPending("price-req-1", "booking-user", "corr-1", now)
-                .priced(new PricingSnapshot("price-req-1", "quote-1", "QUOTED", Map.of("total", "100.00 USD"), now, "corr-1"),
-                        "pricing-service", now)
+                .typedPriced(pricingSnapshot(validated), "pricing-service", now)
                 .confirmed("booking-user", "corr-1", now);
 
         assertEquals(BookingStatus.CONFIRMED, booking.status());
-        assertEquals("100.00 USD", booking.pricingSnapshot().quotedAmounts().get("total"));
+        assertEquals(new BigDecimal("125.00"), booking.pricingSnapshot().typed().total());
         assertEquals(5, booking.lifecycleEvents().size());
     }
 
@@ -35,20 +36,25 @@ class BookingTest {
 
     @Test
     void amendsAndReconfirmsWithoutCalculatingPricing() {
-        Booking confirmed = draft()
-                .validated("booking-user", "corr-1", now)
+        Booking validated = draft().validated("booking-user", "corr-1", now);
+        Booking confirmed = validated
                 .pricingPending("price-req-1", "booking-user", "corr-1", now)
-                .priced(new PricingSnapshot("price-req-1", "quote-1", "QUOTED", Map.of("total", "100.00 USD"), now, "corr-1"),
-                        "pricing-service", now)
+                .typedPriced(pricingSnapshot(validated), "pricing-service", now)
                 .confirmed("booking-user", "corr-1", now);
 
         Booking reconfirmed = confirmed
-                .amended(Map.of("specialInstructions", "reefer plug required"), "booking-user", "corr-2", now)
+                .pricingInputsAmended(
+                        Map.of("specialInstructions", "reefer plug required"),
+                        "a".repeat(64),
+                        "2026-08-01",
+                        "booking-user",
+                        "corr-2",
+                        now)
                 .reconfirmed("booking-user", "corr-2", now);
 
         assertEquals(BookingStatus.RECONFIRMED, reconfirmed.status());
         assertEquals(2, reconfirmed.revision());
-        assertEquals("quote-1", reconfirmed.pricingSnapshot().pricingQuoteId());
+        assertEquals("tariff:NA-EU", reconfirmed.pricingSnapshot().pricingQuoteId());
     }
 
     @Test
@@ -158,5 +164,22 @@ class BookingTest {
                 List.of(new RoutingLeg(1, "USNYC", "NLRTM", "voyage-1")),
                 List.of(new EquipmentAssignment("45G1", 1, "MSCU6639870")),
                 "USD", "FCL_DRY", false, false, Map.of(), "booking-user", "corr-1", now);
+    }
+
+    private BookingPricingSnapshot pricingSnapshot(Booking booking) {
+        List<PricingLineSnapshot> lines = List.of(
+                line("OFR", "FREIGHT", "BASE", "100.00"),
+                line("BAF", "SURCHARGE", "SURCHARGE", "20.00"),
+                line("THC", "LOCAL", "LOCAL", "5.00"));
+        return new BookingPricingSnapshot(
+                2, "price-req-1", booking.bookingNumber(), booking.pricingAmendmentSeq(), booking.revision(),
+                "a".repeat(64), LocalDate.parse("2026-08-01"), "TARIFF", "tariff:NA-EU",
+                null, lines, List.of(), new BigDecimal("125.00"), "USD", now, "corr-1", now);
+    }
+
+    private PricingLineSnapshot line(String code, String category, String rateCategory, String amount) {
+        BigDecimal money = new BigDecimal(amount);
+        return new PricingLineSnapshot(
+                code, category, rateCategory, "PER_CONTAINER", 1, money, money, "USD", "rate-version-1");
     }
 }

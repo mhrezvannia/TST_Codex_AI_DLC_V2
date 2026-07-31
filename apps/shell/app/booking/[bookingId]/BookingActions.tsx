@@ -48,7 +48,7 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
             "content-type": "application/json",
             "idempotency-key": idempotencyKey
           },
-          body: action === "price" ? JSON.stringify({ idempotencyKey }) : "{}"
+          body: "{}"
         }
       );
       const payload = await response.json().catch(() => ({}));

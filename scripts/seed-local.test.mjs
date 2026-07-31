@@ -78,7 +78,7 @@ test("builds live API commands for reference records and role assignments", () =
     reason: "local seed currency-usd",
     correlationId: "corr-test"
   });
-  assert.equal(buildRoleAssignmentCommands(seedPack, "local.reference.admin", "corr-test").length, 4);
+  assert.equal(buildRoleAssignmentCommands(seedPack, "local.reference.admin", "corr-test").length, 5);
 });
 
 test("apply mode creates missing reference records through live API shape", async () => {
@@ -103,7 +103,7 @@ test("apply mode creates missing reference records through live API shape", asyn
 
   assert.equal(summary.failed, 0);
   assert.equal(summary.created, orderedReferenceRecords(seedPack).length);
-  assert.equal(summary.identityAssignments.length, 4);
+  assert.equal(summary.identityAssignments.length, 5);
   assert.equal(calls.some((call) => call.url === "http://identity.test/internal/identity/roles/assign"), true);
   assert.equal(calls.some((call) => call.url.includes("http://reference.test/reference-sets/CURRENCY/records")), true);
 });

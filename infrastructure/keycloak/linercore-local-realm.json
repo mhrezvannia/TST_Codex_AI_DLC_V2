@@ -100,6 +100,25 @@
       "realmRoles": [
         "reference-admin"
       ]
+    },
+    {
+      "id": "local.pricing.analyst",
+      "username": "pricing.user",
+      "firstName": "Pricing",
+      "lastName": "Analyst",
+      "email": "pricing.user@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "pricing",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "pricing"
+      ]
     }
   ]
 }

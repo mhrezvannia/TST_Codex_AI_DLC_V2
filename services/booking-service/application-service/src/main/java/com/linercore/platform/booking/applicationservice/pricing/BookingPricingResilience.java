@@ -21,7 +21,7 @@ public final class BookingPricingResilience {
 
     public BookingPricingResilience(Clock clock) {
         this.clock = clock;
-        RetryConfig<PricingPortResult> retryConfig = RetryConfig.<PricingPortResult>custom()
+        RetryConfig retryConfig = RetryConfig.<PricingPortResult>custom()
                 .maxAttempts(2)
                 .waitDuration(Duration.ZERO)
                 .retryOnResult(BookingPricingResilience::isTimeoutOrUnavailable)

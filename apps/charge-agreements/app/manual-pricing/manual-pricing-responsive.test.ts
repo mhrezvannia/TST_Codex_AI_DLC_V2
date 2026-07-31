@@ -1,13 +1,10 @@
 // @vitest-environment node
 
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 
 describe("manual pricing responsive and redaction source contract", () => {
   it("keeps bounded horizontal table handling and one-column narrow layout", () => {
-    const css = readFileSync(resolve(
-      "apps/charge-agreements/app/rates/rates.css"
-    ), "utf8");
+    const css = readFileSync(new URL("../rates/rates.css", import.meta.url), "utf8");
     expect(css).toMatch(/\.rates-table-region\s*\{[^}]*overflow-x:\s*auto/s);
     expect(css).toMatch(/\.rates-table-region table\s*\{[^}]*min-width:\s*760px/s);
     expect(css).toMatch(/@media \(max-width:\s*1024px\)[\s\S]*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
@@ -16,9 +13,7 @@ describe("manual pricing responsive and redaction source contract", () => {
   });
 
   it("contains no amount, quote, assignment, approval, resolution, closure, or repricing controls", () => {
-    const source = readFileSync(resolve(
-      "apps/charge-agreements/app/manual-pricing/ManualPricingEvidence.tsx"
-    ), "utf8");
+    const source = readFileSync(new URL("./ManualPricingEvidence.tsx", import.meta.url), "utf8");
     for (const prohibited of [
       /unitRate/, /totalAmount/, /quote input/i, /assignment control/i,
       /approve case/i, /resolve case/i, /close case/i, /reprice command/i

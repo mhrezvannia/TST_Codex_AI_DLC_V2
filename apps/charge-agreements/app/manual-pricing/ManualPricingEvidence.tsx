@@ -12,14 +12,16 @@ export function ManualPricingEvidence() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [error, setError] = useState("");
   const [filters, setFilters] = useState({ reasonCode: "", bookingRef: "", openedFrom: "", openedTo: "" });
+  const [appliedFilters, setAppliedFilters] = useState(filters);
   const detailHeading = useRef<HTMLHeadingElement>(null);
   const detailTrigger = useRef<HTMLButtonElement | null>(null);
+  const focusDetailHeading = useRef(false);
 
   const load = useCallback(async (browserPage = 1) => {
     setLoading(true);
     setError("");
     const query = new URLSearchParams({ page: String(browserPage) });
-    Object.entries(filters).forEach(([key, value]) => { if (value) query.set(key, value); });
+    Object.entries(appliedFilters).forEach(([key, value]) => { if (value) query.set(key, value); });
     try {
       setPage(await listManualCases(query));
     } catch (reason) {
@@ -27,9 +29,14 @@ export function ManualPricingEvidence() {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [appliedFilters]);
 
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    if (!selected || !focusDetailHeading.current) return;
+    focusDetailHeading.current = false;
+    requestAnimationFrame(() => detailHeading.current?.focus());
+  }, [selected]);
 
   async function selectCase(caseId: string, trigger: HTMLButtonElement) {
     detailTrigger.current = trigger;
@@ -37,11 +44,11 @@ export function ManualPricingEvidence() {
     setError("");
     try {
       const detail = await getManualCase(caseId);
+      focusDetailHeading.current = true;
       setSelected(detail);
       const url = new URL(window.location.href);
       url.searchParams.set("case", caseId);
       window.history.replaceState(null, "", url);
-      requestAnimationFrame(() => detailHeading.current?.focus());
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Manual pricing evidence could not be loaded");
     } finally {
@@ -66,7 +73,10 @@ export function ManualPricingEvidence() {
       </header>
 
       <Card title="Filter OPEN evidence">
-        <form className="manual-pricing-filters" onSubmit={(event) => { event.preventDefault(); void load(); }}>
+        <form className="manual-pricing-filters" onSubmit={(event) => {
+          event.preventDefault();
+          setAppliedFilters({ ...filters });
+        }}>
           <Field label="Reason" htmlFor="manual-reason">
             <Select id="manual-reason" value={filters.reasonCode}
               onChange={(event) => setFilters({ ...filters, reasonCode: event.target.value })}>

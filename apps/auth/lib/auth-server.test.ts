@@ -99,7 +99,13 @@ test("creates a session from verified Keycloak claims", () => {
     subjectId: "local.booking.user",
     displayName: "booking.user",
     roles: ["booking-desk"],
-    permissions: ["booking:read", "booking:create"],
+    permissions: [
+      "booking:read",
+      "booking:create",
+      "booking:validate",
+      "booking:request-pricing",
+      "booking:confirm"
+    ],
     policyVersion: "keycloak:linercore-local"
   });
 });

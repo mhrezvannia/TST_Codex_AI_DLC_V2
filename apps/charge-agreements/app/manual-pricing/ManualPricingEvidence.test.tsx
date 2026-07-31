@@ -108,7 +108,8 @@ describe("ManualPricingEvidence", () => {
     }), { status: 503, headers: { "content-type": "application/json" } })));
     render(<ManualPricingEvidence />);
 
-    expect(await screen.findByText("Manual pricing evidence is unavailable")).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: "Evidence service unavailable" })).toBeTruthy();
+    expect(screen.getByTestId("manual-case-status")).toHaveTextContent("Manual pricing evidence is unavailable");
     expect(screen.getByRole("button", { name: "Retry" })).toBeTruthy();
     for (const prohibited of [
       /unit rate/i, /total/i, /quote/i, /assign/i, /approve/i,

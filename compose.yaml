@@ -486,8 +486,6 @@ services:
       CHARGE_BFF_REQUEST_BODY_BYTES: "32768"
       CHARGE_BFF_RESPONSE_BYTES: "524288"
       CHARGE_REFERENCE_RESPONSE_BYTES: "131072"
-    ports:
-      - "${CHARGE_AGREEMENTS_UI_HOST_PORT:-3003}:3000"
     depends_on:
       charge-agreement-service:
         condition: service_started

@@ -31,10 +31,10 @@ const stages: Stage[] = [
 ];
 
 const moduleItems = [
-  { key: "overview", label: "Overview", href: "http://127.0.0.1:8088/" },
-  { key: "booking", label: "Booking", href: "http://127.0.0.1:8088/booking" },
-  { key: "reference", label: "Reference data", href: "http://127.0.0.1:3002/" },
-  { key: "charge", label: "Charge agreements", href: "http://127.0.0.1:3003/" }
+  { key: "overview", label: "Overview", href: "/" },
+  { key: "booking", label: "Booking", href: "/booking" },
+  { key: "reference", label: "Reference data", href: "/reference-data/" },
+  { key: "charge", label: "Charge agreements", href: "/charge-agreements" }
 ];
 
 export function PlatformShell({
@@ -61,7 +61,7 @@ export function PlatformShell({
       <style>{platformShellResponsiveCss}</style>
       <div className="erp-platform-shell" style={{ ...styles.shell, gridTemplateColumns: showRail ? "236px minmax(0, 1fr)" : "minmax(0, 1fr)" }}>
         {showRail ? <aside style={styles.rail}>
-          <a href="http://127.0.0.1:8088/" style={styles.sidebarBrand}>LinerCore</a>
+          <a href="/" style={styles.sidebarBrand}>LinerCore</a>
           <nav aria-label="LinerCore modules" className="erp-module-nav" style={styles.railNav}>
             {moduleItems.map((item) => {
               const active = item.key === activeModule;

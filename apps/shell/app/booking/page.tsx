@@ -88,10 +88,10 @@ export default async function ShellBookingPage({ searchParams }: { searchParams:
             <tbody>
               {presentation.items.map((booking) => (
                 <tr key={booking.id}>
-                  <td><a href={`/booking/${booking.id}`}>{booking.bookingNumber}</a></td>
-                  <td>{booking.customerId}</td>
-                  <td>{booking.routing[0] ? `${booking.routing[0].loadUnLocode} to ${booking.routing[0].dischargeUnLocode}` : "Correction required"}</td>
-                  <td><StatusBadge status={booking.status} /></td>
+                  <td data-label="Booking"><a href={`/booking/${booking.id}`}>{booking.bookingNumber}</a></td>
+                  <td data-label="Customer">{booking.customerId}</td>
+                  <td data-label="Route">{booking.routing[0] ? `${booking.routing[0].loadUnLocode} to ${booking.routing[0].dischargeUnLocode}` : "Correction required"}</td>
+                  <td data-label="Status"><StatusBadge status={booking.status} /></td>
                 </tr>
               ))}
             </tbody>

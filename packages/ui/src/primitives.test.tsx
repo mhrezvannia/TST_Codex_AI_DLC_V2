@@ -1,7 +1,7 @@
 import { createRef } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Button, EmptyState, Field, Input, Skeleton, StatusStrip, Table, TableContainer } from "./primitives";
+import { Button, EmptyState, Field, Input, Skeleton, StatusBadge, StatusStrip, Table, TableContainer } from "./primitives";
 
 describe("shared primitive contracts", () => {
   it("forwards standard DOM props and refs", () => {
@@ -36,5 +36,12 @@ describe("shared primitive contracts", () => {
     render(<><Skeleton data-testid="skeleton" /><EmptyState title="No records" role="status" /></>);
     expect(screen.getByTestId("skeleton").getAttribute("aria-hidden")).toBe("true");
     expect(screen.getByRole("status")).toHaveTextContent("No records");
+  });
+
+  it("renders domain statuses as readable labels while preserving the canonical value", () => {
+    render(<StatusBadge status="VALIDATION_BLOCKED" />);
+    const badge = screen.getByText("Validation blocked");
+    expect(badge).toHaveAttribute("data-status", "VALIDATION_BLOCKED");
+    expect(badge.className).toContain("erp-badge--danger");
   });
 });

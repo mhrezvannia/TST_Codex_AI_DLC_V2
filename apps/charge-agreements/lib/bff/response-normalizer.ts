@@ -11,7 +11,9 @@ export async function normalizeChargeResponse(
   signal?: AbortSignal
 ): Promise<Response> {
   const contentType = provider.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase();
-  if (contentType !== "application/json") {
+  const isJson = contentType === "application/json"
+    || Boolean(contentType?.startsWith("application/") && contentType.endsWith("+json"));
+  if (!isJson) {
     return chargeErrorResponse(503, "CHARGE_REQUEST_FAILED", "Charge returned an invalid response", correlationId);
   }
   try {

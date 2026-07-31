@@ -10,6 +10,15 @@ describe("provider response normalization", () => {
     expect(await response.json()).toEqual({ id: "a1" });
   });
 
+  it("accepts versioned application JSON media types", async () => {
+    const response = await normalizeChargeResponse(new Response(JSON.stringify({ id: "agreement-1" }), {
+      headers: { "content-type": "application/vnd.linercore.charge-agreement.v2+json; charset=utf-8" }
+    }), "browser-correlation", 1024);
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ id: "agreement-1" });
+  });
+
   it("preserves only allowlisted safe errors", async () => {
     const response = await normalizeChargeResponse(Response.json({
       code: "VERSION_CONFLICT", message: "Refresh", retryAfterSeconds: 2

@@ -7,9 +7,10 @@ describe("PlatformShell module navigation", () => {
     render(<PlatformShell title="Reference Data"><p>Reference workspace</p></PlatformShell>);
 
     expect(screen.getByRole("navigation", { name: "LinerCore modules" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "http://127.0.0.1:8088/");
-    expect(screen.getByRole("link", { name: "Booking" })).toHaveAttribute("href", "http://127.0.0.1:8088/booking");
+    expect(screen.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "Booking" })).toHaveAttribute("href", "/booking");
     expect(screen.getByRole("link", { name: "Reference data" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "Charge agreements" })).toHaveAttribute("href", "http://127.0.0.1:3003/");
+    expect(screen.getByRole("link", { name: "Reference data" })).toHaveAttribute("href", "/reference-data/");
+    expect(screen.getByRole("link", { name: "Charge agreements" })).toHaveAttribute("href", "/charge-agreements");
   });
 });

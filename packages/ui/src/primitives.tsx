@@ -126,13 +126,23 @@ const STATUS_TONE: Record<string, BadgeTone> = {
   PRICED: "info",
   VALIDATED: "info",
   PRICING_PENDING: "warning",
+  MANUAL_PRICING: "warning",
+  VALIDATION_BLOCKED: "danger",
   DRAFT: "neutral",
   AMENDED: "warning",
   EXCEPTION: "danger",
   CANCELLED: "danger"
 };
+
+function statusLabel(status: string): string {
+  return status
+    .toLowerCase()
+    .replaceAll("_", " ")
+    .replace(/^./, (letter) => letter.toUpperCase());
+}
+
 export function StatusBadge({ status }: { status: string }) {
-  return <Badge tone={STATUS_TONE[status] ?? "neutral"} dot>{status}</Badge>;
+  return <Badge tone={STATUS_TONE[status] ?? "neutral"} dot data-status={status}>{statusLabel(status)}</Badge>;
 }
 
 /* ---- Table ---- */

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SESSION_COOKIE_NAME, encodeSessionCookie, type AuthSession } from "@erp/auth";
 import { bookingReturnTo, loadBookings, proxyBooking, safeBookingReturnTo, serviceHeaders, validateCommandRequest } from "./bookings";
 
@@ -120,6 +120,47 @@ describe("Booking BFF service headers", () => {
       expect(payload).toMatchObject({ code: "forbidden", message: "booking command denied" });
       expect(payload.correlationId).not.toBe("local-correlation");
     } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it("aborts proxy requests at the 2500 ms BFF deadline and returns a safe 503", async () => {
+    process.env.BOOKING_SERVICE_TOKEN = "server-only-token";
+    const originalFetch = global.fetch;
+    vi.useFakeTimers();
+    const captured: { signal: AbortSignal | null } = { signal: null };
+    global.fetch = ((_: RequestInfo | URL, init?: RequestInit) => {
+      captured.signal = init?.signal ?? null;
+      return new Promise<Response>((_resolve, reject) => {
+        captured.signal?.addEventListener(
+          "abort",
+          () => reject(new DOMException("The operation was aborted", "AbortError")),
+          { once: true }
+        );
+      });
+    }) as typeof fetch;
+
+    try {
+      const request = new Request("http://localhost/api/bookings", {
+        headers: { cookie: `${SESSION_COOKIE_NAME}=${encodeSessionCookie(testSession())}` }
+      });
+      const responsePromise = proxyBooking(request, "/api/bookings?page=0&size=25", "GET");
+
+      await vi.advanceTimersByTimeAsync(2499);
+      expect(captured.signal?.aborted).toBe(false);
+
+      await vi.advanceTimersByTimeAsync(1);
+      const response = await responsePromise;
+      const payload = await response.json();
+
+      expect(captured.signal?.aborted).toBe(true);
+      expect(response.status).toBe(503);
+      expect(payload).toMatchObject({
+        code: "BOOKING_UNAVAILABLE",
+        message: "Booking service is unavailable"
+      });
+    } finally {
+      vi.useRealTimers();
       global.fetch = originalFetch;
     }
   });

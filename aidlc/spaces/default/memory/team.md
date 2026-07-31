@@ -5,19 +5,19 @@
 > not directly.
 
 ## Way of Working
-W2-01 uses the existing short-lived intent branch `intent/W2-01-app-shell-and-auth` from `integ/main-reconciled` and keeps one Platform+UI driver accountable for the full shell/auth/Booking vertical slice. Contributors work through owned seams rather than broad cross-module rewrites.
+The team delivers vertical intents on short-lived intent branches from the protected program integration baseline, with one driver accountable end to end and contributors working through owned seams. Final integration mode is an explicit program-owner decision; local history is evidence, not permission to overwrite the current merge protocol.
 
 ## Walking Skeleton
-The first W2-01 Construction slice should prove the protected shell entry and session handoff before any shell chrome expansion. The risk-first path is login through Keycloak/auth, shell landing, and one Booking call that cannot fall back to `local-user`.
+For closure work, the skeleton is the smallest canonical live journey that proves the existing architecture and the unresolved Definition-of-Done gap together. W2-02 therefore proves authenticated /booking through the shared shell, Booking BFF/backend, shared UI states, and isolated live evidence before closure.
 
 ## Testing Posture
-Tests are written alongside code and must include targeted coverage for session-derived actor propagation, denied authorization, sign-out/session clearing, and detector 6d hardcoded-auth evidence. Unit and integration tests are necessary but insufficient; live Compose proof through Nginx and Keycloak remains the exit gate.
+Tests are written alongside focused changes, and defects are reproduced with a failing test before repair when practical. Unit, component, contract, type, lint, and build checks are necessary but insufficient; the integrated live journey, UI matrix, demo safety, and audits remain hard gates, with no invented percentage target.
 
 ## Deployment
-W2-01 acceptance targets the local/on-prem Docker Compose topology with Nginx, Keycloak, identity-service, Booking service, and shell/auth app. Public-cloud deployment is not a release condition for this intent.
+This closure deploys only to the isolated local linercore-wave-a acceptance stack through the approved wrapper, with demo guards before and after. Production promotion is outside this intent, and no external pipeline, environment, or rollback capability is assumed without evidence.
 
 ## Code Style
-Frontend work stays in strict TypeScript/Next.js/Yarn workspace patterns and reuses shared packages where practical. Backend changes preserve service ownership and Java/Spring boundaries; local auth bypass code must be explicit, logged, and fail closed outside local profiles.
+Frontend work uses strict TypeScript/Next.js workspace boundaries and @erp/ui tokens/primitives for applicable presentation; native semantic elements are allowed only as documented, tested exceptions. Module-local theme systems and duplicate shell/navigation are not acceptable, while backend and BFF behavior preserve existing Java/Spring and service ownership boundaries.
 ## Forbidden
 
 <!-- Team-specific forbidden patterns -->

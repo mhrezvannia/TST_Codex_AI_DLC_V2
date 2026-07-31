@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260730074058-9adef85fd5de-32c59c26",
+  "terminalStatus": "PREPARED",
+  "commitProtocol": "terminal-last-v1",
+  "reproducesRun": "20260730071753-e8d654ff47be-d6a12388",
+  "evidencePayload": {
+    "path": "evidence-payload.json",
+    "kind": "immutable-evidence-payload",
+    "sha256": "7103d3695b030c797ab8f52bedcf2cc15a68cd648271df92776f0d0074e47b76"
+  },
+  "terminalAttempt": {
+    "path": "attempt/terminal.json",
+    "kind": "terminal-attempt-record",
+    "sha256": "62fabb8c968a605d94e7d379a576522fb44cc5795b380c01f907ba070e7d9a35"
+  }
+}

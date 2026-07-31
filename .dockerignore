@@ -1,5 +1,11 @@
 .git
 .local-tools
+.codebase-memory
+.npm-cache
+.w2-02-auth
+.w2-02-traces
+.yarn/global
+graphify-out
 node_modules
 **/node_modules
 .next

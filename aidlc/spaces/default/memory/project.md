@@ -89,6 +89,12 @@ NEVER rewrite prior merged W0-01, W0-02, W1-01, or W2-02 work to make the shell 
 NEVER claim completion from shell chrome, screenshots, unit tests, or container startup without real subject audit evidence and audit gates. (affirmed 2026-07-18)
 NEVER create a second canonical frontend for a Phase 1 module or give a module independent shell chrome, navigation, authentication, typography, or palette. (affirmed 2026-07-21)
 NEVER target the `linercore-shared-platform` Docker Compose project from a Wave A worktree or run an unscoped `docker compose down`; that project is the continuously available manager demo. (affirmed 2026-07-21)
+NEVER infer a universal squash or no-fast-forward merge rule solely from local git history. (affirmed 2026-07-21)
+NEVER invent a coverage percentage, scanner pass, deployment environment, or branch-protection guarantee without executable evidence. (affirmed 2026-07-21)
+NEVER use the protected linercore-shared-platform manager demo as a closure acceptance target. (affirmed 2026-07-21)
+NEVER treat package tests, detached module pages, screenshots alone, or the historical W1 waiver as canonical live proof. (affirmed 2026-07-21)
+NEVER create a module-local theme, duplicate authenticated shell/navigation, or second frontend for W2-02. (affirmed 2026-07-21)
+NEVER replace correct native semantics merely to satisfy wrapper-counting; exceptions must remain explicit and testable. (affirmed 2026-07-21)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -134,6 +140,13 @@ ALWAYS keep W2-02 design-system foundation and W4-01 broad module migration out 
 ALWAYS invoke the project `ui-ux-pro-max` skill for every UI-bearing intent, load `design-system/linercore/MASTER.md` before design or code generation, and record any page-specific override under `design-system/linercore/pages/`. (affirmed 2026-07-21)
 ALWAYS deliver Phase 1 module UI through the shared authenticated shell and verify changed screens at 375px, 768px, 1024px, and 1440px with keyboard, loading, empty, error, denied, light-theme, and dark-theme evidence. (affirmed 2026-07-21)
 ALWAYS run Wave A Compose work through `node scripts/wave-a-compose.mjs`, serialize live acceptance on the isolated `linercore-wave-a` stack, and run `npm run demo:guard` before and after acceptance. (affirmed 2026-07-21)
+ALWAYS use a short-lived program intent branch from the explicitly protected integration baseline. (affirmed 2026-07-21)
+ALWAYS make final integration mode an explicit program-owner decision when written rules and observed history conflict. (affirmed 2026-07-21)
+ALWAYS write focused tests alongside changes and reproduce defects with a failing regression test when practical. (affirmed 2026-07-21)
+ALWAYS require canonical integrated live proof, demo safety, and mandated audits in addition to static and component checks for UI closure. (affirmed 2026-07-21)
+ALWAYS use scripts/wave-a-compose.mjs and the linercore-wave-a project for W2-02 live acceptance. (affirmed 2026-07-21)
+ALWAYS use @erp/ui tokens and applicable primitives for shared presentation, documenting and testing any native-semantic exception. (affirmed 2026-07-21)
+ALWAYS preserve service, BFF, authenticated-shell, and package ownership boundaries during design-system closure. (affirmed 2026-07-21)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->
@@ -162,3 +175,5 @@ ALWAYS run Wave A Compose work through `node scripts/wave-a-compose.mjs`, serial
 - When economic value, time-cost, and job-size inputs are not supplied, use an explicit ordinal value, risk-reduction, time-criticality, and relative-size rationale instead of fabricating numeric WSJF precision. (learned 2026-07-15) <!-- cid:delivery-planning:c2 -->
 - For local Compose acceptance, describe transaction durability as atomic effects and committed-state survival within existing volumes; do not claim zero data loss after host or volume destruction unless WAL or replication mechanisms exist. (learned 2026-07-16) <!-- cid:nfr-requirements:c1 -->
 - Use explicit local tokens and least-privilege roles only under the local profile, and fail every non-local profile until W2-01 authenticated identity and transport controls are implemented. (learned 2026-07-16) <!-- cid:nfr-requirements:c2 -->
+- In UI functional designs, use one discriminator vocabulary aligned with upstream contracts and explicitly model every action outcome—including recoverable, validation-blocked, denied, degraded, and fatal—with state retention, focus, announcement, and retry semantics. (learned 2026-07-21) <!-- cid:functional-design:c1 -->
+- Before accepting a manager demo-guard PASS, assert and retain the effective Compose project, edge URL, and locked image tag; environment overrides must not silently retarget safety evidence. (learned 2026-07-21) <!-- cid:infrastructure-design:c1 -->

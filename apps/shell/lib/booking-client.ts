@@ -13,10 +13,62 @@ export type ShellBookingStatus =
 export type ShellBooking = {
   id: string;
   bookingNumber: string;
+  revision: number;
   status: ShellBookingStatus;
   customerId: string;
-  routing: Array<{ loadUnLocode: string; dischargeUnLocode: string }>;
+  routing: Array<{ legSequence: number; loadUnLocode: string; dischargeUnLocode: string; voyageId: string }>;
   equipment: Array<{ equipmentId: string; equipmentTypeCode: string; quantity: number }>;
+  currency: string;
+  cargoMode: string;
+  reefer: boolean;
+  dangerousGoods: boolean;
+  legacyIncomplete: boolean;
+  referenceValidation: {
+    bookingRevision: number;
+    referenceFingerprint: string;
+    outcome: "VALID" | "BLOCKED";
+    fieldResults: Array<{
+      fieldPath: string;
+      referenceSet: string;
+      requestedValue: string;
+      outcome: "ACTIVE" | "INACTIVE" | "NOT_FOUND" | "MISMATCH";
+      recordId: string | null;
+      recordCode: string | null;
+      recordVersion: number | null;
+      reasonCode: string;
+    }>;
+    checkedAt: string;
+    correlationId: string;
+  } | null;
+  pricingSnapshot?: {
+    pricingRequestId: string;
+    pricingQuoteId: string;
+    status: string;
+    quotedAmounts: Record<string, string>;
+    quotedAt: string;
+    correlationId: string;
+  } | null;
+  lifecycleEvents: Array<{ eventType: string; occurredAt: string }>;
+  movementStatuses: Array<{
+    bookingRef: string;
+    containerRef: string;
+    movementId: string | null;
+    moveCode: string;
+    eventClassifierCode: string;
+    occurredDateTime: string;
+    receivedDateTime: string;
+    derivedStatus: string;
+    emptyIndicatorCode: string;
+    transshipment: boolean;
+    location: { unLocationCode: string | null; facilityCode: string | null; facilityTypeCode: string | null } | null;
+    eventId: string;
+    source: string;
+    eventTime: string;
+    dataSchemaVersion: number;
+    correlationId: string;
+    projectedAt: string;
+  }>;
+  attributes: Record<string, string>;
 };
 
 export type ShellBookingPage = {
@@ -27,7 +79,7 @@ export type ShellBookingPage = {
 };
 
 export type ShellBookingLoad =
-  | { ok: true; value: ShellBookingPage; correlationId: string }
+  | { ok: true; value: ShellBookingPage; correlationId: string; degradedMessage?: string }
   | { ok: false; status: number; message: string; correlationId: string };
 
 export type ShellBookingDetailLoad =
@@ -79,12 +131,15 @@ export async function loadShellBooking(bookingId: string, cookieHeader: string, 
 export async function forwardToBookingBff(request: Request, path: string, init?: RequestInit) {
   const correlationId = request.headers.get("x-correlation-id") ?? crypto.randomUUID();
   const targetBaseUrl = bookingAppUrl();
+  const targetOrigin = new URL(targetBaseUrl);
   const headers = new Headers(init?.headers);
   const cookie = request.headers.get("cookie");
   if (cookie) headers.set("cookie", cookie);
   headers.set("x-correlation-id", correlationId);
-  if ((init?.method ?? "GET").toUpperCase() === "POST" && !headers.has("origin")) {
-    headers.set("origin", targetBaseUrl);
+  if ((init?.method ?? "GET").toUpperCase() === "POST") {
+    if (!headers.has("origin")) headers.set("origin", targetOrigin.origin);
+    headers.set("x-forwarded-host", targetOrigin.host);
+    headers.set("x-forwarded-proto", targetOrigin.protocol.replace(":", ""));
   }
   const idempotencyKey = request.headers.get("idempotency-key");
   if (idempotencyKey) headers.set("idempotency-key", idempotencyKey);

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260722083455-0122bcaabb93-a7e4e63b",
+  "command": "node scripts/wave-a-compose.mjs -f compose.yaml -f infrastructure/compose/w2-02-acceptance.compose.yaml down --volumes --remove-orphans",
+  "startedAt": "2026-07-22T08:43:07.916Z",
+  "finishedAt": "2026-07-22T08:43:44.231Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "429168d5fda243f8c41857a43d998707aa27c6d913b697472fe65c0f8e0aac15",
+  "outputBytes": 4020,
+  "wrapperOnly": true,
+  "ownership": "THIS_ATTEMPT"
+}

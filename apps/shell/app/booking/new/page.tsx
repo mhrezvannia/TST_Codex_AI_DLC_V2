@@ -2,7 +2,6 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createCorrelationId } from "@erp/auth";
 import { requireShellSession } from "../../../lib/shell-auth";
-import { ShellFrame } from "../../ShellFrame";
 import { BookingCreateForm } from "./BookingCreateForm";
 
 export default async function ShellBookingNewPage() {
@@ -17,7 +16,7 @@ export default async function ShellBookingNewPage() {
   }
 
   return (
-    <ShellFrame activePath="booking" breadcrumbs={["Shell", "Booking", "New"]} session={shellSession.summary}>
+    <>
       <section className="shell-page-heading">
         <div>
           <p className="shell-eyebrow">Create draft</p>
@@ -26,6 +25,6 @@ export default async function ShellBookingNewPage() {
         </div>
       </section>
       <BookingCreateForm />
-    </ShellFrame>
+    </>
   );
 }

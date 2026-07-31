@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260722071611-d94fc0f47ab8-92eebbf8",
+  "workspaceDigest": "d94fc0f47ab83b1ad8149819f97e9419a152411d55876fb7d350267edcb9a7d1",
+  "fixtures": {
+    "schemaVersion": 2,
+    "controlURL": "http://127.0.0.1:14312",
+    "routes": {
+      "list": {
+        "path": "/booking",
+        "routePattern": "^/booking$",
+        "stateSelector": "[data-testid=\"shell-booking-list\"]",
+        "stateValue": "populated",
+        "landmark": {
+          "role": "table",
+          "name": "Bookings"
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "New booking"
+        },
+        "liveRegionSelector": "[role=\"status\"]"
+      },
+      "create": {
+        "path": "/booking/new",
+        "routePattern": "^/booking/new$",
+        "stateSelector": "form[data-state=\"idle\"]",
+        "stateValue": "idle",
+        "landmark": {
+          "role": "heading",
+          "name": "New booking"
+        },
+        "primaryAction": {
+          "role": "button",
+          "name": "Create draft"
+        },
+        "liveRegionSelector": "form[aria-live]"
+      },
+      "detail": {
+        "path": "/booking/W2-02-DETAIL",
+        "routePattern": "^/booking/W2-02-DETAIL$",
+        "stateSelector": "[data-testid=\"booking-detail\"]",
+        "stateValue": "populated",
+        "landmark": {
+          "role": "heading",
+          "name": "BKG-W2-02-DETAIL"
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Back to Booking"
+        },
+        "liveRegionSelector": "[data-testid=\"booking-detail\"][aria-live]"
+      }
+    },
+    "states": {
+      "loading": {
+        "path": "/booking/new",
+        "routePattern": "^/booking$",
+        "stateSelector": "[data-state=\"loading\"]",
+        "stateValue": "loading",
+        "landmark": {
+          "role": "region",
+          "name": "Loading bookings"
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Booking"
+        },
+        "liveRegionSelector": "[aria-busy=\"true\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "loading-list"
+        },
+        "trigger": {
+          "role": "link",
+          "name": "Booking"
+        }
+      },
+      "populated": {
+        "path": "/booking",
+        "routePattern": "^/booking$",
+        "stateSelector": "[data-testid=\"shell-booking-list\"]",
+        "stateValue": "populated",
+        "landmark": {
+          "role": "table",
+          "name": "Bookings"
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "New booking"
+        },
+        "liveRegionSelector": "[role=\"status\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "populated-list"
+        }
+      },
+      "empty": {
+        "path": "/booking",
+        "routePattern": "^/booking$",
+        "stateSelector": "[data-state=\"empty\"]",
+        "stateValue": "empty",
+        "landmark": {
+          "role": "status",
+          "name": ""
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Create booking"
+        },
+        "liveRegionSelector": "[data-state=\"empty\"][role=\"status\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "empty-list"
+        }
+      },
+      "error-retry": {
+        "path": "/booking",
+        "routePattern": "^/booking$",
+        "stateSelector": "[data-state=\"error\"]",
+        "stateValue": "error",
+        "landmark": {
+          "role": "alert",
+          "name": ""
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Retry"
+        },
+        "liveRegionSelector": "[data-state=\"error\"][role=\"alert\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "error-list"
+        }
+      },
+      "denied": {
+        "path": "/booking",
+        "routePattern": "^/booking$",
+        "stateSelector": "[data-state=\"denied\"]",
+        "stateValue": "denied",
+        "landmark": {
+          "role": "region",
+          "name": "Access denied"
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Request access"
+        },
+        "liveRegionSelector": "[data-state=\"denied\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "denied-list"
+        }
+      },
+      "degraded": {
+        "path": "/booking/W2-02-DEGRADED",
+        "routePattern": "^/booking/W2-02-DEGRADED$",
+        "stateSelector": "[data-state=\"degraded\"]",
+        "stateValue": "degraded",
+        "landmark": {
+          "role": "status",
+          "name": ""
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Back to Booking"
+        },
+        "liveRegionSelector": "[data-state=\"degraded\"][role=\"status\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "degraded-detail"
+        }
+      },
+      "validation": {
+        "path": "/booking/W2-02-VALIDATION",
+        "routePattern": "^/booking/W2-02-VALIDATION$",
+        "stateSelector": "[data-state=\"validation-blocked\"]",
+        "stateValue": "validation-blocked",
+        "landmark": {
+          "role": "alert",
+          "name": ""
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Back to Booking"
+        },
+        "liveRegionSelector": "[data-state=\"validation-blocked\"][role=\"alert\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "validation-detail"
+        }
+      },
+      "pending": {
+        "path": "/booking/W2-02-PENDING",
+        "routePattern": "^/booking/W2-02-PENDING$",
+        "stateSelector": "[data-state=\"pending\"]",
+        "stateValue": "pending",
+        "landmark": {
+          "role": "status",
+          "name": ""
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Back to Booking"
+        },
+        "liveRegionSelector": "[data-state=\"pending\"][role=\"status\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "pending-action"
+        },
+        "trigger": {
+          "role": "button",
+          "name": "Validate references"
+        }
+      },
+      "success": {
+        "path": "/booking/W2-02-SUCCESS?created=1",
+        "routePattern": "^/booking/W2-02-SUCCESS$",
+        "stateSelector": "[data-state=\"success\"]",
+        "stateValue": "success",
+        "landmark": {
+          "role": "status",
+          "name": ""
+        },
+        "primaryAction": {
+          "role": "link",
+          "name": "Back to Booking"
+        },
+        "liveRegionSelector": "[data-state=\"success\"][role=\"status\"]",
+        "control": {
+          "transport": "ssr-proxy",
+          "mode": "success-detail"
+        }
+      }
+    }
+  }
+}

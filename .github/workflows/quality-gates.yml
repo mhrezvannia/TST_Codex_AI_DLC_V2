@@ -30,8 +30,24 @@ jobs:
           java-version: "21"
           cache: maven
 
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
       - name: Enable Corepack
         run: corepack enable
+
+      - name: Verify self-hosted runner prerequisites
+        run: |
+          node --version
+          java --version
+          docker compose version
+          bun --version
+          bash --version
+          rg --version
 
       - name: Install frontend dependencies
         run: corepack yarn install --immutable
@@ -59,6 +75,28 @@ jobs:
 
       - name: Shared types package lint
         run: corepack yarn workspace @erp/shared-types lint
+
+      - name: Shared UI package tests
+        run: corepack yarn workspace @erp/ui test
+
+      - name: Shared UI package typecheck
+        run: corepack yarn workspace @erp/ui typecheck
+
+      - name: Shared UI package lint
+        run: corepack yarn workspace @erp/ui lint
+
+      - name: Shared UI package build
+        run: corepack yarn workspace @erp/ui build
+
+      - name: W2-02 presentation anti-drift and evidence helper tests
+        run: |
+          corepack yarn w2-02:anti-drift
+          corepack yarn w2-02:test:scripts
+          corepack yarn w2-02:test:auth-state
+          corepack yarn exec tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --types node --skipLibCheck playwright.config.ts tests/w2-02/booking.spec.ts
+
+      # Historical W1 live proof remains BLOCKED/waived. These deterministic W2-02
+      # checks do not reclassify it and do not operate either Compose project.
 
       - name: Auth frontend tests
         run: corepack yarn workspace @erp/app-auth test
@@ -124,6 +162,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: quality-gate-evidence
+          retention-days: 14
           path: |
             artifacts/quality-gates/evidence.json
             artifacts/readiness/local-readiness.json

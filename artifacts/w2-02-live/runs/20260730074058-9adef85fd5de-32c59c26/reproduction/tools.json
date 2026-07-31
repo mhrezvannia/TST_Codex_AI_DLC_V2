@@ -1,0 +1,21 @@
+{
+  "node": "v24.18.0",
+  "npm": "11.16.0",
+  "yarn": "4.5.3",
+  "compose": "Docker Compose version v5.3.1",
+  "profiles": [
+    "app",
+    "w2-02-acceptance"
+  ],
+  "wrapperPrefix": [
+    "scripts/wave-a-compose.mjs",
+    "--parallel",
+    "1",
+    "-f",
+    "compose.yaml",
+    "-f",
+    "infrastructure/compose/w2-02-acceptance.compose.yaml"
+  ],
+  "localIdentityCount": 16,
+  "localIdentityConfigurationDigest": "6bcb1ca127f706693d5537eb1a6cb8b5b4165c112946bc22d47615a6b4f4fb9a"
+}

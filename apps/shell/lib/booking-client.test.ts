@@ -47,12 +47,17 @@ describe("shell Booking client", () => {
     let calledUrl = "";
     global.fetch = ((input: RequestInfo | URL) => {
       calledUrl = String(input);
-      return Promise.resolve(Response.json({ id: "booking-1", bookingNumber: "BKG-1", status: "DRAFT", customerId: "customer-1", routing: [], equipment: [] }));
+      return Promise.resolve(Response.json({ id: "booking-1", bookingNumber: "BKG-1", revision: 2, status: "DRAFT", customerId: "customer-1", routing: [], equipment: [], currency: "USD", cargoMode: "FCL_DRY", reefer: false, dangerousGoods: false, legacyIncomplete: false, referenceValidation: null, pricingSnapshot: null, lifecycleEvents: [{ eventType: "booking.created", occurredAt: "2026-07-22T00:00:00Z" }], movementStatuses: [], attributes: {} }));
     }) as typeof fetch;
 
     const result = await loadShellBooking("booking-1", "lc_session=session", "corr-2");
 
     expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.value.revision).toBe(2);
+      expect(result.value.lifecycleEvents[0]?.eventType).toBe("booking.created");
+      expect(result.value.referenceValidation).toBeNull();
+    }
     expect(calledUrl).toBe("http://booking-bff.local/api/bookings/booking-1");
   });
 
@@ -62,12 +67,16 @@ describe("shell Booking client", () => {
     let cookie = "";
     let correlation = "";
     let origin = "";
+    let forwardedHost = "";
+    let forwardedProto = "";
     global.fetch = ((_: RequestInfo | URL, init?: RequestInit) => {
       const headers = new Headers(init?.headers);
       idempotency = headers.get("idempotency-key") ?? "";
       cookie = headers.get("cookie") ?? "";
       correlation = headers.get("x-correlation-id") ?? "";
       origin = headers.get("origin") ?? "";
+      forwardedHost = headers.get("x-forwarded-host") ?? "";
+      forwardedProto = headers.get("x-forwarded-proto") ?? "";
       return Promise.resolve(Response.json({ id: "booking-1" }, { status: 201 }));
     }) as typeof fetch;
 
@@ -82,5 +91,7 @@ describe("shell Booking client", () => {
     expect(cookie).toBe("lc_session=session");
     expect(correlation).toBe("corr-3");
     expect(origin).toBe("http://booking-bff.local");
+    expect(forwardedHost).toBe("booking-bff.local");
+    expect(forwardedProto).toBe("http");
   });
 });

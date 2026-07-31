@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260730074058-9adef85fd5de-32c59c26",
+  "workspaceDigest": "9adef85fd5de59b5a019317fc4b69eada1a95f158260545cc4f684847c771887",
+  "command": "erp-fidelity-audit",
+  "startedAt": "2026-07-30T07:49:39.077Z",
+  "finishedAt": "2026-07-30T07:50:27.781Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "48267008e4872e45b6a36e5259b99f02ec0184464cfe61987477d68cfa47661a",
+  "outputBytes": 13044,
+  "executable": "docker run --rm --mount <workspace>:/workspace:ro --workdir /workspace --entrypoint /bin/bash linercore/w2-02-audit-tools:1 .claude/skills/erp-fidelity-audit/detectors.sh"
+}

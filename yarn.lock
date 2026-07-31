@@ -25,6 +25,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@axe-core/playwright@npm:4.10.2":
+  version: 4.10.2
+  resolution: "@axe-core/playwright@npm:4.10.2"
+  dependencies:
+    axe-core: "npm:~4.10.3"
+  peerDependencies:
+    playwright-core: ">= 1.0.0"
+  checksum: 10c0/3dc02d177eb1b4865bbef05df993a5ad94268cb862e7095a273d7c7191174855f9f5a444cd8ad3ccea4991fab884083d6fdc661d471515af0d6c571958162043
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.29.7":
   version: 7.29.7
   resolution: "@babel/code-frame@npm:7.29.7"
@@ -322,6 +333,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@erp/app-booking@workspace:apps/booking"
   dependencies:
+    "@erp/auth": "workspace:*"
     "@erp/shared-types": "workspace:*"
     "@erp/ui": "workspace:*"
     "@testing-library/dom": "npm:^10.4.1"
@@ -381,6 +393,7 @@ __metadata:
   dependencies:
     "@erp/auth": "workspace:*"
     "@erp/shared-types": "workspace:*"
+    "@erp/ui": "workspace:*"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/react": "npm:^16.0.1"
     next: "npm:^15.1.3"
@@ -425,6 +438,16 @@ __metadata:
 "@erp/ui@workspace:*, @erp/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@erp/ui@workspace:packages/ui"
+  dependencies:
+    "@testing-library/dom": "npm:^10.4.1"
+    "@testing-library/react": "npm:^16.0.1"
+    "@types/react": "npm:^18.3.12"
+    "@types/react-dom": "npm:^18.3.1"
+    eslint: "npm:^9.17.0"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    typescript: "npm:^5.7.2"
+    vitest: "npm:^2.1.8"
   peerDependencies:
     react: ^18.3.1
   languageName: unknown
@@ -1837,6 +1860,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axe-core@npm:~4.10.3":
+  version: 4.10.3
+  resolution: "axe-core@npm:4.10.3"
+  checksum: 10c0/1b1c24f435b2ffe89d76eca0001cbfff42dbf012ad9bd37398b70b11f0d614281a38a28bc3069e8972e3c90ec929a8937994bd24b0ebcbaab87b8d1e241ab0c7
+  languageName: node
+  linkType: hard
+
 "axios@npm:^1.7.9":
   version: 1.18.1
   resolution: "axios@npm:1.18.1"
@@ -2480,6 +2510,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fflate@npm:0.8.2":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 10c0/03448d630c0a583abea594835a9fdb2aaf7d67787055a761515bf4ed862913cfd693b4c4ffd5c3f3b355a70cf1e19033e9ae5aedcca103188aaff91b8bd6e293
+  languageName: node
+  linkType: hard
+
 "file-entry-cache@npm:^8.0.0":
   version: 8.0.0
   resolution: "file-entry-cache@npm:8.0.0"
@@ -2935,6 +2972,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "linercore-shared-platform@workspace:."
   dependencies:
+    "@axe-core/playwright": "npm:4.10.2"
     "@playwright/test": "npm:^1.61.1"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.4.8"
@@ -2944,7 +2982,9 @@ __metadata:
     "@types/react-dom": "npm:^18.3.1"
     "@vitejs/plugin-react": "npm:^4.3.4"
     eslint: "npm:^9.17.0"
+    fflate: "npm:0.8.2"
     jsdom: "npm:^25.0.1"
+    playwright-core: "npm:1.61.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     turbo: "npm:^2.3.3"

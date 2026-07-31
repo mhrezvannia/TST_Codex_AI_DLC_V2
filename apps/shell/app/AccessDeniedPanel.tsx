@@ -15,7 +15,7 @@ export function AccessDeniedPanel({
 }) {
   const requestAccess = `/auth/request-access?resource=${encodeURIComponent(resource)}&action=${encodeURIComponent(action)}&correlationId=${encodeURIComponent(correlationId)}`;
   return (
-    <section className="shell-state shell-denied" data-testid="shell-access-denied" aria-labelledby="shell-access-denied-title">
+    <section className="shell-state shell-denied" data-state="denied" data-testid="shell-access-denied" aria-labelledby="shell-access-denied-title" aria-live="assertive">
       <p className="shell-eyebrow">Authorization decision</p>
       <h1 id="shell-access-denied-title">Access denied</h1>
       <p>{message}</p>

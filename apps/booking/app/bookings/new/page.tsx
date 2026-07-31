@@ -1,5 +1,7 @@
-import { BookingCreateForm } from "./BookingCreateForm";
+import { permanentRedirect } from "next/navigation";
+import { canonicalBookingRedirect, canonicalShellOrigin } from "../../../lib/booking-redirect";
 
 export default function NewBookingPage() {
-  return <main className="booking-page booking-page-narrow"><p className="booking-eyebrow">Create</p><h1>New booking</h1><BookingCreateForm /></main>;
+  const decision = canonicalBookingRedirect(new Request("http://booking.internal/bookings/new"), canonicalShellOrigin());
+  permanentRedirect(decision?.destination.toString() ?? new URL("/booking/new", canonicalShellOrigin()).toString());
 }

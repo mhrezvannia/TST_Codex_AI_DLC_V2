@@ -48,4 +48,65 @@ describe("Shell BookingCreateForm", () => {
       push.mockReset();
     }
   });
+
+  it("retains valid input and announces a service validation failure", async () => {
+    const originalFetch = global.fetch;
+    global.fetch = ((input: RequestInfo | URL) => String(input).includes("reference-options")
+      ? Promise.resolve(Response.json([]))
+      : Promise.resolve(Response.json({ message: "Customer is not active", fields: { customerId: "Customer is not active" } }, { status: 422 }))) as typeof fetch;
+    try {
+      render(<BookingCreateForm />);
+      for (const [testId, value] of [
+        ["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"],
+        ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"],
+        ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"],
+        ["booking-commodityCode", "GENERAL"]
+      ]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
+      fireEvent.click(screen.getByTestId("booking-submit"));
+      expect(await screen.findByRole("alert")).toHaveTextContent("Customer is not active");
+      expect((screen.getByTestId("booking-customerId") as HTMLInputElement).value).toBe("customer-1");
+      await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("alert")));
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it("retains input, focuses recovery, and safely retries a thrown transport failure", async () => {
+    const originalFetch = global.fetch;
+    let createCalls = 0;
+    const keys: string[] = [];
+    global.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).includes("reference-options")) return Promise.resolve(Response.json([]));
+      createCalls += 1;
+      keys.push(new Headers(init?.headers).get("idempotency-key") ?? "");
+      return createCalls === 1 ? Promise.reject(new Error("offline")) : Promise.resolve(Response.json({ id: "booking-2" }, { status: 201 }));
+    }) as typeof fetch;
+    try {
+      render(<BookingCreateForm />);
+      for (const [testId, value] of [["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"], ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"], ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"], ["booking-commodityCode", "GENERAL"]]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
+      fireEvent.click(screen.getByTestId("booking-submit"));
+      const retry = await screen.findByTestId("booking-create-retry");
+      expect(screen.getByTestId("booking-customerId")).toHaveValue("customer-1");
+      await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("alert")));
+      fireEvent.click(retry);
+      await waitFor(() => expect(push).toHaveBeenCalledWith("/booking/booking-2?created=1"));
+      expect(keys[1]).toBe(keys[0]);
+    } finally {
+      global.fetch = originalFetch;
+      push.mockReset();
+    }
+  });
+
+  it("classifies denied outcomes without blind retry and offers safe navigation", async () => {
+    const originalFetch = global.fetch;
+    global.fetch = ((input: RequestInfo | URL) => String(input).includes("reference-options") ? Promise.resolve(Response.json([])) : Promise.resolve(Response.json({ message: "Denied" }, { status: 403 }))) as typeof fetch;
+    try {
+      render(<BookingCreateForm />);
+      for (const [testId, value] of [["booking-customerId", "customer-1"], ["booking-loadUnLocode", "USNYC"], ["booking-dischargeUnLocode", "NLRTM"], ["booking-voyageId", "voyage-1"], ["booking-equipmentTypeCode", "45G1"], ["booking-equipmentId", "MSCU6639870"], ["booking-commodityCode", "GENERAL"]]) fireEvent.change(screen.getByTestId(testId), { target: { value } });
+      fireEvent.click(screen.getByTestId("booking-submit"));
+      expect(await screen.findByRole("alert")).toHaveTextContent("Denied");
+      expect(screen.queryByTestId("booking-create-retry")).toBeNull();
+      expect(screen.getByRole("link", { name: "Return safely to Booking" })).toHaveAttribute("href", "/booking");
+    } finally { global.fetch = originalFetch; }
+  });
 });

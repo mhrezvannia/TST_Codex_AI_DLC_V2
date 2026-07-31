@@ -6,7 +6,7 @@ set -uo pipefail
 ROOT="${1:-.}"
 cd "$ROOT" || exit 1
 # Exclude generated graphs, deps, and the audit's own output so hits are real source leads.
-EXC='--glob=!**/graphify-out/** --glob=!**/node_modules/** --glob=!**/*.tsbuildinfo --glob=!**/codex-review-findings.md'
+EXC='--glob=!**/graphify-out/** --glob=!**/node_modules/** --glob=!**/.next/** --glob=!**/artifacts/** --glob=!**/.w2-02-traces/** --glob=!**/coverage/** --glob=!**/dist/** --glob=!**/build/** --glob=!**/*.tsbuildinfo --glob=!**/codex-review-findings.md'
 if command -v rg >/dev/null 2>&1; then S(){ rg -n $EXC "$@"; }; else S(){ grep -rnE --exclude-dir={graphify-out,node_modules,.git} "$@" 2>/dev/null; }; fi
 hr(){ printf '\n=== %s ===\n' "$1"; }
 

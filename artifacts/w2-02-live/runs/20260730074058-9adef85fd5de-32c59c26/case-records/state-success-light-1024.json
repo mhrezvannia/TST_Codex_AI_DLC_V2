@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260730074058-9adef85fd5de-32c59c26",
+  "id": "state:success:light:1024",
+  "result": "PASS",
+  "assertions": {
+    "semantic": "PASS",
+    "keyboard-focus": "PASS",
+    "live-region": "PASS",
+    "reduced-motion": "PASS",
+    "primary-action": "PASS",
+    "overflow": "PASS",
+    "overlap": "PASS",
+    "clipping": "PASS",
+    "theme": "PASS",
+    "axe": "PASS"
+  },
+  "startedAt": "2026-07-30T07:47:44.594Z",
+  "actionAt": "2026-07-30T07:47:44.622Z",
+  "capturedAt": "2026-07-30T07:47:46.379Z",
+  "browserPermit": {
+    "schemaVersion": 1,
+    "producer": "playwright-global-setup",
+    "status": "PERMITTED",
+    "runId": "20260730074058-9adef85fd5de-32c59c26",
+    "workspaceDigest": "9adef85fd5de59b5a019317fc4b69eada1a95f158260545cc4f684847c771887",
+    "guardFinishedAt": "2026-07-30T07:43:29.474Z",
+    "guardSha256": "bc66049bdc4d65889708ec4147423989532849ff59beb3740516be21b5dfe6b7",
+    "authorizedAt": "2026-07-30T07:43:29.478Z"
+  },
+  "timing": {
+    "type": "navigate",
+    "durationMs": 173,
+    "domInteractiveMs": 121,
+    "loadEventEndMs": 173
+  },
+  "state": "success",
+  "theme": "light",
+  "width": 1024,
+  "control": {
+    "kind": "ssr-proxy",
+    "mode": "success-detail",
+    "appliedCount": 1,
+    "verified": true,
+    "causal": true,
+    "observations": [
+      {
+        "method": "GET",
+        "path": "/api/bookings/W2-02-SUCCESS",
+        "status": 200,
+        "action": "synthetic-success"
+      }
+    ]
+  }
+}

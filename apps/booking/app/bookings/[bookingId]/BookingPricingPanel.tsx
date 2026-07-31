@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   BookingStatus,
   BookingView,
@@ -28,6 +28,8 @@ export function BookingPricingPanel({
   initialConfirmationEligible?: boolean;
 }) {
   const commandButton = useRef<HTMLButtonElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const restoreCommandFocus = useRef(false);
   const [history, setHistory] = useState(() => normalizeHistory(initialSnapshot, initialHistory));
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [outcome, setOutcome] = useState<PricingStatus>(initialPricingStatus);
@@ -47,6 +49,17 @@ export function BookingPricingPanel({
     : entries.length === 0 && bookingStatus === "VALIDATED"
       ? "Price"
       : null;
+
+  useEffect(() => {
+    setOutcome(initialPricingStatus);
+    setConfirmationEligible(initialConfirmationEligible);
+  }, [initialConfirmationEligible, initialPricingStatus]);
+
+  useEffect(() => {
+    if (busy || !restoreCommandFocus.current) return;
+    restoreCommandFocus.current = false;
+    requestAnimationFrame(() => (commandButton.current ?? heading.current)?.focus());
+  }, [busy, outcome, requestError]);
 
   async function requestPrice() {
     if (!command) return;
@@ -77,19 +90,18 @@ export function BookingPricingPanel({
         setRequestError(outcomeMessage(result.result.outcome, result.result.failureEvidence));
       }
     } catch {
-      setOutcome("UNAVAILABLE");
       setRequestError("Pricing is unavailable. Existing pricing evidence has been preserved.");
       setAnnouncement("Pricing is unavailable");
     } finally {
+      restoreCommandFocus.current = true;
       setBusy(false);
-      requestAnimationFrame(() => commandButton.current?.focus());
     }
   }
 
   return <section className="booking-pricing" aria-labelledby="booking-pricing-title" data-testid="booking-pricing-region">
     <div className="booking-pricing-header">
       <div>
-        <h2 id="booking-pricing-title">Pricing evidence</h2>
+        <h2 id="booking-pricing-title" ref={heading} tabIndex={-1}>Pricing evidence</h2>
         <p className="booking-muted">Current and prior Booking-owned snapshots. Amounts are received from Charge.</p>
       </div>
       {command && <button

@@ -124,7 +124,7 @@ describe("Booking BFF service headers", () => {
     }
   });
 
-  it("aborts proxy requests at the 2500 ms BFF deadline and returns a safe 503", async () => {
+  it("aborts proxy requests at the 2500 ms BFF deadline and returns a safe 504", async () => {
     process.env.BOOKING_SERVICE_TOKEN = "server-only-token";
     const originalFetch = global.fetch;
     vi.useFakeTimers();
@@ -154,10 +154,10 @@ describe("Booking BFF service headers", () => {
       const payload = await response.json();
 
       expect(captured.signal?.aborted).toBe(true);
-      expect(response.status).toBe(503);
+      expect(response.status).toBe(504);
       expect(payload).toMatchObject({
-        code: "BOOKING_UNAVAILABLE",
-        message: "Booking service is unavailable"
+        code: "BOOKING_TIMEOUT",
+        message: "Booking service timed out"
       });
     } finally {
       vi.useRealTimers();

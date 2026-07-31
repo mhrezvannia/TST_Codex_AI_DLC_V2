@@ -305,7 +305,6 @@ export async function proxyBooking(request: Request, path: string, method: "GET"
   if (/\/price$/.test(path) && !session.permissions.includes(BOOKING_PRICE_PERMISSION)) {
     return safeError(403, "BOOKING_PRICE_FORBIDDEN", "Booking pricing is not permitted", correlationId);
   }
-  const headers = serviceHeaders(correlationId, actorSubjectId, request.headers.get("idempotency-key"));
   const controller = new AbortController();
   const cancelBackend = () => controller.abort(request.signal.reason);
   request.signal.addEventListener("abort", cancelBackend, { once: true });
@@ -340,6 +339,7 @@ export async function proxyBooking(request: Request, path: string, method: "GET"
         }
       }
     }
+    const headers = serviceHeaders(correlationId, actorSubjectId, request.headers.get("idempotency-key"));
     const response = await fetch(`${backendUrl()}${path}`, {
       method,
       headers,

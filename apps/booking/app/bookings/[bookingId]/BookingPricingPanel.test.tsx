@@ -112,7 +112,7 @@ describe("BookingPricingPanel", () => {
     expect(screen.getByTestId("booking-pricing-loading")).toHaveAttribute("aria-label", "Loading pricing");
     await waitFor(() => expect(screen.getByTestId("booking-pricing-typed")).toBeInTheDocument());
     expect(screen.getByRole("status")).toHaveTextContent("Pricing completed");
-    expect(document.activeElement).toBe(button);
+    expect(screen.getByRole("heading", { name: "Pricing evidence" })).toHaveFocus();
     expect(screen.getByText("Current · AGREEMENT · amendment 1")).toBeInTheDocument();
   });
 

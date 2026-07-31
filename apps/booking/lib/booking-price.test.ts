@@ -149,7 +149,9 @@ describe("Booking price BFF", () => {
     global.fetch = ((_: RequestInfo | URL, init?: RequestInit) => {
       backendSignal = init?.signal ?? undefined;
       return new Promise((_, reject) => {
-        backendSignal?.addEventListener("abort", () => reject(new DOMException("aborted", "AbortError")));
+        const rejectAbort = () => reject(new DOMException("aborted", "AbortError"));
+        if (backendSignal?.aborted) rejectAbort();
+        else backendSignal?.addEventListener("abort", rejectAbort, { once: true });
       });
     }) as typeof fetch;
 
@@ -184,7 +186,7 @@ function commandRequest(
   headers: Record<string, string> = {},
   signal?: AbortSignal
 ) {
-  return new Request("http://localhost/api/bookings/booking-1/price", {
+  const request = new Request("http://localhost/api/bookings/booking-1/price", {
     method: "POST",
     headers: {
       cookie: `${SESSION_COOKIE_NAME}=${encodeSessionCookie(session(sessionOverrides))}`,
@@ -193,9 +195,10 @@ function commandRequest(
       "idempotency-key": "idem-price-1",
       ...headers
     },
-    body: JSON.stringify(body),
-    signal
+    body: JSON.stringify(body)
   });
+  if (signal) Object.defineProperty(request, "signal", { value: signal });
+  return request;
 }
 
 function session(overrides: Partial<AuthSession> = {}): AuthSession {

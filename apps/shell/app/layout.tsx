@@ -9,8 +9,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body><DesignSystemStyles />{children}</body>
+    <html data-theme="light" lang="en">
+      <body>
+        <DesignSystemStyles />
+        {children}
+      </body>
     </html>
   );
 }

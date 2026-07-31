@@ -8,7 +8,7 @@ describe("PlatformShell module navigation", () => {
 
     expect(screen.getByRole("navigation", { name: "LinerCore modules" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Overview" })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: "Booking" })).toHaveAttribute("href", "/booking");
+    expect(screen.getByRole("link", { name: "Booking" })).toHaveAttribute("href", "/bookings");
     expect(screen.getByRole("link", { name: "Reference data" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: "Reference data" })).toHaveAttribute("href", "/reference-data/");
     expect(screen.getByRole("link", { name: "Charge agreements" })).toHaveAttribute("href", "/charge-agreements");

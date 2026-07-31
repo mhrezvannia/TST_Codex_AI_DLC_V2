@@ -42,6 +42,8 @@ test("creates browser-safe session summary", () => {
   expect(toSessionSummary(session, "corr-1")).not.toHaveProperty("accessToken");
   expect(toSessionSummary(session, "corr-1")).toMatchObject({
     subjectType: "user",
+    issuedAt: session.issuedAt,
+    expiresAt: session.expiresAt,
     permissionSummary: { total: 1, byResource: { "reference-data": ["create"] } }
   });
 });

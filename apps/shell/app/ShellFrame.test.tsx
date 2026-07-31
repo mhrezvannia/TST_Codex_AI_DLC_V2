@@ -25,6 +25,30 @@ describe("ShellFrame", () => {
     expect(signOut.closest("form")?.getAttribute("method")).toBe("post");
     expect(signOut.closest("form")?.getAttribute("action")).toBe("/api/auth/sign-out");
     expect(screen.getByTestId("shell-user-menu")).toHaveTextContent("local.booking.user");
-    expect(screen.getByRole("button", { name: "Switch to dark theme" })).toBeInTheDocument();
+    expect(screen.getByTestId("shell-nav-booking")).toBeInTheDocument();
+    expect(screen.queryByTestId("shell-nav-reference-data")).not.toBeInTheDocument();
+    expect(screen.queryByText("Charge agreements")).not.toBeInTheDocument();
+  });
+
+  it("shows only the mounted module granted to a reference-data user", () => {
+    render(
+      <ShellFrame
+        activePath="home"
+        breadcrumbs={["Home"]}
+        session={{
+          isAuthenticated: true,
+          subject: "local.reference.admin",
+          displayName: "Reference Data Administrator",
+          roles: ["reference-admin"],
+          permissions: ["reference-data:read"]
+        }}
+      >
+        <p>Reference workspace</p>
+      </ShellFrame>
+    );
+
+    expect(screen.getByTestId("shell-nav-reference-data")).toBeInTheDocument();
+    expect(screen.queryByTestId("shell-nav-booking")).not.toBeInTheDocument();
+    expect(screen.queryByText(/disabled/i)).not.toBeInTheDocument();
   });
 });

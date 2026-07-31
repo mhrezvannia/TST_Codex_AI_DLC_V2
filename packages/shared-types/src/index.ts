@@ -7,7 +7,7 @@ export type BookingDraftFields = {
   loadUnLocode: string;
   dischargeUnLocode: string;
   voyageId: string;
-  requestedDepartureDate: string;
+  requestedDepartureDate?: string;
   equipmentTypeCode: string;
   equipmentId: string;
   commodityCode: string;
@@ -15,8 +15,8 @@ export type BookingDraftFields = {
 
 export function validateBookingDraft(fields: BookingDraftFields) {
   const errors: Partial<Record<keyof BookingDraftFields, string>> = {};
-  for (const [key, value] of Object.entries(fields) as Array<[keyof BookingDraftFields, string]>) {
-    if (!value.trim()) errors[key] = "Required";
+  for (const [key, value] of Object.entries(fields) as Array<[keyof BookingDraftFields, string | undefined]>) {
+    if (key !== "requestedDepartureDate" && !value?.trim()) errors[key] = "Required";
   }
   if (fields.loadUnLocode && !/^[A-Za-z]{2}[A-Za-z0-9]{3}$/.test(fields.loadUnLocode)) {
     errors.loadUnLocode = "Use a five-character UN/LOCODE";
@@ -35,10 +35,29 @@ export function validateBookingDraft(fields: BookingDraftFields) {
   if (fields.loadUnLocode.toUpperCase() === fields.dischargeUnLocode.toUpperCase()) {
     errors.dischargeUnLocode = "Discharge must differ from load";
   }
-  if (fields.equipmentId && !/^[A-Za-z]{3}[UJZujz][0-9]{7}$/.test(fields.equipmentId)) {
-    errors.equipmentId = "Use an ISO 6346 equipment identifier";
+  if (fields.equipmentId && !isValidIso6346(fields.equipmentId)) {
+    errors.equipmentId = "Use a valid ISO 6346 equipment identifier, including its check digit";
   }
   return errors;
+}
+
+export function isValidIso6346(value: string) {
+  const normalized = value.trim().toUpperCase();
+  if (!/^[A-Z]{3}[UJZ][0-9]{7}$/.test(normalized)) return false;
+  const characters = normalized.slice(0, 10);
+  const expected = Number(normalized[10]);
+  const sum = Array.from(characters).reduce((total, character, index) => {
+    const digit = /\d/.test(character)
+      ? Number(character)
+      : iso6346LetterValue(character);
+    return total + digit * (2 ** index);
+  }, 0);
+  return (sum % 11) % 10 === expected;
+}
+
+function iso6346LetterValue(character: string) {
+  const sequential = character.charCodeAt(0) - 55;
+  return sequential + Math.floor((sequential - 1) / 10);
 }
 
 const bookingServerFieldMap: Record<string, keyof BookingDraftFields> = {

@@ -11,6 +11,8 @@ export type SessionSummary = {
   permissions?: string[];
   permissionSummary?: PermissionSummary;
   policyVersion?: string;
+  issuedAt?: string;
+  expiresAt?: string;
   correlationId?: string;
 };
 
@@ -256,6 +258,8 @@ export function toSessionSummary(session: AuthSession, correlationId: string): S
     permissions: session.permissions,
     permissionSummary: summarizePermissions(session.permissions),
     policyVersion: session.policyVersion,
+    issuedAt: session.issuedAt,
+    expiresAt: session.expiresAt,
     correlationId
   };
 }

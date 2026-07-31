@@ -1,6 +1,15 @@
 import type { ReactNode } from "react";
 import type { SessionSummary } from "@erp/auth";
-import { Button, ThemeToggle } from "@erp/ui";
+import {
+  Breadcrumbs,
+  EnvironmentBadge,
+  LucideIcon,
+  ProductWordmark,
+  SideNavigation,
+  type SideNavigationItem
+} from "@erp/ui";
+
+export type ShellActivePath = "home" | "booking" | "reference-data" | "charge-agreements";
 
 export function ShellFrame({
   activePath,
@@ -8,64 +17,124 @@ export function ShellFrame({
   children,
   session
 }: {
-  activePath: "home" | "booking";
+  activePath: ShellActivePath;
   breadcrumbs: string[];
   children: ReactNode;
   session: SessionSummary;
 }) {
+  const navigation = moduleNavigation(session, activePath);
+  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "Local demo";
+
   return (
-    <div className="shell-frame">
+    <>
       <a className="shell-skip-link" href="#shell-main">Skip to main content</a>
-      <header className="shell-topbar">
-        <div className="shell-brand-block">
-          <a className="shell-brand" href="/" data-testid="shell-home-link">LinerCore</a>
-          <span className="shell-brand-divider" />
-          <span className="shell-brand-context">Commercial &amp; Equipment Platform</span>
-          <span className="shell-scope">MVP - ONE TRADE LANE</span>
+      <div className="shell-frame">
+        <aside className="shell-sidebar">
+          <ProductWordmark className="shell-brand" dataTestId="shell-home-link" href="/" />
+          <SideNavigation items={navigation} label="LinerCore modules" />
+        </aside>
+
+        <div className="shell-workspace">
+          <header className="shell-topbar">
+            <details className="shell-mobile-nav">
+              <summary aria-label="Open navigation">
+                <LucideIcon name="menu" />
+                <span>LinerCore</span>
+              </summary>
+              <SideNavigation
+                items={navigation.map((item) => ({
+                  href: item.href,
+                  label: item.label,
+                  icon: item.icon,
+                  active: item.active
+                }))}
+                label="Mobile modules"
+              />
+            </details>
+
+            <EnvironmentBadge>{environmentLabel}</EnvironmentBadge>
+
+            <details className="shell-user-menu" data-testid="shell-user-menu">
+              <summary aria-label={`Open user menu for ${session.displayName || session.subject}`}>
+                <LucideIcon name="user" />
+                <span>{session.displayName || session.subject}</span>
+              </summary>
+              <div>
+                <div className="shell-user-identity">
+                  <strong>{session.displayName || session.subject}</strong>
+                  <span>{session.subject}</span>
+                </div>
+                <a href="/auth/session">Account and session</a>
+                <form action="/api/auth/sign-out" method="post">
+                  <button type="submit" data-testid="shell-sign-out-button">
+                    <LucideIcon name="log-out" size={16} />
+                    Sign out
+                  </button>
+                </form>
+              </div>
+            </details>
+          </header>
+
+          <main className="shell-main" id="shell-main">
+            <Breadcrumbs items={breadcrumbItems(breadcrumbs)} />
+            {children}
+          </main>
         </div>
-        <div className="shell-user" data-testid="shell-user-menu" aria-label="Signed-in user">
-          <ThemeToggle />
-          <div className="shell-user-identity">
-            <span>{session.displayName || session.subject}</span>
-            <strong>{session.subject}</strong>
-          </div>
-          <form action="/api/auth/sign-out" method="post">
-            <Button size="sm" type="submit" data-testid="shell-sign-out-button">
-              Sign out
-            </Button>
-          </form>
-        </div>
-      </header>
-      <div className="shell-journey" aria-label="MVP journey">
-        <div className="shell-journey-step shell-journey-complete"><span>1</span><div><strong>Agreement</strong><small>Charge module</small></div></div>
-        <div className="shell-journey-step shell-journey-active"><span>2</span><div><strong>Booking</strong><small>Booking module</small></div></div>
-        <div className="shell-journey-step"><span>3</span><div><strong>Track &amp; trace</strong><small>Movement module</small></div></div>
-        <div className="shell-journey-step"><span>4</span><div><strong>D&amp;D &amp; invoice</strong><small>Charge to Finance</small></div></div>
       </div>
-      <aside className="shell-sidebar">
-        <nav aria-label="Application modules">
-          <a
-            className={`shell-nav-link ${activePath === "home" ? "shell-nav-link-active" : ""}`}
-            href="/"
-            data-testid="shell-nav-home"
-          >
-            Overview
-          </a>
-          <a
-            className={`shell-nav-link ${activePath === "booking" ? "shell-nav-link-active" : ""}`}
-            href="/booking"
-            data-testid="shell-nav-booking"
-          >
-            Booking
-          </a>
-          <a className="shell-nav-link" href="/reference-data/">Reference data</a>
-          <a className="shell-nav-link" href="/charge-agreements/">Charge agreements</a>
-        </nav>
-      </aside>
-      <main className="shell-main" id="shell-main">
-        <div className="shell-breadcrumbs" aria-label="Breadcrumbs">{breadcrumbs.join(" / ")}</div>
-        {children}
-      </main>
-    </div>
+    </>
   );
+}
+
+export function moduleNavigation(session: SessionSummary, activePath: ShellActivePath): SideNavigationItem[] {
+  const permissions = new Set(session.permissions ?? []);
+  const items: SideNavigationItem[] = [
+    {
+      href: "/",
+      label: "Home",
+      icon: "home",
+      active: activePath === "home",
+      testId: "shell-nav-home"
+    }
+  ];
+
+  if (permissions.has("booking:read")) {
+    items.push({
+      href: "/bookings",
+      label: "Bookings",
+      icon: "clipboard-list",
+      active: activePath === "booking",
+      testId: "shell-nav-booking"
+    });
+  }
+  if (permissions.has("reference-data:read")) {
+    items.push({
+      href: "/reference-data/",
+      label: "Reference Data",
+      icon: "database",
+      active: activePath === "reference-data",
+      testId: "shell-nav-reference-data"
+    });
+  }
+  if (permissions.has("charge-agreement:read")) {
+    items.push({
+      href: "/charge-agreements/",
+      label: "Service Contracts & Rates",
+      icon: "file-text",
+      active: activePath === "charge-agreements",
+      testId: "shell-nav-charge-agreements"
+    });
+  }
+
+  return items;
+}
+
+function breadcrumbItems(labels: string[]) {
+  return labels.map((rawLabel, index) => {
+    const label = rawLabel === "Shell" ? "Home" : rawLabel;
+    const current = index === labels.length - 1;
+    if (current) return { label };
+    if (index === 0) return { label, href: "/" };
+    if (label === "Bookings" || label === "Booking") return { label: "Bookings", href: "/bookings" };
+    return { label };
+  });
 }

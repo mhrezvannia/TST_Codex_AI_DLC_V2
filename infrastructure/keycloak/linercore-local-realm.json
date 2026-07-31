@@ -1,6 +1,7 @@
 {
   "realm": "linercore-local",
   "enabled": true,
+  "loginTheme": "linercore",
   "sslRequired": "none",
   "registrationAllowed": false,
   "resetPasswordAllowed": false,

@@ -1,32 +1,31 @@
 import { describe, expect, it } from "vitest";
-import { mapBookingServerFields, validateBookingDraft } from "./index";
+import { isValidIso6346, mapBookingServerFields, validateBookingDraft } from "./index";
 
 const valid = {
   customerId: "CUST-001",
   loadUnLocode: "USNYC",
   dischargeUnLocode: "NLRTM",
   voyageId: "VOY-001",
-  requestedDepartureDate: "2026-08-01",
   equipmentTypeCode: "45G1",
   equipmentId: "MSCU6639870",
   commodityCode: "GENERAL"
 };
 
 describe("Booking draft shared contract", () => {
+  it("validates the ISO 6346 check digit", () => {
+    expect(isValidIso6346("LCRU1000055")).toBe(true);
+    expect(isValidIso6346("LCRU1000054")).toBe(false);
+    expect(isValidIso6346("not-a-container")).toBe(false);
+  });
+
   it("accepts the canonical W1 booking draft shape", () => {
     expect(validateBookingDraft(valid)).toEqual({});
   });
 
   it("returns field-addressable route and equipment errors", () => {
-    const errors = validateBookingDraft({
-      ...valid,
-      dischargeUnLocode: "USNYC",
-      requestedDepartureDate: "2026-02-30",
-      equipmentId: "bad"
-    });
+    const errors = validateBookingDraft({ ...valid, dischargeUnLocode: "USNYC", equipmentId: "bad" });
 
     expect(errors.dischargeUnLocode).toContain("differ");
-    expect(errors.requestedDepartureDate).toContain("valid departure date");
     expect(errors.equipmentId).toContain("ISO 6346");
   });
 

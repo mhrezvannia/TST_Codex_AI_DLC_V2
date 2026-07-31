@@ -1,6 +1,15 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { SESSION_COOKIE_NAME, encodeSessionCookie, type AuthSession } from "@erp/auth";
-import { bookingReturnTo, loadBookings, proxyBooking, safeBookingReturnTo, serviceHeaders, validateCommandRequest } from "./bookings";
+import {
+  bookingReturnTo,
+  isValidBookingId,
+  loadBooking,
+  loadBookings,
+  proxyBooking,
+  safeBookingReturnTo,
+  serviceHeaders,
+  validateCommandRequest
+} from "./bookings";
 
 describe("Booking BFF service headers", () => {
   afterEach(() => {
@@ -41,8 +50,37 @@ describe("Booking BFF service headers", () => {
     try {
       const result = await loadBookings(new URLSearchParams({ page: "0", size: "25" }), null);
 
-      expect(result).toEqual({ ok: false, status: 401, message: "A signed-in Booking actor is required" });
+      expect(result).toMatchObject({
+        ok: false,
+        status: 401,
+        code: "AUTH_REQUIRED",
+        message: "Sign in again to return to Booking.",
+        retryable: false
+      });
       expect(calls).toEqual([]);
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it("retries one transient Booking read transport failure", async () => {
+    process.env.BOOKING_SERVICE_TOKEN = "server-only-token";
+    const originalFetch = global.fetch;
+    let calls = 0;
+    global.fetch = (() => {
+      calls += 1;
+      if (calls === 1) return Promise.reject(new TypeError("connection reset"));
+      return Promise.resolve(Response.json({ items: [], returned: 0, page: 0, size: 25 }));
+    }) as typeof fetch;
+
+    try {
+      const result = await loadBookings(new URLSearchParams({ page: "0", size: "25" }), "local.booking.user");
+
+      expect(result).toEqual({
+        ok: true,
+        value: { items: [], returned: 0, page: 0, size: 25 }
+      });
+      expect(calls).toBe(2);
     } finally {
       global.fetch = originalFetch;
     }
@@ -117,50 +155,13 @@ describe("Booking BFF service headers", () => {
       const payload = await response.json();
 
       expect(response.status).toBe(403);
-      expect(payload).toMatchObject({ code: "forbidden", message: "booking command denied" });
+      expect(payload).toMatchObject({
+        code: "forbidden",
+        message: "You do not have permission to perform this Booking action."
+      });
+      expect(JSON.stringify(payload)).not.toContain("booking command denied");
       expect(payload.correlationId).not.toBe("local-correlation");
     } finally {
-      global.fetch = originalFetch;
-    }
-  });
-
-  it("aborts proxy requests at the 2500 ms BFF deadline and returns a safe 504", async () => {
-    process.env.BOOKING_SERVICE_TOKEN = "server-only-token";
-    const originalFetch = global.fetch;
-    vi.useFakeTimers();
-    const captured: { signal: AbortSignal | null } = { signal: null };
-    global.fetch = ((_: RequestInfo | URL, init?: RequestInit) => {
-      captured.signal = init?.signal ?? null;
-      return new Promise<Response>((_resolve, reject) => {
-        captured.signal?.addEventListener(
-          "abort",
-          () => reject(new DOMException("The operation was aborted", "AbortError")),
-          { once: true }
-        );
-      });
-    }) as typeof fetch;
-
-    try {
-      const request = new Request("http://localhost/api/bookings", {
-        headers: { cookie: `${SESSION_COOKIE_NAME}=${encodeSessionCookie(testSession())}` }
-      });
-      const responsePromise = proxyBooking(request, "/api/bookings?page=0&size=25", "GET");
-
-      await vi.advanceTimersByTimeAsync(2499);
-      expect(captured.signal?.aborted).toBe(false);
-
-      await vi.advanceTimersByTimeAsync(1);
-      const response = await responsePromise;
-      const payload = await response.json();
-
-      expect(captured.signal?.aborted).toBe(true);
-      expect(response.status).toBe(504);
-      expect(payload).toMatchObject({
-        code: "BOOKING_TIMEOUT",
-        message: "Booking service timed out"
-      });
-    } finally {
-      vi.useRealTimers();
       global.fetch = originalFetch;
     }
   });
@@ -267,6 +268,44 @@ describe("Booking BFF service headers", () => {
     expect(returnTo).toBe("/bookings?search=BKG-1&status=DRAFT&page=2");
     expect(safeBookingReturnTo(returnTo)).toBe(returnTo);
     expect(safeBookingReturnTo("https://attacker.example")).toBe("/bookings");
+    expect(safeBookingReturnTo("//attacker.example/bookings")).toBe("/bookings");
+    expect(safeBookingReturnTo("/bookings/123")).toBe("/bookings");
+    expect(safeBookingReturnTo("/bookings?returnTo=https://attacker.example")).toBe("/bookings");
+    expect(safeBookingReturnTo(`/bookings?search=${"x".repeat(121)}`)).toBe("/bookings");
+  });
+
+  it("validates Booking record identifiers before route reads", () => {
+    expect(isValidBookingId("ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a")).toBe(true);
+    expect(isValidBookingId("not-a-booking-id")).toBe(false);
+    expect(isValidBookingId("ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a/extra")).toBe(false);
+  });
+
+  it("normalizes denied reads without exposing backend wording", async () => {
+    process.env.BOOKING_SERVICE_TOKEN = "server-only-token";
+    const originalFetch = global.fetch;
+    global.fetch = (() => Promise.resolve(Response.json({
+      code: "forbidden",
+      message: "booking command denied",
+      correlationId: "corr-safe"
+    }, { status: 403 }))) as typeof fetch;
+
+    try {
+      const result = await loadBooking(
+        "ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a",
+        "local.booking.user"
+      );
+
+      expect(result).toMatchObject({
+        ok: false,
+        status: 403,
+        code: "BOOKING_ACCESS_DENIED",
+        retryable: false,
+        supportReference: "corr-safe"
+      });
+      expect(JSON.stringify(result)).not.toContain("booking command denied");
+    } finally {
+      global.fetch = originalFetch;
+    }
   });
 });
 

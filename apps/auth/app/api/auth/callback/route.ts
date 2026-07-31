@@ -17,11 +17,28 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const state = url.searchParams.get("state");
   const code = url.searchParams.get("code");
+  const providerError = url.searchParams.get("error");
   const rawTx = readCookie(request.headers.get("cookie"), OIDC_TRANSACTION_COOKIE_NAME);
   const tx = decodeCookie<OidcTransaction>(rawTx);
 
+  if (providerError) {
+    const status =
+      providerError === "access_denied"
+        ? "cancelled"
+        : providerError === "temporarily_unavailable" || providerError === "server_error"
+          ? "unavailable"
+          : "failed";
+    const recoveryParams = new URLSearchParams({ status });
+    if (tx?.returnUrl) {
+      recoveryParams.set("returnUrl", tx.returnUrl);
+    }
+    const response = redirectResponse(publicUrl(request, `/auth/sign-in?${recoveryParams.toString()}`));
+    response.headers.append("Set-Cookie", clearCookieHeader(OIDC_TRANSACTION_COOKIE_NAME));
+    return response;
+  }
+
   if (!tx || !state || state !== tx.state || !code) {
-    const response = redirectResponse(publicUrl(request, "/auth/access-denied?reasonCode=AUTH_CALLBACK_INVALID"));
+    const response = redirectResponse(publicUrl(request, "/auth/sign-in?status=expired"));
     response.headers.append("Set-Cookie", clearCookieHeader(OIDC_TRANSACTION_COOKIE_NAME));
     return response;
   }
@@ -37,7 +54,7 @@ export async function GET(request: Request) {
     return response;
   } catch (error) {
     console.error("OIDC callback failed", { reason: error instanceof Error ? error.message : "unknown" });
-    const response = redirectResponse(publicUrl(request, "/auth/access-denied?reasonCode=AUTH_CALLBACK_TOKEN_INVALID"));
+    const response = redirectResponse(publicUrl(request, "/auth/sign-in?status=failed"));
     response.headers.append("Set-Cookie", clearCookieHeader(OIDC_TRANSACTION_COOKIE_NAME));
     return response;
   }

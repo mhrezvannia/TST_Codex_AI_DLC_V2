@@ -15,7 +15,7 @@ describe("Shell BookingCreateForm", () => {
     fireEvent.click(screen.getByTestId("booking-submit"));
 
     const summary = await screen.findByText("Booking not created");
-    await waitFor(() => expect(document.activeElement).toBe(summary.parentElement));
+    await waitFor(() => expect(document.activeElement).toBe(summary.closest(".erp-status")));
     expect(screen.getAllByRole("link", { name: "Required" })[0].getAttribute("href")).toBe("#booking-customerId");
   });
 

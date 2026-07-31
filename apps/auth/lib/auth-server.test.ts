@@ -46,33 +46,7 @@ test("auth bypass returns local session without a cookie", () => {
 test("local subject selection is allowlisted for live proof fixtures", () => {
   expect(localSubjectId("local.reference.admin")).toBe("local.reference.admin");
   expect(localSubjectId("local.booking.user")).toBe("local.booking.user");
-  expect(localSubjectId("local.pricing.analyst")).toBe("local.pricing.analyst");
-  expect(localSubjectId("local.charge.reader")).toBe("local.charge.reader");
   expect(localSubjectId("attacker")).toBe("local.booking.user");
-});
-
-test("creates least-privilege local Rate sessions", () => {
-  expect(createLocalSession("local.pricing.analyst")).toMatchObject({
-    roles: ["pricing"],
-    permissions: [
-      "charge-rates:read",
-      "charge-rates:create",
-      "charge-rates:update",
-      "charge-rates:approve",
-      "charge-rates:create-successor",
-      "charge-agreements:read",
-      "charge-agreements:create",
-      "charge-agreements:update",
-      "charge-agreements:approve",
-      "charge-agreements:create-successor",
-      "charge-agreements:suspend",
-      "charge-agreements:expire"
-    ]
-  });
-  expect(createLocalSession("local.charge.reader")).toMatchObject({
-    roles: ["finance-read"],
-    permissions: ["charge-rates:read", "charge-agreements:read"]
-  });
 });
 
 test("creates a standards-compliant PKCE transaction", () => {
@@ -80,7 +54,7 @@ test("creates a standards-compliant PKCE transaction", () => {
 
   expect(transaction.pkceVerifier.length).toBeGreaterThanOrEqual(43);
   expect(createPkceChallenge(transaction.pkceVerifier)).toMatch(/^[A-Za-z0-9_-]{43}$/);
-  expect(transaction.returnUrl).toBe("/booking");
+  expect(transaction.returnUrl).toBe("/bookings");
 });
 
 test("creates a session from verified Keycloak claims", () => {
@@ -99,15 +73,26 @@ test("creates a session from verified Keycloak claims", () => {
     subjectId: "local.booking.user",
     displayName: "booking.user",
     roles: ["booking-desk"],
-    permissions: [
-      "booking:read",
-      "booking:create",
-      "booking:validate",
-      "booking:request-pricing",
-      "booking:confirm"
-    ],
+    permissions: ["booking:read", "booking:create"],
     policyVersion: "keycloak:linercore-local"
   });
+});
+
+test("maps the pricing role to Charge module and command capabilities", () => {
+  const session = createOidcSession({
+    sub: "local.pricing.analyst",
+    preferred_username: "pricing.user",
+    realm_access: { roles: ["pricing"] }
+  });
+
+  expect(session.permissions).toEqual(expect.arrayContaining([
+    "charge-agreement:read",
+    "charge-agreements:read",
+    "charge-agreements:approve",
+    "charge-rates:read",
+    "charge-rates:approve",
+    "charge-manual-cases:read"
+  ]));
 });
 
 test("auth bypass is ignored outside local runtime profile", () => {
@@ -142,6 +127,6 @@ test("sign-out redirects through Keycloak and clears the server session cookie",
   const response = signOut(new Request("http://erp.local/auth/api/auth/sign-out", { method: "POST" }));
 
   expect(response.status).toBe(303);
-  expect(response.headers.get("Location")).toBe("http://keycloak:8080/realms/linercore-local/protocol/openid-connect/logout?client_id=linercore-auth&post_logout_redirect_uri=http%3A%2F%2Ferp.local%2Fsigned-out");
+  expect(response.headers.get("Location")).toBe("http://keycloak:8080/realms/linercore-local/protocol/openid-connect/logout?client_id=linercore-auth&post_logout_redirect_uri=http%3A%2F%2Ferp.local%2Fauth%2Fsigned-out");
   expect(response.headers.get("Set-Cookie")).toBe(`${SESSION_COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
 });

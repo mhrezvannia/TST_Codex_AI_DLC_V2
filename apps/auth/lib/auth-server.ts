@@ -3,7 +3,6 @@ import {
   decodeSignedCookie,
   encodeSignedCookie,
   isAuthBypassEnabled as sharedIsAuthBypassEnabled,
-  safeReturnUrl,
   sessionFromCookieHeader,
   toSessionSummary,
   type AuthSession,
@@ -12,6 +11,7 @@ import {
 } from "@erp/auth";
 import { createHash, randomBytes } from "node:crypto";
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
+import { canonicalAuthReturnUrl } from "./auth-gateway";
 
 const keycloakRealm = process.env.KEYCLOAK_REALM ?? "linercore-local";
 const keycloakBaseUrl = process.env.KEYCLOAK_PUBLIC_URL ?? "http://keycloak:8080";
@@ -69,7 +69,7 @@ export function createOidcTransaction(returnUrl: string): OidcTransaction {
     state: createCorrelationId(),
     nonce: createCorrelationId(),
     pkceVerifier: randomBytes(32).toString("base64url"),
-    returnUrl: safeReturnUrl(returnUrl),
+    returnUrl: canonicalAuthReturnUrl(returnUrl),
     createdAt: new Date().toISOString()
   };
 }
@@ -122,29 +122,24 @@ export function createOidcSession(claims: KeycloakClaims): AuthSession {
     ...(claims.resource_access?.[authConfig.clientId]?.roles ?? [])
   ])).filter((role) => !role.startsWith("default-roles-"));
   const permissions = [
-    ...(roles.includes("booking-desk") ? [
-      "booking:read",
-      "booking:create",
-      "booking:validate",
-      "booking:request-pricing",
-      "booking:confirm"
-    ] : []),
+    ...(roles.includes("booking-desk") ? ["booking:read", "booking:create"] : []),
     ...(roles.includes("reference-admin") ? ["reference-data:read", "reference-data:create"] : []),
     ...(roles.includes("pricing") ? [
-      "charge-rates:read",
-      "charge-rates:create",
-      "charge-rates:update",
-      "charge-rates:approve",
-      "charge-rates:create-successor",
+      "charge-agreement:read",
       "charge-agreements:read",
       "charge-agreements:create",
       "charge-agreements:update",
       "charge-agreements:approve",
       "charge-agreements:create-successor",
       "charge-agreements:suspend",
-      "charge-agreements:expire"
-    ] : []),
-    ...(roles.includes("finance-read") ? ["charge-rates:read", "charge-agreements:read"] : [])
+      "charge-agreements:expire",
+      "charge-rates:read",
+      "charge-rates:create",
+      "charge-rates:update",
+      "charge-rates:approve",
+      "charge-rates:create-successor",
+      "charge-manual-cases:read"
+    ] : [])
   ];
   const issuedAt = new Date((claims.iat ?? Math.floor(Date.now() / 1000)) * 1000);
   const expiresAt = new Date((claims.exp ?? Math.floor(Date.now() / 1000) + 300) * 1000);
@@ -170,49 +165,15 @@ export function sessionMaxAgeSeconds(session: AuthSession): number {
 export function createLocalSession(subjectId: string): AuthSession {
   const issuedAt = new Date();
   const expiresAt = new Date(issuedAt.getTime() + 60 * 60 * 1000);
-  const profile = subjectId === "local.booking.user"
-    ? {
-        roles: ["booking-desk"],
-        permissions: [
-          "booking:read",
-          "booking:create",
-          "booking:validate",
-          "booking:request-pricing",
-          "booking:confirm"
-        ]
-      }
-    : subjectId === "local.pricing.analyst"
-      ? {
-          roles: ["pricing"],
-          permissions: [
-            "charge-rates:read",
-            "charge-rates:create",
-            "charge-rates:update",
-            "charge-rates:approve",
-            "charge-rates:create-successor",
-            "charge-agreements:read",
-            "charge-agreements:create",
-            "charge-agreements:update",
-            "charge-agreements:approve",
-            "charge-agreements:create-successor",
-            "charge-agreements:suspend",
-            "charge-agreements:expire"
-          ]
-        }
-      : subjectId === "local.charge.reader"
-        ? {
-            roles: ["finance-read"],
-            permissions: ["charge-rates:read", "charge-agreements:read"]
-          }
-        : { roles: ["reference-admin"], permissions: ["reference-data:read", "reference-data:create"] };
+  const bookingUser = subjectId === "local.booking.user";
   return {
     sessionId: createCorrelationId(),
     subjectId,
     subjectType: "user",
     displayName: subjectId,
     email: `${subjectId}@example.test`,
-    roles: profile.roles,
-    permissions: profile.permissions,
+    roles: bookingUser ? ["booking-desk"] : ["reference-admin"],
+    permissions: bookingUser ? ["booking:read", "booking:create"] : ["reference-data:read", "reference-data:create"],
     issuedAt: issuedAt.toISOString(),
     expiresAt: expiresAt.toISOString(),
     policyVersion: "mvp-2026-07-01"
@@ -220,13 +181,7 @@ export function createLocalSession(subjectId: string): AuthSession {
 }
 
 export function localSubjectId(requested?: string | null): string {
-  const allowedSubjects = new Set([
-    "local.booking.user",
-    "local.reference.admin",
-    "local.pricing.analyst",
-    "local.charge.reader",
-    "local-user"
-  ]);
+  const allowedSubjects = new Set(["local.booking.user", "local.reference.admin", "local-user"]);
   if (requested && allowedSubjects.has(requested)) {
     return requested;
   }

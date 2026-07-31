@@ -1,8 +1,6 @@
-/** @type {import("next").NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    cpus: 1
-  }
+  assetPrefix: "/auth-assets"
 };
 
 export default nextConfig;

@@ -38,6 +38,7 @@ services:
       - "${KEYCLOAK_HOST_PORT:-8080}:8080"
     volumes:
       - ./infrastructure/keycloak/linercore-local-realm.json:/opt/keycloak/data/import/linercore-local-realm.json:ro
+      - ./infrastructure/keycloak/themes/linercore:/opt/keycloak/themes/linercore:ro
     healthcheck:
       test: ["CMD-SHELL", "bash -c '</dev/tcp/localhost/8080'"]
       interval: 10s
@@ -199,7 +200,7 @@ services:
       CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED: "false"
       CHARGE_PRICING_SERVICE_ID: ${CHARGE_PRICING_SERVICE_ID:-booking-service}
       CHARGE_PRICING_SERVICE_TOKEN: ${CHARGE_PRICING_SERVICE_TOKEN:-pricing_booking_local_token}
-      CHARGE_RATE_AUTHORIZATION_MODE: ${CHARGE_RATE_AUTHORIZATION_MODE}
+      CHARGE_RATE_AUTHORIZATION_MODE: ${CHARGE_RATE_AUTHORIZATION_MODE:-local-map}
       CHARGE_BFF_SERVICE_ID: charge-agreements-bff
       CHARGE_SERVICE_TOKEN: ${CHARGE_SERVICE_TOKEN:-charge_bff_local_token}
       CHARGE_BFF_ASSERTION_SECRET: ${CHARGE_BFF_ASSERTION_SECRET:-linercore-local-assertion-secret-change-me}

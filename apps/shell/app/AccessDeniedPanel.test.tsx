@@ -20,8 +20,8 @@ describe("AccessDeniedPanel", () => {
       />
     );
 
-    expect(screen.getByTestId("shell-access-denied")).toHaveTextContent("Access denied");
-    expect(screen.getByTestId("shell-access-denied")).toHaveAttribute("aria-live", "assertive");
+    expect(screen.getByTestId("shell-access-denied")).toHaveTextContent("You cannot view this Booking workspace");
+    expect(screen.getByTestId("shell-access-denied")).not.toHaveTextContent("booking command denied");
     expect(screen.getByText("local.reference.admin")).toBeInTheDocument();
     expect(screen.getByTestId("shell-request-access").getAttribute("href"))
       .toBe("/auth/request-access?resource=booking&action=read&correlationId=corr-deny");

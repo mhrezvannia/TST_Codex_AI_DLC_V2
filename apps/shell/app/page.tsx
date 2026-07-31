@@ -1,43 +1,195 @@
+import { createCorrelationId } from "@erp/auth";
+import {
+  EmptyState,
+  LucideIcon,
+  PageHeader,
+  StatusBadge,
+  StatusStrip,
+  TechnicalDetails
+} from "@erp/ui";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createCorrelationId } from "@erp/auth";
+import { ShellFrame, moduleNavigation } from "./ShellFrame";
+import { loadShellBookings, type ShellBookingLoad } from "../lib/booking-client";
 import { requireShellSession } from "../lib/shell-auth";
-import { ShellFrame } from "./ShellFrame";
+
+const ATTENTION_STATUSES = new Set(["VALIDATION_BLOCKED", "MANUAL_PRICING", "EXCEPTION"]);
 
 export default async function ShellHomePage() {
   const headerStore = await headers();
-  const cookieHeader = headerStore.get("cookie");
-  const shellSession = requireShellSession(cookieHeader, "/", headerStore.get("x-correlation-id") ?? createCorrelationId());
+  const cookieHeader = headerStore.get("cookie") ?? "";
+  const correlationId = headerStore.get("x-correlation-id") ?? createCorrelationId();
+  const shellSession = requireShellSession(cookieHeader, "/", correlationId);
   if (!shellSession.ok) {
     redirect(shellSession.redirectTo);
   }
 
+  const canReadBookings = shellSession.summary.permissions?.includes("booking:read") ?? false;
+  const bookings = canReadBookings
+    ? await loadOverviewBookings(cookieHeader, correlationId)
+    : null;
+  const navigation = moduleNavigation(shellSession.summary, "home").filter((item) => item.href !== "/");
+  const bookingItems = bookings?.ok ? bookings.value.items : [];
+  const attentionItems = bookingItems.filter((booking) => ATTENTION_STATUSES.has(booking.status));
+
   return (
-    <ShellFrame activePath="home" breadcrumbs={["Shell", "Overview"]} session={shellSession.summary}>
-      <section className="shell-page-heading">
-        <div>
-          <p className="shell-eyebrow">Authenticated workspace</p>
-          <h1>Application shell</h1>
-          <p className="shell-muted">Booking is mounted as the first W2-01 business module.</p>
+    <ShellFrame activePath="home" breadcrumbs={["Home"]} session={shellSession.summary}>
+      <div className="shell-overview">
+        <PageHeader
+          eyebrow="Operational workspace"
+          title={`Welcome, ${shellSession.summary.displayName || shellSession.summary.subject}`}
+          description="Open your authorized work queues and continue records that need attention."
+          actions={canReadBookings ? (
+            <a className="shell-button shell-button-primary" data-testid="shell-open-booking" href="/bookings">
+              Open Bookings
+            </a>
+          ) : undefined}
+        />
+
+        {bookings && !bookings.ok ? (
+          <StatusStrip
+            title="Booking work could not be loaded"
+            tone="warning"
+            icon="cloud-off"
+            actions={<a className="shell-button" href="/">Retry</a>}
+          >
+            <p>Your other authorized workspaces remain available.</p>
+          </StatusStrip>
+        ) : null}
+
+        <div className="shell-overview-layout">
+          <div className="shell-overview-column">
+            {canReadBookings ? (
+              <section className="shell-overview-section" aria-labelledby="my-work-heading">
+                <div className="shell-section-heading">
+                  <h2 id="my-work-heading">My work</h2>
+                  <a href="/bookings">{bookingItems.length} bookings shown</a>
+                </div>
+                {bookingItems.length ? (
+                  <ul className="shell-work-list">
+                    {bookingItems.slice(0, 5).map((booking) => (
+                      <li className="shell-work-row" key={booking.id}>
+                        <div>
+                          <a href={`/bookings/${encodeURIComponent(booking.id)}?returnTo=%2Fbookings`}>
+                            {booking.bookingNumber}
+                          </a>
+                          <small>{booking.equipment[0]?.equipmentId ?? "Equipment pending"}</small>
+                        </div>
+                        <div className="shell-work-row__route">
+                          {routeLabel(booking.routing)}
+                        </div>
+                        <StatusBadge status={booking.status} />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyState title="No assigned booking work">
+                    <p>The Booking queue has no records in your current scope.</p>
+                  </EmptyState>
+                )}
+              </section>
+            ) : null}
+
+            {canReadBookings && bookings?.ok ? (
+              <section className="shell-overview-section" aria-labelledby="exceptions-heading">
+                <div className="shell-section-heading">
+                  <h2 id="exceptions-heading">Exceptions and attention</h2>
+                  {attentionItems.length ? <a href="/bookings">Review queue</a> : null}
+                </div>
+                {attentionItems.length ? (
+                  <ul className="shell-work-list">
+                    {attentionItems.map((booking) => (
+                      <li className="shell-work-row" key={booking.id}>
+                        <div>
+                          <a href={`/bookings/${encodeURIComponent(booking.id)}?returnTo=%2Fbookings`}>
+                            {booking.bookingNumber}
+                          </a>
+                          <small>{attentionLabel(booking.status)}</small>
+                        </div>
+                        <div className="shell-work-row__route">{routeLabel(booking.routing)}</div>
+                        <StatusBadge status={booking.status} />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="shell-muted">No booking exceptions are present in the loaded queue.</p>
+                )}
+              </section>
+            ) : null}
+          </div>
+
+          <div className="shell-overview-column">
+            <section className="shell-overview-section" aria-labelledby="modules-heading">
+              <div className="shell-section-heading">
+                <h2 id="modules-heading">Authorized workspaces</h2>
+              </div>
+              {navigation.length ? (
+                <div className="shell-module-list">
+                  {navigation.map((item) => (
+                    <a className="shell-module-link" href={item.href} key={item.href}>
+                      <LucideIcon name={item.icon} />
+                      <span>
+                        <strong>{item.label}</strong>
+                        <span>{moduleDescription(item.href)}</span>
+                      </span>
+                      <LucideIcon name="chevron-right" size={16} />
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState title="No module access">
+                  <p>Your account is active, but no business workspace is currently assigned.</p>
+                </EmptyState>
+              )}
+            </section>
+
+            <TechnicalDetails
+              items={[
+                { term: "Request ID", description: shellSession.summary.correlationId ?? correlationId },
+                { term: "Policy version", description: shellSession.summary.policyVersion ?? "Not available" }
+              ]}
+            />
+          </div>
         </div>
-      </section>
-      <section className="shell-grid" aria-label="Shell status">
-        <article className="shell-panel">
-          <h2>Session</h2>
-          <p>{shellSession.summary.subject}</p>
-          <p className="shell-muted">{shellSession.summary.permissionSummary?.total ?? 0} permissions summarized</p>
-        </article>
-        <article className="shell-panel">
-          <h2>Mounted module</h2>
-          <p><a href="/booking" data-testid="shell-open-booking">Open Booking</a></p>
-          <p className="shell-muted">Read-only walking skeleton path.</p>
-        </article>
-        <article className="shell-panel">
-          <h2>Trace</h2>
-          <p>{shellSession.summary.correlationId}</p>
-          <p className="shell-muted">Correlation id is propagated server-side.</p>
-        </article>
-      </section>
+      </div>
     </ShellFrame>
   );
+}
+
+async function loadOverviewBookings(
+  cookieHeader: string,
+  correlationId: string
+): Promise<ShellBookingLoad> {
+  try {
+    return await loadShellBookings(
+      new URLSearchParams({ page: "0", size: "6" }),
+      cookieHeader,
+      correlationId
+    );
+  } catch {
+    return {
+      ok: false,
+      status: 503,
+      message: "Booking workspace unavailable",
+      correlationId
+    };
+  }
+}
+
+function routeLabel(routing: Array<{ loadUnLocode: string; dischargeUnLocode: string }>) {
+  const leg = routing[0];
+  return leg ? `${leg.loadUnLocode} to ${leg.dischargeUnLocode}` : "Route correction required";
+}
+
+function attentionLabel(status: string) {
+  if (status === "MANUAL_PRICING") return "Pricing review required";
+  if (status === "VALIDATION_BLOCKED") return "Reference validation required";
+  return "Operational exception";
+}
+
+function moduleDescription(href: string) {
+  if (href.startsWith("/bookings")) return "Booking operations and exception queue";
+  if (href.startsWith("/reference-data")) return "Canonical shipping reference records";
+  if (href.startsWith("/charge-agreements")) return "Commercial contracts and approved rates";
+  return "Authorized operational workspace";
 }

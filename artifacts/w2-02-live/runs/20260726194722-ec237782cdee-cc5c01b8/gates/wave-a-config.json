@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260726194722-ec237782cdee-cc5c01b8",
+  "workspaceDigest": "ec237782cdee9d6f5eed8b6854e7b5408e2bd7e912eee3d4a590d628116ccc2f",
+  "command": "node scripts/wave-a-compose.mjs --parallel 1 -f compose.yaml -f infrastructure/compose/w2-02-acceptance.compose.yaml config --format json",
+  "startedAt": "2026-07-26T19:47:32.069Z",
+  "finishedAt": "2026-07-26T19:47:32.970Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "d560c1ef445242c25c2595748baea27107a19f64a7f8e0cbc5c7c0b42d5052e8",
+  "outputBytes": 32585,
+  "composeProject": "linercore-wave-a",
+  "profiles": [
+    "app",
+    "w2-02-acceptance"
+  ],
+  "services": [
+    "apps-auth",
+    "apps-booking",
+    "apps-charge-agreements",
+    "apps-reference-data",
+    "apps-shell",
+    "booking-service",
+    "charge-agreement-service",
+    "container-movement-service",
+    "identity-service",
+    "kafka",
+    "kafka-init",
+    "keycloak",
+    "nginx",
+    "postgres",
+    "reference-data-service",
+    "schema-registry",
+    "seed-loader",
+    "w2-02-ssr-control"
+  ],
+  "edgeURL": "http://127.0.0.1:18088"
+}

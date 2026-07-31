@@ -466,10 +466,11 @@ services:
       BOOKING_SERVICE_URL: http://booking-service:8085
       BOOKING_SERVICE_TOKEN: ${BOOKING_SERVICE_TOKEN:-booking_local_service_token}
       AUTH_SESSION_SECRET: ${AUTH_SESSION_SECRET:-linercore-local-session-secret}
+      SHELL_PUBLIC_URL: ${SHELL_PUBLIC_URL:-http://127.0.0.1:8088}
     ports:
       - "${BOOKING_APP_HOST_PORT:-3001}:3000"
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/bookings"]
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/health"]
       interval: 10s
       timeout: 3s
       retries: 12

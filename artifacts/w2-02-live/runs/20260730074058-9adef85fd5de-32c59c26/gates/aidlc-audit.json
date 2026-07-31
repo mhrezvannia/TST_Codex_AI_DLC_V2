@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260730074058-9adef85fd5de-32c59c26",
+  "workspaceDigest": "9adef85fd5de59b5a019317fc4b69eada1a95f158260545cc4f684847c771887",
+  "command": "aidlc-audit",
+  "startedAt": "2026-07-30T07:48:30.410Z",
+  "finishedAt": "2026-07-30T07:49:39.073Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "a5a47883d7f3b7e05b3e6781f1ee6a85ce6a385d96067eeb5bd1d09af0c6ff5b",
+  "outputBytes": 67829,
+  "executable": "docker run --rm --mount <workspace>:/workspace:ro --workdir /workspace --entrypoint /bin/bash linercore/w2-02-audit-tools:1 .claude/skills/aidlc-audit/detectors.sh"
+}

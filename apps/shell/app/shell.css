@@ -1,12 +1,24 @@
 :root {
   color-scheme: light;
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-  color: #17212b;
-  background: #f4f6f8;
+  font-family: var(--erp-font-sans);
+  color: var(--erp-color-text);
+  background: var(--erp-color-bg);
 }
 
 * {
   box-sizing: border-box;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 body {
@@ -14,15 +26,15 @@ body {
 }
 
 a {
-  color: #125a78;
+  color: var(--erp-color-primary);
   text-underline-offset: 3px;
 }
 
-a:focus,
-button:focus,
-input:focus {
-  outline: 3px solid #f2c14e;
-  outline-offset: 2px;
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  box-shadow: var(--erp-focus-ring);
 }
 
 button,
@@ -44,12 +56,12 @@ input {
   justify-content: space-between;
   gap: 18px;
   padding: 0 24px;
-  background: #17212b;
-  color: white;
+  background: var(--erp-color-surface-inverse);
+  color: var(--erp-color-text-inverse);
 }
 
 .shell-brand {
-  color: white;
+  color: var(--erp-color-text-inverse);
   text-decoration: none;
   font-weight: 750;
 }
@@ -78,18 +90,18 @@ input {
 
 .shell-sign-out {
   min-height: 34px;
-  border: 1px solid #b8c6d0;
+  border: 1px solid var(--erp-color-border-strong);
   border-radius: 5px;
-  background: #ffffff;
-  color: #17212b;
+  background: var(--erp-color-surface);
+  color: var(--erp-color-text);
   padding: 6px 10px;
   cursor: pointer;
 }
 
 .shell-sidebar {
   padding: 18px;
-  background: #ffffff;
-  border-right: 1px solid #d9e1e7;
+  background: var(--erp-color-surface);
+  border-right: 1px solid var(--erp-color-border);
 }
 
 .shell-sidebar nav {
@@ -108,18 +120,18 @@ input {
 }
 
 .shell-nav-link {
-  color: #17212b;
+  color: var(--erp-color-text);
   font-weight: 700;
 }
 
 .shell-nav-link-active {
-  background: #e8f2f5;
-  color: #125a78;
+  background: var(--erp-color-info-bg);
+  color: var(--erp-color-info);
 }
 
 .shell-nav-disabled {
-  color: #71808d;
-  background: #f0f3f5;
+  color: var(--erp-color-text-muted);
+  background: var(--erp-color-surface-2);
 }
 
 .shell-main {
@@ -141,7 +153,7 @@ input {
 
 .shell-breadcrumbs {
   margin-bottom: 18px;
-  color: #5f6f7b;
+  color: var(--erp-color-text-muted);
   font-size: 13px;
 }
 
@@ -161,7 +173,7 @@ input {
 
 .shell-eyebrow {
   margin: 0 0 6px;
-  color: #3e6b3f;
+  color: var(--erp-color-success);
   font-size: 12px;
   font-weight: 750;
   letter-spacing: 0;
@@ -176,8 +188,8 @@ input {
 
 .shell-panel,
 .shell-state {
-  background: white;
-  border: 1px solid #d9e1e7;
+  background: var(--erp-color-surface);
+  border: 1px solid var(--erp-color-border);
   border-radius: 8px;
   padding: 18px;
 }
@@ -190,25 +202,25 @@ input {
 
 .shell-table-wrap {
   overflow-x: auto;
-  border-top: 1px solid #c7d0d7;
+  border-top: 1px solid var(--erp-color-border-strong);
 }
 
 .shell-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--erp-color-surface);
 }
 
 .shell-table th,
 .shell-table td {
   padding: 13px 12px;
   text-align: left;
-  border-bottom: 1px solid #dfe5e9;
+  border-bottom: 1px solid var(--erp-color-border);
   vertical-align: top;
 }
 
 .shell-table th {
-  color: #52616d;
+  color: var(--erp-color-text-muted);
   font-size: 12px;
   text-transform: uppercase;
 }
@@ -216,20 +228,43 @@ input {
 .shell-status {
   display: inline-block;
   white-space: nowrap;
-  border-left: 4px solid #7c8790;
+  border-left: 4px solid var(--erp-color-border-strong);
   padding: 4px 8px;
-  background: #edf0f2;
+  background: var(--erp-color-surface-2);
   font-size: 12px;
   font-weight: 750;
 }
 
 .shell-muted {
-  color: #64717d;
+  color: var(--erp-color-text-muted);
 }
 
 .shell-booking-form {
   display: grid;
   gap: 22px;
+}
+
+.shell-skip-link {
+  position: fixed;
+  z-index: 100;
+  top: var(--erp-space-2);
+  left: var(--erp-space-2);
+  padding: var(--erp-space-2) var(--erp-space-3);
+  background: var(--erp-color-surface);
+  color: var(--erp-color-text);
+  transform: translateY(-200%);
+}
+
+.shell-skip-link:focus {
+  transform: translateY(0);
+}
+
+.shell-booking-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 2fr) minmax(160px, 1fr) auto auto;
+  align-items: end;
+  gap: var(--erp-space-3);
+  margin-bottom: var(--erp-space-4);
 }
 
 .shell-booking-form fieldset {
@@ -239,7 +274,7 @@ input {
   margin: 0;
   padding: 20px 0;
   border: 0;
-  border-top: 1px solid #c7d0d7;
+  border-top: 1px solid var(--erp-color-border-strong);
 }
 
 .shell-booking-form legend {
@@ -258,11 +293,11 @@ input {
 .shell-booking-form input {
   min-height: 42px;
   width: 100%;
-  border: 1px solid #9aa7b2;
+  border: 1px solid var(--erp-color-border-strong);
   border-radius: 4px;
-  background: white;
+  background: var(--erp-color-surface);
   padding: 9px 10px;
-  color: #17212b;
+  color: var(--erp-color-text);
 }
 
 .shell-actions {
@@ -295,18 +330,18 @@ input {
   align-items: center;
   justify-content: center;
   padding: 9px 14px;
-  border: 1px solid #9aa7b2;
+  border: 1px solid var(--erp-color-border-strong);
   border-radius: 5px;
-  background: white;
-  color: #17212b;
+  background: var(--erp-color-surface);
+  color: var(--erp-color-text);
   text-decoration: none;
   cursor: pointer;
 }
 
 .shell-button-primary {
-  border-color: #125a78;
-  background: #125a78;
-  color: white;
+  border-color: var(--erp-color-primary);
+  background: var(--erp-color-primary);
+  color: var(--erp-color-on-primary);
 }
 
 .shell-button:disabled {
@@ -315,11 +350,11 @@ input {
 }
 
 .shell-error {
-  color: #812f24;
+  color: var(--erp-color-danger);
 }
 
 .shell-denied {
-  border-left: 4px solid #a23a2a;
+  border-left: 4px solid var(--erp-color-danger);
 }
 
 .shell-denied-facts {
@@ -331,14 +366,14 @@ input {
 
 .shell-denied-facts div {
   min-width: 0;
-  border: 1px solid #f1d6c8;
+  border: 1px solid var(--erp-color-danger);
   border-radius: 6px;
   padding: 12px;
-  background: #fff7f3;
+  background: var(--erp-color-danger-bg);
 }
 
 .shell-denied-facts dt {
-  color: #8b4426;
+  color: var(--erp-color-danger);
   font-size: 12px;
   font-weight: 750;
   text-transform: uppercase;
@@ -364,13 +399,14 @@ input {
 
   .shell-sidebar {
     border-right: 0;
-    border-bottom: 1px solid #d9e1e7;
+    border-bottom: 1px solid var(--erp-color-border);
   }
 
   .shell-sidebar nav,
   .shell-grid,
   .shell-denied-facts,
-  .shell-booking-form fieldset {
+  .shell-booking-form fieldset,
+  .shell-booking-filters {
     grid-template-columns: 1fr;
   }
 

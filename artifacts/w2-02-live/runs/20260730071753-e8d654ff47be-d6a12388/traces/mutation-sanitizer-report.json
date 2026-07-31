@@ -1,0 +1,13 @@
+{
+  "sanitizer": "w2-02-trace-sanitize/v3",
+  "closureStatus": "PASS",
+  "inputHash": "491bccdf37b61a1e930dfc4046a66d9f3b677ab778d3a72829cf97466c8dce80",
+  "promotedHash": "8061146ea32ecc9bdceab09f1077b79d5d89d6ce97b8570a18bbef81332eb0ca",
+  "secondScan": "PASS",
+  "traceOpenValidation": "PASS: reopened 858 trace model events and 3 classified entries",
+  "droppedResourceEntries": 113,
+  "localIdentityScan": "PASS",
+  "localIdentityCount": 16,
+  "localIdentityConfigurationDigest": "f1d993746465fa0fd622c79dca437c30576808da4c4b0d872d8d496abb01b3be",
+  "rawInputRemoved": true
+}

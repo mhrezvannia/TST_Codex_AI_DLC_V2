@@ -40,5 +40,12 @@
     "dirName": "260717-app-shell-auth",
     "scope": "enterprise",
     "status": "complete"
+  },
+  {
+    "uuid": "019f8494-4efd-7764-8d07-3286a83d43a1",
+    "slug": "design-system-closure",
+    "dirName": "260721-design-system-closure",
+    "scope": "feature",
+    "status": "complete"
   }
 ]

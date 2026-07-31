@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { SessionSummary } from "@erp/auth";
+import { Button, ThemeToggle } from "@erp/ui";
 
 export function ShellFrame({
   activePath,
@@ -14,17 +15,19 @@ export function ShellFrame({
 }) {
   return (
     <div className="shell-frame">
+      <a className="shell-skip-link" href="#shell-main">Skip to main content</a>
       <header className="shell-topbar">
         <a className="shell-brand" href="/" data-testid="shell-home-link">LinerCore</a>
         <div className="shell-user" data-testid="shell-user-menu" aria-label="Signed-in user">
+          <ThemeToggle />
           <div className="shell-user-identity">
             <span>{session.displayName || session.subject}</span>
             <strong>{session.subject}</strong>
           </div>
           <form action="/api/auth/sign-out" method="post">
-            <button className="shell-sign-out" type="submit" data-testid="shell-sign-out-button">
+            <Button size="sm" type="submit" data-testid="shell-sign-out-button">
               Sign out
-            </button>
+            </Button>
           </form>
         </div>
       </header>
@@ -44,11 +47,12 @@ export function ShellFrame({
           >
             Booking
           </a>
-          <span className="shell-nav-disabled" aria-disabled="true">Reference data</span>
           <span className="shell-nav-disabled" aria-disabled="true">Charge agreements</span>
+          <span className="shell-nav-disabled" aria-disabled="true">Container movement</span>
+          <span className="shell-nav-disabled" aria-disabled="true">Reference data</span>
         </nav>
       </aside>
-      <main className="shell-main">
+      <main className="shell-main" id="shell-main">
         <div className="shell-breadcrumbs" aria-label="Breadcrumbs">{breadcrumbs.join(" / ")}</div>
         {children}
       </main>

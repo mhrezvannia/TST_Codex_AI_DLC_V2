@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "producer": "playwright-global-setup",
+  "status": "PERMITTED",
+  "runId": "20260722102815-60c2e993f62a-8695403c",
+  "workspaceDigest": "60c2e993f62a78844a1e2bceb52215d3b39c827e9da96b35a84e8284f7271bdd",
+  "guardFinishedAt": "2026-07-22T10:32:48.143Z",
+  "guardSha256": "a61e6c4019e06e3f1628c75a07c2815b7ba5bb06cbf56b98069b133140d99c38",
+  "authorizedAt": "2026-07-22T10:32:48.164Z"
+}

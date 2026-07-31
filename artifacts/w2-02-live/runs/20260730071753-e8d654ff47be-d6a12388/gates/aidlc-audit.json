@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260730071753-e8d654ff47be-d6a12388",
+  "workspaceDigest": "e8d654ff47be960380fee8f174325d63b1d769d11e027c448ddacabe286f2972",
+  "command": "aidlc-audit",
+  "startedAt": "2026-07-30T07:26:49.321Z",
+  "finishedAt": "2026-07-30T07:27:21.322Z",
+  "exitCode": 1,
+  "directExit": true,
+  "result": "FAIL",
+  "outputHash": "72dab70c39fc21901cff966ec5355ee66702e1233e75602a2e23de624ac74088",
+  "outputBytes": 447,
+  "executable": "bash .claude/skills/aidlc-audit/detectors.sh"
+}

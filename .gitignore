@@ -22,7 +22,13 @@ aidlc/spaces/*/intents/*/.aidlc-*
 
 # Local tool caches
 .yarn/install-state.gz
+.yarn/cache/
+.yarn/global/
 *.tsbuildinfo
+.w2-02-traces/raw/
+.w2-02-traces/staged/
+.w2-02-auth/
+.npm-cache/
 
 # Python skill runtime caches
 __pycache__/

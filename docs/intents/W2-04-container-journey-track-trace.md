@@ -11,6 +11,7 @@ CMM speaks **DCSA**: journeys derive expected moves from the confirmed booking's
 3. `docs/erp-business-ui-gap-analysis.md` Part 2 (DCSA adoption table) + Appendix (canonical names)
 4. `services/container-movement-service/` (existing journey intake — refactor, don't discard)
 5. W1-01 outputs: real `booking.confirmed` consumption + journey open
+6. `design-system/linercore/MASTER.md` and `design-system/linercore/SESSION-PROMPT.md` (binding shared UI/UX contract)
 
 ## Vertical Slice Definition
 

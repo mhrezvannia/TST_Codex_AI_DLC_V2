@@ -1,0 +1,79 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\TST_Codex_W2-02-closure\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.config.ts"
+    ],
+    "configFile": "D:\\TST_Codex_W2-02-closure\\playwright.config.ts",
+    "rootDir": "D:/TST_Codex_W2-02-closure/tests/w2-02",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\TST_Codex_W2-02-closure\\scripts\\w2-02-playwright-global-setup.mjs",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/TST_Codex_W2-02-closure/.w2-02-traces/staged/20260722095446-d0f46130f1c5-36c31862/playwright",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/TST_Codex_W2-02-closure/tests/w2-02",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\TST_Codex_W2-02-closure\\artifacts\\w2-02-live\\runs\\20260722095446-d0f46130f1c5-36c31862\\results\\playwright.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 6,
+    "webServer": null
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "SyntaxError: The requested module './w2-02-protected-demo.mjs' does not provide an export named 'PROTECTED_DEMO'",
+      "stack": "SyntaxError: The requested module './w2-02-protected-demo.mjs' does not provide an export named 'PROTECTED_DEMO'"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-07-22T09:58:08.018Z",
+    "duration": 224.8420000000001,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

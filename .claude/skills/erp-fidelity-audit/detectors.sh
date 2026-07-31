@@ -3,7 +3,7 @@
 # Every hit is a LEAD; confirm against the contract/vision doc before reporting.
 set -uo pipefail
 ROOT="${1:-.}"; cd "$ROOT" || exit 1
-EXC='--glob=!**/graphify-out/** --glob=!**/node_modules/** --glob=!**/.next/** --glob=!**/*.tsbuildinfo --glob=!**/*gap-analysis*.md --glob=!**/erp-workflow-map.md'
+EXC='--glob=!**/graphify-out/** --glob=!**/node_modules/** --glob=!**/.next/** --glob=!**/artifacts/** --glob=!**/.w2-02-traces/** --glob=!**/coverage/** --glob=!**/dist/** --glob=!**/build/** --glob=!**/*.tsbuildinfo --glob=!**/*gap-analysis*.md --glob=!**/erp-workflow-map.md'
 if command -v rg >/dev/null 2>&1; then S(){ rg -n $EXC "$@"; }; else S(){ grep -rnE "$@" . 2>/dev/null; }; fi
 hr(){ printf '\n=== %s ===\n' "$1"; }
 

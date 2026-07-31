@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Button, Card, StatusStrip } from "@erp/ui";
 import type { ShellBookingStatus } from "../../../lib/booking-client";
 
 type BookingAction = "validate" | "price" | "confirm";
@@ -12,71 +13,136 @@ const actionLabel: Record<BookingAction, string> = {
   confirm: "Confirm"
 };
 
+type ActionState =
+  | { state: "idle" }
+  | { state: "pending"; action: BookingAction; idempotencyKey: string }
+  | { state: "success"; action: BookingAction; authoritativeStatus: ShellBookingStatus }
+  | { state: "validationBlocked" | "recoverableError" | "denied" | "degraded" | "fatalError"; action: BookingAction; message: string; idempotencyKey: string };
+
+const expectedStatus: Record<BookingAction, ShellBookingStatus> = {
+  validate: "VALIDATED",
+  price: "PRICED",
+  confirm: "CONFIRMED"
+};
+
 export function BookingActions({ bookingId, status }: { bookingId: string; status: ShellBookingStatus }) {
   const router = useRouter();
-  const [busy, setBusy] = useState<BookingAction | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [actionState, setActionState] = useState<ActionState>({ state: "idle" });
+  const resultRef = useRef<HTMLDivElement>(null);
+  const busy = actionState.state === "pending" ? actionState.action : null;
 
-  async function execute(action: BookingAction) {
-    setBusy(action);
-    setError(null);
-    const idempotencyKey = crypto.randomUUID();
-    const response = await fetch(
-      `/api/booking/bookings/${encodeURIComponent(bookingId)}/${action}`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "idempotency-key": idempotencyKey
-        },
-        body: action === "price" ? JSON.stringify({ idempotencyKey }) : "{}"
+  useEffect(() => {
+    if (actionState.state !== "idle" && actionState.state !== "pending") resultRef.current?.focus();
+  }, [actionState]);
+
+  async function execute(action: BookingAction, retryKey?: string) {
+    if (actionState.state === "pending") return;
+    const idempotencyKey = retryKey ?? crypto.randomUUID();
+    setActionState({ state: "pending", action, idempotencyKey });
+    try {
+      const response = await fetch(
+        `/api/booking/bookings/${encodeURIComponent(bookingId)}/${action}`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "idempotency-key": idempotencyKey
+          },
+          body: action === "price" ? JSON.stringify({ idempotencyKey }) : "{}"
+        }
+      );
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const message = typeof payload.message === "string" ? payload.message : `${actionLabel[action]} failed`;
+        const nextState = response.status === 400 || response.status === 422
+          ? "validationBlocked"
+          : response.status === 401 || response.status === 403
+            ? "denied"
+            : response.status === 502 || response.status === 503
+              ? "degraded"
+              : response.status === 408 || response.status === 429 || response.status >= 500
+                ? "recoverableError"
+                : "fatalError";
+        setActionState({ state: nextState, action, message, idempotencyKey });
+        return;
       }
-    );
-    const payload = await response.json().catch(() => ({}));
-    setBusy(null);
-    if (!response.ok) {
-      setError(payload.message ?? `${actionLabel[action]} failed`);
-      return;
+      if (payload.status !== expectedStatus[action]) {
+        setActionState({
+          state: "recoverableError",
+          action,
+          message: `${actionLabel[action]} returned without authoritative ${expectedStatus[action]} status. Retry safely or review the booking.`,
+          idempotencyKey
+        });
+        return;
+      }
+      setActionState({ state: "success", action, authoritativeStatus: payload.status });
+      router.refresh();
+    } catch {
+      setActionState({
+        state: "recoverableError",
+        action,
+        message: `${actionLabel[action]} could not reach Booking. Retry uses the same command key.`,
+        idempotencyKey
+      });
     }
-    router.refresh();
   }
 
   return (
-    <section className="shell-panel shell-booking-actions" aria-labelledby="shell-booking-actions-title">
+    <Card className="shell-booking-actions" aria-labelledby="shell-booking-actions-title">
       <div>
         <h2 id="shell-booking-actions-title">Booking actions</h2>
         <p className="shell-muted">Complete the next available lifecycle step.</p>
       </div>
       <div className="shell-actions">
-        <button
-          className="shell-button shell-button-primary"
+        <Button
+          variant="primary"
           data-testid="booking-validate"
           disabled={status !== "DRAFT" && status !== "VALIDATION_BLOCKED" || busy !== null}
           onClick={() => execute("validate")}
           type="button"
         >
           {busy === "validate" ? "Validating..." : "Validate references"}
-        </button>
-        <button
-          className="shell-button shell-button-primary"
+        </Button>
+        <Button
+          variant="primary"
           data-testid="booking-price"
           disabled={status !== "VALIDATED" || busy !== null}
           onClick={() => execute("price")}
           type="button"
         >
           {busy === "price" ? "Pricing..." : "Price"}
-        </button>
-        <button
-          className="shell-button shell-button-primary"
+        </Button>
+        <Button
+          variant="primary"
           data-testid="booking-confirm"
           disabled={status !== "PRICED" || busy !== null}
           onClick={() => execute("confirm")}
           type="button"
         >
           {busy === "confirm" ? "Confirming..." : "Confirm"}
-        </button>
+        </Button>
       </div>
-      {error && <p className="shell-error" role="alert">{error}</p>}
-    </section>
+      {actionState.state === "pending" ? <StatusStrip role="status" aria-busy="true" data-state="pending">Running {actionLabel[actionState.action]}</StatusStrip> : null}
+      {actionState.state === "success" ? (
+        <StatusStrip ref={resultRef} tabIndex={-1} tone="success" role="status" data-state="success">
+          {actionLabel[actionState.action]} completed: <strong data-testid="booking-authoritative-status">{actionState.authoritativeStatus}</strong>
+        </StatusStrip>
+      ) : null}
+      {"message" in actionState ? (
+        <StatusStrip
+          ref={resultRef}
+          tabIndex={-1}
+          tone={actionState.state === "degraded" ? "warning" : "danger"}
+          role={actionState.state === "validationBlocked" || actionState.state === "denied" || actionState.state === "fatalError" ? "alert" : "status"}
+          live={actionState.state === "validationBlocked" || actionState.state === "denied" || actionState.state === "fatalError" ? "assertive" : "polite"}
+          data-state={actionState.state}
+        >
+          {actionState.message}
+          {actionState.state === "recoverableError" || actionState.state === "degraded" ? (
+            <Button size="sm" onClick={() => execute(actionState.action, actionState.idempotencyKey)} data-testid="booking-action-retry">Retry {actionLabel[actionState.action]}</Button>
+          ) : null}
+        </StatusStrip>
+      ) : null}
+    </Card>
   );
 }

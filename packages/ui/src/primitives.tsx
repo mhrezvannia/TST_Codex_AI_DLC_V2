@@ -2,11 +2,13 @@
 // All styling comes from design tokens (see styles.ts); no inline hex, no local style objects.
 import type {
   ButtonHTMLAttributes,
+  HTMLAttributes,
   InputHTMLAttributes,
   ReactNode,
   SelectHTMLAttributes,
   TableHTMLAttributes
 } from "react";
+import { forwardRef } from "react";
 import { designSystemCss } from "./styles";
 
 function cx(...parts: Array<string | false | undefined | null>): string {
@@ -33,50 +35,73 @@ export function Inline({ children, className }: { children: ReactNode; className
 
 /* ---- Button ---- */
 type ButtonVariant = "default" | "primary" | "danger" | "ghost";
-export function Button({
+export const Button = forwardRef<HTMLButtonElement, { variant?: ButtonVariant; size?: "sm" } & ButtonHTMLAttributes<HTMLButtonElement>>(function Button({
   variant = "default",
   size,
   className,
   type = "button",
   ...rest
-}: { variant?: ButtonVariant; size?: "sm" } & ButtonHTMLAttributes<HTMLButtonElement>) {
+}, ref) {
   return (
     <button
       type={type}
+      ref={ref}
       className={cx("erp-btn", variant !== "default" && `erp-btn--${variant}`, size === "sm" && "erp-btn--sm", className)}
       {...rest}
     />
   );
-}
+});
 
 /* ---- Field + Input + Select ---- */
-export function Field({ label, hint, error, htmlFor, children }: { label: string; hint?: string; error?: string; htmlFor?: string; children: ReactNode }) {
+export function Field({
+  label,
+  hint,
+  error,
+  htmlFor,
+  hintId,
+  errorId,
+  children
+}: {
+  label: string;
+  hint?: string;
+  error?: string;
+  htmlFor?: string;
+  hintId?: string;
+  errorId?: string;
+  children: ReactNode;
+}) {
   return (
-    <label className="erp-field" htmlFor={htmlFor}>
-      <span className="erp-field__label">{label}</span>
+    <div className="erp-field">
+      <label className="erp-field__label" htmlFor={htmlFor}>{label}</label>
       {children}
-      {hint && !error ? <span className="erp-field__hint">{hint}</span> : null}
-      {error ? <span className="erp-field__error">{error}</span> : null}
-    </label>
+      {hint && !error ? <span id={hintId} className="erp-field__hint">{hint}</span> : null}
+      {error ? <span id={errorId} className="erp-field__error">{error}</span> : null}
+    </div>
   );
 }
 
-export function Input({ invalid, className, ...rest }: { invalid?: boolean } & InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={cx("erp-input", className)} aria-invalid={invalid || undefined} {...rest} />;
-}
+export const Input = forwardRef<HTMLInputElement, { invalid?: boolean } & InputHTMLAttributes<HTMLInputElement>>(function Input(
+  { invalid, className, ...rest },
+  ref
+) {
+  return <input ref={ref} className={cx("erp-input", className)} aria-invalid={invalid || undefined} {...rest} />;
+});
 
-export function Select({ invalid, className, children, ...rest }: { invalid?: boolean } & SelectHTMLAttributes<HTMLSelectElement>) {
+export const Select = forwardRef<HTMLSelectElement, { invalid?: boolean } & SelectHTMLAttributes<HTMLSelectElement>>(function Select(
+  { invalid, className, children, ...rest },
+  ref
+) {
   return (
-    <select className={cx("erp-select", className)} aria-invalid={invalid || undefined} {...rest}>
+    <select ref={ref} className={cx("erp-select", className)} aria-invalid={invalid || undefined} {...rest}>
       {children}
     </select>
   );
-}
+});
 
 /* ---- Card / Panel ---- */
-export function Card({ title, inverse, className, children }: { title?: ReactNode; inverse?: boolean; className?: string; children: ReactNode }) {
+export function Card({ title, inverse, className, children, ...rest }: { title?: ReactNode; inverse?: boolean } & HTMLAttributes<HTMLElement>) {
   return (
-    <section className={cx("erp-card", inverse && "erp-card--inverse", className)}>
+    <section className={cx("erp-card", inverse && "erp-card--inverse", className)} {...rest}>
       {title ? <h2 className="erp-card__title">{title}</h2> : null}
       {children}
     </section>
@@ -85,9 +110,9 @@ export function Card({ title, inverse, className, children }: { title?: ReactNod
 
 /* ---- Badge / StatusBadge ---- */
 type BadgeTone = "neutral" | "success" | "warning" | "danger" | "info";
-export function Badge({ tone = "neutral", dot, children }: { tone?: BadgeTone; dot?: boolean; children: ReactNode }) {
+export function Badge({ tone = "neutral", dot, className, children, ...rest }: { tone?: BadgeTone; dot?: boolean } & HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span className={cx("erp-badge", tone !== "neutral" && `erp-badge--${tone}`)}>
+    <span className={cx("erp-badge", tone !== "neutral" && `erp-badge--${tone}`, className)} {...rest}>
       {dot ? <span className="erp-badge__dot" aria-hidden="true" /> : null}
       {children}
     </span>
@@ -119,10 +144,14 @@ export function Table({ className, children, ...rest }: TableHTMLAttributes<HTML
   );
 }
 
+export function TableContainer({ className, children, ...rest }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx("erp-table-container", className)} {...rest}>{children}</div>;
+}
+
 /* ---- Empty state ---- */
-export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
+export function EmptyState({ title, children, className, ...rest }: { title: string } & HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className="erp-empty">
+    <div className={cx("erp-empty", className)} {...rest}>
       <p className="erp-empty__title">{title}</p>
       {children ? <div>{children}</div> : null}
     </div>
@@ -130,21 +159,36 @@ export function EmptyState({ title, children }: { title: string; children?: Reac
 }
 
 /* ---- Skeleton (loading placeholder) ---- */
-export function Skeleton({ height = 16, width = "100%", radius }: { height?: number | string; width?: number | string; radius?: number }) {
+export function Skeleton({ height = 16, width = "100%", radius, className, ...rest }: { height?: number | string; width?: number | string; radius?: number } & HTMLAttributes<HTMLSpanElement>) {
   return (
     <span
-      className="erp-skeleton"
+      className={cx("erp-skeleton", className)}
       style={{ display: "block", height, width, borderRadius: radius === undefined ? undefined : `var(--erp-radius-${radius >= 12 ? "lg" : "sm"})` }}
       aria-hidden="true"
+      {...rest}
     />
   );
 }
 
 /* ---- Status strip (inline, aria-live) ---- */
-export function StatusStrip({ children }: { children: ReactNode }) {
+export const StatusStrip = forwardRef<HTMLDivElement, {
+  tone?: "neutral" | "info" | "success" | "warning" | "danger";
+  live?: "off" | "polite" | "assertive";
+} & HTMLAttributes<HTMLDivElement>>(function StatusStrip({
+  children,
+  tone = "neutral",
+  live = "polite",
+  className,
+  ...rest
+}, ref) {
   return (
-    <div className="erp-status" aria-live="polite">
+    <div
+      ref={ref}
+      className={cx("erp-status", tone !== "neutral" && `erp-status--${tone}`, className)}
+      aria-live={live}
+      {...rest}
+    >
       {children}
     </div>
   );
-}
+});

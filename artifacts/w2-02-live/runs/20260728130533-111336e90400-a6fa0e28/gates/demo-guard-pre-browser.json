@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 3,
+  "producer": "playwright-global-setup",
+  "command": "npm run demo:guard",
+  "phase": "pre-browser",
+  "runId": "20260728130533-111336e90400-a6fa0e28",
+  "workspaceDigest": "111336e90400cbf439bce8f8269de9feee8925502e78f1e7b5098718f206baf0",
+  "waveTarget": {
+    "baseURL": "http://127.0.0.1:18088",
+    "composeProject": "linercore-wave-a"
+  },
+  "protectedDemoInputs": {
+    "composeProject": "linercore-shared-platform",
+    "imageTag": "demo-20260721",
+    "edgeURL": "http://127.0.0.1:8088"
+  },
+  "startedAt": "2026-07-28T13:38:59.059Z",
+  "finishedAt": "2026-07-28T13:39:07.597Z",
+  "directExit": true,
+  "exitCode": 0,
+  "result": "PASS",
+  "outputHash": "39bc9387dea45d9c8c0a0cc6231106ee1f6c841fe3aa4a2f74c7fd9bd796e6f9"
+}

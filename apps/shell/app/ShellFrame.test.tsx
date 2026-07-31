@@ -25,5 +25,6 @@ describe("ShellFrame", () => {
     expect(signOut.closest("form")?.getAttribute("method")).toBe("post");
     expect(signOut.closest("form")?.getAttribute("action")).toBe("/api/auth/sign-out");
     expect(screen.getByTestId("shell-user-menu")).toHaveTextContent("local.booking.user");
+    expect(screen.getByRole("button", { name: "Switch to dark theme" })).toBeInTheDocument();
   });
 });

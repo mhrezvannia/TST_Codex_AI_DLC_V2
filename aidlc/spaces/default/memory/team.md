@@ -28,6 +28,35 @@ W2-02 deploys only to the isolated local `linercore-wave-a` acceptance stack thr
 
 W2-02 frontend work uses strict TypeScript/Next.js workspace boundaries and `@erp/ui` tokens and primitives for applicable presentation. Native semantic elements are allowed only as documented, tested exceptions; module-local theme systems and duplicate shell/navigation are prohibited.
 
+## W2-04 Container Movement Delivery
+W2-04 is delivered as one stream-aligned vertical intent on its short-lived
+intent branch, preserving merged program work and synchronizing with the
+integration baseline after W2-02. Contract, UI, and acceptance seams are
+co-reviewed by their bounded owners rather than broadened through shared-file
+rewrites.
+
+PB-01 is the gated walking skeleton: one real `booking.confirmed` creates a
+planned journey, one accepted GTOT publishes status, and Booking renders the
+projection. Later lifecycle depth builds only after that broker-to-database-to-
+Booking path and one observable invalid transition are proven.
+
+Tests are written alongside code and selected by acceptance risk, with explicit
+domain transition, duplicate, sequence, contract, migration, consumer, UI, and
+live-path coverage. Deterministic failures fail closed, without inventing a
+numeric coverage floor that the repository cannot enforce.
+
+Pull-request and integration CI block on the established fast Java and frontend
+gates. W2-04 final release acceptance is a separately serialized, manual
+blocking run on `linercore-wave-a`; one evidence-preserving retry is allowed
+only for an environmental failure, and the manager demo at port 8088 remains
+guarded.
+
+Java keeps the framework-free domain, application ports, adapter, and Spring
+container layering with current EditorConfig conventions; TypeScript keeps
+strict Next.js/React patterns and shared `@erp/ui` tokens. Domain rejection is
+explicit and stable while exceptions remain mapped at REST or infrastructure
+boundaries; W2-04 adds no new universal formatter mandate.
+
 ## Forbidden
 
 <!-- Team-specific forbidden patterns -->

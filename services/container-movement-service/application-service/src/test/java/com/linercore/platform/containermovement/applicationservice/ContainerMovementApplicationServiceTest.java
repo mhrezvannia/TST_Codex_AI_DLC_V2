@@ -14,6 +14,10 @@ import com.linercore.platform.containermovement.applicationservice.port.Idempote
 import com.linercore.platform.containermovement.applicationservice.port.JourneyRepository;
 import com.linercore.platform.containermovement.applicationservice.port.OutboxRepository;
 import com.linercore.platform.containermovement.applicationservice.port.ReferenceValidationPort;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.CaptureDisabledReason;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.Dependency;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.Freshness;
 import com.linercore.platform.containermovement.domain.model.ContainerJourney;
 import com.linercore.platform.containermovement.domain.model.JourneyId;
 import com.linercore.platform.containermovement.domain.model.MovementEventType;
@@ -37,15 +41,15 @@ class ContainerMovementApplicationServiceTest {
     private final FakeAuditRepository audit = new FakeAuditRepository();
     private final FakeOutboxRepository outbox = new FakeOutboxRepository();
     private final FakeReferenceValidation referenceValidation = new FakeReferenceValidation();
-    private boolean authorized = true;
+    private final FakeAuthorization authorization = new FakeAuthorization();
     private final ContainerMovementApplicationService service = new ContainerMovementApplicationService(
             journeys,
             idempotency,
-            (subjectId, resource, action, correlationId) -> authorized,
+            authorization,
             referenceValidation,
             audit,
             outbox,
-            new FakeIds("journey-1", "status-1", "movement-1", "status-2"),
+            new FakeIds("journey-1", "status-1", "movement-1", "status-2", "movement-2", "status-3"),
             Clock.fixed(now, ZoneOffset.UTC));
 
     @Test
@@ -54,10 +58,11 @@ class ContainerMovementApplicationServiceTest {
 
         assertEquals("journey-1", journey.id().value());
         assertEquals(1, journey.bookingRevision());
-        assertEquals(MovementStatus.PLANNED, journey.status());
+        assertEquals(MovementStatus.ALLOCATED, journey.status());
         assertEquals(2, journey.expectedMovements().size());
         assertEquals("status-1", outbox.events.get(0).deduplicationKey());
         assertEquals("PLN", outbox.events.get(0).payload().get("data.eventClassifierCode"));
+        assertEquals("LOAD", outbox.events.get(0).payload().get("data.moveCode"));
         assertEquals("CMM_JOURNEY_CREATED", audit.records.get(0).action);
     }
 
@@ -76,15 +81,58 @@ class ContainerMovementApplicationServiceTest {
         ContainerJourney journey = service.createJourney(createCommand("create-1"));
 
         ContainerJourney moved = service.captureMovement(new CaptureMovementCommand(journey.id().value(),
-                MovementEventType.ACTUAL_DEPARTURE, "CONT0000001", "SGSIN", now.plusSeconds(60),
+                MovementEventType.ACT_GTOT, "CONT0000001", "SGSIN", now,
                 "local.cmm.operator", "move-1", "corr-1"));
 
-        assertEquals(MovementStatus.IN_TRANSIT, moved.status());
+        assertEquals(MovementStatus.GATED_OUT, moved.status());
         assertEquals(1, moved.history().size());
         MovementStatusEvent event = outbox.events.get(1);
-        assertEquals("IN_TRANSIT", event.payload().get("data.derivedStatus"));
+        assertEquals("GATED_OUT", event.payload().get("data.derivedStatus"));
+        assertEquals("GTOT", event.payload().get("data.moveCode"));
         assertEquals("ACT", event.payload().get("data.eventClassifierCode"));
         assertEquals("SGSIN", event.payload().get("data.location.unLocationCode"));
+    }
+
+    @Test
+    void rejectsReplayedMovementRequestKeyAsTypedConflictWithEvidence() {
+        ContainerJourney journey = service.createJourney(createCommand("create-1"));
+        service.captureMovement(new CaptureMovementCommand(journey.id().value(),
+                MovementEventType.ACT_GTOT, "CONT0000001", "SGSIN", now,
+                "local.cmm.operator", "move-1", "corr-1"));
+
+        MovementConflictException failure = assertThrows(MovementConflictException.class,
+                () -> service.captureMovement(new CaptureMovementCommand(journey.id().value(),
+                        MovementEventType.ACT_GTOT, "CONT0000001", "SGSIN", now,
+                        "local.cmm.operator", "move-1", "corr-replay")));
+
+        assertEquals("DUPLICATE_MOVEMENT", failure.code());
+        assertEquals("GATED_OUT", failure.current());
+        assertEquals("LOAD", failure.requiredNext());
+        assertEquals("corr-replay", failure.correlationId());
+        assertEquals("CMM_DUPLICATE_MOVEMENT", audit.records.get(audit.records.size() - 1).action);
+    }
+
+    @Test
+    void rejectsSameOccurrenceWithNewKeyAndWrongNextMove() {
+        ContainerJourney journey = service.createJourney(createCommand("create-1"));
+        service.captureMovement(new CaptureMovementCommand(journey.id().value(),
+                MovementEventType.ACT_GTOT, "CONT0000001", "SGSIN", now,
+                "local.cmm.operator", "move-1", "corr-1"));
+
+        MovementConflictException duplicate = assertThrows(MovementConflictException.class,
+                () -> service.captureMovement(new CaptureMovementCommand(journey.id().value(),
+                        MovementEventType.ACT_GTOT, "CONT0000001", "SGSIN", now,
+                        "local.cmm.operator", "move-2", "corr-duplicate")));
+        MovementConflictException wrongNext = assertThrows(MovementConflictException.class,
+                () -> service.captureMovement(new CaptureMovementCommand(journey.id().value(),
+                        MovementEventType.ACT_DISC, "CONT0000001", "NLRTM", now,
+                        "local.cmm.operator", "move-3", "corr-sequence")));
+
+        assertEquals("DUPLICATE_MOVEMENT", duplicate.code());
+        assertEquals("OUT_OF_SEQUENCE_MOVEMENT", wrongNext.code());
+        assertEquals("GATED_OUT", wrongNext.current());
+        assertEquals("LOAD", wrongNext.requiredNext());
+        assertEquals("corr-sequence", wrongNext.correlationId());
     }
 
     @Test
@@ -100,7 +148,7 @@ class ContainerMovementApplicationServiceTest {
 
     @Test
     void deniesUnauthorizedCommandsFailClosed() {
-        authorized = false;
+        authorization.authorized = false;
 
         assertThrows(SecurityException.class, () -> service.createJourney(createCommand("create-1")));
 
@@ -175,13 +223,95 @@ class ContainerMovementApplicationServiceTest {
 
     @Test
     void deniesUnauthorizedBookingConfirmedConsumer() {
-        authorized = false;
+        authorization.authorized = false;
 
         assertThrows(SecurityException.class,
                 () -> service.consumeBookingConfirmed(bookingConfirmed("event-1", 1, "confirmed-1", "SGSIN", "NLRTM")));
 
         assertEquals("CMM_AUTHORIZATION_DENIED", audit.records.get(0).action);
         assertEquals(0, journeys.records.size());
+    }
+
+    @Test
+    void evaluatesCaptureCapabilityOnceAfterProtectedDetailRead() {
+        ContainerJourney journey = service.createJourney(createCommand("create-1"));
+        authorization.actions.clear();
+
+        JourneyReadResult result = service.detail(journey.id().value(), "local.cmm.operator", "corr-read");
+
+        assertEquals(List.of("read", "capture-capability"), authorization.actions);
+        assertEquals(Freshness.FRESH, result.freshness());
+        assertEquals(now, result.dataUpdatedAt());
+        assertEquals(now, result.checkedAt());
+        assertEquals(true, result.captureEnabled());
+        assertEquals(Dependency.NONE, result.dependency());
+    }
+
+    @Test
+    void returnsTruthfulLastKnownMetadataAndDisablesCapture() {
+        ContainerJourney journey = service.createJourney(createCommand("create-1"));
+        referenceValidation.availability = new ReferenceValidationPort.Availability(
+                ReferenceValidationPort.State.LAST_KNOWN,
+                "REFERENCE_DATA_TIMEOUT",
+                now.minusSeconds(30));
+        authorization.actions.clear();
+
+        JourneyReadResult result = service.detail(journey.id().value(), "local.cmm.operator", "corr-read");
+
+        assertEquals(List.of("read", "capture-capability"), authorization.actions);
+        assertEquals(Freshness.LAST_KNOWN, result.freshness());
+        assertEquals(false, result.captureEnabled());
+        assertEquals(CaptureDisabledReason.REFERENCE_DATA_LAST_KNOWN, result.captureDisabledReason());
+        assertEquals(Dependency.REFERENCE_DATA, result.dependency());
+        assertEquals(now.minusSeconds(30), result.checkedAt());
+    }
+
+    @Test
+    void evaluatesListCapabilityOnceAndSharesBoundedMetadata() {
+        ContainerJourney journey = service.createJourney(createCommand("create-1"));
+        ContainerJourney second = ContainerJourney.create(
+                new JourneyId("journey-2"), "booking-2", "CONT0000002", List.of("SGSIN", "NLRTM"), now);
+        journeys.recent = List.of(journey, second);
+        authorization.actions.clear();
+
+        List<JourneyReadResult> results = service.recent("local.cmm.operator", "corr-list", 25);
+
+        assertEquals(2, results.size());
+        assertEquals(List.of("read", "capture-capability"), authorization.actions);
+        assertEquals(Freshness.FRESH, results.get(0).freshness());
+    }
+
+    @Test
+    void unavailableReferenceDataDisablesCaptureWithoutBusinessWrites() {
+        ContainerJourney journey = service.createJourney(createCommand("create-1"));
+        int journeyWrites = journeys.saveCount;
+        int outboxWrites = outbox.events.size();
+        referenceValidation.availability = new ReferenceValidationPort.Availability(
+                ReferenceValidationPort.State.UNAVAILABLE,
+                "adapter detail must not leak",
+                now.minusSeconds(10));
+
+        JourneyReadResult result = service.detailByBookingId(
+                journey.bookingId(), "local.cmm.operator", "corr-booking");
+
+        assertEquals(Freshness.UNAVAILABLE, result.freshness());
+        assertEquals(CaptureDisabledReason.REFERENCE_DATA_UNAVAILABLE, result.captureDisabledReason());
+        assertEquals(Dependency.REFERENCE_DATA, result.dependency());
+        assertEquals(journeyWrites, journeys.saveCount);
+        assertEquals(outboxWrites, outbox.events.size());
+    }
+
+    @Test
+    void capabilityOutageIsDistinctFromAuthorizationDenial() {
+        ContainerJourney journey = service.createJourney(createCommand("create-1"));
+        authorization.capabilityDecision = AuthorizationPort.Decision.UNAVAILABLE;
+
+        JourneyReadResult result = service.responseMetadata(
+                journey, "local.cmm.operator", "corr-response");
+
+        assertEquals(false, result.captureEnabled());
+        assertEquals(CaptureDisabledReason.CAPABILITY_UNAVAILABLE, result.captureDisabledReason());
+        assertEquals(Dependency.IDENTITY, result.dependency());
     }
 
     private CreateJourneyCommand createCommand(String idempotencyKey) {
@@ -197,8 +327,11 @@ class ContainerMovementApplicationServiceTest {
 
     private static class FakeJourneyRepository implements JourneyRepository {
         final Map<JourneyId, ContainerJourney> records = new HashMap<>();
+        List<ContainerJourney> recent = List.of();
+        int saveCount;
 
         public ContainerJourney save(ContainerJourney journey) {
+            saveCount++;
             records.put(journey.id(), journey);
             return journey;
         }
@@ -211,6 +344,10 @@ class ContainerMovementApplicationServiceTest {
             return records.values().stream()
                     .filter(journey -> journey.bookingId().equals(bookingId))
                     .findFirst();
+        }
+
+        public List<ContainerJourney> findRecent(int limit) {
+            return recent.stream().limit(limit).toList();
         }
     }
 
@@ -237,9 +374,32 @@ class ContainerMovementApplicationServiceTest {
 
     private static class FakeReferenceValidation implements ReferenceValidationPort {
         final List<String> inactive = new ArrayList<>();
+        Availability availability = new Availability(State.FRESH, null, null);
 
         public List<String> inactiveLocationIds(List<String> locationIds, String correlationId) {
             return locationIds.stream().filter(inactive::contains).toList();
+        }
+
+        public Availability availability(String correlationId) {
+            return availability;
+        }
+    }
+
+    private static class FakeAuthorization implements AuthorizationPort {
+        boolean authorized = true;
+        Decision capabilityDecision = Decision.ALLOW;
+        final List<String> actions = new ArrayList<>();
+
+        public boolean allowed(String subjectId, String resource, String action, String correlationId) {
+            actions.add(action);
+            return authorized;
+        }
+
+        public Decision decision(String subjectId, String resource, String action, String correlationId) {
+            actions.add(action);
+            return "capture-capability".equals(action)
+                    ? capabilityDecision
+                    : (authorized ? Decision.ALLOW : Decision.DENY);
         }
     }
 

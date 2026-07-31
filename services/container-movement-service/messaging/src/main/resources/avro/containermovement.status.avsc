@@ -19,6 +19,7 @@
           { "name": "bookingRef", "type": "string" },
           { "name": "containerRef", "type": "string" },
           { "name": "movementId", "type": ["null", "string"], "default": null },
+          { "name": "sequenceNumber", "type": "int", "default": 0 },
           { "name": "moveCode", "type": "string" },
           { "name": "eventClassifierCode", "type": "string" },
           { "name": "occurredDateTime", "type": "string" },

@@ -43,6 +43,8 @@
 ## Tech Stack
 
 <!-- Technology choices locked for this project. -->
+- Treat AWS specialist input as portability and operational-quality review when an approved slice targets the canonical on-premises Compose topology; do not turn it into public-cloud expansion. (learned 2026-07-21) <!-- cid:application-design:c2 -->
+- Treat RTK as unavailable when the binding Enterprise Technical Environment prohibits it; use server-rendered reads and focused local client state unless the standard changes. (learned 2026-07-21) <!-- cid:application-design:c3 -->
 
 ## Decided
 
@@ -102,6 +104,11 @@ NEVER redesign `packages/ui`, shared shell, navigation, typography, palette, or 
 NEVER query another service's database, bypass the existing Booking-to-Charge pricing port, or move pricing authority into a generic shared UI/service layer. (affirmed 2026-07-21)
 NEVER rewrite the W1 blocked/waived history as a real PASS or weaken W0-01, W0-02, W1-01, W2-01, or W2-02 evidence to simplify this feature. (affirmed 2026-07-21)
 NEVER describe the current CI as security-complete or expand W2-03 into repository-wide SAST, DAST, secret/CVE/image scanning, SBOM, signing, or deployment modernization without a separately approved scope change. (affirmed 2026-07-21)
+NEVER treat a silent duplicate replay, timestamp-only ordering, outbox row, container startup, or screenshot as W2-04 acceptance. (affirmed 2026-07-21)
+NEVER run ordinary pull-request CI against the single shared Wave A live stack. (affirmed 2026-07-21)
+NEVER introduce a universal Java formatter or result-type migration as incidental W2-04 scope. (affirmed 2026-07-21)
+NEVER redesign `packages/ui`, the shared shell, or Booking while adding Container Movement-owned composition. (affirmed 2026-07-21)
+NEVER relabel an environmental block or accepted waiver as PASS. (affirmed 2026-07-21)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -161,6 +168,12 @@ ALWAYS require domain, additive-migration, provider-consumer contract, typed-sna
 ALWAYS preserve Charge pricing authority, Booking snapshot/UI ownership, service-owned databases, framework-free domain cores, session-derived actors, correlation/idempotency metadata, and typed failure semantics. (affirmed 2026-07-21)
 ALWAYS use `scripts/wave-a-compose.mjs` with the isolated `linercore-wave-a` project and run `npm run demo:guard` before and after live acceptance. (affirmed 2026-07-21)
 ALWAYS preserve fail-closed non-local profile/session/secret controls, immutable dependency installation, least-privilege workflow permissions, and explicit local-only credentials. (affirmed 2026-07-21)
+ALWAYS deliver W2-04 as vertical increments that retain domain, persistence, contract, Booking projection, UI, and observed evidence. (affirmed 2026-07-21)
+ALWAYS run the PB-01 broker-to-database-to-Booking walking skeleton before deeper lifecycle increments. (affirmed 2026-07-21)
+ALWAYS write risk-based tests alongside code for every legal transition and every duplicate or out-of-sequence rejection. (affirmed 2026-07-21)
+ALWAYS preserve service-owned databases, framework-free domain code, exact contract names, and producer/consumer co-review. (affirmed 2026-07-21)
+ALWAYS keep final Wave A live acceptance serialized, run the demo guard before and after, and retain evidence from any environmental retry. (affirmed 2026-07-21)
+ALWAYS preserve the historical W1 BLOCKED record and waiver separately from the later real PASS and new W2-04 evidence. (affirmed 2026-07-21)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->
@@ -189,6 +202,31 @@ ALWAYS preserve fail-closed non-local profile/session/secret controls, immutable
 - When economic value, time-cost, and job-size inputs are not supplied, use an explicit ordinal value, risk-reduction, time-criticality, and relative-size rationale instead of fabricating numeric WSJF precision. (learned 2026-07-15) <!-- cid:delivery-planning:c2 -->
 - For local Compose acceptance, describe transaction durability as atomic effects and committed-state survival within existing volumes; do not claim zero data loss after host or volume destruction unless WAL or replication mechanisms exist. (learned 2026-07-16) <!-- cid:nfr-requirements:c1 -->
 - Use explicit local tokens and least-privilege roles only under the local profile, and fail every non-local profile until W2-01 authenticated identity and transport controls are implemented. (learned 2026-07-16) <!-- cid:nfr-requirements:c2 -->
+- Preserve the existing Container Movement service and aggregate seam for brownfield journey work; refactor intake through typed collaborators instead of replacing the aggregate. (learned 2026-07-21) <!-- cid:application-design:c1 -->
+- Apply last-known behavior only to business and reference-data freshness, never to authorization; Identity must authorize every new read, while an authorized persisted route view may remain readable during a Reference Data outage with capture disabled. (learned 2026-07-21) <!-- cid:application-design:c4 -->
+- Prefer additive evolution at verified domain, persistence, contract, projection, authorization, and UI ports over new services or synchronous shortcuts in brownfield vertical intents. (learned 2026-07-21) <!-- cid:application-design:w2-04-c6 -->
+- Persist an immutable idempotency disposition plus append-only per-attempt evidence so accepted, rejected, replayed, conflicting-fingerprint, and concurrent outcomes cannot double-advance business state. (learned 2026-07-21) <!-- cid:application-design:c7 -->
+- Fence outbox completion with worker identity, claim token, and monotonically increasing version so stale workers cannot corrupt at-least-once publication state. (learned 2026-07-21) <!-- cid:application-design:c8 -->
+- Use the approved PB-01 broker-to-Booking journey as the W2-04 walking skeleton: booking.confirmed, journey persistence, first GTOT status publication, Booking projection, operator timeline, and one observable invalid transition travel together. (learned 2026-07-21) <!-- cid:units-generation:c1 -->
+- Keep distributed transaction and cross-module contract seams inside the vertical increment whose observed behavior proves them; do not defer those seams to integration-only or final-test units. (learned 2026-07-21) <!-- cid:units-generation:c3 -->
+- Keep independent program AI-DLC sessions concurrent when authorized, while still enforcing each intent's internal hard prerequisites; for W2-04, U01 gates completion of U02/U03 work. (learned 2026-07-21) <!-- cid:delivery-planning:c1 -->
+- Parallelize W2-04 U02/U03 implementation only after U01, serialize every isolated live Compose reservation under one controller, and defer final visual acceptance until W2-02 has merged and W2-04 has synchronized integration. (learned 2026-07-21) <!-- cid:delivery-planning:c3 -->
+- Treat service identities and release reviewers as supporting actors, not invented end-user personas, when approved upstream artifacts assign them observable outcomes. (learned 2026-07-21) <!-- cid:user-stories:c1 -->
+- Favor workflow-based vertical stories over component stories; defer component allocation to Units Generation. (learned 2026-07-21) <!-- cid:user-stories:c2 -->
+- Apply the LinerCore operational-console authority over generic ui-ux-pro-max output: keep dense operational, responsive, accessible guidance and reject marketing, alternate-palette/font, chart-first, and spinner-first conflicts. (learned 2026-07-21) <!-- cid:refined-mockups:c1 -->
+- Interpret 'not a workbench' as prohibiting disposable standalone workbenches, not the product-grade operational workbench required inside the shared authenticated shell. (learned 2026-07-21) <!-- cid:refined-mockups:c2 -->
+- Apply the LinerCore operational-console authority over generic UI guidance: retain dense, responsive, validated, accessible patterns and reject marketing, hero, alternate-palette or font, chart-first, spinner-first, and dark-default conflicts. (learned 2026-07-21) <!-- cid:application-design:w2-04-c5 -->
+- Model authorization and dependency degradation as a scenario-led vertical unit when they produce a cohesive user outcome; keep global viewport, Compose coordination, demo-guard, and audit mechanics at the intent Exit Gate rather than packaging them as a release-hardening unit. (learned 2026-07-21) <!-- cid:units-generation:c4 -->
+- Explicitly decline unsupported production availability, capacity, backup, and disaster-recovery claims when this intent defines only local acceptance evidence. (learned 2026-07-22) <!-- cid:nfr-requirements:c3 -->
+- Keep CMM and Booking as explicit service/adapter boundaries and do not add a cache or orchestration component when the approved contracts already provide the required reliability and proof. (learned 2026-07-22) <!-- cid:nfr-design:c1 -->
+- Keep NFR design evidence local-acceptance focused; do not infer production autoscaling, rate-limit, or availability commitments. (learned 2026-07-22) <!-- cid:nfr-design:c2 -->
+- Prefer bounded pagination and existing connection pools over cache/CDN complexity when isolated-stack evidence remains truthful without them. (learned 2026-07-22) <!-- cid:nfr-design:c3 -->
+- Retain the existing portable Compose/service-owned topology and do not add an AWS resource or shared database when the intent can be proven on the current stack. (learned 2026-07-22) <!-- cid:infrastructure-design:c1 -->
+- Use existing correlated logs, metrics, traces, and reversible CI/CD evidence before introducing a new production observability platform. (learned 2026-07-22) <!-- cid:infrastructure-design:c2 -->
+- Document shared Kafka/network/service-discovery ownership explicitly when it is required for the real broker-to-Booking proof. (learned 2026-07-22) <!-- cid:infrastructure-design:c3 -->
+- Extend existing CMM/Booking seams in place and do not introduce a new service or redesign the shared UI shell for a vertical intent. (learned 2026-07-22) <!-- cid:code-generation:c1 -->
+- Bound dependency/reactor validation explicitly and document limitations; do not claim live acceptance until the isolated stack is actually run. (learned 2026-07-22) <!-- cid:code-generation:c2 -->
+- Prioritize contract-visible lifecycle, conflict, authorization, freshness, and UI evidence in brownfield remediation while preserving approved topology. (learned 2026-07-22) <!-- cid:code-generation:c3 -->
 - In UI functional designs, use one discriminator vocabulary aligned with upstream contracts and explicitly model every action outcome—including recoverable, validation-blocked, denied, degraded, and fatal—with state retention, focus, announcement, and retry semantics. (learned 2026-07-21) <!-- cid:functional-design:c1 -->
 - Before accepting a manager demo-guard PASS, assert and retain the effective Compose project, edge URL, and locked image tag; environment overrides must not silently retarget safety evidence. (learned 2026-07-21) <!-- cid:infrastructure-design:c1 -->
 - For W2-03 live acceptance, make no-rate MANUAL_PRICING_REQUIRED the focal degraded-path demonstration while preserving timeout, 503, and circuit-open contract behavior without expanding the thin slice. (learned 2026-07-21) <!-- cid:intent-capture:c3 -->

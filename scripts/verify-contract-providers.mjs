@@ -85,7 +85,23 @@ export async function verifyContractProviders(options = {}) {
 
   if (live) {
     await checkLive("identity roles", `${options.identityServiceUrl ?? process.env.IDENTITY_SERVICE_URL ?? "http://localhost:8082"}/internal/identity/roles`, checks, failures);
-    await checkLive("reference sets", `${options.referenceDataServiceUrl ?? process.env.REFERENCE_DATA_SERVICE_URL ?? "http://localhost:8083"}/reference-sets`, checks, failures);
+    const referenceDataServiceId = options.referenceDataServiceId
+      ?? process.env.REFERENCE_DATA_VERIFY_SERVICE_ID
+      ?? "apps-reference-data";
+    const referenceDataToken = options.referenceDataToken
+      ?? process.env.REFERENCE_DATA_VERIFY_TOKEN
+      ?? process.env.REFERENCE_DATA_BFF_TOKEN
+      ?? "reference_data_bff_local_token";
+    await checkLive(
+      "reference sets",
+      `${options.referenceDataServiceUrl ?? process.env.REFERENCE_DATA_SERVICE_URL ?? "http://localhost:8083"}/reference-sets`,
+      checks,
+      failures,
+      {
+        "x-linercore-service-id": referenceDataServiceId,
+        "x-linercore-local-token": referenceDataToken
+      }
+    );
   } else {
     checks.push({ name: "live provider verification", status: "skipped", reason: "run with --live when services are available" });
   }
@@ -158,9 +174,9 @@ function push(checks, failures, name, condition, reason) {
   }
 }
 
-async function checkLive(name, url, checks, failures) {
+async function checkLive(name, url, checks, failures, headers = {}) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { headers });
     push(checks, failures, name, response.ok, `HTTP ${response.status}`);
   } catch (error) {
     push(checks, failures, name, false, error instanceof Error ? error.message : String(error));

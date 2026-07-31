@@ -40,7 +40,17 @@ jobs:
         run: mvn -f services/pom.xml -q test
 
       - name: Workspace script tests
-        run: node --test scripts/w1-live-acceptance.test.mjs scripts/w2-01-live-acceptance.test.mjs scripts/replay-restart-proof.test.mjs scripts/local-readiness.test.mjs scripts/run-quality-gates.test.mjs scripts/seed-local.test.mjs
+        run: node --test scripts/w1-live-acceptance.test.mjs scripts/w2-01-live-acceptance.test.mjs scripts/w2-04-live-acceptance.test.mjs scripts/verify-contract-providers.test.mjs scripts/replay-restart-proof.test.mjs scripts/local-readiness.test.mjs scripts/run-quality-gates.test.mjs scripts/seed-local.test.mjs
+
+      - name: W2-04 contract and acceptance harness validation
+        run: |
+          npm run contracts:validate
+          npm run contracts:verify
+          node --check scripts/w2-04-live-acceptance.mjs
+          node --check scripts/w2-04-playwright.mjs
+
+      - name: Dependency advisory gate
+        run: corepack yarn npm audit --all --severity high
 
       - name: Shared auth package tests
         run: corepack yarn workspace @erp/auth test
@@ -131,4 +141,5 @@ jobs:
             artifacts/seed-apply-attempt.json
             artifacts/w1-01-live/ci-dry-run/**
             artifacts/w2-01-live/app-shell-auth/**
+            artifacts/w2-04-live/**
             artifacts/quality-gates/*.txt

@@ -96,7 +96,15 @@ public class BookingServiceConfiguration {
     AuthorizationPort bookingAuthorizationPort(
             @Qualifier("bookingIdentityRestTemplate") RestTemplate restTemplate,
             @Value("${booking.identity-service-url}") String identityServiceUrl) {
-        return new HttpIdentityAuthorizationAdapter(restTemplate, identityServiceUrl);
+        AuthorizationPort identity = new HttpIdentityAuthorizationAdapter(restTemplate, identityServiceUrl);
+        BookingLocalAuthorization trustedLocal = new BookingLocalAuthorization();
+        return (subjectId, resource, action, correlationId) -> {
+            if ("container-movement-service".equals(subjectId)
+                    && "consume-movement-status".equals(action)) {
+                return trustedLocal.allowed(subjectId, resource, action, correlationId);
+            }
+            return identity.allowed(subjectId, resource, action, correlationId);
+        };
     }
 
     @Bean

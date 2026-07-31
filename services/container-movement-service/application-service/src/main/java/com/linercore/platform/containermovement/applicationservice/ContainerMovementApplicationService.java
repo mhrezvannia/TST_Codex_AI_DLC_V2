@@ -5,6 +5,7 @@ import com.linercore.platform.containermovement.applicationservice.command.Creat
 import com.linercore.platform.containermovement.applicationservice.event.BookingConfirmedEvent;
 import com.linercore.platform.containermovement.applicationservice.port.AuditRepository;
 import com.linercore.platform.containermovement.applicationservice.port.AuthorizationPort;
+import com.linercore.platform.containermovement.applicationservice.port.AuthorizationPort.Decision;
 import com.linercore.platform.containermovement.applicationservice.port.IdGenerator;
 import com.linercore.platform.containermovement.applicationservice.port.IdempotencyRepository;
 import com.linercore.platform.containermovement.applicationservice.port.JourneyRepository;
@@ -15,6 +16,10 @@ import com.linercore.platform.containermovement.applicationservice.port.Referenc
 import com.linercore.platform.containermovement.applicationservice.port.SchemaRegistryPort;
 import com.linercore.platform.containermovement.applicationservice.query.OutboxStatusQuery;
 import com.linercore.platform.containermovement.applicationservice.query.PublishBatchResult;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.CaptureDisabledReason;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.Dependency;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.Freshness;
 import com.linercore.platform.containermovement.domain.model.ContainerJourney;
 import com.linercore.platform.containermovement.domain.model.DedupeKey;
 import com.linercore.platform.containermovement.domain.model.JourneyId;
@@ -156,7 +161,11 @@ public class ContainerMovementApplicationService {
         validateRequired(command.correlationId(), "correlation id is required");
         ContainerJourney journey = journeys.findById(new JourneyId(command.journeyId())).orElseThrow();
         if (idempotency.findMovementEventId(command.idempotencyKey()).isPresent()) {
-            return journey;
+            throw movementConflict(
+                    "DUPLICATE_MOVEMENT",
+                    "idempotency key has already been accepted",
+                    journey,
+                    command);
         }
         List<String> inactiveLocations = referenceValidation.inactiveLocationIds(List.of(command.locationId()), command.correlationId());
         if (!inactiveLocations.isEmpty()) {
@@ -168,7 +177,14 @@ public class ContainerMovementApplicationService {
         String eventId = ids.nextId();
         MovementEvent event = new MovementEvent(eventId, command.eventType(), command.containerId(), command.locationId(),
                 command.eventTime(), new DedupeKey(command.idempotencyKey()), command.correlationId());
-        ContainerJourney next = journey.capture(event);
+        ContainerJourney next;
+        try {
+            next = journey.capture(event, clock);
+        } catch (IllegalArgumentException ex) {
+            String code = ex.getMessage() != null && ex.getMessage().contains("duplicate")
+                    ? "DUPLICATE_MOVEMENT" : "OUT_OF_SEQUENCE_MOVEMENT";
+            throw movementConflict(code, ex.getMessage(), journey, command);
+        }
         journeys.save(next);
         idempotency.rememberMovement(command.idempotencyKey(), eventId);
         outbox.enqueue(eventMapper.statusEvent(ids.nextId(), next, command.correlationId(), now()));
@@ -176,19 +192,49 @@ public class ContainerMovementApplicationService {
         return next;
     }
 
-    public ContainerJourney detail(String journeyId, String actorSubjectId, String correlationId) {
+    private MovementConflictException movementConflict(
+            String code,
+            String message,
+            ContainerJourney journey,
+            CaptureMovementCommand command) {
+        String current = journey.status().name();
+        String requiredNext = journey.requiredNextMove();
+        audit.appendDurableRejection("CMM_" + code, journey.id().value(), command.actorSubjectId(),
+                "current=" + current + ";requiredNext=" + requiredNext, command.correlationId());
+        return new MovementConflictException(
+                code,
+                message,
+                current,
+                requiredNext,
+                command.correlationId());
+    }
+
+    public JourneyReadResult detail(String journeyId, String actorSubjectId, String correlationId) {
         requireAllowed(actorSubjectId, "read", correlationId, journeyId);
-        return journeys.findById(new JourneyId(journeyId)).orElseThrow();
+        ContainerJourney result = journeys.findById(new JourneyId(journeyId)).orElseThrow();
+        return readResult(result, actorSubjectId, correlationId, readMetadata(actorSubjectId, correlationId));
     }
 
-    public ContainerJourney detailByBookingId(String bookingId, String actorSubjectId, String correlationId) {
+    public JourneyReadResult detailByBookingId(String bookingId, String actorSubjectId, String correlationId) {
         requireAllowed(actorSubjectId, "read", correlationId, null);
-        return journeys.findByBookingId(bookingId).orElseThrow();
+        ContainerJourney result = journeys.findByBookingId(bookingId).orElseThrow();
+        return readResult(result, actorSubjectId, correlationId, readMetadata(actorSubjectId, correlationId));
     }
 
-    public List<ContainerJourney> recent(String actorSubjectId, String correlationId, int limit) {
+    public List<JourneyReadResult> recent(String actorSubjectId, String correlationId, int limit) {
         requireAllowed(actorSubjectId, "read", correlationId, null);
-        return journeys.findRecent(Math.max(1, Math.min(limit, 100)));
+        List<ContainerJourney> result = journeys.findRecent(Math.max(1, Math.min(limit, 100)));
+        ReadMetadata metadata = readMetadata(actorSubjectId, correlationId);
+        return result.stream()
+                .map(journey -> readResult(journey, actorSubjectId, correlationId, metadata))
+                .toList();
+    }
+
+    public JourneyReadResult responseMetadata(
+            ContainerJourney journey,
+            String actorSubjectId,
+            String correlationId) {
+        return readResult(journey, actorSubjectId, correlationId, readMetadata(actorSubjectId, correlationId));
     }
 
     @Transactional
@@ -252,6 +298,59 @@ public class ContainerMovementApplicationService {
 
     private Instant now() {
         return Instant.now(clock);
+    }
+
+    private ReadMetadata readMetadata(String actorSubjectId, String correlationId) {
+        Decision capability = authorization.decision(
+                actorSubjectId, "container-movement", "capture-capability", correlationId);
+        boolean captureAuthorized = capability == Decision.ALLOW;
+        ReferenceValidationPort.Availability availability = referenceValidation.availability(correlationId);
+        Instant checkedAt = availability.checkedAt() == null ? now() : availability.checkedAt();
+        boolean referenceFresh = availability.state() == ReferenceValidationPort.State.FRESH;
+        boolean captureEnabled = captureAuthorized && referenceFresh;
+        CaptureDisabledReason disabledReason = null;
+        Dependency dependency = Dependency.NONE;
+        if (capability == Decision.UNAVAILABLE) {
+            disabledReason = CaptureDisabledReason.CAPABILITY_UNAVAILABLE;
+            dependency = Dependency.IDENTITY;
+        } else if (!captureAuthorized) {
+            disabledReason = CaptureDisabledReason.CAPTURE_NOT_AUTHORIZED;
+            dependency = Dependency.IDENTITY;
+        } else if (!referenceFresh) {
+            disabledReason = availability.state() == ReferenceValidationPort.State.UNAVAILABLE
+                    ? CaptureDisabledReason.REFERENCE_DATA_UNAVAILABLE
+                    : CaptureDisabledReason.REFERENCE_DATA_LAST_KNOWN;
+            dependency = Dependency.REFERENCE_DATA;
+        }
+        Freshness freshness = switch (availability.state()) {
+            case FRESH -> Freshness.FRESH;
+            case LAST_KNOWN -> Freshness.LAST_KNOWN;
+            case UNAVAILABLE -> Freshness.UNAVAILABLE;
+        };
+        return new ReadMetadata(freshness, captureEnabled, disabledReason, dependency, checkedAt);
+    }
+
+    private JourneyReadResult readResult(
+            ContainerJourney journey,
+            String actorSubjectId,
+            String correlationId,
+            ReadMetadata metadata) {
+        return new JourneyReadResult(
+                journey,
+                metadata.freshness(),
+                journey.updatedAt(),
+                metadata.captureEnabled(),
+                metadata.captureDisabledReason(),
+                metadata.dependency(),
+                metadata.checkedAt());
+    }
+
+    private record ReadMetadata(
+            Freshness freshness,
+            boolean captureEnabled,
+            CaptureDisabledReason captureDisabledReason,
+            Dependency dependency,
+            Instant checkedAt) {
     }
 
     private void requireMessaging() {

@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.HexFormat;
+import java.util.Map;
 
 public record PricingInput(
         String bookingRef,
@@ -38,26 +39,44 @@ public record PricingInput(
     }
 
     public static PricingInput from(Booking booking, int amendmentSeq) {
-        String date = booking.attributes().get("requestedDepartureDate");
+        return from(booking, booking.attributes(), amendmentSeq);
+    }
+
+    public static PricingInput from(Booking booking, Map<String, String> attributes, int amendmentSeq) {
+        Map<String, String> resolvedAttributes = attributes == null ? Map.of() : attributes;
+        String date = resolvedAttributes.get("requestedDepartureDate");
         if (date == null || date.isBlank()) {
             throw new IllegalArgumentException("requested departure date is required");
         }
         int equipmentQuantity = booking.equipment().isEmpty() ? 1 : booking.equipment().get(0).quantity();
+        String equipmentCode = booking.equipmentType();
         return new PricingInput(
                 booking.bookingNumber(),
-                booking.attributes().getOrDefault("tradeLaneId", "NA-EU"),
-                booking.originLocationId(),
-                booking.destinationLocationId(),
-                booking.equipmentType(),
-                booking.customerId(),
-                booking.attributes().getOrDefault(
-                        "commodityCode", booking.attributes().getOrDefault("commodityId", "commodity-general")),
+                resolvedAttributes.getOrDefault("tradeLaneId", "NA-EU"),
+                canonicalReferenceId(booking, "routing[0].loadUnLocode", booking.originLocationId()),
+                canonicalReferenceId(booking, "routing[0].dischargeUnLocode", booking.destinationLocationId()),
+                canonicalReferenceId(booking, "equipment[0].equipmentTypeCode", equipmentCode),
+                canonicalReferenceId(booking, "customerId", booking.customerId()),
+                resolvedAttributes.getOrDefault(
+                        "commodityCode", resolvedAttributes.getOrDefault("commodityId", "commodity-general")),
                 booking.reefer(),
                 booking.dangerousGoods(),
                 LocalDate.parse(date),
                 equipmentQuantity,
-                booking.equipmentType().startsWith("4") ? equipmentQuantity * 2 : equipmentQuantity,
+                equipmentCode.startsWith("4") ? equipmentQuantity * 2 : equipmentQuantity,
                 amendmentSeq);
+    }
+
+    private static String canonicalReferenceId(Booking booking, String fieldPath, String fallback) {
+        if (booking.referenceValidationSnapshot() == null) {
+            return fallback;
+        }
+        return booking.referenceValidationSnapshot().fieldResults().stream()
+                .filter(result -> fieldPath.equals(result.fieldPath()))
+                .map(result -> result.recordId())
+                .filter(recordId -> recordId != null && !recordId.isBlank())
+                .findFirst()
+                .orElse(fallback);
     }
 
     public byte[] canonicalBytes() {

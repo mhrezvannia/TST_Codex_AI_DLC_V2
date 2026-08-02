@@ -4,12 +4,13 @@ import { AgreementFormEditor } from "./AgreementForm";
 afterEach(() => vi.unstubAllGlobals());
 
 test("associates validation errors, focuses a linked summary, and preserves entered values", async () => {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json({ options: [] })));
   render(<AgreementFormEditor />);
   const agreementNumber = screen.getByLabelText("Agreement number");
   fireEvent.change(agreementNumber, { target: { value: "AGR-1" } });
   fireEvent.click(screen.getByTestId("save-agreement"));
 
-  const summary = await screen.findByRole("alert");
+  const summary = await screen.findByTestId("agreement-form-error");
   await waitFor(() => expect(summary).toHaveFocus());
   expect(agreementNumber).toHaveValue("AGR-1");
 
@@ -26,7 +27,9 @@ test("associates validation errors, focuses a linked summary, and preserves ente
 });
 
 test("focuses and announces service failures while preserving values and field associations", async () => {
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({
+  vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL) => String(input).includes("reference-options")
+    ? Promise.resolve(Response.json({ options: [] }))
+    : Promise.resolve(new Response(JSON.stringify({
     code: "AGREEMENT_REFERENCE_INVALID",
     message: "Customer reference is inactive",
     fields: [{
@@ -35,13 +38,13 @@ test("focuses and announces service failures while preserving values and field a
       message: "Select an active customer"
     }],
     correlationId: "corr-1"
-  }), { status: 422 })));
+  }), { status: 422 }))));
 
   render(<AgreementFormEditor />);
   fillValidForm();
   fireEvent.click(screen.getByTestId("save-agreement"));
 
-  const summary = await screen.findByRole("alert");
+  const summary = await screen.findByTestId("agreement-form-error");
   await waitFor(() => expect(summary).toHaveFocus());
   expect(summary).toHaveTextContent("Customer reference is inactive");
   expect(screen.getByLabelText("Agreement number")).toHaveValue("AGR-1");

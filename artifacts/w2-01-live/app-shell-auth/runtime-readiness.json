@@ -22,7 +22,7 @@
     {
       "name": "apps-booking",
       "url": "http://127.0.0.1:3001/",
-      "httpStatus": 307,
+      "httpStatus": 308,
       "status": "PASS"
     },
     {

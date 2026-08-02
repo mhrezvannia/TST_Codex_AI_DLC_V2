@@ -1,19 +1,13 @@
 {
-  "preSignOutSubject": "local.booking.user",
-  "signOutCorrelationId": "2b6d56a202ed3101586b097f276760b8",
+  "preSignOutSubject": null,
+  "signOutCorrelationId": "not-captured",
   "signOutCommand": "POST /api/auth/sign-out through shell/auth route",
-  "signOutExitOrHttpStatus": 200,
-  "cookieCleared": true,
+  "signOutExitOrHttpStatus": null,
+  "cookieCleared": false,
   "postSignOutRoute": "/booking",
-  "postSignOutDecision": "Keycloak reauthentication required",
-  "staleCallStatus": 401,
-  "staleCallCode": "AUTH_REQUIRED",
-  "staleCallCorrelationId": "response-body",
-  "backendLocalUserObserved": false,
-  "reauthRequired": true,
-  "timings": {
-    "signOutMs": 416.98,
-    "staleCallMs": 26.08,
-    "postSignOutGuardMs": 217.89
-  }
+  "postSignOutDecision": "BLOCKED - live proof not executed",
+  "staleCallStatus": null,
+  "staleCallCode": null,
+  "staleCallCorrelationId": "not-captured",
+  "backendLocalUserObserved": false
 }

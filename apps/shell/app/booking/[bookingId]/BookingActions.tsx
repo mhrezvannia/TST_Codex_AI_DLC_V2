@@ -5,11 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { Button, StatusStrip } from "@erp/ui";
 import type { ShellBookingStatus } from "../../../lib/booking-client";
 
-type BookingAction = "validate" | "price" | "confirm";
+type BookingAction = "validate" | "confirm";
 
 const actionLabel: Record<BookingAction, string> = {
   validate: "Validate references",
-  price: "Price",
   confirm: "Confirm"
 };
 
@@ -21,7 +20,6 @@ type ActionState =
 
 const expectedStatus: Record<BookingAction, ShellBookingStatus> = {
   validate: "VALIDATED",
-  price: "PRICED",
   confirm: "CONFIRMED"
 };
 
@@ -109,15 +107,6 @@ export function BookingActions({ bookingId, status }: { bookingId: string; statu
           type="button"
         >
           {busy === "validate" ? "Validating..." : "Validate references"}
-        </Button>
-        <Button
-          variant="primary"
-          data-testid="booking-price"
-          disabled={status !== "VALIDATED" || busy !== null}
-          onClick={() => execute("price")}
-          type="button"
-        >
-          {busy === "price" ? "Pricing..." : "Price"}
         </Button>
         <Button
           variant="primary"

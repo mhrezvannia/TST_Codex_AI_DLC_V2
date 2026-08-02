@@ -26,7 +26,8 @@ export async function runBrowserEvidence({ registry, driver, publishArtifacts })
     const assertionStatus = validateBrowserAssertion(observed?.assertions ?? {});
     const trace = sanitizeTraceEntries(observed?.traceEntries ?? []);
     if (assertionStatus !== "PASS" || trace.status !== "PASS" || observed?.stateObserved !== true || !observed?.correlationObserved) {
-      results.push(failedCell(cell, trace.status === "BLOCKED" ? "BLOCKED" : "FAIL", trace.message ?? "browser assertion/correlation mismatch"));
+      const summary = trace.message ?? browserFailureSummary(observed);
+      results.push(failedCell(cell, trace.status === "BLOCKED" ? "BLOCKED" : "FAIL", summary));
       continue;
     }
     let publication;
@@ -55,24 +56,28 @@ export function createPlaywrightPageDriver({ page, axeScan, signedSession, scena
       if (typeof scenarioController?.prepare !== "function" || typeof scenarioController?.assert !== "function") {
         throw blockedError("browser scenario controller unavailable");
       }
+      await applyCellPresentation(page, cell);
       await scenarioController.prepare({ page, cell, session: signedSession });
       const origins = []; const onRequest = (request) => origins.push(new URL(request.url()).origin);
       page.on("request", onRequest);
       try {
         const response = await page.goto(cell.resolvedRoute);
         const main = page.getByRole("main"); await main.waitFor({ state: "visible" });
-        const axe = await axeScan(page);
         const scenario = await scenarioController.assert({ page, cell, session: signedSession });
+        const axe = await axeScan(page);
         const focus = await observeKeyboardFocus(page);
         const layout = await observeLayout(page);
         const correlationId = scenario.correlationId;
         return { stateObserved: scenario.stateObserved === true,
           correlationObserved: cell.scenario ? Boolean(correlationId && scenario.correlationObserved) : true,
           correlationId,
-          assertions: { networkOrigins: origins, axeCritical: axe.critical, axeSerious: axe.serious, semantic: response?.ok() === true,
+          assertions: { networkOrigins: origins, axeCritical: axe.critical, axeSerious: axe.serious,
+            axeSeriousRules: axe.violations?.filter((item) => item.impact === "serious").map((item) => item.id) ?? [],
+            semantic: response?.ok() === true,
             keyboard: focus.keyboard, focus: focus.visible, liveRegion: scenario.liveRegionObserved === true,
             reducedMotion: await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches),
-            pageOverflow: layout.pageOverflow, focusClipped: focus.clipped, hiddenPrimaryAction: scenario.hiddenPrimaryAction === true },
+            pageOverflow: layout.pageOverflow, overflowElements: layout.overflowElements,
+            focusClipped: focus.clipped, hiddenPrimaryAction: scenario.hiddenPrimaryAction === true },
           screenshot: await page.screenshot(),
           axeReport: Buffer.from(JSON.stringify(axe)),
           assertionJson: Buffer.from(JSON.stringify({ scenario, focus, layout })),
@@ -80,6 +85,15 @@ export function createPlaywrightPageDriver({ page, axeScan, signedSession, scena
       } finally { page.off("request", onRequest); }
     },
   };
+}
+
+async function applyCellPresentation(page, cell) {
+  const structural = /-(375|768|1024|1440)-(LIGHT|DARK)$/.exec(cell.key);
+  await page.setViewportSize({ width: structural ? Number(structural[1]) : 1024, height: 900 });
+  await page.emulateMedia({
+    colorScheme: structural?.[2].toLowerCase() ?? "light",
+    reducedMotion: "reduce",
+  });
 }
 
 export function createDefaultBrowserAdapter({ root, env = process.env }) {
@@ -114,9 +128,9 @@ export function createDefaultBrowserAdapter({ root, env = process.env }) {
 export function resolveBrowserRoute(route, fixtures = {}, key = "") {
   const selected = route ?? "/charge-agreements/[agreementId]";
   const values = {
-    agreementId: fixtures.agreementId,
-    rateId: fixtures.rateId,
-    id: fixtures.bookingId,
+    agreementId: fixtures.agreementIdByKey?.[key] ?? fixtures.agreementId,
+    rateId: fixtures.rateIdByKey?.[key] ?? fixtures.rateId,
+    id: fixtures.bookingIdByKey?.[key] ?? fixtures.bookingId,
   };
   const resolved = selected.replace(/\[([A-Za-z][A-Za-z0-9]*)\]/g, (_, name) => {
     const value = values[name];
@@ -138,21 +152,37 @@ function browserPayloads(registry, cell, observed, trace) {
 }
 
 async function observeKeyboardFocus(page) {
-  await page.keyboard.press("Tab");
-  return page.evaluate(() => {
+  const inspect = () => page.evaluate(() => {
     const element = document.activeElement;
     const rectangle = element?.getBoundingClientRect();
     const visible = Boolean(element && element !== document.body && rectangle && rectangle.width > 0 && rectangle.height > 0);
     return { keyboard: visible, visible, clipped: visible && (rectangle.left < 0 || rectangle.top < 0
       || rectangle.right > innerWidth || rectangle.bottom > innerHeight) };
   });
+  const current = await inspect();
+  if (current.visible) return current;
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    await page.keyboard.press("Tab");
+    const candidate = await inspect();
+    if (candidate.visible && !candidate.clipped) return candidate;
+  }
+  return inspect();
 }
 
 async function observeLayout(page) {
-  return page.evaluate(() => ({ pageOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth }));
+  return page.evaluate(() => ({
+    pageOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    overflowElements: [...document.querySelectorAll("body *")]
+      .filter((element) => {
+        const rectangle = element.getBoundingClientRect();
+        return rectangle.width > 0 && (rectangle.right > document.documentElement.clientWidth + 1 || rectangle.left < -1);
+      })
+      .slice(0, 8)
+      .map((element) => `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ""}${element.classList.length ? `.${[...element.classList].join(".")}` : ""}`)
+  }));
 }
 
-async function createBuiltInDriver({ root, env, runId }) {
+export async function createBuiltInDriver({ root, env, runId }) {
   if (!env.U06_SIGNED_STORAGE_STATE || !env.U06_SIGNED_SESSION_SUBJECT || !env.U06_BROWSER_SCENARIO_MODULE) {
     throw blockedError("signed storage, subject, or browser scenario capability unavailable");
   }
@@ -165,7 +195,8 @@ async function createBuiltInDriver({ root, env, runId }) {
   if (typeof scenarios.prepareScenario !== "function" || typeof scenarios.assertScenario !== "function") {
     throw blockedError("browser scenario transition/assertion capability unavailable");
   }
-  const browser = await playwright.chromium.launch({ headless: true });
+  const executablePath = verifiedBrowserExecutable(env.U06_BROWSER_EXECUTABLE ?? env.W2_02_BROWSER_EXECUTABLE);
+  const browser = await playwright.chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
   const context = await browser.newContext({ baseURL: "http://127.0.0.1:18088", storageState: path.resolve(root, env.U06_SIGNED_STORAGE_STATE),
     reducedMotion: "reduce" });
   const page = await context.newPage();
@@ -207,3 +238,25 @@ function hasExactArtifacts(kinds, artifacts) {
 }
 
 function blockedError(message) { const error = new Error(message); error.status = "BLOCKED"; return error; }
+
+function verifiedBrowserExecutable(candidate) {
+  if (!candidate?.trim()) return undefined;
+  const resolved = path.resolve(candidate.trim());
+  const stat = lstatSync(resolved);
+  if (!stat.isFile() || stat.isSymbolicLink()) throw blockedError("browser executable identity rejected");
+  return resolved;
+}
+
+function browserFailureSummary(observed) {
+  const assertions = observed?.assertions ?? {};
+  const failures = [];
+  if (assertions.networkOrigins?.some((origin) => origin !== "http://127.0.0.1:18088")) failures.push("non-edge network origin");
+  if ((assertions.axeCritical ?? 0) > 0) failures.push(`axe critical=${assertions.axeCritical}`);
+  if ((assertions.axeSerious ?? 0) > 0) failures.push(`axe serious=${assertions.axeSerious} (${assertions.axeSeriousRules?.join(",") || "unknown"})`);
+  for (const [key, failed] of [["semantic", !assertions.semantic], ["keyboard", !assertions.keyboard],
+    ["focus", !assertions.focus], ["liveRegion", !assertions.liveRegion], ["reducedMotion", !assertions.reducedMotion],
+    [assertions.pageOverflow ? `pageOverflow (${assertions.overflowElements?.join(",") || "unknown"})` : "pageOverflow", assertions.pageOverflow], ["focusClipped", assertions.focusClipped],
+    ["hiddenPrimaryAction", assertions.hiddenPrimaryAction], ["stateObserved", observed?.stateObserved !== true],
+    ["correlationObserved", !observed?.correlationObserved]]) if (failed) failures.push(key);
+  return failures.length ? `browser assertion mismatch: ${failures.join(", ")}` : "browser assertion/correlation mismatch";
+}

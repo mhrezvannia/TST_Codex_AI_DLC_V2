@@ -31,8 +31,8 @@ test("migration fixtures prove exact catalogs, legacy identity, drift fail-close
   assert.equal(validateMigrationProof({ owner: "CHARGE", startingShape: "PARTIAL", migrations: [], startupRejected: false }), "FAIL");
   assert.equal(validateMigrationProof({ owner: "BOOKING", startingShape: "UNKNOWN", migrations: MIGRATIONS.BOOKING.map(([version]) => ({ version, sha256: "0".repeat(64) })), restartHashStable: true, immutableMutationRejected: true }), "FAIL");
   assert.equal(validateMigrationProof({ owner: "BOOKING", startingShape: "V2", migrations: MIGRATIONS.BOOKING.map(([version]) => ({ version, sha256: "0".repeat(64) })), restartHashStable: true, immutableMutationRejected: true }), "FAIL");
-  assert.equal(validateMigrationProof({ owner: "CHARGE", startingShape: "V4", databaseOid: 101, migrations,
-    catalogBefore: catalog, catalogAfter: [...catalog, { version: "V5", checksum: 5, success: true }],
+  assert.equal(validateMigrationProof({ owner: "CHARGE", startingShape: "V5", databaseOid: 101, migrations,
+    catalogBefore: catalog, catalogAfter: [...catalog, { version: "V6", checksum: 6, success: true }],
     catalogHashBefore: "before", catalogHashAfter: "after", legacyRowsPreserved: true, inventedRateLinks: 0,
     restartHashStable: true, immutableMutation }), "FAIL");
   assert.equal(deterministicLegacyAgreementId("a", 1), deterministicLegacyAgreementId("a", 1));
@@ -48,7 +48,7 @@ test("restore targets are owner-separated and guards protect sources/manager", (
 });
 
 test("independent commercial oracle and scenario validators reject fabricated or duplicate evidence", () => {
-  const price = expectedPrice(); assert.equal(price.total, "251.80"); assert.deepEqual(price.lines.map((l) => l.amount), ["200.50", "40.20", "11.10"]);
+  const price = expectedPrice(); assert.equal(price.total, "125.90"); assert.deepEqual(price.lines.map((l) => l.amount), ["100.25", "20.10", "5.55"]);
   const priced = { id: "AGREEMENT_PRICE", correlationId: "c", httpCount: 1, ownerLocalDbOwners: ["CHARGE", "BOOKING"], price, receiptCount: 1, snapshotCount: 1 };
   assert.equal(validateCommercialScenario(priced), "PASS");
   assert.equal(validateCommercialScenario({ ...priced, price: { ...price, total: "0.00" } }), "FAIL");

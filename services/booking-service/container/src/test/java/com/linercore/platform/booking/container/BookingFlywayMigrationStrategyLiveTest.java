@@ -57,7 +57,7 @@ class BookingFlywayMigrationStrategyLiveTest {
         List<HistoryRow> firstHistory = history(schemaDataSource);
         strategy.migrate(flyway(schemaDataSource));
 
-        assertThat(firstHistory).extracting(HistoryRow::version).containsExactly("1", "2", "3");
+        assertThat(firstHistory).extracting(HistoryRow::version).containsExactly("1", "2", "3", "4");
         assertThat(history(schemaDataSource)).isEqualTo(firstHistory);
         assertThat(columns(schemaDataSource, "booking_records"))
                 .contains("equipment_type_code", "snapshot_version");
@@ -89,7 +89,7 @@ class BookingFlywayMigrationStrategyLiveTest {
 
         new BookingFlywayMigrationStrategy(schemaDataSource).migrate(flyway(schemaDataSource));
 
-        assertThat(history(schemaDataSource)).extracting(HistoryRow::version).containsExactly("1", "2", "3");
+        assertThat(history(schemaDataSource)).extracting(HistoryRow::version).containsExactly("1", "2", "3", "4");
         assertThat(columns(schemaDataSource, "booking_snapshot_migration"))
                 .contains("booking_id", "from_version", "to_version", "outcome");
         assertThat(columns(schemaDataSource, "booking_pricing_snapshots"))

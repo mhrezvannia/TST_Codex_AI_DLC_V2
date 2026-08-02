@@ -27,6 +27,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingApiController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingApiController.class);
     private final BookingApplicationService service;
     private final BookingPricingOrchestrator pricing;
 
@@ -138,6 +141,10 @@ public class BookingApiController {
         }
         PricingCommandResult result =
                 pricing.price(new BookingId(id), actor(request.actorSubjectId()), resolvedCorrelation);
+        LOGGER.info("booking_pricing_terminal correlationId={} outcome={} basis={}",
+                resolvedCorrelation,
+                result.outcome(),
+                result.typedSnapshot() == null ? "NONE" : result.typedSnapshot().pricingBasis());
         PricingHistoryPage history = pricing.history(new BookingId(id), null, 25);
         ResponseEntity.BodyBuilder response = ResponseEntity.status(pricingStatus(result));
         if (result.retryAfterSeconds() > 0) {

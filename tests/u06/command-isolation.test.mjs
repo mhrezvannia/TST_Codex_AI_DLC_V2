@@ -15,6 +15,23 @@ test("bounded commands classify unavailable as BLOCKED and mismatches as FAIL", 
   assert.equal(runBoundedCommand(spec, { execute: execute({}) }).status, "PASS");
 });
 
+test("npm commands execute through Node on Windows while evidence retains the reviewed argv", () => {
+  let invoked;
+  const npmSpec = { ...spec, command: "npm", args: ["--version"] };
+  const result = runBoundedCommand(npmSpec, { execute: (command, args) => {
+    invoked = { command, args };
+    return { status: 0, stdout: "11.0.0", stderr: "" };
+  } });
+  assert.equal(result.status, "PASS");
+  assert.deepEqual(result.command, ["npm", "--version"]);
+  if (process.platform === "win32") {
+    assert.equal(invoked.command, process.execPath);
+    assert.match(invoked.args[0], /npm[\\/]bin[\\/]npm-cli\.js$/);
+  } else {
+    assert.equal(invoked.command, "npm");
+  }
+});
+
 test("redaction and linked SKIPPED records retain no secrets", () => {
   assert.deepEqual(redactArgv(["tool", "--token", "secret-value"]), ["tool", "<redacted>", "<redacted>"]);
   const blocked = runBoundedCommand(spec, { execute: execute({ error: Object.assign(new Error("denied"), { code: "EPERM" }), status: null }) });

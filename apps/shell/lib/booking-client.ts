@@ -10,6 +10,105 @@ export type ShellBookingStatus =
   | "RECONFIRMED"
   | "EXCEPTION";
 
+export type ShellPricingOutcome =
+  | "PRICED"
+  | "LEGACY_PRICED"
+  | "MANUAL_PRICING_REQUIRED"
+  | "DENIED"
+  | "MALFORMED"
+  | "VALIDATION_FAILED"
+  | "CONFLICT"
+  | "IN_PROGRESS"
+  | "TIMEOUT"
+  | "UNAVAILABLE"
+  | "CIRCUIT_OPEN"
+  | "BOOKING_CHANGED";
+
+export type ShellPricingStatus = ShellPricingOutcome | "UNPRICED" | "REPRICE_REQUIRED";
+
+export type ShellTypedPricingSnapshot = {
+  schemaVersion: 2;
+  pricingRequestId: string;
+  bookingRef: string;
+  amendmentSeq: number;
+  bookingRevision: number;
+  inputFingerprint: string;
+  requestedDepartureDate: string;
+  pricingBasis: "AGREEMENT" | "TARIFF";
+  pricingRef: string;
+  agreementVersionId: string | null;
+  lines: Array<{
+    chargeCode: string;
+    category: "FREIGHT" | "SURCHARGE" | "LOCAL";
+    rateCategory: "BASE" | "SURCHARGE" | "LOCAL";
+    basis: "PER_CONTAINER";
+    quantity: number;
+    unitRate: number;
+    amount: number;
+    currency: "USD";
+    sourceRateVersionId: string;
+  }>;
+  applicableDndRuleTypes: string[];
+  total: number;
+  currency: "USD";
+  pricedAt: string;
+  correlationId: string;
+  createdAt: string;
+};
+
+export type ShellLegacyPricingSnapshot = {
+  pricingRequestId: string | null;
+  pricingQuoteId: string;
+  status: string;
+  quotedAmounts: Record<string, string>;
+  receivedAt: string;
+  correlationId: string;
+};
+
+export type ShellPricingSnapshotEnvelope = {
+  pricingRequestId: string | null;
+  pricingQuoteId: string;
+  status: string;
+  quotedAmounts: Record<string, string>;
+  receivedAt: string;
+  correlationId: string;
+  typed: ShellTypedPricingSnapshot | null;
+  legacy: ShellLegacyPricingSnapshot | null;
+};
+
+export type ShellPricingFailureEvidence = {
+  reasonCode: string;
+  reasonMessage: string;
+  pricingRequestId: string | null;
+  manualCaseId: string | null;
+  attempts: number;
+  circuitState: string | null;
+  nextProbeAt: string | null;
+  correlationId: string;
+  occurredAt: string;
+  amendmentSeq: number;
+};
+
+export type ShellPricingCommandResponse = {
+  result: {
+    outcome: ShellPricingOutcome;
+    pricingRequestId: string | null;
+    amendmentSeq: number;
+    inputFingerprint: string;
+    typedSnapshot: ShellTypedPricingSnapshot | null;
+    legacySnapshot: ShellPricingSnapshotEnvelope | null;
+    failureEvidence: ShellPricingFailureEvidence | null;
+    retryAfterSeconds: number;
+    correlationId: string;
+  };
+  history: {
+    current: ShellPricingSnapshotEnvelope | null;
+    prior: ShellPricingSnapshotEnvelope[];
+    nextCursor: string | null;
+  };
+  confirmationEligible: boolean;
+};
+
 export type ShellBooking = {
   id: string;
   bookingNumber: string;
@@ -41,13 +140,22 @@ export type ShellBooking = {
     correlationId: string;
   } | null;
   pricingSnapshot?: {
-    pricingRequestId: string;
+    pricingRequestId: string | null;
     pricingQuoteId: string;
     status: string;
     quotedAmounts: Record<string, string>;
     quotedAt: string;
     correlationId: string;
+    typed: ShellTypedPricingSnapshot | null;
+    legacy: ShellLegacyPricingSnapshot | null;
   } | null;
+  pricingHistory?: {
+    current: ShellPricingSnapshotEnvelope | null;
+    prior: ShellPricingSnapshotEnvelope[];
+    nextCursor: string | null;
+  } | null;
+  pricingStatus?: ShellPricingStatus;
+  confirmationEligible?: boolean;
   lifecycleEvents: Array<{ eventType: string; occurredAt: string }>;
   movementStatuses: Array<{
     bookingRef: string;

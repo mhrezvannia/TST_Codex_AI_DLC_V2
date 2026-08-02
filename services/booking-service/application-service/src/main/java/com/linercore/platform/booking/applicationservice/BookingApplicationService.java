@@ -24,6 +24,7 @@ import com.linercore.platform.booking.applicationservice.port.PricingRequestResu
 import com.linercore.platform.booking.applicationservice.port.ReferenceValidationPort;
 import com.linercore.platform.booking.applicationservice.port.ReferenceProviderUnavailable;
 import com.linercore.platform.booking.applicationservice.port.SchemaRegistryPort;
+import com.linercore.platform.booking.applicationservice.pricing.PricingInput;
 import com.linercore.platform.booking.applicationservice.query.OutboxStatusQuery;
 import com.linercore.platform.booking.applicationservice.query.PublishBatchResult;
 import com.linercore.platform.booking.domain.model.Booking;
@@ -268,7 +269,24 @@ public class BookingApplicationService {
 
     public Booking amend(BookingId id, Map<String, String> attributes, String actorSubjectId, String correlationId) {
         requireAllowed(actorSubjectId, "amend", correlationId);
-        Booking next = bookings.findById(id).orElseThrow().amended(attributes, actorSubjectId, correlationId, now());
+        Booking booking = bookings.findById(id).orElseThrow();
+        java.util.HashMap<String, String> mergedAttributes = new java.util.HashMap<>(booking.attributes());
+        if (attributes != null) {
+            mergedAttributes.putAll(attributes);
+        }
+        int currentAmendmentSeq = booking.pricingAmendmentSeq();
+        PricingInput currentInput = PricingInput.from(booking, currentAmendmentSeq);
+        PricingInput candidateInput = PricingInput.from(booking, mergedAttributes, currentAmendmentSeq);
+        boolean pricingChanged = !currentInput.sameCommercialInput(candidateInput);
+        PricingInput nextInput = candidateInput.withAmendmentSeq(
+                currentAmendmentSeq + (pricingChanged ? 1 : 0));
+        Booking next = booking.pricingInputsAmended(
+                mergedAttributes,
+                nextInput.fingerprint(),
+                nextInput.requestedDepartureDate().toString(),
+                actorSubjectId,
+                correlationId,
+                now());
         bookings.save(next);
         audit.append("BOOKING_AMENDED", id.value(), actorSubjectId, "SUCCESS", null, correlationId);
         return next;

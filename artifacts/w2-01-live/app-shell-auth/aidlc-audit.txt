@@ -38,10 +38,10 @@ docs\codex-review-findings.md:65:**Fix:** Wrap the state change + outbox enqueue
 docs\codex-review-findings.md:106:- AsyncAPI/OpenAPI: `contents.includes(channel)` / `contents.includes(requiredPath)` — substring presence in a YAML file (lines 85-105).
 docs\codex-review-findings.md:131:The `erp-flow-checkpoint.md` marks every step `[x]` except the final "Docker-backed live full-flow smoke," which is the **one** check that would exercise real Kafka/Schema-Registry/cross-service delivery — i.e. the one that would have exposed C1–C5. Unit/integration tests pass because they run against the no-op placeholders and in-process wiring. Green tests here certify the scaffold, not the system.
 docs\codex-review-findings.md:163:3. **Doc-code architecture drift with no binding check.** Docs described async/event-driven; code did sync point-to-point; nothing reconciled them. **Prevention:** for every contract, add one executable test that fails if the code stops matching the contract. A contract with no test that can go red is just prose.
-docs\enterprise-gap-summary.md:19:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`
-docs\enterprise-gap-summary.md:21:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`
-docs\enterprise-gap-summary.md:43:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`: 15 graph nodes found.
-docs\enterprise-gap-summary.md:45:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`: 15 graph nodes found.
+contracts\openapi\reference-data-service.yaml:155:      summary: Publish a claimed batch through the configured Kafka relay.
+docs\enterprise-technical-environment.md:33:- **Number of Modules (current / planned)**: 4 program lanes / 4. The **Shared Platform** lane is physically realised as **two services** (`reference-data-service`, `identity-service`) plus the **Apache Kafka event bus**; the other three lanes are one service each.
+docs\enterprise-technical-environment.md:52:| Shared Platform | *Apache Kafka (event bus)* | Infrastructure | Not a service — the shared async transport (self-managed on-prem) |
+docs\enterprise-technical-environment.md:78:- **Cross-service connectivity**: synchronous calls over the internal network; asynchronous over the Kafka event bus. Service-to-service auth via the identity service (§7).
 -- direct HTTP calls that may be delivering those 'events':
 
 === 6. State-change + outbox paths lacking a transactional boundary ===

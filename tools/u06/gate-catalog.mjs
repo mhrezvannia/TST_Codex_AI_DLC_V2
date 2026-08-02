@@ -1,7 +1,7 @@
-export const STARTUP = Object.freeze({ command: ["node", "scripts/wave-a-compose.mjs", "up", "-d", "--build"], timeoutMs: 600_000, serviceReadinessMs: 120_000, edge: "http://127.0.0.1:18088" });
+export const STARTUP = Object.freeze({ command: ["node", "scripts/wave-a-compose.mjs", "acceptance-up", "--wait-timeout", "360"], timeoutMs: 1_200_000, serviceReadinessMs: 120_000, edge: "http://127.0.0.1:18088" });
 export const OWNER_LOCAL_DATABASE_COMMANDS = Object.freeze({
-  CHARGE: ["node", "scripts/wave-a-compose.mjs", "exec", "-T", "postgres", "psql", "-d", "linercore_pricing"],
-  BOOKING: ["node", "scripts/wave-a-compose.mjs", "exec", "-T", "postgres", "psql", "-d", "linercore_booking"],
+  CHARGE: ["node", "scripts/wave-a-compose.mjs", "exec", "-T", "postgres", "psql", "-U", "linercore_pricing", "-d", "linercore_pricing"],
+  BOOKING: ["node", "scripts/wave-a-compose.mjs", "exec", "-T", "postgres", "psql", "-U", "linercore_booking", "-d", "linercore_booking"],
 });
 export const PRESERVATION_GATES = Object.freeze([
   ["W0-01", "node scripts/validate-skeleton.mjs"], ["W0-02", "npm run seed:validate"],

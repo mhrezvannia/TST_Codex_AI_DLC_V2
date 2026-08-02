@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PricingApiController {
     static final String PRICING_MEDIA_TYPE = "application/vnd.api.v1+json";
+    private static final Logger LOGGER = LoggerFactory.getLogger(PricingApiController.class);
 
     private final PricingApplicationService service;
 
@@ -41,6 +44,8 @@ public class PricingApiController {
             @RequestAttribute(PricingServiceIdentityFilter.VERIFIED_SERVICE_ATTRIBUTE) String actorSubjectId) {
         PricingRequest request = body.toDomain(correlationId);
         var result = service.requestPricing(request, idempotencyKey, actorSubjectId);
+        LOGGER.info("charge_pricing_terminal correlationId={} httpStatus={} replayed={}",
+                correlationId, result.httpStatus(), result.replayed());
         return ResponseEntity.status(result.httpStatus())
                 .contentType(MediaType.parseMediaType(result.contentType()))
                 .header("X-Pricing-Replayed", Boolean.toString(result.replayed()))

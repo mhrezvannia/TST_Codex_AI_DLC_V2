@@ -1,8 +1,14 @@
 .rates-page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--erp-space-4);
+  min-width: 0;
   padding: var(--erp-space-6);
   color: var(--erp-color-text);
+}
+
+.rates-page > * {
+  min-width: 0;
 }
 
 .manual-pricing-page {
@@ -41,7 +47,7 @@
 }
 
 .rates-link {
-  color: var(--erp-color-primary);
+  color: var(--erp-color-info);
   font-weight: 700;
 }
 
@@ -84,6 +90,8 @@
 }
 
 .rates-table-region {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
   border: 1px solid var(--erp-color-border);
   border-radius: var(--erp-radius-md);

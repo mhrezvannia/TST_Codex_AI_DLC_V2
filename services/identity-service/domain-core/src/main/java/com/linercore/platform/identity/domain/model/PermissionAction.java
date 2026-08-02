@@ -6,6 +6,8 @@ public enum PermissionAction {
     VALIDATE("validate"),
     REQUEST_PRICING("request-pricing"),
     CONFIRM("confirm"),
+    AMEND("amend"),
+    RECONFIRM("reconfirm"),
     UPDATE("update"),
     APPROVE("approve"),
     CREATE_SUCCESSOR("create-successor"),

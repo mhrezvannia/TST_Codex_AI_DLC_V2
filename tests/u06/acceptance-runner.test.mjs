@@ -72,15 +72,16 @@ test("capability exception is BLOCKED and every downstream lifecycle gate is lin
 
 test("migration and restore adapters execute exact owner-only catalogs and isolated targets", async () => {
   const seen = []; let migrationCall = 0;
-  const catalog = { startingShape: "V3", databaseOid: 101, catalog: MIGRATIONS.BOOKING.map(([version], index) => ({ version, checksum: index + 1, success: true })),
+  const catalog = { startingShape: "V4", databaseOid: 101, catalog: MIGRATIONS.BOOKING.map(([version], index) => ({ version, checksum: index + 1, success: true })),
     legacyFingerprint: "legacy-booking", inventedRateLinks: 0 };
   const executeMigration = (command, args) => {
     seen.push([command, ...args]); migrationCall++;
-    const stdout = migrationCall === 4 ? JSON.stringify({ attempted: true, rejected: true, beforeHash: "same", afterHash: "same" }) : JSON.stringify(catalog);
+    const stdout = migrationCall === 5 ? JSON.stringify({ attempted: true, rejected: true, beforeHash: "same", afterHash: "same" }) : JSON.stringify(catalog);
     return { status: 0, stdout, stderr: "" };
   };
   assert.equal((await createMigrationAdapter("BOOKING", { execute: executeMigration, root: process.cwd() })({})).status, "PASS");
   assert.match(seen[0].join(" "), /linercore_booking/); assert.doesNotMatch(seen[0].join(" "), /linercore_pricing/);
+  assert.match(seen[2].join(" "), /up -d --no-deps --wait booking-service/);
   seen.length = 0; let identityCall = 0;
   const executeRestore = (command, args) => {
     seen.push([command, ...args]);

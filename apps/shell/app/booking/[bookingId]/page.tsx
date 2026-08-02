@@ -6,6 +6,7 @@ import { loadShellBooking } from "../../../lib/booking-client";
 import { requireShellSession } from "../../../lib/shell-auth";
 import { AccessDeniedPanel } from "../../AccessDeniedPanel";
 import { BookingActions } from "./BookingActions";
+import { BookingPricingPanel } from "./BookingPricingPanel";
 
 export default async function ShellBookingDetailPage({
   params,
@@ -96,22 +97,14 @@ export default async function ShellBookingDetailPage({
               <dl><div><dt>Customer</dt><dd>{result.value.customerId}</dd></div><div><dt>Status</dt><dd>{result.value.status}</dd></div></dl>
             </Card>
           </section>
-          {result.value.pricingSnapshot ? (
-            <Card title="Pricing evidence">
-              <p><strong>{result.value.currency ?? "Currency unavailable"} {result.value.pricingSnapshot.quotedAmounts.total ?? result.value.pricingSnapshot.quotedAmounts.amount ?? "Quoted"}</strong></p>
-              <p>Quote {result.value.pricingSnapshot.pricingQuoteId}; request {result.value.pricingSnapshot.pricingRequestId}</p>
-              <p className="shell-muted">Source status {result.value.pricingSnapshot.status}; quoted {new Date(result.value.pricingSnapshot.quotedAt).toLocaleString()}</p>
-            </Card>
-          ) : result.value.status === "PRICED" || result.value.status === "CONFIRMED" ? (
-            <StatusStrip tone="warning" role="status" data-state="degraded">Pricing source evidence is temporarily unavailable. Booking status remains service-authoritative.</StatusStrip>
-          ) : null}
-          {result.value.status === "MANUAL_PRICING" ? (
-            <StatusStrip tone="danger" role="alert" data-state="validation-blocked">
-              <h2>Manual pricing required</h2>
-              <p>{result.value.attributes.manualPricingReasonMessage || result.value.attributes.manualPricingReasonCode || "Pricing requires operator review."}</p>
-              <p className="shell-muted">Request {result.value.attributes.manualPricingRequestId || "booking-only"}; correlation {result.value.attributes.manualPricingCorrelationId || "not recorded"}</p>
-            </StatusStrip>
-          ) : null}
+          <BookingPricingPanel
+            bookingId={result.value.id}
+            bookingStatus={result.value.status}
+            initialSnapshot={result.value.pricingSnapshot ?? null}
+            initialHistory={result.value.pricingHistory ?? null}
+            initialPricingStatus={result.value.pricingStatus ?? inferPricingStatus(result.value.status, Boolean(result.value.pricingSnapshot))}
+            initialConfirmationEligible={result.value.confirmationEligible ?? ["PRICED", "CONFIRMED", "RECONFIRMED"].includes(result.value.status)}
+          />
           {result.value.movementStatuses.length ? (
             <Card title="Journey status" data-testid="booking-movement-evidence">
               {result.value.movementStatuses.map((movement) => (
@@ -144,4 +137,10 @@ export default async function ShellBookingDetailPage({
       )}
     </>
   );
+}
+
+function inferPricingStatus(status: string, hasSnapshot: boolean) {
+  if (hasSnapshot) return "PRICED" as const;
+  if (status === "MANUAL_PRICING") return "MANUAL_PRICING_REQUIRED" as const;
+  return "UNPRICED" as const;
 }

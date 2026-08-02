@@ -14,7 +14,7 @@ export function verifyU02RoutePreservation(root = repositoryRoot) {
   const waveEnv = env(text(root, "infrastructure/env/wave-a.env.example"));
 
   requireText(nginx, "location = /charge-agreements {", failures);
-  requireText(nginx, "return 308 /charge-agreements/;", failures);
+  requireText(nginx, "location = /charge-agreements {\n    proxy_pass http://apps-charge-agreements:3000;", failures);
   requireText(nginx, "location ^~ /charge-agreements/ {", failures);
   requireText(nginx, "proxy_pass http://apps-charge-agreements:3000;", failures);
   for (const route of fixture.preservedEdgeRoutes) {

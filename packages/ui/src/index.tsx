@@ -38,8 +38,15 @@ const railItems = [
   { key: "charge-agreements", label: "Charge agreements", icon: "CA" }
 ];
 
-export function PlatformShell({ title, children }: { title: string; children: ReactNode }) {
-  const activeStage = title.toLowerCase().includes("charge") ? 0 : title.toLowerCase().includes("auth") ? -1 : 1;
+export function PlatformShell({
+  title,
+  children,
+  journeyStage = null
+}: {
+  title: string;
+  children: ReactNode;
+  journeyStage?: 0 | 1 | 2 | 3 | null;
+}) {
   const normalizedTitle = title.toLowerCase();
   const activeRail = normalizedTitle.includes("charge")
     ? "charge-agreements"
@@ -52,8 +59,8 @@ export function PlatformShell({ title, children }: { title: string; children: Re
   return (
     <>
       <DesignSystemStyles />
-      <div style={styles.shell}>
-        <aside aria-label="LinerCore modules" style={styles.rail}>
+      <div className="erp-platform-shell" style={styles.shell}>
+        <aside className="erp-platform-shell__rail" aria-label="LinerCore modules" style={styles.rail}>
           <div aria-hidden="true" style={styles.logoMark}>LC</div>
           <nav aria-label="LinerCore modules" style={styles.railNav}>
             {railItems.map((item) => {
@@ -75,28 +82,34 @@ export function PlatformShell({ title, children }: { title: string; children: Re
           <div style={styles.avatar}>RT</div>
         </aside>
 
-        <section style={styles.application}>
-          <header style={styles.topbar}>
-            <div style={styles.brandBlock}>
+        <section className="erp-platform-shell__application" style={styles.application}>
+          <header className="erp-platform-shell__topbar" style={styles.topbar}>
+            <details className="erp-platform-shell__mobile-nav">
+              <summary aria-label="Open module navigation">Modules</summary>
+              <nav aria-label="Mobile LinerCore modules">
+                {railItems.map((item) => <a key={item.key} aria-current={item.key === activeRail ? "page" : undefined} href={railHref(item.key)}>{item.label}</a>)}
+              </nav>
+            </details>
+            <div className="erp-platform-shell__brand" style={styles.brandBlock}>
               <span style={styles.brandName}>LinerCore</span>
               <span style={styles.brandDivider} />
-              <span style={styles.brandSubcopy}>Commercial & Equipment Platform</span>
-              <span style={styles.scopePill}>MVP - ONE TRADE LANE</span>
+              <span className="erp-platform-shell__brand-subcopy" style={styles.brandSubcopy}>Commercial & Equipment Platform</span>
+              <span className="erp-platform-shell__scope" style={styles.scopePill}>MVP - ONE TRADE LANE</span>
             </div>
-            <div style={styles.searchBar} aria-label="Global search">
+            <div className="erp-platform-shell__search" style={styles.searchBar} aria-label="Global search">
               <span aria-hidden="true">Search</span>
               <span>Search bookings, containers...</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, justifySelf: "end" }}>
-              <span style={styles.currency}>USD</span>
+            <div className="erp-platform-shell__tools" style={{ display: "flex", alignItems: "center", gap: 12, justifySelf: "end" }}>
+              <span className="erp-platform-shell__currency" style={styles.currency}>USD</span>
               <ThemeToggle />
             </div>
           </header>
 
-          <div style={styles.stageRibbon} aria-label="MVP journey">
+          {journeyStage !== null ? <div style={styles.stageRibbon} aria-label="MVP journey">
             {stages.map((stage, index) => {
-              const active = index === activeStage;
-              const complete = activeStage > index;
+              const active = index === journeyStage;
+              const complete = journeyStage > index;
               return (
                 <div key={stage.label} style={styles.stageItem}>
                   <span style={active ? styles.stageNumberActive : complete ? styles.stageNumberComplete : styles.stageNumber}>
@@ -109,9 +122,9 @@ export function PlatformShell({ title, children }: { title: string; children: Re
                 </div>
               );
             })}
-          </div>
+          </div> : null}
 
-          <div style={styles.content}>{children}</div>
+          <div className="erp-platform-shell__content" style={styles.content}>{children}</div>
         </section>
       </div>
     </>

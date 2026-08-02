@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { dirname, join } from "node:path";
 
 export const COMMAND_LOG_CAP = 32 * 1024 * 1024;
 const SECRET = /(?:token|secret|password|cookie|authorization|session|credential|api[-_]?key)/i;
@@ -9,7 +10,8 @@ export function runBoundedCommand(spec, { execute = spawnSync, now = () => new D
   const startedAt = now().toISOString(); const start = monotonic();
   let result;
   try {
-    result = execute(spec.command, spec.args ?? [], {
+    const invocation = platformInvocation(spec.command, spec.args ?? []);
+    result = execute(invocation.command, invocation.args, {
       cwd: spec.cwd, env: spec.env, encoding: "utf8", timeout: spec.timeoutMs,
       maxBuffer: spec.outputCapBytes ?? COMMAND_LOG_CAP, windowsHide: true,
     });
@@ -33,9 +35,23 @@ export function runBoundedCommand(spec, { execute = spawnSync, now = () => new D
     startedAt, completedAt, startMonotonicNs: start.toString(), endMonotonicNs: end.toString(),
     exitCode: Number.isInteger(result.status) ? result.status : null, status, classification,
     stdout: boundText(redactText(result.stdout), spec.outputCapBytes), stderr: boundText(redactText(result.stderr), spec.outputCapBytes),
-    errorCode: errorCode ?? null, summary: boundText(redactText(result.assertionError?.message ?? result.error?.message ?? classification), spec.outputCapBytes),
+    errorCode: errorCode ?? null, summary: boundText(redactText(result.assertionError?.message ?? result.error?.message
+      ?? (status === "FAIL" ? commandFailureSummary(result) : classification)), Math.min(spec.outputCapBytes ?? COMMAND_LOG_CAP, 4_000)),
     blockerId: status === "BLOCKED" ? `B-${spec.id}` : undefined,
     probeHistory: [{ completedAt, exitCode: Number.isInteger(result.status) ? result.status : null, errorCode: errorCode ?? null, status }],
+  };
+}
+
+function commandFailureSummary(result) {
+  const output = `${result.stderr ?? ""}\n${result.stdout ?? ""}`.trim();
+  return output ? output.slice(-4_000) : "COMMAND_MISMATCH";
+}
+
+function platformInvocation(command, args) {
+  if (process.platform !== "win32" || command !== "npm") return { command, args };
+  return {
+    command: process.execPath,
+    args: [join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js"), ...args],
   };
 }
 

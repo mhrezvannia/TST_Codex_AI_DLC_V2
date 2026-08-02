@@ -155,6 +155,11 @@ export const componentsCss = `
 /* Layout helpers */
 .erp-stack { display: flex; flex-direction: column; gap: var(--erp-space-4); }
 .erp-inline { display: flex; align-items: center; gap: var(--erp-space-2); flex-wrap: wrap; }
+.erp-platform-shell__mobile-nav { display: none; position: relative; }
+.erp-platform-shell__mobile-nav summary { min-height: 40px; display: inline-flex; align-items: center; padding: 0 var(--erp-space-2); border: 1px solid var(--erp-color-border-strong); border-radius: var(--erp-radius-sm); cursor: pointer; font-weight: 700; }
+.erp-platform-shell__mobile-nav nav { position: absolute; z-index: 40; top: calc(100% + var(--erp-space-1)); left: 0; width: min(260px, calc(100vw - 24px)); display: grid; gap: var(--erp-space-1); padding: var(--erp-space-2); border: 1px solid var(--erp-color-border); border-radius: var(--erp-radius-sm); background: var(--erp-color-surface); box-shadow: var(--erp-shadow-2); }
+.erp-platform-shell__mobile-nav a { min-height: 40px; display: flex; align-items: center; padding: 0 var(--erp-space-2); color: var(--erp-color-text); text-decoration: none; }
+.erp-platform-shell__mobile-nav a[aria-current="page"] { border-left: 3px solid var(--erp-color-primary); background: var(--erp-color-info-bg); }
 
 /* Card / Panel */
 .erp-card {
@@ -365,6 +370,14 @@ export const componentsCss = `
 .erp-identifier { overflow-wrap: anywhere; font-size: var(--erp-font-size-xs); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 767px) {
+  .erp-platform-shell { display: block !important; }
+  .erp-platform-shell__rail { display: none !important; }
+  .erp-platform-shell__application { width: 100%; min-width: 0; }
+  .erp-platform-shell__topbar { grid-template-columns: auto minmax(0, 1fr) auto !important; gap: var(--erp-space-2) !important; padding: var(--erp-space-2) var(--erp-space-3) !important; }
+  .erp-platform-shell__mobile-nav { display: block; }
+  .erp-platform-shell__brand { gap: var(--erp-space-2) !important; overflow: hidden; }
+  .erp-platform-shell__brand-subcopy, .erp-platform-shell__scope, .erp-platform-shell__search, .erp-platform-shell__currency { display: none !important; }
+  .erp-platform-shell__content { min-width: 0; max-width: 100vw; }
   .erp-page-header, .erp-record-header__main { align-items: stretch; flex-direction: column; }
   .erp-page-header__actions, .erp-record-header__actions { justify-content: flex-start; }
   .erp-page-header__actions .erp-btn, .erp-record-header__actions .erp-btn { min-height: 44px; }

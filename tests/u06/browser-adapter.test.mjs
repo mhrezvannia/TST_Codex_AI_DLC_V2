@@ -41,6 +41,10 @@ test("browser adapter fails closed on accessibility and incomplete trace publica
 
 test("parameterized routes require bounded fixtures and never reach the driver unresolved", () => {
   assert.equal(resolveBrowserRoute("/charge-agreements/[agreementId]", { agreementId: "a-1" }, "cell"), "/charge-agreements/a-1");
+  assert.equal(resolveBrowserRoute("/booking/[id]", {
+    bookingId: "fallback",
+    bookingIdByKey: { cell: "booking-for-cell" }
+  }, "cell"), "/booking/booking-for-cell");
   assert.throws(() => resolveBrowserRoute("/booking/[id]", {}, "cell"), (error) => error.status === "BLOCKED");
   assert.throws(() => resolveBrowserRoute("/booking/[id]", { bookingId: "../manager" }, "cell"), /fixture/);
 });

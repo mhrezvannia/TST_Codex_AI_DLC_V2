@@ -30,16 +30,18 @@ export function evaluateU05Preservation(repositoryRoot = root) {
     "services/booking-service/dataaccess/src/main/resources/db/migration");
   const migrations = readdirSync(migrationDir).filter((name) => /^V\d+__.*\.sql$/.test(name)).sort();
   if (JSON.stringify(migrations) !== JSON.stringify([
-    "V1__booking_baseline.sql", "V2__booking_w1.sql", "V3__booking_pricing_snapshots.sql"
-  ])) failures.push("Booking Flyway catalog must be exactly V1-V3");
+    "V1__booking_baseline.sql", "V2__booking_w1.sql", "V3__booking_pricing_snapshots.sql",
+    "V4__immutable_booking_pricing_snapshots.sql"
+  ])) failures.push("Booking Flyway catalog must be exactly V1-V4");
   for (const name of ["V1__booking_baseline.sql", "V2__booking_w1.sql"]) {
     const relative = `services/booking-service/dataaccess/src/main/resources/db/migration/${name}`;
     const expected = baseline?.baselineHashes?.[relative];
     if (!expected) failures.push(`baseline hash missing: ${name}`);
-    else if (sha(path.join(migrationDir, name)) !== expected) failures.push(`immutable migration changed: ${name}`);
+    else if (shaHistoricalText(path.join(migrationDir, name)) !== expected) failures.push(`immutable migration changed: ${name}`);
   }
   for (const required of [
     "services/booking-service/dataaccess/src/main/resources/db/migration/V3__booking_pricing_snapshots.sql",
+    "services/booking-service/dataaccess/src/main/resources/db/migration/V4__immutable_booking_pricing_snapshots.sql",
     "services/booking-service/dataaccess/src/main/java/com/linercore/platform/booking/dataaccess/jdbc/BookingSnapshotCodec.java",
     "services/booking-service/dataaccess/src/test/java/com/linercore/platform/booking/dataaccess/jdbc/BookingSnapshotCodecTest.java",
     "services/booking-service/container/src/main/java/com/linercore/platform/booking/container/integration/HttpChargePricingClient.java",
@@ -73,7 +75,12 @@ function serviceBlock(source, startName, endName) {
   const end = source.indexOf(`\n  ${endName}:`, start);
   return source.slice(start, end < 0 ? source.length : end);
 }
-function sha(file) { return createHash("sha256").update(readFileSync(file)).digest("hex"); }
+// The U05 baseline was captured from a Windows checkout. Normalize text to its
+// historical CRLF representation so the immutable-content check is portable.
+function shaHistoricalText(file) {
+  const historical = readFileSync(file, "utf8").replace(/^\uFEFF/, "").replace(/\r\n?|\n/g, "\r\n");
+  return createHash("sha256").update(historical, "utf8").digest("hex");
+}
 function text(repositoryRoot, relative) { return readFileSync(path.join(repositoryRoot, relative), "utf8"); }
 function json(repositoryRoot, relative) { return JSON.parse(text(repositoryRoot, relative)); }
 function normalize(value) { return value.replace(/\s+/g, " ").trim(); }

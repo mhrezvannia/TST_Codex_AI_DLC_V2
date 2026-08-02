@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, mkdirSync, symlinkSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
-import { EvidenceFsBlockedError, EvidenceWriter, assertStableIdentity, validateOpenedFileIdentity, validateRegistryDestination, verifyFinalArtifactBytes } from "../../tools/aidlc-evidence-fs.mjs";
+import { EvidenceWriter, assertStableIdentity, validateOpenedFileIdentity, validateRegistryDestination, verifyFinalArtifactBytes } from "../../tools/aidlc-evidence-fs.mjs";
 
 const oneRegistry = { members: [{ key: "QUALITY:GIT_DIFF", destination: "results/quality/git-diff.json" }] };
 let sequence = 0;
@@ -52,16 +52,10 @@ test("reparse/symlink run root is rejected when host permits creating one", (t) 
   assert.throws(() => new EvidenceWriter({ runRoot: path.join(base, "link"), registry: oneRegistry }), /unsafe|alias|exist/i);
 });
 
-test("native handle-relative rename either commits safely or reports BLOCKED", () => {
+test("native handle-relative rename commits safely", () => {
   const root = runRoot("native");
   const writer = new EvidenceWriter({ runRoot: root, registry: oneRegistry });
-  try {
-    const artifact = writer.commit("QUALITY:GIT_DIFF", "hello");
-    assert.equal(artifact.sha256, "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824");
-    assert.equal(existsSync(path.join(root, artifact.relativePath)), true);
-  } catch (error) {
-    assert.ok(error instanceof EvidenceFsBlockedError);
-    assert.equal(error.status, "BLOCKED");
-    assert.match(error.message, /no-replace rename unavailable/);
-  }
+  const artifact = writer.commit("QUALITY:GIT_DIFF", "hello");
+  assert.equal(artifact.sha256, "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824");
+  assert.equal(existsSync(path.join(root, artifact.relativePath)), true);
 });

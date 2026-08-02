@@ -12,5 +12,12 @@ describe("PlatformShell module navigation", () => {
     expect(screen.getByRole("link", { name: "Reference data" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: "Reference data" })).toHaveAttribute("href", "/reference-data/");
     expect(screen.getByRole("link", { name: "Charge agreements" })).toHaveAttribute("href", "/charge-agreements");
+    expect(screen.queryByLabelText("MVP journey")).not.toBeInTheDocument();
+  });
+
+  it("renders journey context only when the owning route opts in explicitly", () => {
+    render(<PlatformShell title="Booking" journeyStage={2}><p>Booking workspace</p></PlatformShell>);
+
+    expect(screen.getByLabelText("MVP journey")).toBeInTheDocument();
   });
 });

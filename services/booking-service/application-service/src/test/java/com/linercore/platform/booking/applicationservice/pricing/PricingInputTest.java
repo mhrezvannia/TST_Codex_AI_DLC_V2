@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.linercore.platform.booking.domain.model.Booking;
 import com.linercore.platform.booking.domain.model.BookingId;
 import com.linercore.platform.booking.domain.model.EquipmentAssignment;
+import com.linercore.platform.booking.domain.model.ReferenceFieldResult;
+import com.linercore.platform.booking.domain.model.ReferenceValidationFieldOutcome;
+import com.linercore.platform.booking.domain.model.ReferenceValidationOutcome;
+import com.linercore.platform.booking.domain.model.ReferenceValidationSnapshot;
 import com.linercore.platform.booking.domain.model.RoutingLeg;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -57,6 +61,33 @@ class PricingInputTest {
     }
 
     @Test
+    void validatedReferenceRecordIdsBecomePricingAuthorityIds() {
+        Booking booking = booking("2026-08-01");
+        ReferenceValidationSnapshot validation = new ReferenceValidationSnapshot(
+                booking.revision(),
+                booking.referenceFingerprint(),
+                ReferenceValidationOutcome.VALID,
+                List.of(
+                        active("customerId", "PARTY_CUSTOMER", "party-1", "party-customer-1"),
+                        active("routing[0].loadUnLocode", "LOCATION", "NLRTM", "location-nlrtm"),
+                        active("routing[0].dischargeUnLocode", "LOCATION", "SGSIN", "location-sgsin"),
+                        active("routing[0].voyageId", "VESSEL_VOYAGE", "voyage-1", "voyage-record-1"),
+                        active("equipment[0].equipmentTypeCode", "EQUIPMENT_TYPE", "45G1", "equipment-type-45g1")),
+                Instant.parse("2026-07-29T10:00:00Z"),
+                "corr-1");
+        Booking validated = booking.applyReferenceValidation(
+                validation, "booking-user", Instant.parse("2026-07-29T10:00:00Z"));
+
+        PricingInput input = PricingInput.from(validated, 0);
+
+        assertEquals("location-nlrtm", input.pol());
+        assertEquals("location-sgsin", input.pod());
+        assertEquals("equipment-type-45g1", input.equipmentType());
+        assertEquals("party-customer-1", input.partyId());
+        assertEquals(2, input.teu());
+    }
+
+    @Test
     void attemptDefensivelyCopiesExactBody() {
         PricingInput input = PricingInput.from(booking("2026-08-01"), 0);
         byte[] body = input.canonicalBytes();
@@ -92,5 +123,18 @@ class PricingInputTest {
                         "corr-1",
                         Instant.parse("2026-07-29T10:00:00Z"))
                 .validated("booking-user", "corr-1", Instant.parse("2026-07-29T10:00:00Z"));
+    }
+
+    private static ReferenceFieldResult active(
+            String fieldPath, String referenceSet, String requestedValue, String recordId) {
+        return new ReferenceFieldResult(
+                fieldPath,
+                referenceSet,
+                requestedValue,
+                ReferenceValidationFieldOutcome.ACTIVE,
+                recordId,
+                requestedValue,
+                1L,
+                "ACTIVE");
     }
 }

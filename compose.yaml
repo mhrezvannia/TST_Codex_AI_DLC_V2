@@ -5,7 +5,7 @@ services:
     image: postgres:15
     profiles: ["core", "app", "devtools", "full"]
     env_file:
-      - ./infrastructure/env/local.env.example
+      - ${LINERCORE_CONTAINER_ENV_FILE:-./infrastructure/env/local.env.example}
     environment:
       POSTGRES_USER: linercore
       POSTGRES_PASSWORD: linercore_local
@@ -197,7 +197,7 @@ services:
       SCHEMA_REGISTRY_URL: http://schema-registry:8081
       MESSAGING_REQUIRE_REAL: "true"
       CHARGE_AGREEMENT_EVENTS_TOPIC: charge-agreement.events
-      CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED: "false"
+      CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED: ${CHARGE_AGREEMENT_OUTBOX_RELAY_ENABLED:-false}
       CHARGE_PRICING_SERVICE_ID: ${CHARGE_PRICING_SERVICE_ID:-booking-service}
       CHARGE_PRICING_SERVICE_TOKEN: ${CHARGE_PRICING_SERVICE_TOKEN:-pricing_booking_local_token}
       CHARGE_RATE_AUTHORIZATION_MODE: ${CHARGE_RATE_AUTHORIZATION_MODE:-local-map}
@@ -329,7 +329,7 @@ services:
     profiles: ["app", "full"]
     working_dir: /workspace
     env_file:
-      - ./infrastructure/env/local.env.example
+      - ${LINERCORE_CONTAINER_ENV_FILE:-./infrastructure/env/local.env.example}
     environment:
       NODE_OPTIONS: --max-old-space-size=160
       IDENTITY_SERVICE_URL: http://identity-service:8082

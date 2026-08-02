@@ -9,6 +9,18 @@ import org.junit.jupiter.api.Test;
 
 class BookingPreparedSchemaContractTest {
     @Test
+    void v4MakesPersistedPricingSnapshotsAppendOnly() throws Exception {
+        String v4 = resource("/db/migration/V4__immutable_booking_pricing_snapshots.sql");
+        for (String token : List.of(
+                "protect_booking_pricing_snapshot",
+                "BEFORE UPDATE OR DELETE",
+                "trg_booking_pricing_snapshots_immutable",
+                "USING ERRCODE = '55000'")) {
+            assertTrue(v4.contains(token), token);
+        }
+    }
+
+    @Test
     void v3DefinesTheImmutableSnapshotContract() throws Exception {
         String v3 = resource();
         for (String token : List.of(
@@ -70,9 +82,13 @@ class BookingPreparedSchemaContractTest {
     }
 
     private String resource() throws Exception {
-        try (var stream = getClass().getResourceAsStream("/db/migration/V3__booking_pricing_snapshots.sql")) {
+        return resource("/db/migration/V3__booking_pricing_snapshots.sql");
+    }
+
+    private String resource(String path) throws Exception {
+        try (var stream = getClass().getResourceAsStream(path)) {
             if (stream == null) {
-                throw new IllegalStateException("V3 migration not found");
+                throw new IllegalStateException("migration not found: " + path);
             }
             return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         }

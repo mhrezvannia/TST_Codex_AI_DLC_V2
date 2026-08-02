@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Field, Input } from "@erp/ui";
+import { Button, Combobox, Dialog, Field, Input, Skeleton } from "@erp/ui";
 import { useEffect, useRef, useState } from "react";
 import { createAgreement, createAgreementSuccessor, updateAgreement } from "../lib/agreement-client";
 import { agreementAppPath, agreementFormSchema, type AgreementDetail, type AgreementForm } from "../lib/agreements";
@@ -61,6 +61,13 @@ export function AgreementFormEditor({
   } : empty);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [discardOpen, setDiscardOpen] = useState(false);
+  const [referenceState, setReferenceState] = useState<{
+    loading: boolean;
+    error: string;
+    options: Array<{ value: string; label: string }>;
+  }>({ loading: true, error: "", options: [] });
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const fieldErrors = Object.entries(errors).filter(([path]) => path !== "_form");
 
@@ -68,7 +75,37 @@ export function AgreementFormEditor({
     if (Object.keys(errors).length > 0) errorSummaryRef.current?.focus();
   }, [errors]);
 
+  useEffect(() => {
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!dirty || saving) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty, saving]);
+
+  useEffect(() => { void loadCustomerReferences(); }, []);
+
+  async function loadCustomerReferences() {
+    setReferenceState((current) => ({ ...current, loading: true, error: "" }));
+    try {
+      const response = await fetch(agreementAppPath("/api/reference-options?domain=agreements&kind=customer"), { cache: "no-store" });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || !Array.isArray(payload?.options)) {
+        throw new Error(typeof payload?.message === "string" ? payload.message : "Reference options are unavailable");
+      }
+      setReferenceState({ loading: false, error: "", options: payload.options.map((option: { id: string; label: string }) => ({
+        value: option.id,
+        label: option.label
+      })) });
+    } catch (reason) {
+      setReferenceState({ loading: false, error: reason instanceof Error ? reason.message : "Reference options are unavailable", options: [] });
+    }
+  }
+
   function setCommercial(field: keyof AgreementForm["commercial"], value: string) {
+    setDirty(true);
     setForm({ ...form, commercial: { ...form.commercial, [field]: value } });
   }
 
@@ -132,13 +169,26 @@ export function AgreementFormEditor({
       })}</ul> : null}
     </div> : null}
 
+    <div className="rates-form-field" aria-live="polite" data-testid="agreement-reference-status">
+      {referenceState.loading ? <><span>Loading customer references…</span><Skeleton height={40} /></> : referenceState.error ? (
+        <div role="alert"><span>{referenceState.error}</span><Button type="button" onClick={() => void loadCustomerReferences()}>Retry references</Button></div>
+      ) : (
+        <Field label="Customer reference lookup" htmlFor="agreement-customer-reference">
+          <Combobox id="agreement-customer-reference" options={referenceState.options}
+            aria-label="Customer reference lookup"
+            value={form.commercial.customerId} onChange={(value) => setCommercial("customerId", value)}
+            placeholder="Search active customers" emptyLabel="No active customers match" />
+        </Field>
+      )}
+    </div>
+
     <div className="rates-form-field">
       <Field label="Agreement number" htmlFor="agreement-number">
         <Input
           id="agreement-number"
           disabled={mode !== "create"}
           value={form.agreementNumber}
-          onChange={(event) => setForm({ ...form, agreementNumber: event.target.value })}
+          onChange={(event) => { setDirty(true); setForm({ ...form, agreementNumber: event.target.value }); }}
           invalid={Boolean(agreementNumberError)}
           aria-describedby={agreementNumberError ? "agreement-number-error" : undefined}
         />
@@ -171,7 +221,7 @@ export function AgreementFormEditor({
         <Input
           id="agreement-reason"
           value={form.reason}
-          onChange={(event) => setForm({ ...form, reason: event.target.value })}
+        onChange={(event) => { setDirty(true); setForm({ ...form, reason: event.target.value }); }}
           invalid={Boolean(reasonError)}
           aria-describedby={reasonError ? "agreement-reason-error" : undefined}
         />
@@ -183,7 +233,16 @@ export function AgreementFormEditor({
       <Button variant="primary" type="submit" disabled={saving} data-testid="save-agreement">
         {saving ? "Saving…" : "Save Draft"}
       </Button>
+      <Button type="button" onClick={() => dirty ? setDiscardOpen(true) : window.location.assign(agreementAppPath("/"))}>
+        Cancel
+      </Button>
     </div>
+    <Dialog open={discardOpen} title="Discard unsaved changes?" onClose={() => setDiscardOpen(false)} actions={<>
+      <Button type="button" onClick={() => setDiscardOpen(false)}>Keep editing</Button>
+      <Button type="button" variant="primary" onClick={() => window.location.assign(agreementAppPath("/"))}>Discard changes</Button>
+    </>}>
+      <p>Your entered agreement values have not been saved.</p>
+    </Dialog>
   </form>;
 }
 

@@ -18,7 +18,6 @@ describe("Shell BookingActions", () => {
 
   for (const scenario of [
     { action: "validate", status: "DRAFT" },
-    { action: "price", status: "VALIDATED" },
     { action: "confirm", status: "PRICED" }
   ] as const) {
     it(`forwards ${scenario.action} with header-owned idempotency and refreshes the detail`, async () => {
@@ -29,7 +28,7 @@ describe("Shell BookingActions", () => {
         calledUrl = String(input);
         idempotencyKey = new Headers(init?.headers).get("idempotency-key") ?? "";
         body = init?.body;
-        const statuses = { validate: "VALIDATED", price: "PRICED", confirm: "CONFIRMED" } as const;
+        const statuses = { validate: "VALIDATED", confirm: "CONFIRMED" } as const;
         return Promise.resolve(Response.json({ status: statuses[scenario.action] }));
       }) as typeof fetch;
 
@@ -37,7 +36,7 @@ describe("Shell BookingActions", () => {
       fireEvent.click(screen.getByTestId(`booking-${scenario.action}`));
 
       await waitFor(() => expect(refresh).toHaveBeenCalledOnce());
-      const statuses = { validate: "VALIDATED", price: "PRICED", confirm: "CONFIRMED" } as const;
+      const statuses = { validate: "VALIDATED", confirm: "CONFIRMED" } as const;
       expect(screen.getByTestId("booking-authoritative-status")).toHaveTextContent(statuses[scenario.action]);
       expect(calledUrl).toBe(`/api/booking/bookings/booking%2Fone/${scenario.action}`);
       expect(idempotencyKey).toBeTruthy();

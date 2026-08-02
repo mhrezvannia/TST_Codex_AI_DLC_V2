@@ -47,6 +47,10 @@ class AuthorizationPolicyEvaluatorTest {
                 evaluator.evaluate(subject, List.of(assignment), request("booking", "request-pricing")).result());
         assertEquals(DecisionResult.ALLOW,
                 evaluator.evaluate(subject, List.of(assignment), request("booking", "confirm")).result());
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "amend")).result());
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(subject, List.of(assignment), request("booking", "reconfirm")).result());
     }
 
     @Test
@@ -86,6 +90,8 @@ class AuthorizationPolicyEvaluatorTest {
             assertEquals(DecisionResult.ALLOW,
                     evaluator.evaluate(analyst, List.of(pricing), request("charge-agreements", action)).result());
         }
+        assertEquals(DecisionResult.ALLOW,
+                evaluator.evaluate(analyst, List.of(pricing), request("charge-manual-cases", "read")).result());
 
         AuthenticatedSubject reader = subject("finance-reader");
         RoleAssignment finance = assignment("finance-reader", RoleCode.FINANCE_READ);

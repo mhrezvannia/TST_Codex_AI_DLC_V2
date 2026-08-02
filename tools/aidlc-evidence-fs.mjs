@@ -112,6 +112,7 @@ function createWin32Api() {
   try { koffi = require(path.join(toolRoot, "node_modules", "koffi")); }
   catch { throw new EvidenceFsBlockedError("locked Koffi helper cannot load"); }
   const kernel32 = koffi.load("kernel32.dll");
+  const ntdll = koffi.load("ntdll.dll");
   const FILETIME = koffi.struct("U06_FILETIME", { low: "uint32_t", high: "uint32_t" });
   const INFO = koffi.struct("U06_BY_HANDLE_FILE_INFORMATION", {
     attributes: "uint32_t", creationTime: FILETIME, accessTime: FILETIME, writeTime: FILETIME,
@@ -123,6 +124,7 @@ function createWin32Api() {
   const GetFileInformationByHandle = kernel32.func("bool __stdcall GetFileInformationByHandle(void *, _Out_ U06_BY_HANDLE_FILE_INFORMATION *)");
   const SetFileInformationByHandle = kernel32.func("bool __stdcall SetFileInformationByHandle(void *, int, const void *, uint32_t)");
   const GetLastError = kernel32.func("uint32_t __stdcall GetLastError()");
+  const NtSetInformationFile = ntdll.func("int32_t __stdcall NtSetInformationFile(void *, void *, const void *, uint32_t, int)");
   const INVALID = koffi.address(CreateFileW("NUL", 0, 7, null, 3, 0, null));
 
   function open(filePath, access, flags) {
@@ -154,13 +156,46 @@ function createWin32Api() {
     const temp = open(tempPath, 0x00010000 | 0x80, 0x00200000);
     try {
       const fileName = Buffer.from(basename, "utf16le");
-      const info = Buffer.alloc((20 + fileName.length + 7) & ~7);
-      info.writeUInt32LE(0, 0); // FileRenameInfoEx flags: no replace, no path fallback
+      // Windows requires at least sizeof(FILE_RENAME_INFO) plus the complete
+      // filename buffer. Keep an additional UTF-16 terminator and align the
+      // allocation; FileNameLength correctly excludes that terminator.
+      const info = Buffer.alloc((24 + fileName.length + 2 + 7) & ~7);
+      info.writeUInt32LE(0, 0); // FileRenameInfoEx flags / FileRenameInfo ReplaceIfExists: no replace
       info.writeBigUInt64LE(koffi.address(parent), 8);
       info.writeUInt32LE(fileName.length, 16);
       fileName.copy(info, 20);
-      if (!SetFileInformationByHandle(temp, 22, info, info.length)) throw new EvidenceFsBlockedError(`handle-relative no-replace rename unavailable (${GetLastError()})`);
+      if (SetFileInformationByHandle(temp, 22, info, info.length)) return;
+      const extendedError = GetLastError();
+      // Some supported Win32/filesystem combinations reject FileRenameInfoEx with
+      // ERROR_INVALID_PARAMETER. FileRenameInfo preserves the same atomic,
+      // handle-relative, ReplaceIfExists=false contract and is not a path fallback.
+      if (extendedError !== 87 && extendedError !== 50) {
+        throw renameError(extendedError, `FileRenameInfoEx=${extendedError}`);
+      }
+      if (!SetFileInformationByHandle(temp, 3, info, info.length)) {
+        const compatibleError = GetLastError();
+        if (compatibleError !== 87 && compatibleError !== 50) {
+          throw renameError(compatibleError, `FileRenameInfoEx=${extendedError};FileRenameInfo=${compatibleError}`);
+        }
+        const ioStatus = Buffer.alloc(16);
+        const ntExtended = NtSetInformationFile(temp, ioStatus, info, info.length, 65) >>> 0;
+        if (ntExtended === 0) return;
+        const ntCompatible = NtSetInformationFile(temp, ioStatus, info, info.length, 10) >>> 0;
+        if (ntCompatible === 0) return;
+        throw nativeRenameError(ntCompatible,
+          `FileRenameInfoEx=${extendedError};FileRenameInfo=${compatibleError};NtEx=0x${ntExtended.toString(16)};Nt=0x${ntCompatible.toString(16)}`);
+      }
     } finally { CloseHandle(temp); CloseHandle(parent); }
+  }
+  function renameError(error, detail) {
+    if (error === 80 || error === 183) return new EvidenceFsViolationError(`destination collision rejected (${detail})`);
+    return new EvidenceFsBlockedError(`handle-relative no-replace rename unavailable (${detail})`);
+  }
+  function nativeRenameError(status, detail) {
+    if (status === 0xc0000035 || status === 0xc00000ba) {
+      return new EvidenceFsViolationError(`destination collision rejected (${detail})`);
+    }
+    return new EvidenceFsBlockedError(`handle-relative no-replace rename unavailable (${detail})`);
   }
   return { directoryIdentity, fileIdentity, renameNoReplace };
 }

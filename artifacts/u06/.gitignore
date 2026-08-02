@@ -2,3 +2,8 @@ dependency-probe/
 fs-test-*/
 ledger-test-*/
 writer-smoke-*/
+runner-*/
+observation-*/
+coverage-*/
+native-commit-*/
+observations/

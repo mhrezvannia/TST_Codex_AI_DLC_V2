@@ -7,22 +7,24 @@ export const MIGRATIONS = Object.freeze({
     ["V2", "ae009a733508ee14c208b1cd7ab973a2ce6ca5f369ce78238a58206f1b95c156"],
     ["V3", "10f3f9b13243de1be3b8c1db4f3eb86c0caff12edf18bdd5a0903fbb2f2beba5"],
     ["V4", "830ea4b77c99502f53d725f62c93fcd875c82a675166acd851302f04f4756b7e"],
+    ["V5", "b29258844d76721679c021b40cd1c80e1009d31ab0bb6aca0c9d287de4d02667"],
   ],
   BOOKING: [
-    ["V1", "2b94af954745fc54c0323d1b6f950ca18b13b1b263d04e1f8d2e1040a3136443"],
-    ["V2", "5524fd5bb9ce3ac604c85c9496cc139b264040aefca603846b3e6030a15cc134"],
+    ["V1", "19a6edbc324efd79452350ff33e86860263c24e42044455594f24d71d93cee12"],
+    ["V2", "cfd6c0552361ecd60b79f19890d4f4769af36a848c07bd015665bbbfc546042f"],
     ["V3", "4b333a0287266211239317761247a9c9feb8ea462d241d22e0e04e41789604c7"],
+    ["V4", "b66f42be5d741d3425437bbda2863eba5adea06af86dc995a52f42cd123cc185"],
   ],
 });
 export const STARTING_SHAPES = Object.freeze({
-  CHARGE: ["EMPTY", "LEGACY", "V1", "V2", "V3", "V4", "PARTIAL", "DRIFTED"],
-  BOOKING: ["EMPTY", "V1", "V2", "V3", "PARTIAL", "DRIFTED"],
+  CHARGE: ["EMPTY", "LEGACY", "V1", "V2", "V3", "V4", "V5", "PARTIAL", "DRIFTED"],
+  BOOKING: ["EMPTY", "V1", "V2", "V3", "V4", "PARTIAL", "DRIFTED"],
 });
 export const DB_QUERIES = Object.freeze({
   CHARGE: new Set(["charge-flyway", "charge-version-hashes", "charge-receipt", "charge-manual-case", "charge-query-plan"]),
   BOOKING: new Set(["booking-flyway", "booking-snapshot", "booking-receipt", "booking-history", "booking-query-plan"]),
 });
-export const SEED = Object.freeze({ currency: "USD", quantity: 2, customer: "u06-customer", lane: "u06-lane", origin: "USNYC", destination: "NLRTM", equipment: "22G1",
+export const SEED = Object.freeze({ currency: "USD", quantity: 1, customer: "u06-customer", lane: "u06-lane", origin: "USNYC", destination: "NLRTM", equipment: "22G1",
   rates: [{ category: "BASE", code: "OFR", unitRate: "100.25", versionId: "rv-ofr-1" }, { category: "SURCHARGE", code: "BAF", unitRate: "20.10", versionId: "rv-baf-1" }, { category: "LOCAL", code: "THC", unitRate: "5.55", versionId: "rv-thc-1" }] });
 export const SECURITY_IDS = Object.freeze(["SEC-U06-001", "SEC-U06-002", "SEC-U06-003", "SEC-U06-004", "SEC-U06-005", "SEC-U06-006"]);
 export const OBSERVABILITY_IDS = Object.freeze(["LATENCY", "TERMINAL_OUTCOME", "BASIS", "MANUAL_FALLBACK", "REPLAY_CONFLICT", "REDACTION"]);

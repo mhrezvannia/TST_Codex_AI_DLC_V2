@@ -95,7 +95,8 @@ export function validateWaveAConfiguration() {
   ];
 
   if (values.LINERCORE_COMPOSE_PROJECT !== "linercore-wave-a"
-    || values.LINERCORE_NETWORK_NAME !== "linercore-wave-a-network") {
+    || values.LINERCORE_NETWORK_NAME !== "linercore-wave-a-network"
+    || values.LINERCORE_CONTAINER_ENV_FILE !== "./infrastructure/env/wave-a.env.example") {
     throw new Error("Wave A project/network topology drift detected");
   }
   for (const [name, value] of Object.entries(values)) {

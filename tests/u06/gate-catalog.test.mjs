@@ -3,8 +3,8 @@ import { test } from "node:test";
 import { AUDIT_GATES, OWNER_LOCAL_DATABASE_COMMANDS, PRESERVATION_GATES, QUALITY_GATES, STARTUP, SUPPLY_CHAIN_GATES, TEARDOWN, validateManualAuditFinding } from "../../tools/u06/gate-catalog.mjs";
 
 test("startup, owner-local DB, preservation, quality, supply chain, and audit catalogs are closed", () => {
-  assert.deepEqual(STARTUP.command, ["node", "scripts/wave-a-compose.mjs", "up", "-d", "--build"]);
-  assert.equal(STARTUP.timeoutMs, 600_000); assert.equal(STARTUP.serviceReadinessMs, 120_000);
+  assert.deepEqual(STARTUP.command, ["node", "scripts/wave-a-compose.mjs", "acceptance-up", "--wait-timeout", "360"]);
+  assert.equal(STARTUP.timeoutMs, 1_200_000); assert.equal(STARTUP.serviceReadinessMs, 120_000);
   assert.match(OWNER_LOCAL_DATABASE_COMMANDS.CHARGE.join(" "), /linercore_pricing/); assert.doesNotMatch(OWNER_LOCAL_DATABASE_COMMANDS.CHARGE.join(" "), /linercore_booking/);
   assert.equal(PRESERVATION_GATES.length, 5); assert.equal(QUALITY_GATES.length, 10); assert.equal(SUPPLY_CHAIN_GATES.length, 5); assert.equal(AUDIT_GATES.length, 4);
   assert.equal(TEARDOWN.optionalCleanup[1], "scripts/wave-a-compose.mjs"); assert.equal(TEARDOWN.managerRepair, false);

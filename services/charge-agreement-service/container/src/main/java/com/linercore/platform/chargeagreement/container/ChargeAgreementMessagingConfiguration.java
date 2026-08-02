@@ -1,7 +1,9 @@
 package com.linercore.platform.chargeagreement.container;
 
+import com.linercore.platform.chargeagreement.applicationservice.ChargeAgreementApplicationService;
 import com.linercore.platform.chargeagreement.applicationservice.port.AgreementEventPublisherPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.SchemaRegistryPort;
+import com.linercore.platform.chargeagreement.applicationservice.query.PublishBatchResult;
 import com.linercore.platform.chargeagreement.messaging.ConfluentSchemaRegistryAdapter;
 import com.linercore.platform.chargeagreement.messaging.KafkaAgreementEventPublisher;
 import com.linercore.platform.chargeagreement.messaging.LocalNoopAgreementEventPublisher;
@@ -10,12 +12,15 @@ import com.linercore.platform.messaging.AvroProducerConfig;
 import com.linercore.platform.messaging.AvroSchemaRepository;
 import com.linercore.platform.messaging.ConfluentSchemaRegistrar;
 import com.linercore.platform.messaging.KafkaGenericRecordPublisher;
+import com.linercore.platform.messaging.RelayBatchResult;
+import com.linercore.platform.messaging.ScheduledOutboxRelay;
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import java.nio.file.Path;
 import java.time.Clock;
 import org.apache.avro.generic.GenericRecord;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -80,6 +85,19 @@ public class ChargeAgreementMessagingConfiguration {
             AvroSchemaRepository agreementEventSchemas) {
         return new ConfluentSchemaRegistryAdapter(
                 new ConfluentSchemaRegistrar(agreementSchemaRegistryClient), agreementEventSchemas);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "charge-agreement.outbox-relay", name = "enabled", havingValue = "true")
+    ScheduledOutboxRelay chargeAgreementOutboxRelay(
+            ChargeAgreementApplicationService service,
+            @Value("${charge-agreement.outbox-relay.worker-id:charge-agreement-relay}") String workerId,
+            @Value("${charge-agreement.outbox-relay.batch-size:50}") int batchSize) {
+        return new ScheduledOutboxRelay("charge-agreement", (worker, size) -> {
+            PublishBatchResult result = service.publishOutboxBatch(worker, size);
+            return new RelayBatchResult(result.claimed(), result.published(),
+                    result.retryableFailures(), result.permanentFailures());
+        }, workerId, batchSize);
     }
 
     @Bean

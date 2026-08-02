@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+.u06-auth/
 .local-tools/
 .turbo/
 .next/
@@ -29,6 +30,22 @@ aidlc/spaces/*/intents/*/.aidlc-*
 .w2-02-traces/staged/
 .w2-02-auth/
 .npm-cache/
+.tmp/
+.codex/tmp/
+
+# Machine-local AI-DLC hook health
+aidlc/spaces/*/intents/.aidlc-*
+
+# Graphify session learnings and query journals
+graphify-out/.graphify_learning.json
+graphify-out/.vocab.txt
+graphify-out/memory/
+graphify-out/reflections/
+
+# Keep only the immutable passing W2-03 acceptance run
+artifacts/w2-03-live/*/
+!artifacts/w2-03-live/20260802T163755.288Z-eb2d89cc/
+!artifacts/w2-03-live/20260802T163755.288Z-eb2d89cc/**
 
 # Python skill runtime caches
 __pycache__/

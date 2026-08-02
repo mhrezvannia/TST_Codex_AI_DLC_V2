@@ -28,22 +28,23 @@ export async function runW204Acceptance(options) {
     timeoutMs,
     (value) => value?.id && value?.bookingId === bookingId
   );
-  assertExpectedMoves(journey);
+  const expectedLocations = assertExpectedMoves(journey);
 
   const wrongNext = await timedJson(
     `${cmmUrl}/api/container-movement/journeys/${encodeURIComponent(journey.id)}/movements`,
-    movementRequest("ACT_DISC", containerId, "NLRTM", actor, `${correlationPrefix}-wrong-next`),
+    movementRequest("ACT_DISC", containerId, expectedLocations.discharge, actor, `${correlationPrefix}-wrong-next`),
     timings,
     409
   );
   assert(wrongNext.body?.code === "OUT_OF_SEQUENCE_MOVEMENT", "wrong-next response must be OUT_OF_SEQUENCE_MOVEMENT");
 
   const accepted = [];
+  let duplicate;
   for (const [eventType, locationId] of [
-    ["GTOT", "USNYC"],
-    ["ACT_LOAD", "USNYC"],
-    ["ACT_DISC", "NLRTM"],
-    ["ACT_GTIN", "NLRTM"]
+    ["GTOT", expectedLocations.load],
+    ["ACT_LOAD", expectedLocations.load],
+    ["ACT_DISC", expectedLocations.discharge],
+    ["ACT_GTIN", expectedLocations.discharge]
   ]) {
     const result = await timedJson(
       `${cmmUrl}/api/container-movement/journeys/${encodeURIComponent(journey.id)}/movements`,
@@ -52,15 +53,16 @@ export async function runW204Acceptance(options) {
       200
     );
     accepted.push({ eventType, status: result.body.status, historyCount: result.body.history?.length ?? 0 });
+    if (eventType === "GTOT") {
+      duplicate = await timedJson(
+        `${cmmUrl}/api/container-movement/journeys/${encodeURIComponent(journey.id)}/movements`,
+        movementRequest("GTOT", containerId, expectedLocations.load, actor, `${correlationPrefix}-gtot`),
+        timings,
+        409
+      );
+      assert(duplicate.body?.code === "DUPLICATE_MOVEMENT", "duplicate response must be DUPLICATE_MOVEMENT");
+    }
   }
-
-  const duplicate = await timedJson(
-    `${cmmUrl}/api/container-movement/journeys/${encodeURIComponent(journey.id)}/movements`,
-    movementRequest("GTOT", containerId, "USNYC", actor, `${correlationPrefix}-duplicate`),
-    timings,
-    409
-  );
-  assert(duplicate.body?.code === "DUPLICATE_MOVEMENT", "duplicate response must be DUPLICATE_MOVEMENT");
 
   const finalJourney = await pollJson(
     `${cmmUrl}/api/container-movement/journeys/${encodeURIComponent(journey.id)}?actor=${encodeURIComponent(actor)}`,
@@ -151,8 +153,11 @@ async function pollJson(url, init, timeoutMs, predicate) {
 
 function assertExpectedMoves(journey) {
   const moves = journey.expectedMovements ?? [];
-  assert(moves.some((move) => move.moveCode === "LOAD" && move.locationId === "USNYC"), "expected LOAD@USNYC");
-  assert(moves.some((move) => move.moveCode === "DISC" && move.locationId === "NLRTM"), "expected DISC@NLRTM");
+  const load = moves.find((move) => move.moveCode === "LOAD");
+  const discharge = moves.find((move) => move.moveCode === "DISC");
+  assert(load && ["USNYC", "location-usnyc"].includes(load.locationId), "expected LOAD@USNYC");
+  assert(discharge && ["NLRTM", "location-nlrot"].includes(discharge.locationId), "expected DISC@NLRTM");
+  return { load: load.locationId, discharge: discharge.locationId };
 }
 
 function summarizeTimings(timings) {

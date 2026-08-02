@@ -12,8 +12,10 @@ the shared shell, `packages/ui`, or manager resources. A missing capability is
 - The manager demo must be healthy at project `linercore-shared-platform` and
   edge `http://127.0.0.1:8088`.
 - Koffi 2.14.1 and its Win32 x64 addon must match
-  `tools/u06/evidence-tool-lock.json`. A native mismatch or unsupported
-  `FileRenameInfoEx` capability blocks evidence; there is no path fallback.
+  `tools/u06/evidence-tool-lock.json`. Evidence requires an atomic,
+  handle-relative Win32 no-replace rename (`FileRenameInfoEx`, with the
+  equivalent `FileRenameInfo`/`ReplaceIfExists=false` compatibility class only
+  when the extended class is unsupported); there is no path-based fallback.
 
 ## Commands
 
@@ -63,13 +65,15 @@ only. Never override `DEMO_COMPOSE_PROJECT` or `DEMO_EDGE_URL`, use manager port
 1. Freeze dirty-tree/protected-input hashes and require the 5 GiB reserve.
 2. Run the default pre-guard and read-only manager fingerprint.
 3. Validate Wave A project `linercore-wave-a`, network, and edge 18088.
-4. Start with wrapper `up -d --build`; enforce ten-minute stack and 120-second
-   authenticated service readiness bounds.
+4. Start with sequential wrapper builds followed by `up -d --no-build --wait`;
+   enforce a twenty-minute cold-start command bound, the unchanged six-minute
+   Compose health deadline, and a 120-second authenticated readiness bound.
 5. Run separate Charge/Booking migration, backup, restore, commercial,
    security, observability, browser, performance, preservation, quality, and
    audit gates.
 6. After any possible Wave A mutation, enter a non-short-circuiting recovery
-   lane. Teardown, manager post-guard, after-inventory, and exact fingerprint
+   lane. Teardown removes the disposable Wave A volumes and orphans; manager
+   post-guard, after-inventory, and exact fingerprint
    comparison all execute even when startup or a later gate is `FAIL`/`BLOCKED`.
    A proven unstarted `spawnSync docker EPERM` does not trigger another Docker
    attempt.

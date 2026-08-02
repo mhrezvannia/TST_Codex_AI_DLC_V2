@@ -27,6 +27,7 @@ import com.linercore.platform.booking.applicationservice.port.ReferenceValidatio
 import com.linercore.platform.booking.applicationservice.port.ReferenceValidationResult;
 import com.linercore.platform.booking.applicationservice.port.ReferenceProviderFailureCategory;
 import com.linercore.platform.booking.applicationservice.port.ReferenceProviderUnavailable;
+import com.linercore.platform.booking.applicationservice.pricing.PricingInput;
 import com.linercore.platform.booking.domain.model.Booking;
 import com.linercore.platform.booking.domain.model.BookingId;
 import com.linercore.platform.booking.domain.model.BookingPricingSnapshot;
@@ -151,6 +152,34 @@ class BookingApplicationServiceTest {
 
         assertThrows(IdempotencyConflictException.class,
                 () -> service.confirm(second.id(), "booking-user", "confirm-idem-conflict", "corr-confirm"));
+    }
+
+    @Test
+    void pricingAmendmentAdvancesSequenceAndRequiresReprice() {
+        Booking confirmed = confirmedBooking("idem-pricing-amend");
+
+        Booking amended = service.amend(confirmed.id(), Map.of("requestedDepartureDate", "2026-08-02"),
+                "booking-user", "corr-pricing-amend");
+
+        assertEquals(BookingStatus.AMENDED, amended.status());
+        assertEquals(1, amended.pricingAmendmentSeq());
+        assertEquals("REPRICE_REQUIRED", amended.attributes().get("pricingStatus"));
+        assertEquals("2026-08-02", amended.attributes().get("requestedDepartureDate"));
+        assertEquals(PricingInput.from(amended, 1).fingerprint(), amended.pricingInputFingerprint());
+    }
+
+    @Test
+    void nonPricingAmendmentRetainsCurrentPriceEligibility() {
+        Booking confirmed = confirmedBooking("idem-non-pricing-amend");
+
+        Booking amended = service.amend(confirmed.id(), Map.of("note", "customer called"),
+                "booking-user", "corr-non-pricing-amend");
+
+        assertEquals(BookingStatus.AMENDED, amended.status());
+        assertEquals(0, amended.pricingAmendmentSeq());
+        assertEquals("PRICED", amended.attributes().get("pricingStatus"));
+        assertEquals("customer called", amended.attributes().get("note"));
+        assertEquals(PricingInput.from(amended, 0).fingerprint(), amended.pricingInputFingerprint());
     }
 
     @Test
@@ -337,7 +366,8 @@ class BookingApplicationServiceTest {
         return new CreateBookingCommand(idempotencyKey, customerId,
                 List.of(new RoutingLeg(1, "USNYC", "NLRTM", "voyage-1")),
                 List.of(new EquipmentAssignment("45G1", 1, "MSCU6639870")), "USD", "FCL_DRY", false, false,
-                Map.of(), "booking-user", "corr-1");
+                Map.of("requestedDepartureDate", "2026-08-01", "tradeLaneId", "NA-EU", "commodityCode", "GEN"),
+                "booking-user", "corr-1");
     }
 
     private Booking confirmedBooking(String idempotencyKey) {
@@ -358,9 +388,10 @@ class BookingApplicationServiceTest {
                 line("OFR", "FREIGHT", "BASE", "100.00"),
                 line("BAF", "SURCHARGE", "SURCHARGE", "20.00"),
                 line("THC", "LOCAL", "LOCAL", "5.00"));
+        String inputFingerprint = PricingInput.from(booking, booking.pricingAmendmentSeq()).fingerprint();
         BookingPricingSnapshot snapshot = new BookingPricingSnapshot(
                 2, "price-" + bookingId.value(), booking.bookingNumber(), booking.pricingAmendmentSeq(),
-                booking.revision(), "a".repeat(64), LocalDate.parse("2026-08-01"), "TARIFF", "tariff:NA-EU",
+                booking.revision(), inputFingerprint, LocalDate.parse("2026-08-01"), "TARIFF", "tariff:NA-EU",
                 null, lines, List.of(), new BigDecimal("125.00"), "USD",
                 Instant.parse("2026-07-01T00:00:00Z"), correlationId, Instant.parse("2026-07-01T00:00:00Z"));
         bookings.save(booking.typedPriced(snapshot, "pricing-service", Instant.parse("2026-07-01T00:00:00Z")));

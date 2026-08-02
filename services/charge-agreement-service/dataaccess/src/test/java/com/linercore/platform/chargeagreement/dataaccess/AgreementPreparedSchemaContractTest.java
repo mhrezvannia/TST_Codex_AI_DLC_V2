@@ -20,6 +20,22 @@ import org.testcontainers.containers.PostgreSQLContainer;
  */
 class AgreementPreparedSchemaContractTest {
     @Test
+    void v5ProtectsApprovedCommercialAuthorityAndItsRateLinks() throws Exception {
+        String v5 = resource("/db/migration/V5__immutable_approved_pricing_authority.sql");
+
+        for (String token : List.of(
+                "trg_charge_rate_versions_approved_immutable",
+                "trg_charge_agreement_versions_approved_immutable",
+                "trg_charge_agreement_rate_links_approved_immutable",
+                "OLD.lifecycle = 'APPROVED'",
+                "NEW.lifecycle NOT IN ('SUSPENDED', 'EXPIRED')",
+                "NEW.snapshot IS DISTINCT FROM OLD.snapshot",
+                "USING ERRCODE = '55000'")) {
+            assertTrue(v5.contains(token), token);
+        }
+    }
+
+    @Test
     void immutableV3ContainsTheAgreementAuthorityContract() throws Exception {
         String v3 = resource("/db/migration/V3__versioned_agreement_authority.sql");
 

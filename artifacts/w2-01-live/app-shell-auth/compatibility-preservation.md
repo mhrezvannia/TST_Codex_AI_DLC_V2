@@ -1,6 +1,6 @@
 # Compatibility and Preservation Evidence
 
-Generated at: 2026-07-19T20:22:43.514Z
+Generated at: 2026-08-02T14:44:11.413Z
 
 ## Route Compatibility
 
@@ -8,9 +8,7 @@ Generated at: 2026-07-19T20:22:43.514Z
 - /bookings/new -> /booking/new: implemented as shell-owned 308 compatibility route; live observation still required.
 - /bookings/[id] -> /booking/[id]: implemented as shell-owned safe one-segment 308 compatibility route; live observation still required.
 
-- /bookings -> /booking: PASS (HTTP 308)
-- /bookings/new -> /booking/new: PASS (HTTP 308)
-- /bookings/8d57d1a3-2f87-4749-a3fd-9b0b25a8ff3f -> /booking/8d57d1a3-2f87-4749-a3fd-9b0b25a8ff3f: PASS (HTTP 308)
+- Live observation: not captured.
 
 ## Prior-Work Preservation
 

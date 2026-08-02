@@ -37,7 +37,7 @@ export function AgreementList() {
         <h1 className="rates-title">Charge agreements</h1>
         <p className="rates-muted">Stable identities with immutable approved versions and explicit RateVersion links.</p>
       </div>
-      {result?.canCreate ? <a className="rates-link" href={agreementAppPath("/agreements/new")} data-testid="create-agreement-link">Create agreement</a> : null}
+      {result?.canCreate ? <a className="rates-link" href={agreementAppPath("/new")} data-testid="create-agreement-link">Create agreement</a> : null}
     </header>
     <Card title="Search and filters">
       <form className="rates-filters" onSubmit={(event) => { event.preventDefault(); void load(); }}>
@@ -51,7 +51,7 @@ export function AgreementList() {
     <div className="rates-status-region" aria-live="polite" data-testid="agreement-list-status">{loading ? "Loading agreement authority…" : error || `${result?.total ?? 0} agreements`}</div>
     {loading ? <Card><Skeleton height={220} /></Card> : error ? <Card title="Agreement service unavailable"><p>{error}</p><Button onClick={() => void load()} data-testid="retry-agreement-list">Retry</Button></Card> : result?.items.length ? <div className="rates-table-region" role="region" aria-label="Agreement results" tabIndex={0}><Table><caption className="rates-muted">W2 authority and read-only legacy history are explicitly distinguished.</caption><thead><tr><th scope="col">Agreement</th><th scope="col">Authority</th><th scope="col">Lifecycle</th><th scope="col">Customer / lane</th><th scope="col">Validity</th><th scope="col">Action</th></tr></thead><tbody>{result.items.map((item) => {
       const version = item.selectedVersion;
-      return <tr key={item.agreementId} data-testid={`agreement-row-${item.agreementId}`}><td><strong>{item.agreementNumber}</strong><br /><small>{item.agreementId}</small></td><td>{item.authorityModel}{item.readOnly ? " / read-only" : ""}</td><td>{version ? <StatusBadge status={version.lifecycle} /> : "—"}</td><td>{version?.customerId ?? "—"}<br /><small>{version?.tradeLaneId ?? "—"}</small></td><td>{version ? `${version.validFrom} – ${version.validTo}` : "—"}</td><td><a className="rates-link" href={agreementAppPath(`/agreements/${encodeURIComponent(item.agreementId)}`)}>Open</a></td></tr>;
+      return <tr key={item.agreementId} data-testid={`agreement-row-${item.agreementId}`}><td><strong>{item.agreementNumber}</strong><br /><small>{item.agreementId}</small></td><td>{item.authorityModel}{item.readOnly ? " / read-only" : ""}</td><td>{version ? <StatusBadge status={version.lifecycle} /> : "—"}</td><td>{version?.customerId ?? "—"}<br /><small>{version?.tradeLaneId ?? "—"}</small></td><td>{version ? `${version.validFrom} – ${version.validTo}` : "—"}</td><td><a className="rates-link" href={agreementAppPath(`/${encodeURIComponent(item.agreementId)}`)}>Open</a></td></tr>;
     })}</tbody></Table></div> : <Card><EmptyState title="No agreements match these filters"><p>Adjust filters or create a W2 Agreement Draft if permitted.</p></EmptyState></Card>}
     {result ? <nav className="rates-actions" aria-label="Agreement result pages"><Button disabled={loading || result.page === 0} onClick={() => void load(result.page)}>Previous</Button><span>Page {result.page + 1}</span><Button disabled={loading || !result.hasMore} onClick={() => void load(result.page + 2)}>Next</Button></nav> : null}
   </main>;

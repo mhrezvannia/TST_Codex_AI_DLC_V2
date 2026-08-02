@@ -1,14 +1,14 @@
 # W2-01 Final Decision
 
-Final decision: PASS
+Final decision: BLOCKED
 Runtime status: PASS
 
 | Scenario | Status | Blocker |
 | --- | --- | --- |
-| allow-booking-create-detail | PASS |  |
-| deny-booking-access | PASS |  |
-| sign-out-reauth-stale-call | PASS |  |
-| legacy-bookings-compatibility | PASS |  |
+| allow-booking-create-detail | BLOCKED | W2-01-LIVE-NOT-RUN |
+| deny-booking-access | BLOCKED | W2-01-LIVE-NOT-RUN |
+| sign-out-reauth-stale-call | BLOCKED | W2-01-LIVE-NOT-RUN |
+| legacy-bookings-compatibility | BLOCKED | W2-01-LIVE-NOT-RUN |
 
 | Command | Status | Exit Code | Blocker |
 | --- | --- | --- | --- |

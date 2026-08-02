@@ -3,34 +3,38 @@
   "branch": "intent/W2-01-app-shell-and-auth",
   "baseBranch": "integ/main-reconciled",
   "baseCommit": "5dd6481",
-  "generatedAt": "2026-07-19T20:22:43.514Z",
+  "generatedAt": "2026-08-02T14:44:11.413Z",
   "runtimeStatus": "PASS",
-  "finalDecision": "PASS",
-  "evidenceRoot": "D:/TST_Codex_integ/artifacts/w2-01-live/app-shell-auth",
+  "finalDecision": "BLOCKED",
+  "evidenceRoot": "D:/TST_Codex_phase1_merge/artifacts/w2-01-live/app-shell-auth",
   "scenarios": [
     {
       "scenarioId": "allow-booking-create-detail",
-      "status": "PASS"
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
     },
     {
       "scenarioId": "deny-booking-access",
-      "status": "PASS"
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
     },
     {
       "scenarioId": "sign-out-reauth-stale-call",
-      "status": "PASS"
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
     },
     {
       "scenarioId": "legacy-bookings-compatibility",
-      "status": "PASS"
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
     }
   ],
   "commands": [
     {
       "commandId": "detector-6d",
       "command": "internal detector 6d scan for hardcoded auth",
-      "startedAt": "2026-07-19T20:22:43.514Z",
-      "endedAt": "2026-07-19T20:22:43.514Z",
+      "startedAt": "2026-08-02T14:44:11.413Z",
+      "endedAt": "2026-08-02T14:44:11.413Z",
       "exitCode": 0,
       "status": "PASS",
       "outputPath": "detector-6d.txt"
@@ -38,8 +42,8 @@
     {
       "commandId": "erp-fidelity-audit",
       "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
-      "startedAt": "2026-07-19T20:22:43.514Z",
-      "endedAt": "2026-07-19T20:23:00.790Z",
+      "startedAt": "2026-08-02T14:44:11.413Z",
+      "endedAt": "2026-08-02T14:45:12.287Z",
       "exitCode": 0,
       "status": "PASS",
       "outputPath": "erp-fidelity-audit.txt"
@@ -47,50 +51,52 @@
     {
       "commandId": "aidlc-audit",
       "command": "bash .claude/skills/aidlc-audit/detectors.sh",
-      "startedAt": "2026-07-19T20:22:43.514Z",
-      "endedAt": "2026-07-19T20:23:02.536Z",
+      "startedAt": "2026-08-02T14:44:11.413Z",
+      "endedAt": "2026-08-02T14:45:13.220Z",
       "exitCode": 0,
       "status": "PASS",
       "outputPath": "aidlc-audit.txt"
     }
   ],
-  "blockers": [],
+  "blockers": [
+    "W2-01-LIVE-NOT-RUN"
+  ],
   "w1WaiverStatus": "W1-01 live-proof waiver remains BLOCKED at compose-start; not a W2-01 PASS.",
   "artifacts": [
     {
       "path": "manifest.json",
-      "sha256": "5dc3d52904d26636179730093f7dfac9cddacf4f19a0b86d24caa50de40acab8",
-      "bytes": 3428
+      "sha256": "5be57a4d126195e5f815f304d7c6b73b2d68486925b64a9e9439896f01706f2e",
+      "bytes": 3787
     },
     {
       "path": "browser-evidence.json",
-      "sha256": "13006c283eb9a073f192194ff505544e2e9df2bc8d7d7c9a603f85640b9a4deb",
-      "bytes": 7329
+      "sha256": "d19d5cae42ec3c9ad87810cc04f75cf03b9cca2cd4498b4f5a68f31d13d2fdd5",
+      "bytes": 2430
     },
     {
       "path": "runtime-readiness.json",
-      "sha256": "0a7690ced30424d326b47c26665ce868ba075028acd30ec983a94f53ae13c019",
+      "sha256": "611833688425f34f727edbb6374bc3d9b29b8646b586f02c7b7d80646a642600",
       "bytes": 1036
     },
     {
       "path": "scenarios.jsonl",
-      "sha256": "365370757acda45989b3b09295a92d210a6c5a28b6bff37cd12437843632072e",
-      "bytes": 1902
+      "sha256": "57b997086914959af98ee9d49458adb1811a270fba5902e5a6bda065b4d660a4",
+      "bytes": 1779
     },
     {
       "path": "actor-evidence.jsonl",
-      "sha256": "fe1f1fb28406c1c9651f93a4b85aa24ab8fc50da93ae32d4591c7a39eafc4049",
-      "bytes": 1472
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
     },
     {
       "path": "sign-out-evidence.json",
-      "sha256": "1ef3a600474626c8e568c910caa51be776f010e6c993889cdd72e1b2131c6609",
-      "bytes": 612
+      "sha256": "61039b4b24ef4ada6bba52eeb7a3c90729b1bc5426b0dc42a0d5d90ccc08726b",
+      "bytes": 436
     },
     {
       "path": "compatibility-preservation.md",
-      "sha256": "0ceb580dc6c01c37e8bb78cbfebe52643618cfdba2b7e422dce4575bcbc9fe71",
-      "bytes": 1236
+      "sha256": "4f5921645723423de5cee10faf9e7dd0ca95efbfdf8edf553962f186b9b597e8",
+      "bytes": 1065
     },
     {
       "path": "detector-6d.txt",
@@ -99,18 +105,23 @@
     },
     {
       "path": "erp-fidelity-audit.txt",
-      "sha256": "9bf7c8f2ae738de60e018f53855d6c51fcca75629148fe7e5a0fb0c0eb99b1a3",
-      "bytes": 4858
+      "sha256": "dd65169b7a019af0a66378a33ae951cfbae7d9234a3567a1048df378f5e6ad7d",
+      "bytes": 4925
     },
     {
       "path": "aidlc-audit.txt",
-      "sha256": "5dc73d4f3d5c1ba4382bcdcb7ecd9e8e9ee6a2eab813eec7c06687d688b94cf7",
-      "bytes": 6936
+      "sha256": "c0c927a47e3169639aaa177a37a88735002679d2477b2f272804495e4ce1a917",
+      "bytes": 7285
     },
     {
       "path": "final-decision.md",
-      "sha256": "44bfdf75670d24999092862844798f639027dbd935032fadae69c0f52ace127c",
-      "bytes": 525
+      "sha256": "0c4b9789c20b6e79ead74f720e330db0c680f283c95bd2aa780f8bbed76dc669",
+      "bytes": 612
+    },
+    {
+      "path": "blockers.jsonl",
+      "sha256": "678de7859468ae376a4cfa96bd08fb78404295741756cef3c7275e7e9f333065",
+      "bytes": 570
     }
   ]
 }

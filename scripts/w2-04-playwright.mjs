@@ -21,7 +21,7 @@ try {
     await page.locator('input[name="password"]').fill(process.env.W2_04_UI_PASSWORD ?? "booking");
     await Promise.all([
       page.waitForLoadState("domcontentloaded"),
-      page.locator('input[type="submit"]').click()
+      page.locator('button[type="submit"], input[type="submit"]').click()
     ]);
   }
   if (!page.url().startsWith(shellUrl)) throw new Error(`Authentication did not return to ${shellUrl}; current=${page.url()}`);
@@ -29,6 +29,8 @@ try {
   for (const width of [375, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: width === 375 ? 812 : 900 });
     await page.goto(`${bookingUiUrl}/bookings/${encodeURIComponent(bookingId)}`, { waitUntil: "networkidle" });
+    await page.getByRole("link", { name: "Journey", exact: true }).click();
+    await page.waitForLoadState("networkidle");
     await page.getByRole("heading", { name: "Journey status" }).waitFor();
     await page.getByText("RETURNED_EMPTY", { exact: false }).waitFor();
     await page.getByText("GTIN", { exact: false }).waitFor();
@@ -45,7 +47,7 @@ try {
   }
 
   await page.goto(`${bookingUiUrl}/bookings/00000000-0000-0000-0000-000000000000`, { waitUntil: "domcontentloaded" });
-  await page.getByText("This page could not be found", { exact: false }).waitFor();
+  await page.getByText("This booking link is not valid", { exact: false }).waitFor();
 } catch (error) {
   evidence.decision = "FAIL";
   evidence.failure = error instanceof Error ? error.message : String(error);

@@ -11,8 +11,8 @@ test("drives ordered W2-04 lifecycle, typed conflicts, projection, and evidence"
   const journeyId = "journey-test";
   const history = [];
   const expected = [
-    { sequence: 1, eventClassifierCode: "PLN", moveCode: "LOAD", locationId: "USNYC" },
-    { sequence: 2, eventClassifierCode: "PLN", moveCode: "DISC", locationId: "NLRTM" }
+    { sequence: 1, eventClassifierCode: "PLN", moveCode: "LOAD", locationId: "location-usnyc" },
+    { sequence: 2, eventClassifierCode: "PLN", moveCode: "DISC", locationId: "location-nlrot" }
   ];
   const server = createServer(async (request, response) => {
     const body = await readJson(request);
@@ -35,7 +35,8 @@ test("drives ordered W2-04 lifecycle, typed conflicts, projection, and evidence"
       if (body.eventType === "ACT_DISC" && history.length === 0) {
         return json(response, 409, { code: "OUT_OF_SEQUENCE_MOVEMENT", requiredNext: "GTOT" });
       }
-      if (body.eventType === "GTOT" && history.length === 4) {
+      if (body.eventType === "GTOT" && history.length === 1) {
+        assert.equal(body.idempotencyKey, "test-gtot");
         return json(response, 409, { code: "DUPLICATE_MOVEMENT" });
       }
       assert.equal(body.eventType, next);
@@ -64,6 +65,9 @@ test("drives ordered W2-04 lifecycle, typed conflicts, projection, and evidence"
     assert.equal(evidence.bookingProjection.moveCode, "GTIN");
     assert.equal(evidence.wrongNext.code, "OUT_OF_SEQUENCE_MOVEMENT");
     assert.equal(evidence.duplicate.code, "DUPLICATE_MOVEMENT");
+    assert.deepEqual(history.map((movement) => movement.locationId), [
+      "location-usnyc", "location-usnyc", "location-nlrot", "location-nlrot"
+    ]);
     assert.equal(JSON.parse(readFileSync(evidenceFile, "utf8")).preservation.historicalW1Result, "BLOCKED_WAIVED");
   } finally {
     await new Promise((resolvePromise, reject) => server.close((error) => error ? reject(error) : resolvePromise()));

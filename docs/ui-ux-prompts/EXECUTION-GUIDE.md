@@ -6,7 +6,7 @@ Use this guide for the remaining Phase 1 intents. Run one intent at a time.
 
 The binding design run happens at this boundary:
 
-`Requirements Analysis 2.3 approved → User Stories 2.4 approved → run UI/UX prompt → Refined Mockups 2.5 → Application Design 2.6`
+`Requirements Analysis 2.3 approved → User Stories 2.4 approved → PARK before executing 2.5 → run and approve UI/UX prompt → resume Refined Mockups 2.5 → Application Design 2.6`
 
 Do not run the final design prompt before Requirements Analysis and User Stories
 are approved. Do not wait until Construction. A Rough Mockups 1.6 run may explore
@@ -23,7 +23,21 @@ $aidlc --status
 
 If Requirements Analysis or User Stories are not approved, continue AI-DLC
 normally and approve each completed stage at its gate. Do not use a stage jump to
-skip them. Continue only when status shows that Refined Mockups is current/next.
+skip them. Continue only until status shows that Refined Mockups is current/next.
+
+Every intent-launch prompt must include this control block:
+
+```text
+Proceed normally through Requirements Analysis (2.3) and User Stories (2.4),
+including their approval gates. As soon as Refined Mockups (2.5) becomes the
+current or next stage, park the main AI-DLC workflow at that clean inter-stage
+boundary and stop. Do not execute, approve, skip, or single-run Refined Mockups.
+Tell me which intent-specific UI/UX Pro Max prompt to run and wait for me.
+```
+
+The conductor should use the AI-DLC park operation at this boundary. The parked
+workflow remains on 2.5 while the design-only UI/UX Pro Max task is generated,
+reviewed, corrected, and explicitly approved.
 
 ## Step 2 — generate the intent design
 
@@ -250,10 +264,14 @@ For W4-01, approve all three design documents before continuing.
 
 ## Step 4 — convert the approved design into Refined Mockups artifacts
 
+The main workflow must still be parked with Refined Mockups 2.5 current. Resume
+that workflow and supply the reviewed design as its binding input. Do not use a
+single-stage runner: it is isolated and cannot advance the main intent.
+
 ### W3-01 handoff
 
 ```text
-$aidlc --stage refined-mockups
+$aidlc --resume
 
 Read and follow docs/ui-ux-prompts/REFINED-MOCKUP-HANDOFF.md completely.
 Apply it to W3-01 D&D Rules and Rates using the reviewed design
@@ -265,7 +283,7 @@ intent record. Do not advance to Application Design until I approve the gate.
 ### W3-04 handoff
 
 ```text
-$aidlc --stage refined-mockups
+$aidlc --resume
 
 Read and follow docs/ui-ux-prompts/REFINED-MOCKUP-HANDOFF.md completely.
 Apply it to W3-04 Booking Request Completeness using the reviewed design
@@ -280,7 +298,7 @@ the gate.
 ### W3-02 handoff
 
 ```text
-$aidlc --stage refined-mockups
+$aidlc --resume
 
 Read and follow docs/ui-ux-prompts/REFINED-MOCKUP-HANDOFF.md completely.
 Apply it to W3-02 D&D Pricing and Invoice using the reviewed design
@@ -293,7 +311,7 @@ Do not advance to Application Design until I approve the gate.
 ### W3-03 handoff
 
 ```text
-$aidlc --stage refined-mockups
+$aidlc --resume
 
 Read and follow docs/ui-ux-prompts/REFINED-MOCKUP-HANDOFF.md completely.
 Apply it to W3-03 Booking Amendments and Reconfirmation using the reviewed design
@@ -306,7 +324,7 @@ advance to Application Design until I approve the gate.
 ### W4-01 handoff
 
 ```text
-$aidlc --stage refined-mockups
+$aidlc --resume
 
 Read and follow docs/ui-ux-prompts/REFINED-MOCKUP-HANDOFF.md completely.
 Apply it to W4-01 Module List/Detail Uplift using all three reviewed designs:
@@ -325,7 +343,7 @@ approve the gate.
 ### W4-02 handoff
 
 ```text
-$aidlc --stage refined-mockups
+$aidlc --resume
 
 Read and follow docs/ui-ux-prompts/REFINED-MOCKUP-HANDOFF.md completely.
 Apply it to W4-02 Operations Observability using the reviewed design

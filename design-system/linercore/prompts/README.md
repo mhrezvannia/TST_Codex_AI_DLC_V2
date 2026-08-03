@@ -12,9 +12,11 @@ Use the prompt at three controlled points:
    early route, task-flow, and information-architecture options. Treat the
    output as provisional because requirements and stories are not final yet.
 2. **Inception / Refined Mockups (2.5):** this is the primary execution point.
-   Run it after Requirements Analysis (2.3) and User Stories (2.4) are approved,
-   then produce the binding interaction spec, refined mockups, state matrix,
-   responsive behavior, accessibility checklist, and design-system mapping.
+   After Requirements Analysis (2.3) and User Stories (2.4) are approved, park
+   the main workflow before executing 2.5. Run and approve the design-only
+   UI/UX Pro Max task, then resume 2.5 to produce the binding interaction spec,
+   refined mockups, state matrix, responsive behavior, accessibility checklist,
+   and design-system mapping.
 3. **Construction / Code Generation and Build & Test (3.5-3.6):** rerun only
    the focused UX and stack searches as a conformance review. Do not redesign
    approved flows during construction without returning through the relevant

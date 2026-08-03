@@ -25,11 +25,16 @@ flowchart TD
     W3_01["W3-01 dnd-rules-and-rates<br/>(Charge team)"]
     W3_02["W3-02 dnd-pricing-and-invoice<br/>(Booking team)"]
     W3_03["W3-03 booking-amendments<br/>(Booking team)"]
+    W3_04["W3-04 booking-request-completeness<br/>(Booking team)"]
     W4_01["W4-01 module-list-detail-uplift<br/>(UI drives; module teams contribute)"]
     W4_02["W4-02 operations-observability<br/>(Platform/DevOps)"]
     P2_1["P2 edi-booking-intake"]
     P2_2["P2 dcsa-track-trace-api"]
     P2_3["P2 booking-cancellation"]
+    P2_4["P2 multi-leg-routing"]
+    P2_5["P2 movement-edi-ingestion"]
+    P2_6["P2 reefer-dg-parameters"]
+    P3_4["P3 documentation-and-ebl<br/>(Documentation team)"]
 
     W0_01 --> W1_01
     W1_01 --> W2_04
@@ -39,7 +44,11 @@ flowchart TD
     W3_01 --> W3_02
     W2_04 --> W3_02
     W1_01 --> W3_02
-    W1_01 --> W3_03
+    W1_01 --> W3_04
+    W0_02 --> W3_04
+    W2_02 --> W3_04
+    W2_03 --> W3_04
+    W3_04 --> W3_03
     W2_01 --> W4_01
     W2_02 --> W4_01
     W1_01 -. "final migration unit only" .-> W2_01
@@ -47,6 +56,15 @@ flowchart TD
     W3_03 --> P2_1
     W2_04 --> P2_2
     W3_03 --> P2_3
+    W3_04 --> P2_4
+    W2_04 --> P2_4
+    W2_03 --> P2_4
+    W2_04 --> P2_5
+    W3_04 --> P2_6
+    W2_03 --> P2_6
+    W3_04 --> P3_4
+    P2_4 --> P3_4
+    W2_04 --> P3_4
 
     style W1_01 fill:#E2F4EC,stroke:#157A5F,stroke-width:3px
 ```
@@ -58,8 +76,9 @@ flowchart TD
 | 0 | W0-01 ∥ W0-02 ∥ W2-02 (no deps) | Platform ×2, UI |
 | 1 | W1-01 ★ ∥ W2-01 (all units except the final booking-migration unit) | Booking(+Charge,CMM), Platform+UI |
 | 2 | W2-03 ∥ W2-04 ∥ (W2-01 finishes) | Charge, CMM, UI |
-| 3 | W3-01 → W3-02 ∥ W3-03 ∥ W4-01 | Charge→Booking, Booking, UI |
-| 4 | W4-02 ∥ Phase-2 starts | Platform |
+| 3A | W3-01 ∥ W3-04 ∥ W4-01 | Charge, Booking, UI — disjoint primary owners |
+| 3B | W3-03 and W3-02 | Booking lane; execute sequentially unless independently staffed with an explicit shared-hotspot merge plan |
+| 4 | W4-02 ∥ Phase-2 starts after its Phase-1 dependencies close | Platform |
 
 ## Ownership model — Driver & Contributors
 
@@ -100,20 +119,21 @@ Your scenario — *"intent 3 of module A depends on intent 10 of module B"* — 
 | W2-03 | Charge tariffs & agreements — tariff/surcharge/local-charge model, agreement versioning, real quote math | Charge | W0-02 | [W2-03](W2-03-charge-tariffs-and-agreements.md) — **Closed 2026-08-02** ([immutable 120-cell live evidence](../../artifacts/w2-03-live/20260802T163755.288Z-eb2d89cc/manifest.1.19e5e9db71d2eb651ef6c7b8b877d4ccc846e108f0e9330143374149659653f9.json)) |
 | W2-04 | Container journey & track-trace — DCSA T&T event model, journey detail, movement capture | CMM | W1-01, W0-01 | [W2-04](W2-04-container-journey-track-trace.md) — **Closed 2026-08-02** ([live API evidence](../../artifacts/w2-04-live/acceptance.json), [four-viewport browser evidence](../../artifacts/w2-04-live/playwright/playwright-evidence.json), [manual audit review](../../artifacts/w2-04-live/audit-review.md)) |
 | W3-01 | D&D rules & rates — rule types (move-pair bounded), free time, daily rates | Charge | W2-03 | [W3-01](W3-01-dnd-rules-and-rates.md) — **Ready to start: W2-03 dependency closed with 120/120 live acceptance** |
+| W3-04 | Booking request completeness — typed party/cargo/schedule/equipment-quantity capture through live validation, pricing, confirmation, and detail | Booking | W1-01, W0-02, W2-02, W2-03 | [W3-04](W3-04-booking-request-completeness.md) — **Ready to start: all dependencies closed** |
 | W3-02 | D&D pricing & invoice — Booking trigger → sync D&D pricing → invoice emission to Finance | Booking | W3-01, W2-04, W1-01 | [W3-02](W3-02-dnd-pricing-and-invoice.md) |
-| W3-03 | Booking amendments — amend/reconfirm, `bookingRevision` re-emission, CMM upsert reconcile | Booking | W1-01 | [W3-03](W3-03-booking-amendments.md) |
+| W3-03 | Booking amendments — amend/reconfirm, `bookingRevision` re-emission, CMM upsert reconcile | Booking | W3-04 | [W3-03](W3-03-booking-amendments.md) |
 | W4-01 | Module list-detail uplift — reference-data, charge, CMM apps to shell + list/detail pattern | UI | W2-01, W2-02 | [W4-01](W4-01-module-list-detail-uplift.md) |
 | W4-02 | Operations & observability — tracing, dashboards, alerts, runbooks for the live stack | Platform | W1-01 | [W4-02](W4-02-operations-observability.md) |
 **Phase 2 — Electronic connectivity, standards publication & lifecycle completion** *(answers in these statements are provisional — reconfirm when Phase 2 starts):*
 
 | Id | Intent | Driver | Depends on | Statement |
 |---|---|---|---|---|
-| P2-01 | EDI / INTTRA booking intake (IFTMBF, ACL) | Booking | W1-01, W3-03 | [P2-01](P2-01-edi-booking-intake.md) |
+| P2-01 | EDI / INTTRA booking intake (IFTMBF, ACL) | Booking | W3-04, W3-03 | [P2-01](P2-01-edi-booking-intake.md) |
 | P2-02 | DCSA Track & Trace public API (OHS) | CMM | W2-04 | [P2-02](P2-02-dcsa-track-trace-api.md) |
 | P2-03 | Booking cancellation & journey close (`booking.cancelled`) | Booking | W1-01, W3-03, W2-04 | [P2-03](P2-03-booking-cancellation.md) |
-| P2-04 | Multi-leg / transshipment routing (POL→PTS→POD) | Booking (+CMM,Charge) | W1-01, W2-04, W2-03 | [P2-04](P2-04-multi-leg-transshipment-routing.md) |
+| P2-04 | Multi-leg / transshipment routing (POL→PTS→POD) | Booking (+CMM,Charge) | W3-04, W2-04, W2-03 | [P2-04](P2-04-multi-leg-transshipment-routing.md) |
 | P2-05 | Operational movement ingestion EDI (CODECO/COARRI, ACL) | CMM | W2-04 | [P2-05](P2-05-edi-movement-ingestion.md) |
-| P2-06 | Reefer & DG booking parameters | Booking (+Charge,CMM) | W1-01, W2-03 | [P2-06](P2-06-reefer-dg-parameters.md) |
+| P2-06 | Reefer & DG booking parameters | Booking (+Charge,CMM) | W3-04, W2-03 | [P2-06](P2-06-reefer-dg-parameters.md) |
 
 **Phase 3 — Multi-company operation & documentation** *(further out; answers provisional, security review required on P3-01):*
 
@@ -122,18 +142,18 @@ Your scenario — *"intent 3 of module A depends on intent 10 of module B"* — 
 | P3-01 | Multi-entity / multi-company operation | Shared Platform (all contribute) | Phase 1 + W2-01 | [P3-01](P3-01-multi-entity-operation.md) |
 | P3-02 | Multi-currency depth (FX in pricing + invoicing) | Charge (+Booking) | W2-03, W3-02, W0-02 | [P3-02](P3-02-multi-currency-depth.md) |
 | P3-03 | Additional equipment types & full reefer depth | Reference Data (+Booking,CMM) | W0-02, P2-06 | [P3-03](P3-03-additional-equipment-types.md) |
-| P3-04 | Documentation / Bill of Lading (DCSA eBL) — **new module** | Documentation (new team) | W1-01, P2-04, W2-04 | [P3-04](P3-04-bill-of-lading-ebl.md) |
+| P3-04 | Documentation / Bill of Lading (DCSA eBL) — **new module** | Documentation (new team) | W3-04, P2-04, W2-04 | [P3-04](P3-04-bill-of-lading-ebl.md) |
 
 **Phase 3+ directional candidates** (not yet full statements — the vision names them as optional; write statements when committed): customer self-service portal; ETA prediction. These are genuinely under-specified in the current docs, so a full vertical-slice statement would be fabrication until the business defines them.
 
 ## Phase 2 & 3 wave/parallel plan
 
-Phase 2 intents are largely independent (they hang off already-closed Phase-1 intents), so most can run in parallel across teams:
+Phase 2 intents are largely independent once their listed Phase-1 providers close, so most can then run in parallel across teams:
 
 | Wave | Parallel intents | Note |
 |---|---|---|
-| P2-a | P2-01 ∥ P2-02 ∥ P2-03 ∥ P2-05 ∥ P2-06 | all depend only on closed Phase-1 work; disjoint hotspots |
-| P2-b | P2-04 (multi-leg) | touches Booking+CMM+Charge broadly — run when those teams have capacity; not blocked, but high-coordination |
+| P2-a | P2-01 ∥ P2-02 ∥ P2-03 ∥ P2-05 ∥ P2-06 | P2-02/P2-05 are unblocked now; P2-06 waits for W3-04; P2-01/P2-03 wait for W3-03; disjoint hotspots once unblocked |
+| P2-b | P2-04 (multi-leg) | waits for W3-04; then run when Booking+CMM+Charge have capacity because it is high-coordination |
 | P3-a | **P3-01 first** (multi-entity) | cross-cutting + security-sensitive; later Phase-3 intents assume entity scope |
 | P3-b | P3-02 ∥ P3-03 | independent, after their Phase-1/2 deps |
 | P3-c | P3-04 (eBL, new module) | new team/context; consumes booking+shipment via contracts |

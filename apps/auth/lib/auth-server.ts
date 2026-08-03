@@ -45,6 +45,67 @@ type KeycloakClaims = JWTPayload & {
   sid?: string;
 };
 
+const SUPERUSER_PERMISSIONS = [
+  "reference-data:read",
+  "reference-data:create",
+  "reference-data:update",
+  "reference-data:deactivate",
+  "reference-data:reactivate",
+  "booking:read",
+  "booking:create",
+  "booking:validate",
+  "booking:request-pricing",
+  "booking:confirm",
+  "booking:amend",
+  "booking:reconfirm",
+  "charge-agreement:read",
+  "charge-rates:read",
+  "charge-rates:create",
+  "charge-rates:update",
+  "charge-rates:approve",
+  "charge-rates:create-successor",
+  "charge-agreements:read",
+  "charge-agreements:create",
+  "charge-agreements:update",
+  "charge-agreements:approve",
+  "charge-agreements:create-successor",
+  "charge-agreements:suspend",
+  "charge-agreements:expire",
+  "charge-manual-cases:read",
+  "reference-contracts:read",
+  "identity-roles:read",
+  "identity-roles:assign",
+  "identity-roles:revoke",
+  "identity-audit:read",
+  "platform-status:read"
+] as const;
+
+function permissionsForRoles(roles: string[]): string[] {
+  if (roles.includes("superuser")) {
+    return [...SUPERUSER_PERMISSIONS];
+  }
+  return [
+    ...(roles.includes("booking-desk") ? ["booking:read", "booking:create"] : []),
+    ...(roles.includes("reference-admin") ? ["reference-data:read", "reference-data:create"] : []),
+    ...(roles.includes("pricing") ? [
+      "charge-agreement:read",
+      "charge-agreements:read",
+      "charge-agreements:create",
+      "charge-agreements:update",
+      "charge-agreements:approve",
+      "charge-agreements:create-successor",
+      "charge-agreements:suspend",
+      "charge-agreements:expire",
+      "charge-rates:read",
+      "charge-rates:create",
+      "charge-rates:update",
+      "charge-rates:approve",
+      "charge-rates:create-successor",
+      "charge-manual-cases:read"
+    ] : [])
+  ];
+}
+
 export function isAuthBypassEnabled(): boolean {
   return sharedIsAuthBypassEnabled();
 }
@@ -121,26 +182,7 @@ export function createOidcSession(claims: KeycloakClaims): AuthSession {
     ...(claims.realm_access?.roles ?? []),
     ...(claims.resource_access?.[authConfig.clientId]?.roles ?? [])
   ])).filter((role) => !role.startsWith("default-roles-"));
-  const permissions = [
-    ...(roles.includes("booking-desk") ? ["booking:read", "booking:create"] : []),
-    ...(roles.includes("reference-admin") ? ["reference-data:read", "reference-data:create"] : []),
-    ...(roles.includes("pricing") ? [
-      "charge-agreement:read",
-      "charge-agreements:read",
-      "charge-agreements:create",
-      "charge-agreements:update",
-      "charge-agreements:approve",
-      "charge-agreements:create-successor",
-      "charge-agreements:suspend",
-      "charge-agreements:expire",
-      "charge-rates:read",
-      "charge-rates:create",
-      "charge-rates:update",
-      "charge-rates:approve",
-      "charge-rates:create-successor",
-      "charge-manual-cases:read"
-    ] : [])
-  ];
+  const permissions = permissionsForRoles(roles);
   const issuedAt = new Date((claims.iat ?? Math.floor(Date.now() / 1000)) * 1000);
   const expiresAt = new Date((claims.exp ?? Math.floor(Date.now() / 1000) + 300) * 1000);
   return {
@@ -165,6 +207,7 @@ export function sessionMaxAgeSeconds(session: AuthSession): number {
 export function createLocalSession(subjectId: string): AuthSession {
   const issuedAt = new Date();
   const expiresAt = new Date(issuedAt.getTime() + 60 * 60 * 1000);
+  const superuser = subjectId === "local.superuser";
   const bookingUser = subjectId === "local.booking.user";
   return {
     sessionId: createCorrelationId(),
@@ -172,8 +215,12 @@ export function createLocalSession(subjectId: string): AuthSession {
     subjectType: "user",
     displayName: subjectId,
     email: `${subjectId}@example.test`,
-    roles: bookingUser ? ["booking-desk"] : ["reference-admin"],
-    permissions: bookingUser ? ["booking:read", "booking:create"] : ["reference-data:read", "reference-data:create"],
+    roles: superuser ? ["superuser"] : bookingUser ? ["booking-desk"] : ["reference-admin"],
+    permissions: superuser
+      ? [...SUPERUSER_PERMISSIONS]
+      : bookingUser
+        ? ["booking:read", "booking:create"]
+        : ["reference-data:read", "reference-data:create"],
     issuedAt: issuedAt.toISOString(),
     expiresAt: expiresAt.toISOString(),
     policyVersion: "mvp-2026-07-01"
@@ -181,7 +228,7 @@ export function createLocalSession(subjectId: string): AuthSession {
 }
 
 export function localSubjectId(requested?: string | null): string {
-  const allowedSubjects = new Set(["local.booking.user", "local.reference.admin", "local-user"]);
+  const allowedSubjects = new Set(["local.superuser", "local.booking.user", "local.reference.admin", "local-user"]);
   if (requested && allowedSubjects.has(requested)) {
     return requested;
   }

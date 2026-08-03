@@ -65,6 +65,21 @@ class AuthorizationPolicyEvaluatorTest {
     }
 
     @Test
+    void superuserReceivesEveryCatalogPermission() {
+        AuthenticatedSubject subject = subject("local.superuser");
+        RoleAssignment assignment = assignment("local.superuser", RoleCode.SUPERUSER);
+
+        catalog.permissions().forEach(permission -> assertEquals(
+                DecisionResult.ALLOW,
+                evaluator.evaluate(
+                        subject,
+                        List.of(assignment),
+                        request(permission.resource(), permission.action().value()))
+                        .result(),
+                () -> "superuser denied " + permission.resource() + ":" + permission.action().value()));
+    }
+
+    @Test
     void pricingCanAdministerRatesAndFinanceReadCannotMutate() {
         AuthenticatedSubject analyst = subject("pricing-analyst");
         RoleAssignment pricing = assignment("pricing-analyst", RoleCode.PRICING);

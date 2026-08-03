@@ -12,12 +12,12 @@ A single booking flows: **UI create form → Booking API → domain → Postgres
 
 - **Layers cut through:** UI · BFF/API · domain · persistence · sync Charge seam · async CMM event seam (both directions).
 - **Thinnest viable form:** one routing leg (POL→POD, no transshipment), one equipment line (type × quantity=1, no container number yet), one currency (USD), FCL dry (no reefer/DG).
-- **Explicitly deferred to later intents:** multi-leg/transshipment, container-number re-confirmation, rolls/splits/cancellations (`booking-amendments` intent), D&D + invoice (`dnd-pricing-and-invoice` intent), app shell/auth (`app-shell-and-auth` intent), design system (`design-system-foundation` intent).
+- **Explicitly deferred to later intents:** complete party/cargo/schedule/equipment-quantity capture (`W3-04 booking-request-completeness`), multi-leg/transshipment (`P2-04`), container-number assignment and reconfirmation (`W3-03 booking-amendments`), rolls/splits/cancellations, D&D + invoice (`dnd-pricing-and-invoice`), app shell/auth, and design-system foundation.
 
 ## In Scope / Out of Scope
 
 - **In:** create/validate/price/confirm booking; DCSA-correct booking aggregate (routing[], equipment[]); real `booking.confirmed` and `containermovement.status` events; CMM journey open; Booking detail rendering movement status.
-- **Out:** D&D and invoicing → `dnd-pricing-and-invoice`. Auth/shell → `app-shell-and-auth`. Full design system → `design-system-foundation`. Multi-leg & amendments → `booking-amendments`.
+- **Out:** complete commercial request fields → `W3-04 booking-request-completeness`. D&D and invoicing → `dnd-pricing-and-invoice`. Auth/shell → `app-shell-and-auth`. Full design system → `design-system-foundation`. Amendments/container assignment → `W3-03`; multi-leg routing → `P2-04`.
 
 ## Actors & Journey
 

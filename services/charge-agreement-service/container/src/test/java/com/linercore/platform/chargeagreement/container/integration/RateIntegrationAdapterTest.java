@@ -26,6 +26,10 @@ class RateIntegrationAdapterTest {
         assertEquals(AgreementAuthorizationPort.Decision.ALLOW,
                 adapter.authorize("local.pricing.analyst", "charge-agreements", "approve", "corr-1"));
         assertEquals(AgreementAuthorizationPort.Decision.ALLOW,
+                adapter.authorize("local.superuser", "charge-agreements", "approve", "corr-1"));
+        assertEquals(AgreementAuthorizationPort.Decision.ALLOW,
+                adapter.authorize("local.superuser", "charge-manual-cases", "read", "corr-1"));
+        assertEquals(AgreementAuthorizationPort.Decision.ALLOW,
                 adapter.authorize("local.charge.reader", "charge-agreements", "read", "corr-1"));
         assertEquals(AgreementAuthorizationPort.Decision.DENY,
                 adapter.authorize("local.charge.reader", "charge-agreements", "approve", "corr-1"));
@@ -48,6 +52,8 @@ class RateIntegrationAdapterTest {
 
         assertEquals(RateAuthorizationPort.Decision.ALLOW,
                 adapter.authorize("local.pricing.analyst", "charge-rates", "approve", "corr-1"));
+        assertEquals(RateAuthorizationPort.Decision.ALLOW,
+                adapter.authorize("local.superuser", "charge-rates", "approve", "corr-1"));
         assertEquals(RateAuthorizationPort.Decision.ALLOW,
                 adapter.authorize("local.charge.reader", "charge-rates", "read", "corr-1"));
         assertEquals(RateAuthorizationPort.Decision.DENY,

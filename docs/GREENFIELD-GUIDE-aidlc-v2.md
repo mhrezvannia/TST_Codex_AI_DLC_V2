@@ -261,7 +261,8 @@ The order that keeps every intent honest (each ships a working vertical slice; n
 
 **Wave 3 — Close the money loop & change:**
 - *D&D rules & rates* → *D&D pricing & invoice* — the "cash" end of quote-to-cash.
-- *Booking amendments* — revision/re-confirmation semantics.
+- *Booking request completeness* — the typed FCL-dry party/cargo/schedule/equipment-quantity baseline; may run beside D&D rules.
+- *Booking amendments* — revision/re-confirmation semantics, after Booking request completeness closes.
 
 **Wave 4 — Product polish & operability:**
 - *Module list-detail uplift* — the remaining modules to product-grade UI.

@@ -6,7 +6,7 @@
 
 1. `docs/program-vision-document.md` §3 (Integration Landscape — EDI/INTTRA row), §5 `booking.intake.edi` contract
 2. `docs/program-vision-document.md` §5 Context Map (EDI/INTTRA → Booking is an **Anti-Corruption Layer**)
-3. W1-01 outputs (the booking quote-to-cash flow this feeds), W3-03 (amendments — intake can amend)
+3. W3-04 outputs (the canonical complete booking-request field dictionary and mappings), W1-01 outputs (the quote-to-cash flow this feeds), and W3-03 (amendments — intake can amend)
 4. `contracts/` (define `contracts/edi/inttra-iftmbf-mapping.md` here)
 
 ## Intent
@@ -44,7 +44,7 @@ On live Compose: (1) drop a sample IFTMBF message → a matching booking appears
 
 ## Dependencies
 
-W1-01 (pipeline), W3-03 (so EDI amendments have a home). Independent of other Phase-2 intents.
+W3-04 (canonical booking request), W1-01 (pipeline), and W3-03 (so EDI amendments have a home). Independent of other Phase-2 intents.
 
 ## Suggested Scope & Sizing
 

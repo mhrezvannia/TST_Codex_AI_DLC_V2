@@ -6,7 +6,7 @@
 
 1. `docs/program-vision-document.md` §3 Scalability + §Roadmap ("candidate Documentation/B/L module", "end-to-end document flow"), §4 (B/L noted as future module out of Booking scope)
 2. `docs/program-vision-document.md` §5 Context Map (to place the new module's seams)
-3. W1-01/P2-04 (booking + routing as B/L inputs), W2-04 (movements/shipment context)
+3. W3-04 (booking parties/cargo/equipment request facts), P2-04 (full routing), W1-01 historical spine, and W2-04 (movements/shipment context)
 4. DCSA eBL standard (external — target its data model)
 
 ## Intent
@@ -44,7 +44,7 @@ On live Compose: (1) from a confirmed booking, draft a B/L → data auto-populat
 
 ## Dependencies
 
-W1-01 (+ P2-04 for real routing), W2-04 (shipment context). Later in Phase 3; benefits from P3-01 (entity scope) if present.
+W3-04 (complete Booking source facts), P2-04 (real routing), and W2-04 (shipment context). Later in Phase 3; benefits from P3-01 (entity scope) if present.
 
 ## Suggested Scope & Sizing
 

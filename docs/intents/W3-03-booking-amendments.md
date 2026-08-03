@@ -8,7 +8,7 @@ The `bookingRevision` semantics in the `booking.confirmed` contract become real:
 
 1. `docs/enterprise-contracts/async-event-contract-booking-confirmed.md` §5 change semantics + §2 idempotency (the spec of this intent)
 2. `docs/program-vision-document.md` §4 Booking profile (amendments owned)
-3. W1-01 outputs (initial-confirmation flow, revision=1)
+3. W3-04 outputs (typed complete dry-booking request, editable quantity, optional/unassigned initial `equipmentId`) and W1-01 outputs (initial-confirmation flow, revision=1)
 
 ## Vertical Slice Definition
 
@@ -40,7 +40,7 @@ On live Compose: (1) amend quantity on a confirmed booking → observe revision-
 
 ## Dependencies
 
-W1-01. (W2-04 helpful but not required — reconciliation is against journeys W1-01 already opens.)
+W3-04 (the field and create/detail baseline this intent amends). W1-01 is inherited transitively. W2-04 is helpful but not required — reconciliation is against journeys W1-01 already opens.
 
 ## Suggested Scope & Sizing
 

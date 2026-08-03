@@ -6,7 +6,7 @@
 
 1. `docs/program-vision-document.md` §4 Booking profile ("reefer/DG indicators; detailed reefer parameters at maturity")
 2. `docs/erp-business-ui-gap-analysis.md` Part 1.2 (reefer/DG = 0 in code today)
-3. W1-01 (booking aggregate to extend), W2-03 (pricing to add reefer/DG surcharge dimensions)
+3. W3-04 (complete FCL-dry booking aggregate and form to extend), W2-03 (pricing to add reefer/DG surcharge dimensions), and W1-01 historical spine
 
 ## Intent
 
@@ -43,7 +43,7 @@ On live Compose: (1) create a reefer booking with a setpoint → reefer surcharg
 
 ## Dependencies
 
-W1-01, W2-03. Independent of other Phase-2 intents.
+W3-04, W2-03. Independent of other Phase-2 intents; W1-01 is inherited through W3-04.
 
 ## Suggested Scope & Sizing
 

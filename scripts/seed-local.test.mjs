@@ -13,6 +13,8 @@ import {
 } from "./seed-local.mjs";
 
 const seedPack = JSON.parse(readFileSync("infrastructure/seeds/shared-platform-mvp-defaults.json", "utf8"));
+const expectedRoleAssignments = seedPack.identity.localUsers
+  .reduce((total, user) => total + (user.roles?.length ?? 0), 0);
 
 test("default seed pack contains all required reference sets", () => {
   const result = validateSeedPack(seedPack);
@@ -78,7 +80,10 @@ test("builds live API commands for reference records and role assignments", () =
     reason: "local seed currency-usd",
     correlationId: "corr-test"
   });
-  assert.equal(buildRoleAssignmentCommands(seedPack, "local.reference.admin", "corr-test").length, 5);
+  assert.equal(
+    buildRoleAssignmentCommands(seedPack, "local.reference.admin", "corr-test").length,
+    expectedRoleAssignments
+  );
 });
 
 test("apply mode creates missing reference records through live API shape", async () => {
@@ -103,7 +108,7 @@ test("apply mode creates missing reference records through live API shape", asyn
 
   assert.equal(summary.failed, 0);
   assert.equal(summary.created, orderedReferenceRecords(seedPack).length);
-  assert.equal(summary.identityAssignments.length, 5);
+  assert.equal(summary.identityAssignments.length, expectedRoleAssignments);
   assert.equal(calls.some((call) => call.url === "http://identity.test/internal/identity/roles/assign"), true);
   assert.equal(calls.some((call) => call.url.includes("http://reference.test/reference-sets/CURRENCY/records")), true);
 });
@@ -125,7 +130,7 @@ test("apply mode reports HTTP 200 authorization denials as failures", async () =
   });
 
   assert.equal(summary.identityAssignments.every((assignment) => assignment.status === "failed"), true);
-  assert.equal(summary.failed, 4);
+  assert.equal(summary.failed, expectedRoleAssignments);
   assert.match(summary.failures[0], /DENY_NO_PERMISSION/);
 });
 
@@ -149,7 +154,7 @@ test("apply mode retries transient transport failures", async () => {
   });
 
   assert.equal(summary.failed, 0);
-  assert.equal(assignmentAttempts, 5);
+  assert.equal(assignmentAttempts, expectedRoleAssignments + 1);
 });
 
 test("apply mode accepts stale assignment only when effective role is present", async () => {
@@ -174,7 +179,7 @@ test("apply mode accepts stale assignment only when effective role is present", 
   });
 
   assert.equal(summary.identityAssignments.find((entry) => entry.targetSubjectId === "local.booking.user").status, "already-applied");
-  assert.equal(summary.failed, 3);
+  assert.equal(summary.failed, expectedRoleAssignments - 1);
 });
 
 test("apply mode is idempotent when live records already match", async () => {

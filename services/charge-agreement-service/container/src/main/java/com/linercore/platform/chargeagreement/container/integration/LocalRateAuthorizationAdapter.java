@@ -8,6 +8,7 @@ public final class LocalRateAuthorizationAdapter implements RateAuthorizationPor
     private static final Set<String> ANALYST_ACTIONS =
             Set.of("read", "create", "update", "approve", "create-successor");
     private static final Map<String, Set<String>> POLICY = Map.of(
+            "local.superuser", ANALYST_ACTIONS,
             "local.pricing.analyst", ANALYST_ACTIONS,
             "local.charge.reader", Set.of("read"));
 

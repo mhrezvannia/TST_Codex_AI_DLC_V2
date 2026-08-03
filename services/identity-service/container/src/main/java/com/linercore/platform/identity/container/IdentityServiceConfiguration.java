@@ -40,6 +40,17 @@ public class IdentityServiceConfiguration {
                     null,
                     "local seed-loader bootstrap",
                     1));
+            repository.save(new RoleAssignment(
+                    "local-bootstrap-superuser",
+                    "local.superuser",
+                    "role-superuser",
+                    AssignmentStatus.ACTIVE,
+                    "local-bootstrap",
+                    Instant.EPOCH,
+                    null,
+                    null,
+                    "local superuser bootstrap",
+                    1));
         }
         return repository;
     }

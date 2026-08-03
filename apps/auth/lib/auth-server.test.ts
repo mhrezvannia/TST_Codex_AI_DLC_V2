@@ -44,6 +44,7 @@ test("auth bypass returns local session without a cookie", () => {
 });
 
 test("local subject selection is allowlisted for live proof fixtures", () => {
+  expect(localSubjectId("local.superuser")).toBe("local.superuser");
   expect(localSubjectId("local.reference.admin")).toBe("local.reference.admin");
   expect(localSubjectId("local.booking.user")).toBe("local.booking.user");
   expect(localSubjectId("attacker")).toBe("local.booking.user");
@@ -93,6 +94,29 @@ test("maps the pricing role to Charge module and command capabilities", () => {
     "charge-rates:approve",
     "charge-manual-cases:read"
   ]));
+});
+
+test("maps the superuser role to every current application capability", () => {
+  const session = createOidcSession({
+    sub: "local.superuser",
+    preferred_username: "superuser",
+    realm_access: { roles: ["superuser"] }
+  });
+
+  expect(session.roles).toEqual(["superuser"]);
+  expect(session.permissions).toEqual(expect.arrayContaining([
+    "booking:reconfirm",
+    "reference-data:reactivate",
+    "charge-agreements:expire",
+    "charge-rates:approve",
+    "identity-roles:assign",
+    "identity-audit:read",
+    "platform-status:read"
+  ]));
+  expect(createLocalSession("local.superuser")).toMatchObject({
+    roles: ["superuser"],
+    permissions: expect.arrayContaining(["booking:read", "reference-data:read", "charge-agreement:read"])
+  });
 });
 
 test("auth bypass is ignored outside local runtime profile", () => {

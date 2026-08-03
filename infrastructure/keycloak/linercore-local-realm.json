@@ -9,6 +9,10 @@
   "roles": {
     "realm": [
       {
+        "name": "superuser",
+        "description": "Local-only unrestricted application access"
+      },
+      {
         "name": "booking-desk",
         "description": "Create, validate, confirm, and view bookings"
       },
@@ -69,6 +73,28 @@
     }
   ],
   "users": [
+    {
+      "id": "local.superuser",
+      "username": "superuser",
+      "firstName": "Local",
+      "lastName": "Superuser",
+      "email": "superuser@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "superuser",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "superuser",
+        "booking-desk",
+        "reference-admin",
+        "pricing"
+      ]
+    },
     {
       "id": "local.booking.user",
       "username": "booking.user",

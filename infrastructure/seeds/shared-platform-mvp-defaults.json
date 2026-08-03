@@ -9,6 +9,12 @@
     "clientId": "linercore-local-bff",
     "users": [
       {
+        "username": "local.superuser",
+        "displayName": "Local Superuser",
+        "email": "local.superuser@example.invalid",
+        "roles": ["superuser", "booking-desk", "reference-admin", "pricing"]
+      },
+      {
         "username": "local.reference.admin",
         "displayName": "Local Reference Admin",
         "email": "local.reference.admin@example.invalid",
@@ -36,6 +42,7 @@
   },
   "identity": {
     "roles": [
+      "superuser",
       "pricing",
       "sales",
       "booking-desk",
@@ -56,6 +63,7 @@
       "booking:create"
     ],
     "rolePermissions": [
+      { "role": "superuser", "permissions": ["reference-data:read", "reference-data:write", "identity:read", "identity:admin", "authz:decision", "booking:read", "booking:create"] },
       { "role": "customer-service", "permissions": ["reference-data:read"] },
       { "role": "booking-desk", "permissions": ["reference-data:read", "booking:read", "booking:create"] },
       { "role": "reference-admin", "permissions": ["reference-data:read", "reference-data:write"] },
@@ -63,6 +71,7 @@
       { "role": "security-admin", "permissions": ["identity:read", "identity:admin", "authz:decision"] }
     ],
     "localUsers": [
+      { "username": "local.superuser", "roles": ["superuser"] },
       { "username": "local.reference.admin", "roles": ["reference-admin", "platform-operator"] },
       { "username": "local.carrier.user", "roles": ["customer-service"] },
       { "username": "local.booking.user", "roles": ["booking-desk"] },

@@ -11,13 +11,14 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MvpAuthorizationCatalog {
-    public static final String POLICY_VERSION = "mvp-2026-07-26";
+    public static final String POLICY_VERSION = "mvp-2026-08-02";
     private final List<Role> roles;
     private final List<Permission> permissions;
     private final List<RolePermission> grants;
 
     public MvpAuthorizationCatalog() {
         this.roles = List.of(
+                role("role-superuser", RoleCode.SUPERUSER, "Superuser"),
                 role("role-pricing", RoleCode.PRICING, "Pricing"),
                 role("role-sales", RoleCode.SALES, "Sales"),
                 role("role-booking-desk", RoleCode.BOOKING_DESK, "Booking Desk"),
@@ -99,6 +100,7 @@ public class MvpAuthorizationCatalog {
 
     private List<RolePermission> grants() {
         Map<RoleCode, List<String>> roleGrantIds = Map.of(
+                RoleCode.SUPERUSER, permissions.stream().map(Permission::permissionId).toList(),
                 RoleCode.REFERENCE_ADMIN, List.of("perm-reference-read", "perm-reference-create", "perm-reference-update",
                         "perm-reference-deactivate", "perm-reference-reactivate", "perm-contract-read"),
                 RoleCode.SECURITY_ADMIN, List.of("perm-identity-role-read", "perm-identity-role-assign",

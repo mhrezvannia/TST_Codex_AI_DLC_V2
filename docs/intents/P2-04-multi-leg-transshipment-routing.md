@@ -6,7 +6,7 @@
 
 1. `docs/enterprise-contracts/async-event-contract-booking-confirmed.md` §4 (full ordered `routing[]`; first leg load = POL, last leg discharge = POD, intermediate = transshipment/PTS)
 2. `docs/erp-business-ui-gap-analysis.md` Part 1.1 (the routing model the aggregate must reach)
-3. W1-01 (single-leg spine — this generalises it), W2-04 (CMM move derivation), W2-03 (per-leg pricing)
+3. W3-04 (complete single-leg booking baseline — this generalises its routing), W2-04 (CMM move derivation), W2-03 (per-leg pricing), and W1-01 historical spine
 
 ## Intent
 
@@ -43,7 +43,7 @@ On live Compose: (1) create a 2-leg booking via the routing builder; (2) price r
 
 ## Dependencies
 
-W1-01, W2-04, W2-03. Best after W3-03 (amendment reconciliation) but not blocked by it.
+W3-04, W2-04, W2-03. Best after W3-03 (amendment reconciliation) but not blocked by it; W1-01 is inherited through W3-04.
 
 ## Suggested Scope & Sizing
 

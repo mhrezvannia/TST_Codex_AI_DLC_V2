@@ -10,7 +10,7 @@ class IdentityServiceConfigurationTest {
     private final IdentityServiceConfiguration configuration = new IdentityServiceConfiguration();
 
     @Test
-    void bootstrapsSeedActorAsSecurityAdminOnlyInLocalProfile() {
+    void bootstrapsSeedActorAndSuperuserOnlyInLocalProfile() {
         MockEnvironment local = new MockEnvironment();
         local.setActiveProfiles("local");
 
@@ -18,6 +18,8 @@ class IdentityServiceConfigurationTest {
         var defaultAssignments = configuration.roleAssignmentRepository(new MockEnvironment());
 
         assertTrue(localAssignments.findBySubjectAndRole("local.reference.admin", "role-security-admin").isPresent());
+        assertTrue(localAssignments.findBySubjectAndRole("local.superuser", "role-superuser").isPresent());
         assertFalse(defaultAssignments.findBySubjectAndRole("local.reference.admin", "role-security-admin").isPresent());
+        assertFalse(defaultAssignments.findBySubjectAndRole("local.superuser", "role-superuser").isPresent());
     }
 }

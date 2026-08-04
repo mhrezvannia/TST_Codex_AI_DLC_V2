@@ -5,19 +5,19 @@
 > not directly.
 
 ## Way of Working
-W2-03 stays on the short-lived `intent/W2-03-charge-tariffs-and-agreements` branch from the common Wave A baseline and integrates through `integ/main-reconciled` under `docs/intents/00-INTENT-BACKLOG.md`. One stream-aligned intent mob owns the vertical flow; this scoped program practice does not rewrite the repository as plain trunk-to-`main` or invent an unobserved merge style.
+W3-04 stays on its short-lived `intent/W3-04-booking-request-completeness` branch, synchronizes with `integ/main-reconciled`, and integrates through the program backlog protocol. The repository does not prove one universal merge style or external branch-protection policy, so neither is invented.
 
 ## Walking Skeleton
-The first Construction slice is a gated risk-first Charge-to-Booking walking skeleton: one real approved rate produces one attributable itemised line, Booking stores and renders it, and evidence remains honest about live-runtime status. Full OFR, BAF, POL THC, repricing, and no-rate behavior build on that spine rather than arriving as disconnected horizontal batches.
+PB-01 is the first gated Construction slice: a real shared-shell request creates and reopens with authoritative voyage schedule facts and equipment quantity greater than one without a physical identifier. Commercial breadth, legacy correction, pricing, and confirmation build only after that cross-layer spine is proven.
 
 ## Testing Posture
-Tests are written alongside code with at least 80 percent line coverage for changed Charge and Booking code. Coverage is necessary but insufficient: domain/version/matching, additive migration, producer-consumer contract, typed snapshot compatibility, repricing, explicit `MANUAL_PRICING_REQUIRED`, Charge UI, Playwright, isolated Compose, demo-guard, `aidlc-audit`, and `erp-fidelity-audit` evidence are required, and Charge lint/build join the blocking quality path.
+Tests are written alongside W3-04 changes and evidence at least 80% line coverage of changed executable production lines in every W3-touched module. Coverage is necessary but insufficient: domain/completeness, additive migration/restart, pricing and event contracts, duplicate/conflict/degraded paths, Playwright accessibility/responsive behavior, isolated live Compose, `aidlc-audit`, and `erp-fidelity-audit` are mandatory, and a missing prerequisite is BLOCKED rather than PASS.
 
 ## Deployment
-The canonical W2-03 acceptance environment is the isolated `linercore-wave-a` stack driven only through `scripts/wave-a-compose.mjs`, with `npm run demo:guard` before and after to protect the manager demo. Current CI is validation, not an established production deployment pipeline; staging topology, production cadence, cloud deployment, and continuous delivery remain unclaimed and out of this feature.
+Fast Java/frontend/contract/lint/build checks block integration, followed by one serialized manual acceptance run on the approved isolated Compose topology with live contracts, browser/accessibility evidence, demo protection, and audits. This practice does not claim an established staging/production deployment pipeline, cadence, rollback mechanism, or continuous delivery.
 
 ## Code Style
-Java preserves the existing ports-and-adapters structure, framework-free domain core, service-owned databases, immutable value objects, explicit identifiers/statuses, and typed boundary outcomes or translated exceptions with correlation data. TypeScript remains strict and feature-local in `apps/charge-agreements`, reuses shared auth and `@erp/ui`, and does not redesign `packages/ui`, shell, navigation, typography, or palette; an unobserved `Result<T,E>` convention is not imposed.
+Java preserves framework-free domain cores, application-service transaction boundaries, ports/adapters, service-owned persistence, immutable typed outcomes, correlated boundary errors, idempotency, audit, and transactional outbox patterns. TypeScript remains strict, centralizes Booking BFF security/error behavior, uses shared workspace types and `@erp/ui` inside the one LinerCore shell, and adds no repository-wide formatter or architecture-tool mandate within W3-04.
 
 ## W2-02 Closure Preservation
 Closure work uses the smallest canonical live journey that proves the existing architecture and the unresolved Definition-of-Done gap together. W2-02 proves authenticated `/booking` through the shared shell, Booking BFF/backend, shared UI states, and isolated live evidence.

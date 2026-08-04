@@ -109,6 +109,14 @@ NEVER run ordinary pull-request CI against the single shared Wave A live stack. 
 NEVER introduce a universal Java formatter or result-type migration as incidental W2-04 scope. (affirmed 2026-07-21)
 NEVER redesign `packages/ui`, the shared shell, or Booking while adding Container Movement-owned composition. (affirmed 2026-07-21)
 NEVER relabel an environmental block or accepted waiver as PASS. (affirmed 2026-07-21)
+- NEVER infer a squash/rebase/merge style, branch protection, reviewer count, or production release policy that is not evidenced or explicitly approved. (affirmed 2026-08-03)
+- NEVER implement W3-04 as disconnected database, backend, frontend, contract, or test-only horizontal releases. (affirmed 2026-08-03)
+- NEVER classify a skipped required live test, missing scanner/toolchain, or unavailable provider as successful evidence. (affirmed 2026-08-03)
+- NEVER reuse a prior intent’s coverage, browser, contract, Compose, security, or audit PASS as W3-04 freshness evidence. (affirmed 2026-08-03)
+- NEVER bypass service-owned data boundaries with shared database access or move lifecycle rules into controllers, BFF routes, or UI-only validation. (affirmed 2026-08-03)
+- NEVER fabricate commodity, trade-lane, voyage schedule, party, equipment quantity, or physical identifier defaults to satisfy completeness. (affirmed 2026-08-03)
+- NEVER add a module-local shell, palette, typography system, or shared-primitive fork within W3-04. (affirmed 2026-08-03)
+- NEVER claim staging, production, rollback, supply-chain provenance, or continuous deployment capability from static CI/Compose definitions alone. (affirmed 2026-08-03)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -174,6 +182,16 @@ ALWAYS write risk-based tests alongside code for every legal transition and ever
 ALWAYS preserve service-owned databases, framework-free domain code, exact contract names, and producer/consumer co-review. (affirmed 2026-07-21)
 ALWAYS keep final Wave A live acceptance serialized, run the demo guard before and after, and retain evidence from any environmental retry. (affirmed 2026-07-21)
 ALWAYS preserve the historical W1 BLOCKED record and waiver separately from the later real PASS and new W2-04 evidence. (affirmed 2026-07-21)
+- ALWAYS deliver W3-04 on its short-lived intent branch, synchronize with `integ/main-reconciled`, and use the program backlog merge protocol. (affirmed 2026-08-03)
+- ALWAYS run PB-01 first and obtain its gate before dependent commercial, migration, pricing, or confirmation slices proceed. (affirmed 2026-08-03)
+- ALWAYS write tests alongside W3-04 code and evidence at least 80% line coverage of changed executable production lines in every touched module. (affirmed 2026-08-03)
+- ALWAYS require W3-specific domain, migration/restart, pricing, Avro/consumer, browser/accessibility/responsive, isolated Compose, `aidlc-audit`, and `erp-fidelity-audit` evidence before release acceptance. (affirmed 2026-08-03)
+- ALWAYS classify unavailable required live, security, contract, or audit evidence as BLOCKED rather than PASS. (affirmed 2026-08-03)
+- ALWAYS preserve the Booking/CMM domain → application → adapter → container dependency direction and service-owned persistence. (affirmed 2026-08-03)
+- ALWAYS keep state changes, idempotency, audit, and resulting outbox effects within the established application transaction boundary. (affirmed 2026-08-03)
+- ALWAYS evolve Booking persistence additively with a versioned snapshot, ordered migration, deterministic backfill, restart/idempotency evidence, and no invented legacy values. (affirmed 2026-08-03)
+- ALWAYS preserve typed operational outcomes or translated correlated exceptions at service boundaries without leaking raw backend errors. (affirmed 2026-08-03)
+- ALWAYS use strict TypeScript, the central Booking BFF security/error path, shared workspace types, and `@erp/ui` in the one LinerCore shell. (affirmed 2026-08-03)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->

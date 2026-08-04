@@ -5,19 +5,19 @@
 > not directly.
 
 ## Way of Working
-W2-03 stays on the short-lived `intent/W2-03-charge-tariffs-and-agreements` branch from the common Wave A baseline and integrates through `integ/main-reconciled` under `docs/intents/00-INTENT-BACKLOG.md`. One stream-aligned intent mob owns the vertical flow; this scoped program practice does not rewrite the repository as plain trunk-to-`main` or invent an unobserved merge style.
+Deliver W3-01 on its short-lived intent branch as a small, risk-first vertical. Preserve W2-03 contracts and service ownership, require the named approval gates and maintainer fixture signoff, and keep every increment reviewable across domain, contract, UI, and evidence.
 
 ## Walking Skeleton
-The first Construction slice is a gated risk-first Charge-to-Booking walking skeleton: one real approved rate produces one attributable itemised line, Booking stores and renders it, and evidence remains honest about live-runtime status. Full OFR, BAF, POL THC, repricing, and no-rate behavior build on that spine rather than arriving as disconnected horizontal batches.
+Prove the smallest real Charge-owned path first: versioned D&D terms and port-local calculator, additive provider response and signed fixtures, then LinerCore UI and live acceptance. Contract, persistence, calculation, UI, and proof travel with the slice that exercises them rather than becoming horizontal releases.
 
 ## Testing Posture
-Tests are written alongside code with at least 80 percent line coverage for changed Charge and Booking code. Coverage is necessary but insufficient: domain/version/matching, additive migration, producer-consumer contract, typed snapshot compatibility, repricing, explicit `MANUAL_PRICING_REQUIRED`, Charge UI, Playwright, isolated Compose, demo-guard, `aidlc-audit`, and `erp-fidelity-audit` evidence are required, and Charge lint/build join the blocking quality path.
+Write focused tests alongside changes, using regression-first when practical rather than claiming strict TDD. Require at least 80% changed-line coverage for touched Charge backend and Charge UI production code, plus blocking deterministic rule/boundary tests, contract fixtures, Playwright accessibility, isolated Compose, demo guards, `aidlc-audit`, and `erp-fidelity-audit` evidence.
 
 ## Deployment
-The canonical W2-03 acceptance environment is the isolated `linercore-wave-a` stack driven only through `scripts/wave-a-compose.mjs`, with `npm run demo:guard` before and after to protect the manager demo. Current CI is validation, not an established production deployment pipeline; staging topology, production cadence, cloud deployment, and continuous delivery remain unclaimed and out of this feature.
+CI is a blocking validation surface, not an established production deployment pipeline. W3-01 acceptance is the isolated local Compose topology only; do not infer production cloud, promotion, rollback, availability, capacity, backup, or disaster-recovery commitments.
 
 ## Code Style
-Java preserves the existing ports-and-adapters structure, framework-free domain core, service-owned databases, immutable value objects, explicit identifiers/statuses, and typed boundary outcomes or translated exceptions with correlation data. TypeScript remains strict and feature-local in `apps/charge-agreements`, reuses shared auth and `@erp/ui`, and does not redesign `packages/ui`, shell, navigation, typography, or palette; an unobserved `Result<T,E>` convention is not imposed.
+Preserve Java ports-and-adapters boundaries with framework-free domain modules, service-owned persistence, immutable values, explicit identifiers/statuses, typed exceptions, correlation evidence, and boundary translation. Keep TypeScript strict and feature-local, reuse authenticated shell and `@erp/ui`, and evolve `pricing.v1` additively without a new D&D service or cross-service persistence access.
 
 ## W2-02 Closure Preservation
 Closure work uses the smallest canonical live journey that proves the existing architecture and the unresolved Definition-of-Done gap together. W2-02 proves authenticated `/booking` through the shared shell, Booking BFF/backend, shared UI states, and isolated live evidence.

@@ -109,6 +109,11 @@ NEVER run ordinary pull-request CI against the single shared Wave A live stack. 
 NEVER introduce a universal Java formatter or result-type migration as incidental W2-04 scope. (affirmed 2026-07-21)
 NEVER redesign `packages/ui`, the shared shell, or Booking while adding Container Movement-owned composition. (affirmed 2026-07-21)
 NEVER relabel an environmental block or accepted waiver as PASS. (affirmed 2026-07-21)
+- NEVER create a new D&D service, move pricing authority into Booking or Container Movement, or share service persistence. (affirmed 2026-08-03)
+- NEVER claim DCSA certification, invoice-level legal compliance, production deployment readiness, or production availability from local/static evidence. (affirmed 2026-08-03)
+- NEVER waive a required security gate or report green security evidence when pinned scanners did not execute. (affirmed 2026-08-03)
+- NEVER introduce module-local shell, palette, typography, component library, or marketing composition in the Charge UI. (affirmed 2026-08-03)
+- NEVER edit approved historical pricing versions in place or silently fall back to UTC for port-local calculation. (affirmed 2026-08-03)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -174,6 +179,12 @@ ALWAYS write risk-based tests alongside code for every legal transition and ever
 ALWAYS preserve service-owned databases, framework-free domain code, exact contract names, and producer/consumer co-review. (affirmed 2026-07-21)
 ALWAYS keep final Wave A live acceptance serialized, run the demo guard before and after, and retain evidence from any environmental retry. (affirmed 2026-07-21)
 ALWAYS preserve the historical W1 BLOCKED record and waiver separately from the later real PASS and new W2-04 evidence. (affirmed 2026-07-21)
+- ALWAYS preserve W2-03 Rate/RateVersion, Agreement/AgreementVersion, `pricing.v1`, and signed-fixture compatibility through additive evolution. (affirmed 2026-08-03)
+- ALWAYS keep D&D commercial authority inside Charge and use bounded provider contracts for Booking consumption. (affirmed 2026-08-03)
+- ALWAYS deliver W3-01 as a risk-first vertical with domain, persistence, API, UI, and evidence in the slice that proves the outcome. (affirmed 2026-08-03)
+- ALWAYS require at least 80% changed-line coverage for touched Charge backend and Charge UI production code. (affirmed 2026-08-03)
+- ALWAYS require deterministic D&D boundary tests, dual-signed fixtures, Playwright accessibility, isolated Compose, demo guards, `aidlc-audit`, and `erp-fidelity-audit` before release claims. (affirmed 2026-08-03)
+- ALWAYS keep required security checks fail-closed and disclose unavailable scanners or unproven controls. (affirmed 2026-08-03)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->

@@ -32,6 +32,7 @@
 
 - For brownfield service database changes, use an ordered Flyway baseline plus additive migrations and prove existing-data upgrade, backfill, restart, and restore or forward-repair behavior; destructive reset is not acceptance evidence. (learned 2026-07-15) <!-- cid:application-design:c6 -->
 - For W2-03 performance validation, execute and report the exact requirement-bound fixtures, warm-ups, concurrency, sample populations, percentile algorithms, contention rounds, and resource cycles before adding generic stress, soak, auto-scaling, or production-capacity claims. (learned 2026-07-30) <!-- cid:performance-validation:c3 -->
+- Apply numeric feature coverage defaults only with executable instrumentation that measures the active intent's changed code; test counts and historical percentages are not coverage evidence. (learned 2026-08-03) <!-- cid:practices-discovery:c2 -->
 ## Deployment
 
 <!-- Project-specific override. -->
@@ -109,6 +110,14 @@ NEVER run ordinary pull-request CI against the single shared Wave A live stack. 
 NEVER introduce a universal Java formatter or result-type migration as incidental W2-04 scope. (affirmed 2026-07-21)
 NEVER redesign `packages/ui`, the shared shell, or Booking while adding Container Movement-owned composition. (affirmed 2026-07-21)
 NEVER relabel an environmental block or accepted waiver as PASS. (affirmed 2026-07-21)
+NEVER create a domain-local theme, shell, navigation system, token system, authentication flow, or shared-component fork. (affirmed 2026-08-03)
+NEVER move shared design-system ownership out of `@erp/ui` or bypass the W2-02 contribution and review boundary. (affirmed 2026-08-03)
+NEVER claim W4 coverage from test counts, historical percentages, or unexecuted configuration. (affirmed 2026-08-03)
+NEVER treat the current non-operational security gate, advisory audit detector output, or unknown branch protection as a passing control. (affirmed 2026-08-03)
+NEVER broaden W4 into repository-wide security modernization, production deployment, cloud infrastructure, or release-platform work without an approved scope change. (affirmed 2026-08-03)
+NEVER introduce cross-service database access, a shared write model, or framework dependencies into Java domain cores. (affirmed 2026-08-03)
+NEVER impose a universal formatter, file-size threshold, or `Result<T,E>` pattern that the repository does not enforce. (affirmed 2026-08-03)
+NEVER call documents, mockups, detached module pages, static scans, container startup, or screenshots alone a live acceptance pass. (affirmed 2026-08-03)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -174,6 +183,17 @@ ALWAYS write risk-based tests alongside code for every legal transition and ever
 ALWAYS preserve service-owned databases, framework-free domain code, exact contract names, and producer/consumer co-review. (affirmed 2026-07-21)
 ALWAYS keep final Wave A live acceptance serialized, run the demo guard before and after, and retain evidence from any environmental retry. (affirmed 2026-07-21)
 ALWAYS preserve the historical W1 BLOCKED record and waiver separately from the later real PASS and new W2-04 evidence. (affirmed 2026-07-21)
+ALWAYS resynchronize the short-lived W4 intent branch with the current integration baseline before Construction. (affirmed 2026-08-03)
+ALWAYS keep the UI team accountable as the W4 Driver while obtaining owning-module review for Reference Data, Charge, and Container Movement changes. (affirmed 2026-08-03)
+ALWAYS obtain producer and consumer sign-off for append-only shared contract changes. (affirmed 2026-08-03)
+ALWAYS build the gated Reference Data shell-to-service list/detail journey first, followed by Charge Agreements and then Container Journeys. (affirmed 2026-08-03)
+ALWAYS preserve the single authenticated LinerCore shell, shared tokens, shared auth, and `@erp/ui` ownership. (affirmed 2026-08-03)
+ALWAYS write tests alongside code and use test-first treatment for defects, contracts, and risky state transitions. (affirmed 2026-08-03)
+ALWAYS enforce executable 80 percent line coverage for changed W4-owned frontend code. (affirmed 2026-08-03)
+ALWAYS make Reference Data, Charge, Container Journey, shell-integration, responsive, accessibility, live Compose, `aidlc-audit`, and `erp-fidelity-audit` verdicts blocking according to the approved W4 acceptance matrix. (affirmed 2026-08-03)
+ALWAYS make the existing required security gate operational, or replace it with a bounded executable equivalent, before W4 merge. (affirmed 2026-08-03)
+ALWAYS operate W4 live acceptance through the isolated `linercore-wave-a` wrapper and protect the manager demo before and after the run. (affirmed 2026-08-03)
+ALWAYS preserve strict TypeScript, Next.js App Router conventions, repository ESLint and EditorConfig rules, Java ports-and-adapters boundaries, and service-owned persistence. (affirmed 2026-08-03)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->
@@ -260,5 +280,10 @@ ALWAYS preserve the historical W1 BLOCKED record and waiver separately from the 
 
 - When Deployment Execution has produced no observable candidate, define alert severity, thresholds, role ownership, and runbook intent as evidence-only gates; do not claim external paging, notification delivery, or automated remediation until an environment, owner, and channel are approved. (learned 2026-07-30) <!-- cid:observability-setup:c3 -->
 - For W2-03 incident response, automate bounded evidence capture, validation, read-only inventory, and safe stopping, but require explicit human approval before restart, restore, forward repair, cleanup, or credential rotation. (learned 2026-07-30) <!-- cid:incident-response:c3 -->
+- Treat prior-intent-specific practice prose as evidence, not the active intent's default; re-affirm only choices the active intent and current repository evidence do not settle. (learned 2026-08-03) <!-- cid:practices-discovery:c1 -->
+- Keep feature security work bounded to operationalizing or replacing already-required gates; broader scanner, SBOM, signing, or provenance modernization requires approved scope expansion. (learned 2026-08-03) <!-- cid:practices-discovery:c5 -->
+- Treat the approved Context Pack, scope, page contracts, rough interaction artifacts, and affirmed practices as binding requirements sources; use the requirements interview only for decisions those sources explicitly leave unresolved. (learned 2026-08-03) <!-- cid:requirements-analysis:c1 -->
 ## Contract Evolution
 - For additive bilateral contract enrichment, retain existing field types and required sets, declare new properties optional for legacy-consumer schema compatibility, require the enriched provider set all-or-none at runtime, and make consumers distinguish absent legacy enrichment from invalid partial enrichment. (learned 2026-07-21) <!-- cid:application-design:c3 -->
+- Preserve one shared interaction grammar while respecting provider-owned capability differences; never create identical client controls that simulate unsupported operations or silently expand backend scope. (learned 2026-08-03) <!-- cid:requirements-analysis:c2 -->
+- Create a permanent compatibility redirect only when an inventoried source maps unambiguously to one canonical target and every retained query value can be safely validated; otherwise use the explicit not-found or gone outcome from the approved retirement inventory. (learned 2026-08-03) <!-- cid:requirements-analysis:c4 -->

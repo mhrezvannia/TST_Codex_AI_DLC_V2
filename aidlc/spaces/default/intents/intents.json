@@ -61,5 +61,12 @@
     "dirName": "260721-container-track-trace",
     "scope": "feature",
     "status": "complete"
+  },
+  {
+    "uuid": "019fc6b5-7561-7810-9944-cd0a009b2156",
+    "slug": "module-list-uplift",
+    "dirName": "260803-module-list-uplift",
+    "scope": "feature",
+    "status": "in-flight"
   }
 ]

@@ -1,0 +1,7 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\GatewayAction.test.tsx
+@@
+       dataTestId="gateway-action"
+-      href="/auth/api/auth/sign-in?returnUrl=%2Fbookings"
++      href="#target"
+*** End Patch

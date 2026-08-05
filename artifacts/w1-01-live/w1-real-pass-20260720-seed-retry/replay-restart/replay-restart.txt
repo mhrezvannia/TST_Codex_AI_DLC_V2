@@ -1,0 +1,14 @@
+gate=replay-restart
+status=FAIL
+exitCode=1
+command=node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-seed-retry/replay-restart/evidence.json
+
+{
+  "status": "failed",
+  "summary": {
+    "passed": 3,
+    "planned": 0,
+    "blocked": 1,
+    "failed": 4
+  }
+}

@@ -1,12 +1,48 @@
 {
-  "pricingRef": "price_20260709_0001",
-  "correlationId": "corr-booking-0001",
+  "bookingRef": "booking-agreement-0001",
   "pricingBasis": "AGREEMENT",
-  "lineItems": [
+  "pricingRef": "agreement-version-0001",
+  "charges": [
     {
-      "chargeCode": "BASE_FREIGHT",
-      "amount": "1200.00",
-      "currency": "USD"
+      "chargeCode": "OFR",
+      "category": "FREIGHT",
+      "amount": 300.03,
+      "currency": "USD",
+      "rateCategory": "BASE",
+      "basis": "PER_CONTAINER",
+      "quantity": 3,
+      "unitRate": 100.01,
+      "sourceRateVersionId": "rate-version-base-0001"
+    },
+    {
+      "chargeCode": "BAF",
+      "category": "SURCHARGE",
+      "amount": 60.03,
+      "currency": "USD",
+      "rateCategory": "SURCHARGE",
+      "basis": "PER_CONTAINER",
+      "quantity": 3,
+      "unitRate": 20.01,
+      "sourceRateVersionId": "rate-version-surcharge-0001"
+    },
+    {
+      "chargeCode": "THC",
+      "category": "LOCAL",
+      "amount": 30.03,
+      "currency": "USD",
+      "rateCategory": "LOCAL",
+      "basis": "PER_CONTAINER",
+      "quantity": 3,
+      "unitRate": 10.01,
+      "sourceRateVersionId": "rate-version-local-0001"
     }
-  ]
+  ],
+  "applicableDndRuleTypes": [],
+  "total": 390.09,
+  "currency": "USD",
+  "requestedDepartureDate": "2026-08-01",
+  "pricingRequestId": "booking-agreement-0001:2",
+  "correlationId": "corr-agreement-0001",
+  "pricedAt": "2026-08-01T09:30:00Z",
+  "agreementVersionId": "agreement-version-0001"
 }

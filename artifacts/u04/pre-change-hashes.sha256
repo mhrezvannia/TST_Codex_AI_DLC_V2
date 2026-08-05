@@ -1,0 +1,17 @@
+# U04 pre-change preservation baseline
+# Captured 2026-07-28 before U04 product edits.
+#
+# Aggregate digests are SHA-256 over sorted UTF-8 `relative/path=file-sha256`
+# lines for the named current-source preservation set.
+
+migrations count=4 sha256=a91027ba0d22d93d1689522379e00c265a7828bd769a118bb4aaa590169d1837
+flywayCatalog count=4 sha256=b52fc652319840c70cd8ab87ac6a16be5001436fb28c38b202cd75ab3f142385
+u01Rate count=13 sha256=e46b980d385830323c2d785f1a4777dd328569f1a0444b176cc27d2186170230
+u02BffRoutes count=15 sha256=400b7d00cd20ca3181bca02875d99f2dbe599681e0e53acd82fbb5818e9f1177
+u03AgreementEvents count=62 sha256=bc30572e0543e73cdac84b41d3d32b0d3ea8b2573a72c2e62bbfddc8a76e2204
+contracts count=2 sha256=11a257aeac79a32e27940839284b21f238da9a63202ad9c7c2c601b4e97a2b41
+
+services/charge-agreement-service/dataaccess/src/main/resources/db/migration/V1__charge_baseline.sql=63524a7922f55229bfb14a477b966e1ea8aa0241e572a56dbd699a14f3d97e3a
+services/charge-agreement-service/dataaccess/src/main/resources/db/migration/V2__versioned_rate_authority.sql=ae009a733508ee14c208b1cd7ab973a2ce6ca5f369ce78238a58206f1b95c156
+services/charge-agreement-service/dataaccess/src/main/resources/db/migration/V3__versioned_agreement_authority.sql=10f3f9b13243de1be3b8c1db4f3eb86c0caff12edf18bdd5a0903fbb2f2beba5
+services/charge-agreement-service/dataaccess/src/main/resources/db/migration/V4__pricing_terminal_evidence.sql=830ea4b77c99502f53d725f62c93fcd875c82a675166acd851302f04f4756b7e

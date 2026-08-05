@@ -1,0 +1,15 @@
+âœ” default seed pack contains all required reference sets (3.7088ms)
+âœ” validation fails when a required reference set is missing (1.5003ms)
+âœ” validation fails on duplicate natural key with incompatible immutable identity (2.5731ms)
+âœ” rerun summary skips already-current records (51.8631ms)
+âœ” builds live API commands for reference records and role assignments (1.1669ms)
+âœ” apply mode creates missing reference records through live API shape (63.5624ms)
+âœ” apply mode is idempotent when live records already match (3.5422ms)
+â„¹ tests 7
+â„¹ suites 0
+â„¹ pass 7
+â„¹ fail 0
+â„¹ cancelled 0
+â„¹ skipped 0
+â„¹ todo 0
+â„¹ duration_ms 139.9166

@@ -1,0 +1,144 @@
+*** Begin Patch
+*** Delete File: D:\TST_Codex_ui_recovery\apps\auth\app\session\page.tsx
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\session\page.tsx
++import { toSessionSummary } from "@erp/auth";
++import { DefinitionList } from "@erp/ui";
++import { headers } from "next/headers";
++import { redirect } from "next/navigation";
++import { AuthBoundaryLayout, AuthNotice, AuthStatePanel, SupportDetails } from "../AuthBoundary";
++import { GatewayAction, GatewayPostAction } from "../GatewayAction";
++import { resolveGatewaySession } from "../../lib/auth-gateway";
++
++export default async function SessionPage() {
++  const headerStore = await headers();
++  const sessionState = resolveGatewaySession(headerStore.get("cookie"));
++
++  if (sessionState.kind !== "active") {
++    const reason = sessionState.kind === "expired" ? "expired" : "invalid";
++    redirect(`/auth/signed-out?reason=${reason}&returnUrl=%2F`);
++  }
++
++  const correlationId = headerStore.get("x-correlation-id") ?? "Not available";
++  const summary = toSessionSummary(sessionState.session, correlationId);
++  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "LOCAL DEMO";
++  const showTechnicalDetails = environmentLabel !== "PRODUCTION";
++  const expiresSoon = Boolean(
++    summary.expiresAt
++      && Date.parse(summary.expiresAt) - Date.now() <= 10 * 60 * 1000
++      && Date.parse(summary.expiresAt) > Date.now()
++  );
++  const access = capabilityLabels(summary.permissionSummary?.byResource ?? {});
++
++  return (
++    <AuthBoundaryLayout>
++      <AuthStatePanel
++        eyebrow="Account"
++        title="Account and session"
++        summary="Review the identity and access currently active for this LinerCore workspace."
++        wide
++      >
++        {expiresSoon ? (
++          <AuthNotice title="Your session ends soon.">
++            Save your work. You can sign in again when the session ends.
++          </AuthNotice>
++        ) : null}
++
++        <DefinitionList
++          columns={2}
++          items={[
++            { term: "Display name", description: summary.displayName || summary.subject },
++            { term: "Username", description: summary.subject },
++            { term: "Roles", description: summary.roles.length ? summary.roles.map(roleLabel).join(", ") : "No assigned roles" },
++            { term: "Last sign-in", description: formatTimestamp(summary.issuedAt) },
++            { term: "Session ends", description: formatTimestamp(summary.expiresAt) },
++            { term: "Subject identifier", description: summary.subjectId ?? summary.subject }
++          ]}
++        />
++
++        <section className="auth-gateway__section" aria-labelledby="session-access-heading">
++          <h2 id="session-access-heading">Granted access</h2>
++          {access.length ? (
++            <ul className="auth-gateway__capabilities">
++              {access.map((label) => <li key={label}>{label}</li>)}
++            </ul>
++          ) : (
++            <p className="auth-gateway__support-note">No module capabilities are currently assigned.</p>
++          )}
++        </section>
++
++        <div className="auth-gateway__actions">
++          <GatewayAction
++            href="/"
++            label="Return to workspace"
++            pendingLabel="Opening workspace..."
++          />
++        </div>
++
++        <section className="auth-gateway__section" aria-labelledby="session-command-heading">
++          <h2 id="session-command-heading">Session command</h2>
++          <p className="auth-gateway__support-note">
++            Signing out clears this LinerCore application session.
++          </p>
++          <GatewayPostAction
++            action="/auth/api/auth/sign-out"
++            dataTestId="sign-out-button"
++            label="Sign out"
++            pendingLabel="Signing out..."
++            variant="sign-out"
++          />
++        </section>
++
++        {showTechnicalDetails ? (
++          <SupportDetails
++            items={[
++              { term: "Environment", description: environmentLabel },
++              { term: "Policy version", description: summary.policyVersion ?? "Not available" },
++              { term: "Request ID", description: correlationId },
++              {
++                term: "Safe session data",
++                description: <a data-testid="session-json-link" href="/auth/api/auth/session">View JSON</a>
++              }
++            ]}
++          />
++        ) : null}
++      </AuthStatePanel>
++    </AuthBoundaryLayout>
++  );
++}
++
++function formatTimestamp(value: string | undefined) {
++  if (!value || !Number.isFinite(Date.parse(value))) {
++    return "Not available";
++  }
++  return `${new Intl.DateTimeFormat("en-GB", {
++    dateStyle: "medium",
++    timeStyle: "short",
++    timeZone: "UTC"
++  }).format(new Date(value))} UTC`;
++}
++
++function roleLabel(value: string) {
++  const labels: Record<string, string> = {
++    "booking-desk": "Booking Desk",
++    "reference-admin": "Reference Data Administrator"
++  };
++  return labels[value] ?? sentenceCase(value);
++}
++
++function capabilityLabels(byResource: Record<string, string[]>) {
++  const resourceLabels: Record<string, string> = {
++    booking: "Bookings",
++    "reference-data": "Reference Data",
++    "charge-agreement": "Service Contracts & Rates",
++    "container-movement": "Equipment Journeys"
++  };
++  return Object.entries(byResource).flatMap(([resource, actions]) =>
++    actions.map((action) => `${resourceLabels[resource] ?? sentenceCase(resource)}: ${sentenceCase(action)}`)
++  );
++}
++
++function sentenceCase(value: string) {
++  const normalized = value.replaceAll("-", " ").replaceAll("_", " ").toLowerCase();
++  return normalized ? normalized[0].toUpperCase() + normalized.slice(1) : value;
++}
+*** End Patch

@@ -1,0 +1,241 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\AuthBoundary.tsx
+@@
+ import type { ReactNode } from "react";
++import { EnvironmentBadge, ProductWordmark } from "@erp/ui";
+@@
+       </a>
+ 
+       <header className="auth-gateway__header">
+-        <div>
+-          <span className="auth-gateway__wordmark">LinerCore</span>
+-          <span className="auth-gateway__product-context">Shipping operations platform</span>
+-        </div>
+-        <span className="auth-gateway__environment">{environmentLabel}</span>
++        <ProductWordmark context="Shipping operations platform" showMark={false} />
++        <EnvironmentBadge>{environmentLabel}</EnvironmentBadge>
+       </header>
+@@
+   title,
+   summary,
++  wide = false,
+   children
+ }: {
+   eyebrow: string;
+   title: string;
+   summary: string;
++  wide?: boolean;
+   children?: ReactNode;
+ }) {
+   return (
+-    <section className="auth-gateway__panel" aria-labelledby="auth-boundary-title">
++    <section
++      className={`auth-gateway__panel${wide ? " auth-gateway__panel--wide" : ""}`}
++      aria-labelledby="auth-boundary-title"
++    >
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\GatewayAction.tsx
+@@
+   label,
+   pendingLabel,
+-  dataTestId
++  dataTestId,
++  variant = "primary"
+ }: {
+   href: string;
+   label: string;
+   pendingLabel: string;
+   dataTestId?: string;
++  variant?: "primary" | "secondary";
+ }) {
+@@
+-      className="auth-gateway__primary-action"
++      className={`auth-gateway__${variant}-action`}
+@@
+   label,
+   pendingLabel,
+-  dataTestId
++  dataTestId,
++  variant = "primary"
+ }: {
+   action: string;
+   label: string;
+   pendingLabel: string;
+   dataTestId?: string;
++  variant?: "primary" | "secondary" | "sign-out";
+ }) {
+@@
+-        className="auth-gateway__primary-action"
++        className={`auth-gateway__${variant}-action`}
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\auth-gateway.css
+@@
+ .auth-gateway__header {
+   display: flex;
+-  min-height: 64px;
++  min-height: 56px;
+@@
+-.auth-gateway__header > div {
+-  display: flex;
+-  min-width: 0;
+-  align-items: baseline;
+-  gap: var(--erp-space-3);
+-}
+-
+-.auth-gateway__wordmark {
+-  color: var(--erp-color-text);
+-  font-size: 20px;
+-  font-weight: 750;
+-}
+-
+-.auth-gateway__product-context {
+-  color: var(--erp-color-text-muted);
+-  font-size: var(--erp-font-size-sm);
+-}
+-
+-.auth-gateway__environment {
+-  flex: 0 0 auto;
+-  padding: 4px 8px;
+-  border: 1px solid var(--erp-color-border);
+-  border-radius: var(--erp-radius-sm);
+-  background: var(--erp-color-surface-2);
+-  color: var(--erp-color-text-muted);
+-  font-size: 11px;
+-  font-weight: 700;
+-}
+-
+ .auth-gateway__main {
+@@
+ .auth-gateway__panel {
+   display: grid;
+-  width: min(100%, 480px);
++  width: min(100%, 520px);
+@@
+ }
+ 
++.auth-gateway__panel--wide {
++  width: min(100%, 640px);
++}
++
+@@
+ .auth-gateway__actions {
+-  display: grid;
++  display: flex;
++  align-items: center;
++  flex-wrap: wrap;
+   gap: var(--erp-space-2);
+ }
+@@
+ .auth-gateway__primary-action {
+@@
+ }
+ 
++.auth-gateway__actions > .auth-gateway__primary-action,
++.auth-gateway__actions > .auth-gateway__secondary-action,
++.auth-gateway__actions > form {
++  flex: 1 1 180px;
++}
++
++.auth-gateway__actions > form > button {
++  width: 100%;
++}
++
+ .auth-gateway__primary-action:focus-visible,
+ .auth-gateway__secondary-action:focus-visible,
++.auth-gateway__sign-out-action:focus-visible,
+@@
+ .auth-gateway__secondary-action {
+@@
+ }
+ 
++.auth-gateway__sign-out-action {
++  display: inline-flex;
++  min-height: 44px;
++  align-items: center;
++  justify-content: center;
++  padding: 0 var(--erp-space-4);
++  border: 1px solid var(--erp-color-border-strong);
++  border-radius: var(--erp-radius-sm);
++  background: var(--erp-color-surface);
++  color: var(--erp-color-danger);
++  cursor: pointer;
++  font: inherit;
++  font-weight: 700;
++}
++
++.auth-gateway__sign-out-action:hover:not(:disabled) {
++  border-color: var(--erp-color-danger);
++  background: var(--erp-color-danger-bg);
++}
++
++.auth-gateway__sign-out-action:disabled {
++  cursor: wait;
++  opacity: 0.65;
++}
++
++.auth-gateway__section {
++  display: grid;
++  gap: var(--erp-space-3);
++  padding-top: var(--erp-space-4);
++  border-top: 1px solid var(--erp-color-border);
++}
++
++.auth-gateway__section h2 {
++  margin: 0;
++  color: var(--erp-color-text);
++  font-size: var(--erp-font-size-lg);
++}
++
++.auth-gateway__facts {
++  margin: 0;
++}
++
++.auth-gateway__facts dt {
++  text-transform: none;
++}
++
++.auth-gateway__capabilities {
++  display: flex;
++  flex-wrap: wrap;
++  gap: var(--erp-space-2);
++  margin: 0;
++  padding: 0;
++  list-style: none;
++}
++
++.auth-gateway__capabilities li {
++  padding: 4px 8px;
++  border: 1px solid var(--erp-color-border);
++  border-radius: var(--erp-radius-sm);
++  background: var(--erp-color-surface-2);
++  color: var(--erp-color-text);
++  font-size: var(--erp-font-size-xs);
++  font-weight: 650;
++}
++
++.auth-gateway__support-note {
++  margin: 0;
++  color: var(--erp-color-text-muted);
++  font-size: var(--erp-font-size-sm);
++  line-height: 1.5;
++}
++
+@@
+ @media (max-width: 600px) {
+@@
+-  .auth-gateway__header > div {
+-    display: grid;
+-    gap: 2px;
+-  }
+-
+-  .auth-gateway__product-context {
+-    font-size: var(--erp-font-size-xs);
+-  }
+-
+@@
+   .auth-gateway__panel {
+@@
+   }
++
++  .auth-gateway__actions {
++    display: grid;
++  }
+*** End Patch

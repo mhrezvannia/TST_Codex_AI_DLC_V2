@@ -1,0 +1,267 @@
+gate=contracts
+status=PASS
+exitCode=0
+command=node scripts/validate-contract-catalog.mjs
+
+{
+  "status": "ok",
+  "catalogVersion": "0.2.0",
+  "contracts": 13,
+  "healthSnapshot": {
+    "snapshotId": "contract-health-2026-07-19T23:08:40.330Z",
+    "generatedAt": "2026-07-19T23:08:40.333Z",
+    "overallStatus": "green",
+    "staleThreshold": "P7D",
+    "seamStatuses": [
+      {
+        "contractId": "api-reference-data-service",
+        "seamId": "reference-data-http",
+        "owner": "shared-platform",
+        "provider": "reference-data-service",
+        "consumer": "enterprise-services",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/openapi/reference-data-service.yaml",
+        "linkedStories": [
+          "US-SP-004",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-SP-004",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "api-identity-service",
+        "seamId": "identity-http",
+        "owner": "shared-platform",
+        "provider": "identity-service",
+        "consumer": "enterprise-services",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/openapi/identity-service.yaml",
+        "linkedStories": [
+          "US-SP-006",
+          "US-RUN-004"
+        ],
+        "linkedRequirements": [
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "api-charge-agreement-service",
+        "seamId": "booking-charge-pricing-http",
+        "owner": "charge-agreement-pricing-domain",
+        "provider": "charge-agreement-service",
+        "consumer": "booking-service",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/openapi/pricing.v1.yaml",
+        "linkedStories": [
+          "US-W1-003",
+          "US-W1-007"
+        ],
+        "linkedRequirements": [
+          "FR-
+
+... output truncated ...
+
+"US-SP-004",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-SP-005",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "asyncapi-reference-data-events",
+        "seamId": "reference-data-events",
+        "owner": "shared-platform",
+        "provider": "reference-data-service",
+        "consumer": "enterprise-services",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/asyncapi/reference-data-events.yaml",
+        "linkedStories": [
+          "US-SP-004",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-SP-005",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "asyncapi-booking-confirmed",
+        "seamId": "booking-confirmed-event",
+        "owner": "booking-confirmed-journey-integration",
+        "provider": "booking-service",
+        "consumer": "container-movement-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/asyncapi/booking-events.yaml",
+        "linkedStories": [
+          "US-BKG-005",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-BKG-006",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "asyncapi-container-movement-status",
+        "seamId": "container-movement-status-event",
+        "owner": "movement-status-booking-integration",
+        "provider": "container-movement-service",
+        "consumer": "booking-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/asyncapi/container-movement-events.yaml",
+        "linkedStories": [
+          "US-CMM-006",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-CMM-007",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "event-booking-confirmed",
+        "seamId": "booking-confirmed-event",
+        "owner": "booking-confirmed-journey-integration",
+        "provider": "booking-service",
+        "consumer": "container-movement-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/avro/booking.confirmed.avsc",
+        "linkedStories": [
+          "US-BKG-005",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-BKG-006",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "event-container-movement-status",
+        "seamId": "container-movement-status-event",
+        "owner": "movement-status-booking-integration",
+        "provider": "container-movement-service",
+        "consumer": "booking-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/avro/containermovement.status.avsc",
+        "linkedStories": [
+          "US-CMM-006",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-CMM-007",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "pact-booking-charge-pricing",
+        "seamId": "booking-charge-pricing-http",
+        "owner": "booking-charge-pricing-integration",
+        "provider": "charge-agreement-service",
+        "consumer": "booking-service",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/booking-charge-pricing-fixtures.json",
+        "linkedStories": [
+          "US-W1-003",
+          "US-W1-007"
+        ],
+        "linkedRequirements": [
+          "FR-W1-003",
+          "FR-W1-004",
+          "FR-W1-013",
+          "NFR-W1-001"
+        ]
+      },
+      {
+        "contractId": "pact-booking-charge-dnd",
+        "seamId": "booking-charge-dnd-http",
+        "owner": "dnd-pricing-integration",
+        "provider": "charge-agreement-service",
+        "consumer": "booking-service",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/booking-charge-dnd-fixtures.json",
+        "linkedStories": [
+          "US-BKG-005",
+          "US-RUN-004"
+        ],
+        "linkedRequirements": [
+          "FR-CHG-008",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "message-pact-booking-confirmed",
+        "seamId": "booking-confirmed-event",
+        "owner": "booking-confirmed-journey-integration",
+        "provider": "booking-service",
+        "consumer": "container-movement-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/booking-confirmed-message-fixtures.json",
+        "linkedStories": [
+          "US-BKG-005",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-BKG-006",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "message-pact-container-movement-status",
+        "seamId": "container-movement-status-event",
+        "owner": "movement-status-booking-integration",
+        "provider": "container-movement-service",
+        "consumer": "booking-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/container-movement-status-message-fixtures.json",
+        "linkedStories": [
+          "US-CMM-006",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-CMM-007",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      }
+    ],
+    "blockingFailures": []
+  }
+}

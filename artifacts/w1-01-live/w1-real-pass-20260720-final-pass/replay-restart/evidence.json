@@ -1,0 +1,102 @@
+{
+  "generatedAt": "2026-07-19T23:23:04.234Z",
+  "mode": "live",
+  "runId": "w1-01-replay-restart-1784503384235",
+  "status": "passed",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "bookingTopic": "booking.events",
+    "movementTopic": "containermovement.status",
+    "bookingDetailSource": "booking-local-projection",
+    "replayRequiresAuthorization": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "summary": {
+    "passed": 10,
+    "planned": 0,
+    "blocked": 0,
+    "failed": 0
+  },
+  "steps": [
+    {
+      "id": "compose-services",
+      "command": "docker compose ps --format json",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-07-20 02:51:49 +0330 +0330\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"46c3eff7ebaf\",\"Image\":\"linercore/apps-auth:local\",\"Labels\":\"desktop.docker.io/ports.scheme=v2,com.docker.compose.config-hash=4eadedc45292667241ce0a137de542cab6d8e4ba4a3087e50724156f85bb4212,com.docker.compose.container-number=1,com.docker.compose.depends_on=identity-service:service_started:false,com.docker.compose.image=sha256:61e8a957713c6ecaf0f5c623138387756039bc93471e1f00cdaab1c65c187e5c,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=D:\\\\TST_Codex_merge_w2\\\\compose.yaml,com.docker.compose.project.working_dir=D:\\\\TST_Codex_merge_w2,com.docker.compose.replace=apps-auth-1,com.docker.compose.project=linercore-shared-platform,com.docker.compose.service=apps-auth,com.docker.compose.version=5.2.0\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"linercore-shared-platform-apps-auth-1\",\"Names\":\"linercore-shared-platform-apps-auth-1\",\"Networks\":\"linercore-local\",\"Ports\":\"3000/tcp\",\"Project\":\"linercore-shared-platform\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":3000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"45 seconds ago\",\"Service\":\"apps-auth\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 39 seconds\"}\n{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-07-20 02:51:52 +0330 +0330\",\"ExitCode\":0,\"Health\":\"starting\",\"ID\":\"ab6a92e40902\",\"Image\":\"linercore/apps-booking:local\",\"Labels\":\"com.docker.compose.oneoff=False,com.docker.compose.replace=apps-booking-1,com.docker.compose.service=apps-booking,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/3000/tcp=:3001,com.docker.compose.config-hash=cd5af7f1d010e8e9f69d8c73d1437719f0009d692c641737d5b0e32954dbb489,com.docker.compose.image=sha256:935e9b13f7dc86d66d88470347d5e6c826cd2f7ece3aa0a9417d9da5c5825b96,com.docker.compose.project=linercore-shared-platform,com.docker.compose.project.config_files=D:\\\\TST_Codex_merge_w2\\\\compose.yaml,com.docker.compose.project.working_dir=D:\\\\TST_Codex_merge_w2,"
+    },
+    {
+      "id": "booking-health-before",
+      "command": "node scripts/replay-restart-proof.mjs --probe http://localhost:8085/actuator/health",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "{\"status\":\"UP\"}"
+    },
+    {
+      "id": "capture-business-counts-before",
+      "command": "docker exec linercore-shared-platform-postgres-1 psql -U linercore -d linercore_booking -t -A -c \"SELECT 'booking_records=' || COUNT(*) FROM booking_records; SELECT 'booking_outbox=' || COUNT(*) FROM booking_outbox; SELECT 'booking_consumed_events=' || COUNT(*) FROM booking_consumed_events; SELECT 'booking_movement_status=' || COUNT(*) FROM booking_movement_status;\"",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "booking_records=0\nbooking_outbox=0\nbooking_consumed_events=0\nbooking_movement_status=0"
+    },
+    {
+      "id": "restart-booking",
+      "command": "docker compose restart booking-service",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "Container linercore-shared-platform-booking-service-1 Restarting \n Container linercore-shared-platform-booking-service-1 Started"
+    },
+    {
+      "id": "booking-health-after",
+      "command": "node scripts/replay-restart-proof.mjs --probe http://localhost:8085/actuator/health",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "{\"status\":\"UP\"}"
+    },
+    {
+      "id": "restart-cmm",
+      "command": "docker compose restart container-movement-service",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "Container linercore-shared-platform-container-movement-service-1 Restarting \n Container linercore-shared-platform-container-movement-service-1 Started"
+    },
+    {
+      "id": "cmm-health-after",
+      "command": "node scripts/replay-restart-proof.mjs --probe http://localhost:8086/actuator/health",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "{\"status\":\"UP\"}"
+    },
+    {
+      "id": "capture-business-counts-after",
+      "command": "docker exec linercore-shared-platform-postgres-1 psql -U linercore -d linercore_booking -t -A -c \"SELECT 'booking_records=' || COUNT(*) FROM booking_records; SELECT 'booking_outbox=' || COUNT(*) FROM booking_outbox; SELECT 'booking_consumed_events=' || COUNT(*) FROM booking_consumed_events; SELECT 'booking_movement_status=' || COUNT(*) FROM booking_movement_status;\"",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "booking_records=0\nbooking_outbox=0\nbooking_consumed_events=0\nbooking_movement_status=0"
+    },
+    {
+      "id": "topic-presence",
+      "command": "docker compose exec -T kafka kafka-topics --bootstrap-server kafka:9092 --list",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "__consumer_offsets\n_schemas\nbooking.events\ncharge-agreement.events\ncontainermovement.status\nreferencedata.events"
+    },
+    {
+      "id": "business-counts-stable",
+      "command": "compare captured booking business counts before and after restarts",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "{\"before\":{\"booking_records\":0,\"booking_outbox\":0,\"booking_consumed_events\":0,\"booking_movement_status\":0},\"after\":{\"booking_records\":0,\"booking_outbox\":0,\"booking_consumed_events\":0,\"booking_movement_status\":0}}"
+    }
+  ]
+}

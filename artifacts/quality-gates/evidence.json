@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-03T22:46:10.329Z",
+  "generatedAt": "2026-07-31T09:35:05.057Z",
   "changedPaths": [
     "<all>"
   ],
@@ -8,9 +8,15 @@
     "services",
     "apps/reference-data",
     "apps/auth",
+    "apps/charge-agreements",
+    "apps/booking",
+    "apps/shell",
     "packages",
+    "packages/auth",
+    "packages/shared-types",
     "contracts",
-    "seeds"
+    "seeds",
+    "w2-01-live"
   ],
   "results": [
     {
@@ -37,7 +43,7 @@
       "command": "node scripts/validate-contract-catalog.mjs",
       "required": true,
       "status": "passed",
-      "summary": "{\n  \"status\": \"ok\",\n  \"catalogVersion\": \"0.1.0\",\n  \"contracts\": 3\n}\n",
+      "summary": "{\n  \"status\": \"ok\",\n  \"catalogVersion\": \"0.2.0\",\n  \"contracts\": 15,\n  \"healthSnapshot\": {\n    \"snapshotId\": \"contract-health-2026-07-31T09:29:59.715Z\",\n    \"generatedAt\": \"2026-07-31T09:29:59.716Z\",\n    \"overallStatus\": \"green\",\n    \"staleThreshold\": \"P7D\",\n    \"seamStatuses\": [\n      {\n        \"contractId\": \"api-reference-data-service\",\n        \"seamId\": \"reference-data-http\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"reference-data-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/reference-data-service.yaml\",\n        \"linkedStories\": [\n          \"US-SP-004\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-004\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"api-identity-service\",\n        \"seamId\": \"identity-http\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"identity-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/identity-service.yaml\",\n        \"linkedStories\": [\n          \"US-SP-006\",\n          \"US-RUN-004\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"api-charge-agreement-service\",\n        \"seamId\": \"booking-charge-pricing-http\",\n        \"owner\": \"charge-agreement-pricing-domain\",\n        \"provider\": \"charge-agreement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/pricing.v1.yaml\",\n        \"linkedStories\": [\n          \"US-W1-003\",\n          \"US-W1-007\",\n          \"US-W2-03-004\",\n          \"US-W2-03-005\"\n     ",
       "evidencePath": "artifacts/quality-gates/contracts-validate.log"
     },
     {
@@ -46,7 +52,7 @@
       "command": "node scripts/verify-contract-providers.mjs",
       "required": true,
       "status": "passed",
-      "summary": "{\n  \"status\": \"ok\",\n  \"valid\": true,\n  \"failures\": [],\n  \"checks\": [\n    {\n      \"name\": \"contract catalog\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}/history\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/events\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/authorize\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/effective-permissions\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles/assign\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.party-customer.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.location.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.region.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.voyage.changed avro record\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"referencedata.currency.changed avro record\",\n      \"status",
+      "summary": "{\n  \"status\": \"ok\",\n  \"valid\": true,\n  \"failures\": [],\n  \"checks\": [\n    {\n      \"name\": \"contract catalog\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}/history\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/events\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/authorize\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/effective-permissions\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles/assign\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml declares /api/charge-agreements\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml declares /api/charge-agreements/active-lookup\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml declares /api/pricing/quote\",\n    ",
       "evidencePath": "artifacts/quality-gates/contracts-verify.log"
     },
     {
@@ -55,7 +61,7 @@
       "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
       "required": true,
       "status": "passed",
-      "summary": "{\n  \"status\": \"dry-run\",\n  \"seedPackId\": \"shared-platform-mvp-defaults\",\n  \"seedVersion\": \"2026.07.01\",\n  \"correlationId\": \"55a1222f-c865-401d-9946-e15f0f784ee8\",\n  \"created\": 11,\n  \"updated\": 0,\n  \"skipped\": 0,\n  \"failed\": 0,\n  \"failures\": [],\n  \"records\": [\n    {\n      \"key\": \"PARTY_CUSTOMER:LOCAL-CARRIER\",\n      \"id\": \"party-customer-local-carrier\",\n      \"fingerprint\": \"c81cedccd25f427cc3cb78b20018a33ab803362d7febc85862068a7f4a22634d\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:USNYC\",\n      \"id\": \"location-usnyc\",\n      \"fingerprint\": \"364b39f5e01afd85d3f290a9ee9f960ba00031e5c389fc6b198048e98942196a\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NLRTM\",\n      \"id\": \"location-nlrot\",\n      \"fingerprint\": \"93ddee2e1c774b7ca668b1bc297e7d18b0849a834f99353e5e9f5cd924455080\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:NA\",\n      \"id\": \"region-na\",\n      \"fingerprint\": \"51216095618b8aea5e4082e5c273b460c8784c57b8ce251e2430310c8d75ae11\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:EU\",\n      \"id\": \"region-eu\",\n      \"fingerprint\": \"9b8f718b6fbbe76849ad836a422cb576967a8e9a9c074dcec12111b165e4b105\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VOYAGE:LC-VOY-001\",\n      \"id\": \"voyage-local-001\",\n      \"fingerprint\": \"b4760588c84abbc7322b2205c3e130462f543678d5b66772ef602396fa8c735f\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CURRENCY:USD\",\n      \"id\": \"currency-usd\",\n      \"fingerprint\": \"33c273c8d34772637436c78cffe8557b4530ccc5ddb4be2e29282230c9de133a\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:OFR\",\n      \"id\": \"charge-code-ofr\",\n      \"fingerprint\": \"49b66d5e96b9bdb31d238bd3e0e188425f92165d0ebb7ed0d8c0213ad8b8ccaa\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:40HC\",\n      \"id\": \"equipment-type-40hc\",\n      \"fingerprint\": \"db784ed8d04c5c83ec17d36b50b1392ba40a6f4a6eadf7c55c4f66e133da75fb\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\":",
+      "summary": "{\n  \"status\": \"dry-run\",\n  \"seedPackId\": \"shared-platform-mvp-defaults\",\n  \"seedVersion\": \"2026.07.02\",\n  \"correlationId\": \"0398bb34-5fcc-4840-90d4-b5ef6dd00dde\",\n  \"created\": 19,\n  \"updated\": 0,\n  \"skipped\": 0,\n  \"failed\": 0,\n  \"failures\": [],\n  \"records\": [\n    {\n      \"key\": \"PARTY_CUSTOMER:LOCAL-CARRIER\",\n      \"id\": \"party-customer-local-carrier\",\n      \"fingerprint\": \"0c090b235d13a85359e111295629a7b485eab56013aee60ae6cdae76fa2efa00\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:US\",\n      \"id\": \"location-country-us\",\n      \"fingerprint\": \"e91742c3e9ee3c286ce51b1b353e84c54597f79aa7e8a4a95a93bd41b8011dc6\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NL\",\n      \"id\": \"location-country-nl\",\n      \"fingerprint\": \"acbf4d560bb8a8d0b8279e74964d9937367a6cd854134efbb312843f1e592ca9\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:USNYC\",\n      \"id\": \"location-usnyc\",\n      \"fingerprint\": \"2aeb12041a5537a3344c520609dac4bf6e94f99e1535301068dcfa3ddd6efb45\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NLRTM\",\n      \"id\": \"location-nlrot\",\n      \"fingerprint\": \"a71f5c61b9bfa5d541afedf49f02326fef09567c6380593f74c574cd1afa4536\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:NA\",\n      \"id\": \"region-na\",\n      \"fingerprint\": \"db764b62f93ab56be4d969b7cbe1b4a638db8bd8d84020d8efe03768cebc6ae9\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:EU\",\n      \"id\": \"region-eu\",\n      \"fingerprint\": \"09134daeb6c5a1c1fd9d0d646513a8d9b9aed9af1eaa5fbdddbf18db554d2b33\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:9387425\",\n      \"id\": \"vessel-linercore-atlas\",\n      \"fingerprint\": \"a3dfe68e1fcf4aceed7f93fc47cf590b36ff370297b15d05fa28417fc9a0dc65\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:LC001E\",\n      \"id\": \"voyage-local-001\",\n      \"fingerprint\": \"b6b998d002c3acac751e5b04b7a6be23648b70720c44a2a85eee5415f006e081\",\n      \"status\": \"created\"\n    },\n    ",
       "evidencePath": "artifacts/quality-gates/seed-validate.log"
     },
     {
@@ -64,7 +70,7 @@
       "command": "node scripts/validate-skeleton.mjs",
       "required": true,
       "status": "passed",
-      "summary": "{\n  \"status\": \"ok\",\n  \"serviceRoots\": [\n    \"identity-service\",\n    \"reference-data-service\"\n  ]\n}\n",
+      "summary": "{\n  \"status\": \"ok\",\n  \"serviceRoots\": [\n    \"booking-service\",\n    \"charge-agreement-service\",\n    \"container-movement-service\",\n    \"identity-service\",\n    \"platform-messaging\",\n    \"reference-data-service\"\n  ]\n}\n",
       "evidencePath": "artifacts/quality-gates/skeleton-validate.log"
     },
     {
@@ -73,7 +79,7 @@
       "command": "node node_modules/vitest/vitest.mjs run apps/reference-data/app/page.test.tsx apps/reference-data/lib/reference-data.test.ts apps/reference-data/lib/contract-catalog.test.ts --config vitest.config.ts",
       "required": true,
       "status": "passed",
-      "summary": "\u001b[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.\u001b[39m\n",
+      "summary": "\n\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.6 \u001b[39m\u001b[90mD:/TST_Codex_phase1_merge\u001b[39m\n\n \u001b[32m✓\u001b[39m apps/reference-data/lib/contract-catalog.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 7\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/reference-data/lib/reference-data.test.ts \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 20\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/reference-data/app/page.test.tsx \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 297\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m14 passed\u001b[39m\u001b[22m\u001b[90m (14)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:00:02\n\u001b[2m   Duration \u001b[22m 6.42s\u001b[2m (transform 369ms, setup 1.91s, collect 1.34s, tests 324ms, environment 8.83s, prepare 789ms)\u001b[22m\n\n",
       "evidencePath": "artifacts/quality-gates/frontend-reference-data-test.log"
     },
     {
@@ -86,6 +92,69 @@
       "evidencePath": "artifacts/quality-gates/frontend-reference-data-typecheck.log"
     },
     {
+      "gateId": "package-auth-test",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth test",
+      "required": true,
+      "status": "passed",
+      "summary": "\n\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.6 \u001b[39m\u001b[90mD:/TST_Codex_phase1_merge\u001b[39m\n\n \u001b[32m✓\u001b[39m packages/auth/src/index.test.ts \u001b[2m(\u001b[22m\u001b[2m13 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 15\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m1 passed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m13 passed\u001b[39m\u001b[22m\u001b[90m (13)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:00:15\n\u001b[2m   Duration \u001b[22m 1.98s\u001b[2m (transform 63ms, setup 196ms, collect 58ms, tests 15ms, environment 917ms, prepare 169ms)\u001b[22m\n\n",
+      "evidencePath": "artifacts/quality-gates/package-auth-test.log"
+    },
+    {
+      "gateId": "package-auth-typecheck",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth typecheck",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/package-auth-typecheck.log"
+    },
+    {
+      "gateId": "package-auth-lint",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth lint",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/package-auth-lint.log"
+    },
+    {
+      "gateId": "package-shared-types-test",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types test",
+      "required": true,
+      "status": "passed",
+      "summary": "\n\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.6 \u001b[39m\u001b[90mD:/TST_Codex_phase1_merge\u001b[39m\n\n \u001b[32m✓\u001b[39m packages/shared-types/src/index.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 3\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m1 passed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:00:27\n\u001b[2m   Duration \u001b[22m 1.73s\u001b[2m (transform 45ms, setup 163ms, collect 30ms, tests 3ms, environment 869ms, prepare 184ms)\u001b[22m\n\n",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-test.log"
+    },
+    {
+      "gateId": "package-shared-types-typecheck",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types typecheck",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-typecheck.log"
+    },
+    {
+      "gateId": "package-shared-types-lint",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types lint",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-lint.log"
+    },
+    {
+      "gateId": "frontend-auth-test",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth test",
+      "required": true,
+      "status": "passed",
+      "summary": "\n\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.6 \u001b[39m\u001b[90mD:/TST_Codex_phase1_merge\u001b[39m\n\n \u001b[32m✓\u001b[39m apps/auth/lib/auth-server.test.ts \u001b[2m(\u001b[22m\u001b[2m12 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 25\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/auth/app/access-denied/page.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 170\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/auth/app/request-access/page.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 156\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/auth/app/page.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 177\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/auth/app/sign-in/page.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 153\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m5 passed\u001b[39m\u001b[22m\u001b[90m (5)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m16 passed\u001b[39m\u001b[22m\u001b[90m (16)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:00:35\n\u001b[2m   Duration \u001b[22m 2.96s\u001b[2m (transform 265ms, setup 1.47s, collect 2.41s, tests 682ms, environment 6.09s, prepare 974ms)\u001b[22m\n\n",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-test.log"
+    },
+    {
       "gateId": "frontend-auth-typecheck",
       "scope": "apps/auth",
       "command": "corepack yarn workspace @erp/app-auth typecheck",
@@ -95,19 +164,237 @@
       "evidencePath": "artifacts/quality-gates/frontend-auth-typecheck.log"
     },
     {
+      "gateId": "frontend-auth-lint",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth lint",
+      "required": true,
+      "status": "passed",
+      "summary": "`next lint` is deprecated and will be removed in Next.js 16.\nFor new projects, use create-next-app to choose your preferred linter.\nFor existing projects, migrate to the ESLint CLI:\nnpx @next/codemod@canary next-lint-to-eslint-cli .\n\n\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-lint.log"
+    },
+    {
+      "gateId": "frontend-auth-build",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth build",
+      "required": true,
+      "status": "passed",
+      "summary": "\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-build.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-test",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements test",
+      "required": true,
+      "status": "passed",
+      "summary": "\n\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.6 \u001b[39m\u001b[90mD:/TST_Codex_phase1_merge\u001b[39m\n\n \u001b[32m✓\u001b[39m apps/charge-agreements/lib/bff/reference-options.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 92\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/lib/rates.test.ts \u001b[2m(\u001b[22m\u001b[2m8 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 162\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/AgreementList.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 219\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/rates/RateForm.test.tsx \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 443\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/rates/[rateId]/RateDetailView.test.tsx \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 606\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m RateDetailView\u001b[2m > \u001b[22mrequires evidence-bearing confirmation and disables duplicate approval while pending \u001b[33m 318\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/AgreementLifecycleDialog.test.tsx \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 811\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/page.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 329\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m ChargeAgreementsHomePage\u001b[2m > \u001b[22mrenders the agreement authority list lifecycle \u001b[33m 326\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/rates/RateList.test.tsx \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 927\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m RateList\u001b[2m > \u001b[22mrenders populated history-aware rows in an accessible overflow region \u001b[33m 392\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m RateList\u001b[2m > \u001b[22mrenders empty and retryable service states \u001b[33m 317\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/AgreementDetailView.test.tsx \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 913\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m requires confirmation evidence before the approve request \u001b[33m 398\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/charge-agreements/app/AgreementForm.test.tsx \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1003\u001b[2mms\u001b[22",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-test.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-typecheck",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements typecheck",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-typecheck.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-lint",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements lint",
+      "required": true,
+      "status": "passed",
+      "summary": "`next lint` is deprecated and will be removed in Next.js 16.\nFor new projects, use create-next-app to choose your preferred linter.\nFor existing projects, migrate to the ESLint CLI:\nnpx @next/codemod@canary next-lint-to-eslint-cli .\n\n\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-lint.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-build",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements build",
+      "required": true,
+      "status": "passed",
+      "summary": "\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-build.log"
+    },
+    {
+      "gateId": "u02-route-preservation",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u02-route-preservation.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "U02 route, base-path, Wave A, and migration preservation: PASS\n",
+      "evidencePath": "artifacts/quality-gates/u02-route-preservation.log"
+    },
+    {
+      "gateId": "u02-subject-assertion-contract",
+      "scope": "apps/charge-agreements",
+      "command": "mvn -f services/pom.xml -pl charge-agreement-service/container -am -Dtest=ChargeSubjectAssertionVerifierTest -Dsurefire.failIfNoSpecifiedTests=false test",
+      "required": true,
+      "status": "passed",
+      "summary": "[INFO] Scanning for projects...\r\n[INFO] ------------------------------------------------------------------------\r\n[INFO] Reactor Build Order:\r\n[INFO] \r\n[INFO] shared-platform-services                                           [pom]\r\n[INFO] platform-messaging                                                 [jar]\r\n[INFO] charge-agreement-service                                           [pom]\r\n[INFO] charge-agreement-domain-core                                       [jar]\r\n[INFO] charge-agreement-application-service                               [jar]\r\n[INFO] charge-agreement-application                                       [jar]\r\n[INFO] charge-agreement-dataaccess                                        [jar]\r\n[INFO] charge-agreement-messaging                                         [jar]\r\n[INFO] charge-agreement-published-language                                [jar]\r\n[INFO] charge-agreement-container                                         [jar]\r\n[INFO] \r\n[INFO] ----------< com.linercore.platform:shared-platform-services >-----------\r\n[INFO] Building shared-platform-services 0.1.0-SNAPSHOT                  [1/10]\r\n[INFO]   from pom.xml\r\n[INFO] --------------------------------[ pom ]---------------------------------\r\n[INFO] \r\n[INFO] -------------< com.linercore.platform:platform-messaging >--------------\r\n[INFO] Building platform-messaging 0.1.0-SNAPSHOT                        [2/10]\r\n[INFO]   from platform-messaging\\pom.xml\r\n[INFO] --------------------------------[ jar ]---------------------------------\r\n[INFO] \r\n[INFO] --- resources:3.3.1:resources (default-resources) @ platform-messaging ---\r\n[INFO] skip non existing resourceDirectory D:\\TST_Codex_phase1_merge\\services\\platform-messaging\\src\\main\\resources\r\n[INFO] \r\n[INFO] --- compiler:3.13.0:compile (default-compile) @ platform-messaging ---\r\n[INFO] Nothing to compile - all classes are up to date.\r\n[INFO] \r\n[INFO] --- resources:3.3.1:testResources (default-testResources) @ platform-messaging ---\r\n[INFO] Copying ",
+      "evidencePath": "artifacts/quality-gates/u02-subject-assertion-contract.log"
+    },
+    {
+      "gateId": "u02-security",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/run-u02-security-gates.mjs",
+      "required": true,
+      "status": "failed",
+      "summary": "U02 security gate blocked: approved version/digest toolchain lock is missing\n",
+      "evidencePath": "artifacts/quality-gates/u02-security.log"
+    },
+    {
+      "gateId": "u02-performance",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u02-bff-performance.mjs --input artifacts/u02/performance.json",
+      "required": true,
+      "status": "failed",
+      "summary": "U02 performance evidence is required; synthetic data is not accepted\n",
+      "evidencePath": "artifacts/quality-gates/u02-performance.log"
+    },
+    {
+      "gateId": "u03-agreement-preservation",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u03-agreement-preservation.test.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "✔ preserves U01 Rate, U02 routing, legacy Agreement, migrations, and Wave A (10.1555ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 24.8095\n",
+      "evidencePath": "artifacts/quality-gates/u03-agreement-preservation.log"
+    },
+    {
+      "gateId": "u03-agreement-performance-contract",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u03-agreement-performance.test.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "✔ uses nearest-rank percentiles (1.7471ms)\n✔ accepts the exact fixed U03 workload (3.5462ms)\n✔ rejects synthetic, incomplete, slow, and unsafe evidence (3.7617ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 16.4536\n",
+      "evidencePath": "artifacts/quality-gates/u03-agreement-performance-contract.log"
+    },
+    {
+      "gateId": "u04-pricing-preservation",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u04-pricing-preservation.test.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "✔ preserves V1-V4, U01-U03, Booking fixtures, rollback SQL, and manager isolation (10.8828ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 17.3828\n",
+      "evidencePath": "artifacts/quality-gates/u04-pricing-preservation.log"
+    },
+    {
+      "gateId": "u04-pricing-performance-contract",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u04-pricing-performance.test.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "✔ uses deterministic nearest-rank percentiles (2.0343ms)\n✔ accepts the exact U04 raw-evidence contract (4.3251ms)\n✔ rejects synthetic, slow, incomplete, spilling, replay-mutating, and growing evidence (2.2257ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 14.2626\n",
+      "evidencePath": "artifacts/quality-gates/u04-pricing-performance-contract.log"
+    },
+    {
+      "gateId": "u04-rollback-policy",
+      "scope": "apps/charge-agreements",
+      "command": "node scripts/u04-rollback-policy.test.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "✔ permits only the compatibility-proven drained SELECT-only zero-state cell (1.5968ms)\n✔ requires forward repair after any U04 state or write-capable prior image (0.3099ms)\n✔ never authorizes destructive recovery (0.1412ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 9.5453\n",
+      "evidencePath": "artifacts/quality-gates/u04-rollback-policy.log"
+    },
+    {
+      "gateId": "frontend-booking-test",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking test",
+      "required": true,
+      "status": "passed",
+      "summary": "\n\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.6 \u001b[39m\u001b[90mD:/TST_Codex_phase1_merge\u001b[39m\n\n \u001b[32m✓\u001b[39m apps/booking/app/api/health/route.test.ts \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 10\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/booking/lib/booking-redirect.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 24\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/booking/lib/bookings.test.ts \u001b[2m(\u001b[22m\u001b[2m13 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 78\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/booking/lib/booking-price.test.ts \u001b[2m(\u001b[22m\u001b[2m12 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 86\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/booking/app/bookings/[bookingId]/BookingPricingPanel.test.tsx \u001b[2m(\u001b[22m\u001b[2m12 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 463\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m5 passed\u001b[39m\u001b[22m\u001b[90m (5)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m42 passed\u001b[39m\u001b[22m\u001b[90m (42)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:02:10\n\u001b[2m   Duration \u001b[22m 3.66s\u001b[2m (transform 467ms, setup 1.76s, collect 1.48s, tests 661ms, environment 6.74s, prepare 1.01s)\u001b[22m\n\n",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-test.log"
+    },
+    {
+      "gateId": "frontend-booking-typecheck",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking typecheck",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-typecheck.log"
+    },
+    {
+      "gateId": "frontend-booking-lint",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking lint",
+      "required": true,
+      "status": "passed",
+      "summary": "`next lint` is deprecated and will be removed in Next.js 16.\nFor new projects, use create-next-app to choose your preferred linter.\nFor existing projects, migrate to the ESLint CLI:\nnpx @next/codemod@canary next-lint-to-eslint-cli .\n\n\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-lint.log"
+    },
+    {
+      "gateId": "frontend-booking-build",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking build",
+      "required": true,
+      "status": "passed",
+      "summary": "\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-build.log"
+    },
+    {
+      "gateId": "frontend-shell-test",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell test",
+      "required": true,
+      "status": "passed",
+      "summary": "\n\u001b[1m\u001b[46m RUN \u001b[49m\u001b[22m \u001b[36mv3.2.6 \u001b[39m\u001b[90mD:/TST_Codex_phase1_merge\u001b[39m\n\n \u001b[32m✓\u001b[39m apps/shell/lib/shell-auth.test.ts \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 14\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/booking/booking-presentation.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 5\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/api/auth/sign-out/route.test.ts \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 7\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/lib/booking-compat.test.ts \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 8\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/lib/booking-client.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 26\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/signed-out/page.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 57\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/booking/loading.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 137\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/AccessDeniedPanel.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 66\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/ShellFrame.test.tsx \u001b[2m(\u001b[22m\u001b[2m1 test\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 162\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/booking/[bookingId]/BookingActions.test.tsx \u001b[2m(\u001b[22m\u001b[2m8 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 363\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m apps/shell/app/booking/new/BookingCreateForm.test.tsx \u001b[2m(\u001b[22m\u001b[2m5 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 514\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m11 passed\u001b[39m\u001b[22m\u001b[90m (11)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m34 passed\u001b[39m\u001b[22m\u001b[90m (34)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:02:50\n\u001b[2m   Duration \u001b[22m 5.62s\u001b[2m (transform 583ms, setup 5.67s, collect 5.08s, tests 1.36s, environment 29.04s, prepare 4.51s)\u001b[22m\n\n",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-test.log"
+    },
+    {
+      "gateId": "frontend-shell-typecheck",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell typecheck",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-typecheck.log"
+    },
+    {
+      "gateId": "frontend-shell-lint",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell lint",
+      "required": true,
+      "status": "passed",
+      "summary": "`next lint` is deprecated and will be removed in Next.js 16.\nFor new projects, use create-next-app to choose your preferred linter.\nFor existing projects, migrate to the ESLint CLI:\nnpx @next/codemod@canary next-lint-to-eslint-cli .\n\n\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-lint.log"
+    },
+    {
+      "gateId": "frontend-shell-build",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell build",
+      "required": true,
+      "status": "passed",
+      "summary": "\n ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config\n",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-build.log"
+    },
+    {
+      "gateId": "w2-01-live-acceptance",
+      "scope": "w2-01-live",
+      "command": "node scripts/w2-01-live-acceptance.mjs --output-root artifacts/w2-01-live/app-shell-auth && node scripts/w2-01-live-acceptance.mjs --validate --require-pass --output-root artifacts/w2-01-live/app-shell-auth",
+      "required": true,
+      "status": "failed",
+      "summary": "{\n  \"finalDecision\": \"BLOCKED\",\n  \"evidenceRoot\": \"D:/TST_Codex_phase1_merge/artifacts/w2-01-live/app-shell-auth\"\n}\n{\n  \"status\": \"FAIL\",\n  \"failures\": [\n    \"manifest finalDecision must be PASS\"\n  ]\n}\n",
+      "evidencePath": "artifacts/quality-gates/w2-01-live-acceptance.log"
+    },
+    {
       "gateId": "backend-test",
       "scope": "services",
       "command": "mvn -f services/pom.xml test",
       "required": true,
-      "status": "failed",
-      "summary": "'mvn' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n",
+      "status": "passed",
+      "summary": "SLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nSLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nWARNING: A Java agent has been loaded dynamically (C:\\Users\\mohammad.rezvannia\\.m2\\repository\\net\\bytebuddy\\byte-buddy-agent\\1.14.19\\byte-buddy-agent-1.14.19.jar)\r\nWARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning\r\nWARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information\r\nWARNING: Dynamic loading of agents will be disallowed by default in a future release\r\nOpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended\r\nSLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nSLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nWARNING: A Java agent has been loaded dynamically (C:\\Users\\mohammad.rezvannia\\.m2\\repository\\net\\bytebuddy\\byte-buddy-agent\\1.14.19\\byte-buddy-agent-1.14.19.jar)\r\nWARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning\r\nWARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information\r\nWARNING: Dynamic loading of agents will be disallowed by default in a future release\r\nOpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended\r\nSLF4J(W): No SLF4J provi",
       "evidencePath": "artifacts/quality-gates/backend-test.log"
     }
   ],
   "aggregate": {
     "status": "failed",
     "failedRequired": [
-      "backend-test"
+      "u02-security",
+      "u02-performance",
+      "w2-01-live-acceptance"
     ]
   }
 }

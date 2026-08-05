@@ -42,6 +42,7 @@ class ReferenceEventOutboxApplicationServiceTest {
         assertEquals("reference-data-service", event.payload().get("producerIdentity"));
         assertEquals("referencedata.currency.changed-value", event.payload().get("schemaSubject"));
         assertEquals("corr-1", event.payload().get("correlationId"));
+        assertEquals("2", event.payload().get("minorUnit"));
     }
 
     @Test

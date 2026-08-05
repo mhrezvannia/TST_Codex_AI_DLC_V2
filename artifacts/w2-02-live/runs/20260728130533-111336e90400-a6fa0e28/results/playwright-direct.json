@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260728130533-111336e90400-a6fa0e28",
+  "workspaceDigest": "111336e90400cbf439bce8f8269de9feee8925502e78f1e7b5098718f206baf0",
+  "command": "corepack yarn playwright test --config playwright.config.ts",
+  "startedAt": "2026-07-28T13:38:54.262Z",
+  "finishedAt": "2026-07-28T13:46:30.380Z",
+  "exitCode": 1,
+  "directExit": true,
+  "result": "FAIL",
+  "outputHash": "0e0925e7966f8288ec3d14561d2721a94325e6a6c0db27d6174c5001a67179db",
+  "outputBytes": 446455
+}

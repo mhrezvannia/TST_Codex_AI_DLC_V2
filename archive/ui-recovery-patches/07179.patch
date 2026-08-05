@@ -1,0 +1,60 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\new\BookingCreateForm.test.tsx
+@@
+ import { BookingCreateForm } from "./BookingCreateForm";
++import type { BookingReferenceCatalog } from "../../../lib/bookings";
+@@
+-    render(<BookingCreateForm />);
++    render(<BookingCreateForm options={catalog} />);
+@@
+   });
+ });
++
++const catalog: BookingReferenceCatalog = {
++  customers: [{
++    id: "party-1",
++    code: "CUST-1",
++    displayName: "Local Demo Carrier",
++    version: 1,
++    attributes: {}
++  }],
++  locations: [{
++    id: "location-usnyc",
++    code: "USNYC",
++    displayName: "New York",
++    version: 1,
++    attributes: {}
++  }, {
++    id: "location-nlrtm",
++    code: "NLRTM",
++    displayName: "Rotterdam",
++    version: 1,
++    attributes: {}
++  }],
++  voyages: [{
++    id: "voyage-2",
++    code: "LC002E",
++    displayName: "LinerCore Atlas",
++    version: 1,
++    attributes: {
++      recordType: "VOYAGE",
++      originLocationId: "location-usnyc",
++      destinationLocationId: "location-nlrtm"
++    }
++  }],
++  equipment: [{
++    id: "equipment-22g1",
++    code: "22G1",
++    displayName: "20 foot dry",
++    version: 1,
++    attributes: {}
++  }]
++};
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\BookingValidationPanel.test.tsx
+@@
+     render(<BookingValidationPanel bookingId="booking-1" status="PRICED" initialValidation={{
+@@
+-    fireEvent.click(screen.getByTestId("booking-confirm"));
++    fireEvent.click(screen.getByTestId("booking-confirm"));
++    fireEvent.click(screen.getByTestId("booking-confirm-submit"));
+*** End Patch

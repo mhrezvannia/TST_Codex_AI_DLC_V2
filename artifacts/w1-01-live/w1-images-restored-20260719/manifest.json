@@ -1,0 +1,192 @@
+{
+  "runId": "w1-images-restored-20260719",
+  "startedAt": "2026-07-19T17:59:40.863Z",
+  "completedAt": "2026-07-19T17:59:40.863Z",
+  "status": "FAILED",
+  "branch": "unknown",
+  "commit": "unknown",
+  "dirtySummary": "not captured",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "nginxHostPort": "8088",
+    "realMessagingRequired": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "gates": [
+    {
+      "id": "preflight",
+      "section": "preflight",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --preflight",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T17:54:40.251Z",
+      "completedAt": "2026-07-19T17:54:40.253Z",
+      "artifactPath": "preflight/preflight.txt",
+      "summary": "{\n  \"status\": \"PASS\",\n  \"failures\": []\n}"
+    },
+    {
+      "id": "compose-config",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "docker compose config --quiet",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T17:54:40.796Z",
+      "completedAt": "2026-07-19T17:54:40.796Z",
+      "artifactPath": "compose/compose-config.txt",
+      "summary": ""
+    },
+    {
+      "id": "compose-start",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "docker compose --profile full up -d --build",
+      "status": "FAIL",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.860Z",
+      "completedAt": "2026-07-19T17:59:40.860Z",
+      "artifactPath": "compose/compose-start.txt",
+      "summary": "Sending build context to Docker daemon  536.2kB\rSending build context to Docker daemon  536.2kB\rSending build context to Docker daemon  1.588MB\rSending build context to Docker daemon  2.114MB\rSending build context to Docker daemon  2.638MB\rSending build context to Docker daemon   3.17MB\rSending build context to Docker daemon  3.694MB\rSending build context to Docker daemon  4.219MB\rSending build context to Docker daemon  4.744MB\rSending build context to Docker daemon  5.271MB\rSending build context to Docker daemon  5.802MB\rSending build context to Docker daemon  5.802MB\rSending build context to Docker daemon  6.851MB\rSending build context to Docker daemon  6.851MB\rSending build context to Docker daemon    7.9MB\rSending build context to Docker daemon    7.9MB\rSending build context to Docker daemon  8.949MB\rSending build context to Docker daemon  8.949MB\rSending build context to Docker daemon  9.473MB\rSending build context to Docker daemon  9.473MB\rSending build context to Docker daemon  9.998MB\rSending build context to Docker daemon  9.998MB\rSending build context to Docker daemon  10.52MB\rSending build context to Docker daemon  10.52MB\rSending build context to Docker daemon  11.05MB\rSending build context to Docker daemon  11.05MB\rSending build context to Docker daemon  11.57MB\rSending build context to Docker daemon  11.57MB\rSending build context to Docker daemon   12.1MB\rSending build context to Docker daemon   12.1MB\rSending build context to Docker daemon  12.62MB\rSending build context to Docker daemon  12.62MB\rSending build context to Docker daemon  13.67MB\rSending build context to Docker daemon  13.67MB\rSending build context to Docker daemon  14.72MB\rSending build context to Docker daemon  14.72MB\rSending build context to Docker daemon  15.24MB\rSending build context to Docker daemon  15.24MB\rSending build context to Docker daemon  15.77MB\rSending build context to Docker daemon  15.77MB\rSending build context to Docker daemon  16.29MB\rSending build context to Docker "
+    },
+    {
+      "id": "contracts",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-004"
+      ],
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "quality/contracts.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "seed-dry-run",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "seed/seed-dry-run.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "seed-live",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file D:/TST_Codex_integ/artifacts/w1-01-live/w1-images-restored-20260719/seed/seed-apply.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "seed/seed-live.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "booking-ui-health",
+      "section": "journey",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "journey/booking-ui-health.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "replay-restart",
+      "section": "replay-restart",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_integ/artifacts/w1-01-live/w1-images-restored-20260719/replay-restart/evidence.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "replay-restart/replay-restart.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "quality-gates",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-006"
+      ],
+      "command": "node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_integ/artifacts/w1-01-live/w1-images-restored-20260719/quality/evidence.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "quality/quality-gates.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "aidlc-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/aidlc-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "audits/aidlc-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "erp-fidelity-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T17:59:40.863Z",
+      "completedAt": "2026-07-19T17:59:40.863Z",
+      "artifactPath": "audits/erp-fidelity-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "preflight/preflight.txt",
+      "sha256": "82f97e65551a22c31cf9e24b3972909614ed654bb0c7b9c729b800f9efcd192d",
+      "bytes": 135
+    },
+    {
+      "path": "compose/compose-config.txt",
+      "sha256": "fb4d606947f2266b286ef1196727a880eb1121710e94840a77e6dc0419d69d5c",
+      "bytes": 82
+    },
+    {
+      "path": "compose/compose-start.txt",
+      "sha256": "e2161ae38c5ed97273da540d7ce07202db65575b3baac1ec9e0fa1a0ffa37e60",
+      "bytes": 2094
+    }
+  ]
+}

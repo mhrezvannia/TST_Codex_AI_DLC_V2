@@ -11,13 +11,14 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MvpAuthorizationCatalog {
-    public static final String POLICY_VERSION = "mvp-2026-07-01";
+    public static final String POLICY_VERSION = "mvp-2026-08-02";
     private final List<Role> roles;
     private final List<Permission> permissions;
     private final List<RolePermission> grants;
 
     public MvpAuthorizationCatalog() {
         this.roles = List.of(
+                role("role-superuser", RoleCode.SUPERUSER, "Superuser"),
                 role("role-pricing", RoleCode.PRICING, "Pricing"),
                 role("role-sales", RoleCode.SALES, "Sales"),
                 role("role-booking-desk", RoleCode.BOOKING_DESK, "Booking Desk"),
@@ -34,6 +35,27 @@ public class MvpAuthorizationCatalog {
                 permission("perm-reference-update", "reference-data", PermissionAction.UPDATE),
                 permission("perm-reference-deactivate", "reference-data", PermissionAction.DEACTIVATE),
                 permission("perm-reference-reactivate", "reference-data", PermissionAction.REACTIVATE),
+                permission("perm-booking-read", "booking", PermissionAction.READ),
+                permission("perm-booking-create", "booking", PermissionAction.CREATE),
+                permission("perm-booking-validate", "booking", PermissionAction.VALIDATE),
+                permission("perm-booking-request-pricing", "booking", PermissionAction.REQUEST_PRICING),
+                permission("perm-booking-confirm", "booking", PermissionAction.CONFIRM),
+                permission("perm-booking-amend", "booking", PermissionAction.AMEND),
+                permission("perm-booking-reconfirm", "booking", PermissionAction.RECONFIRM),
+                permission("perm-charge-rates-read", "charge-rates", PermissionAction.READ),
+                permission("perm-charge-rates-create", "charge-rates", PermissionAction.CREATE),
+                permission("perm-charge-rates-update", "charge-rates", PermissionAction.UPDATE),
+                permission("perm-charge-rates-approve", "charge-rates", PermissionAction.APPROVE),
+                permission("perm-charge-rates-create-successor", "charge-rates", PermissionAction.CREATE_SUCCESSOR),
+                permission("perm-charge-agreements-read", "charge-agreements", PermissionAction.READ),
+                permission("perm-charge-agreements-create", "charge-agreements", PermissionAction.CREATE),
+                permission("perm-charge-agreements-update", "charge-agreements", PermissionAction.UPDATE),
+                permission("perm-charge-agreements-approve", "charge-agreements", PermissionAction.APPROVE),
+                permission("perm-charge-agreements-create-successor",
+                        "charge-agreements", PermissionAction.CREATE_SUCCESSOR),
+                permission("perm-charge-agreements-suspend", "charge-agreements", PermissionAction.SUSPEND),
+                permission("perm-charge-agreements-expire", "charge-agreements", PermissionAction.EXPIRE),
+                permission("perm-charge-manual-cases-read", "charge-manual-cases", PermissionAction.READ),
                 permission("perm-contract-read", "reference-contracts", PermissionAction.READ),
                 permission("perm-identity-role-read", "identity-roles", PermissionAction.READ),
                 permission("perm-identity-role-assign", "identity-roles", PermissionAction.ASSIGN),
@@ -78,17 +100,27 @@ public class MvpAuthorizationCatalog {
 
     private List<RolePermission> grants() {
         Map<RoleCode, List<String>> roleGrantIds = Map.of(
+                RoleCode.SUPERUSER, permissions.stream().map(Permission::permissionId).toList(),
                 RoleCode.REFERENCE_ADMIN, List.of("perm-reference-read", "perm-reference-create", "perm-reference-update",
                         "perm-reference-deactivate", "perm-reference-reactivate", "perm-contract-read"),
                 RoleCode.SECURITY_ADMIN, List.of("perm-identity-role-read", "perm-identity-role-assign",
                         "perm-identity-role-revoke", "perm-identity-audit-read", "perm-platform-status-read"),
                 RoleCode.PLATFORM_OPERATOR, List.of("perm-platform-status-read", "perm-identity-audit-read", "perm-contract-read"),
-                RoleCode.PRICING, List.of("perm-reference-read", "perm-contract-read"),
+                RoleCode.PRICING, List.of("perm-reference-read", "perm-contract-read",
+                        "perm-charge-rates-read", "perm-charge-rates-create", "perm-charge-rates-update",
+                        "perm-charge-rates-approve", "perm-charge-rates-create-successor",
+                        "perm-charge-agreements-read", "perm-charge-agreements-create",
+                        "perm-charge-agreements-update", "perm-charge-agreements-approve",
+                        "perm-charge-agreements-create-successor", "perm-charge-agreements-suspend",
+                        "perm-charge-agreements-expire", "perm-charge-manual-cases-read"),
                 RoleCode.SALES, List.of("perm-reference-read"),
-                RoleCode.BOOKING_DESK, List.of("perm-reference-read"),
+                RoleCode.BOOKING_DESK, List.of("perm-reference-read", "perm-booking-read", "perm-booking-create",
+                        "perm-booking-validate", "perm-booking-request-pricing", "perm-booking-confirm",
+                        "perm-booking-amend", "perm-booking-reconfirm"),
                 RoleCode.EQUIPMENT_CONTROL, List.of("perm-reference-read"),
                 RoleCode.CUSTOMER_SERVICE, List.of("perm-reference-read"),
-                RoleCode.FINANCE_READ, List.of("perm-reference-read")
+                RoleCode.FINANCE_READ, List.of(
+                        "perm-reference-read", "perm-charge-rates-read", "perm-charge-agreements-read")
         );
 
         Instant epoch = Instant.EPOCH;

@@ -1,0 +1,56 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\new\BookingCreateForm.test.tsx
+@@
+ import type { BookingReferenceCatalog } from "../../../lib/bookings";
+ 
++const { push } = vi.hoisted(() => ({ push: vi.fn() }));
+ vi.mock("next/navigation", () => ({
+-  useRouter: () => ({ push: vi.fn() })
++  useRouter: () => ({ push })
+ }));
+@@
+   afterEach(() => {
+     vi.restoreAllMocks();
++    push.mockReset();
+@@
+   it("prevents duplicate draft submission while the request is active", async () => {
+@@
+     expect(submit).toBeDisabled();
+   });
++
++  it("redirects to the created Booking record after a successful idempotent request", async () => {
++    const fetchMock = vi.fn().mockResolvedValue(Response.json({
++      id: "ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a",
++      status: "DRAFT"
++    }, { status: 201 }));
++    vi.stubGlobal("fetch", fetchMock);
++    render(<BookingCreateForm options={catalog} />);
++    enterValidDraft();
++
++    fireEvent.click(screen.getByTestId("booking-submit"));
++
++    await waitFor(() => expect(push).toHaveBeenCalledWith(
++      "/bookings/ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a?created=1"
++    ));
++    const request = fetchMock.mock.calls[0][1] as RequestInit;
++    expect(new Headers(request.headers).get("idempotency-key")).toBeTruthy();
++  });
+ });
+ 
+ function selectOption(testId: string, optionName: RegExp) {
+@@
+   fireEvent.mouseDown(screen.getByRole("option", { name: optionName }));
+ }
++
++function enterValidDraft() {
++  selectOption("booking-customerId", /CUST-1 - Local Demo Carrier/);
++  selectOption("booking-voyageId", /LC002E - LinerCore Atlas/);
++  selectOption("booking-equipmentTypeCode", /22G1 - 20 foot dry/);
++  fireEvent.change(screen.getByTestId("booking-equipmentId"), {
++    target: { value: "LCRU1000055" }
++  });
++  fireEvent.change(screen.getByTestId("booking-commodityCode"), {
++    target: { value: "GENERAL" }
++  });
++}
+*** End Patch

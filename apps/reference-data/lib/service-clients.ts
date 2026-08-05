@@ -322,12 +322,15 @@ async function serviceJson<T>(
   correlationId: string
 ): Promise<ServiceResult<T>> {
   try {
+    const headers = new Headers(init.headers);
+    headers.set("x-correlation-id", correlationId);
+    if (path.startsWith("/reference-sets")) {
+      headers.set("x-linercore-service-id", "apps-reference-data");
+      headers.set("x-linercore-local-token", process.env.REFERENCE_DATA_BFF_TOKEN ?? "");
+    }
     const response = await fetch(`${baseUrl}${path}`, {
       ...init,
-      headers: {
-        "x-correlation-id": correlationId,
-        ...(init.headers ?? {})
-      },
+      headers,
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
     });
     const data = await safeJson(response);

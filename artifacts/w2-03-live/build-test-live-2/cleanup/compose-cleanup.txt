@@ -1,0 +1,6 @@
+gate=compose-cleanup
+status=PASS
+exitCode=0
+command=docker compose -p linercore-wave-a --profile full down
+
+time="2026-07-26T11:48:43+03:30" level=warning msg="Warning: No resource found to remove for project \"linercore-wave-a\"."

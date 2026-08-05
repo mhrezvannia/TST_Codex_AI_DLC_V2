@@ -1,0 +1,10 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\auth\src\index.test.ts
+@@
+   expect(toSessionSummary(session, "corr-1")).toMatchObject({
+     subjectType: "user",
++    issuedAt: session.issuedAt,
++    expiresAt: session.expiresAt,
+     permissionSummary: { total: 1, byResource: { "reference-data": ["create"] } }
+   });
+*** End Patch

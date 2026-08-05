@@ -1,0 +1,68 @@
+gate=erp-fidelity-audit
+status=PASS
+exitCode=0
+command=node scripts/w2-03-live-acceptance.mjs --audit erp-fidelity
+
+=== 1. Aggregate shape — arrays/value-objects in contracts vs. flat scalars in domain ===
+-- array/nested fields the CONTRACTS declare:
+contracts\openapi\reference-data-service.yaml:193:        - equipment-type
+contracts\asyncapi\reference-data-events.yaml:20:  referencedata.equipment-type.changed:
+contracts\asyncapi\reference-data-events.yaml:22:      summary: Reference data equipment type change event.
+contracts\asyncapi\reference-data-events.yaml:26:          $ref: "../avro/referencedata.equipment-type.changed.avsc"
+contracts\avro\referencedata.equipment-type.changed.avsc:5:  "doc": "Reference data equipment type change event.",
+contracts\avro\booking.confirmed.avsc:22:            "name": "routing",
+contracts\avro\booking.confirmed.avsc:24:              "type": "array",
+contracts\avro\booking.confirmed.avsc:25:              "items": {
+contracts\avro\booking.confirmed.avsc:38:            "name": "equipment",
+contracts\avro\booking.confirmed.avsc:40:              "type": "array",
+contracts\avro\booking.confirmed.avsc:41:              "items": {
+-- how the domain models them (look for flat String instead):
+services\container-movement-service\application-service\src\test\java\com\linercore\platform\containermovement\applicationservice\ContainerMovementApplicationServiceTest.java:192:    private BookingConfirmedEvent bookingConfirmed(String eventId, int revision, String idempotencyKey, String origin, String destination) {
+services\charge-agreement-service\container\src\main\java\com\linercore\platform\chargeagreement\container\api\RateAuthorityApiController.java:107:            String equipmentTypeId, String locationId, BigDecimal amount, String currencyId, LocalDate validFrom,
+services\charge-agreement-service\container\src\main\java\com\linercore\platform\chargeagreement\container\api\RateAuthorityApiController.java:125:            String chargeCodeId, String tradeLaneId, String equipmentTypeId, String locationId, String basis,
+services\container-movemen
+... output truncated ...
+in\java\com\linercore\platform\containermovement\applicationservice\event\BookingConfirmedEvent.java:70:            String equipmentTypeId) {
+services\container-movement-service\application-service\src\main\java\com\linercore\platform\containermovement\applicationservice\event\BookingConfirmedEvent.java:136:    public record EquipmentAssignment(String equipmentTypeCode, int quantity, String equipmentId) {
+services\charge-agreement-service\container\src\main\java\com\linercore\platform\chargeagreement\container\api\PricingApiController.java:97:            String equipmentType,
+
+=== 2. Field-name drift & self-disagreement (compare against contract names by hand) ===
+
+=== 3. Stringly-typed escape hatches (real domain fields hidden in bags) ===
+
+=== 4. Standards-on-paper — industry standard in docs vs. code (edit STD for your standard) ===
+-- in DOCS:
+211
+-- in CODE (java/ts/avsc):
+0
+  (docs >> 0 while code == 0 means the standard is aspirational only)
+
+=== 5. Named capabilities that are ZERO/near-zero in code (adjust list per vision) ===
+  invoice        0 hits
+  capacity       0 hits
+  tariff         0 hits
+  surcharge      0 hits
+  reefer         0 hits
+  voyage         0 hits
+  vessel         0 hits
+  track.?trace   0 hits
+  routing        0 hits
+
+=== 6a. UI — missing detail routes (expect a [id] page per entity) ===
+-- dynamic [id] PAGE routes found:
+apps/booking/app/bookings/[bookingId]/page.tsx
+apps/shell/app/booking/[bookingId]/page.tsx
+apps/shell/app/bookings/[bookingId]/page.tsx
+
+=== 6b. UI — inline hardcoded colors & local style objects (no design tokens) ===
+93
+  hex-color/inline-style occurrences in app TSX (high = ad-hoc styling, no design system)
+
+=== 6c. UI — design system size (a real one is many files, not one) ===
+6
+  files in packages/ui (1 = placeholder, not a design system)
+
+=== 6d. UI — hardcoded auth user (login not wired into business screens) ===
+  none found
+
+Done. LEADS only — confirm each against the vision/contract docs before reporting.

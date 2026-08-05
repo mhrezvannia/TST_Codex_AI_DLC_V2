@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 3,
+  "sequence": 2,
+  "revision": "formal-revision-1-correction-pass-5",
+  "runId": "20260722061852-1eca66d69d51-40330d21",
+  "rerunOf": "20260722061649-0a572721749d-bab54b5a",
+  "reproducesRun": "20260722061649-0a572721749d-bab54b5a",
+  "predecessor": {
+    "runId": "20260722061649-0a572721749d-bab54b5a",
+    "sequence": 1,
+    "status": "FAILED",
+    "terminalSha256": "6b15d09d59980432ee295bf13b97c4d76f9652397ccb54292f2ed1193da7dbe2"
+  },
+  "event": "STARTED",
+  "startedAt": "2026-07-22T06:18:52.511Z"
+}

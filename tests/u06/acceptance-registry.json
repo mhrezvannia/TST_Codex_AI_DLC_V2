@@ -1,0 +1,2477 @@
+{
+  "schemaVersion": 1,
+  "resultStatuses": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "SKIPPED"
+  ],
+  "expectedCategoryCardinality": {
+    "PRESERVATION": 5,
+    "SECURITY": 6,
+    "COMMERCIAL": 13,
+    "BROWSER_STRUCTURAL": 40,
+    "BROWSER_STATE": 33,
+    "DESIGN_DEPENDENCY": 3,
+    "OBSERVABILITY": 6,
+    "QUALITY": 10,
+    "AUDIT": 4
+  },
+  "ownedRoutes": [
+    "/charge-agreements",
+    "/charge-agreements/new",
+    "/charge-agreements/[agreementId]",
+    "/charge-agreements/[agreementId]/edit",
+    "/charge-agreements/rates",
+    "/charge-agreements/rates/new",
+    "/charge-agreements/rates/[rateId]",
+    "/charge-agreements/rates/[rateId]?mode=edit",
+    "/charge-agreements/manual-pricing",
+    "/booking/[id]"
+  ],
+  "edgeRegressionRoutes": [
+    "/",
+    "/auth",
+    "/reference-data",
+    "/booking",
+    "/bookings"
+  ],
+  "members": [
+    {
+      "key": "PRESERVATION:W0-01",
+      "category": "PRESERVATION",
+      "id": "W0-01",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "protected-hash",
+        "assertion-json"
+      ],
+      "destination": "results/preservation/w0-01.json",
+      "dependsOn": [],
+      "legalSkippedAfter": []
+    },
+    {
+      "key": "PRESERVATION:W0-02",
+      "category": "PRESERVATION",
+      "id": "W0-02",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "protected-hash",
+        "assertion-json"
+      ],
+      "destination": "results/preservation/w0-02.json",
+      "dependsOn": [],
+      "legalSkippedAfter": []
+    },
+    {
+      "key": "PRESERVATION:W1-01",
+      "category": "PRESERVATION",
+      "id": "W1-01",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "protected-hash",
+        "assertion-json"
+      ],
+      "destination": "results/preservation/w1-01.json",
+      "dependsOn": [],
+      "legalSkippedAfter": []
+    },
+    {
+      "key": "PRESERVATION:W2-01",
+      "category": "PRESERVATION",
+      "id": "W2-01",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "protected-hash",
+        "assertion-json"
+      ],
+      "destination": "results/preservation/w2-01.json",
+      "dependsOn": [],
+      "legalSkippedAfter": []
+    },
+    {
+      "key": "PRESERVATION:W2-02",
+      "category": "PRESERVATION",
+      "id": "W2-02",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "protected-hash",
+        "assertion-json"
+      ],
+      "destination": "results/preservation/w2-02.json",
+      "dependsOn": [],
+      "legalSkippedAfter": []
+    },
+    {
+      "key": "SECURITY:SEC-U06-001",
+      "category": "SECURITY",
+      "id": "SEC-U06-001",
+      "route": null,
+      "scenario": "SEC-U06-001",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "mutation-count",
+        "audit-evidence"
+      ],
+      "destination": "results/security/sec-u06-001.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "SECURITY:SEC-U06-002",
+      "category": "SECURITY",
+      "id": "SEC-U06-002",
+      "route": null,
+      "scenario": "SEC-U06-002",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "mutation-count",
+        "audit-evidence"
+      ],
+      "destination": "results/security/sec-u06-002.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "SECURITY:SEC-U06-003",
+      "category": "SECURITY",
+      "id": "SEC-U06-003",
+      "route": null,
+      "scenario": "SEC-U06-003",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "mutation-count",
+        "audit-evidence"
+      ],
+      "destination": "results/security/sec-u06-003.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "SECURITY:SEC-U06-004",
+      "category": "SECURITY",
+      "id": "SEC-U06-004",
+      "route": null,
+      "scenario": "SEC-U06-004",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "mutation-count",
+        "audit-evidence"
+      ],
+      "destination": "results/security/sec-u06-004.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "SECURITY:SEC-U06-005",
+      "category": "SECURITY",
+      "id": "SEC-U06-005",
+      "route": null,
+      "scenario": "SEC-U06-005",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "mutation-count",
+        "audit-evidence"
+      ],
+      "destination": "results/security/sec-u06-005.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "SECURITY:SEC-U06-006",
+      "category": "SECURITY",
+      "id": "SEC-U06-006",
+      "route": null,
+      "scenario": "SEC-U06-006",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "mutation-count",
+        "audit-evidence"
+      ],
+      "destination": "results/security/sec-u06-006.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:AGREEMENT_PRICE",
+      "category": "COMMERCIAL",
+      "id": "AGREEMENT_PRICE",
+      "route": null,
+      "scenario": "AGREEMENT_PRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/agreement-price.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:TARIFF_FALLBACK",
+      "category": "COMMERCIAL",
+      "id": "TARIFF_FALLBACK",
+      "route": null,
+      "scenario": "TARIFF_FALLBACK",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/tariff-fallback.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:SUCCESSOR_REPRICE",
+      "category": "COMMERCIAL",
+      "id": "SUCCESSOR_REPRICE",
+      "route": null,
+      "scenario": "SUCCESSOR_REPRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/successor-reprice.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:NO_RATE",
+      "category": "COMMERCIAL",
+      "id": "NO_RATE",
+      "route": null,
+      "scenario": "NO_RATE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/no-rate.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:AMBIGUITY_AGREEMENT",
+      "category": "COMMERCIAL",
+      "id": "AMBIGUITY_AGREEMENT",
+      "route": null,
+      "scenario": "AMBIGUITY_AGREEMENT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/ambiguity-agreement.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:AMBIGUITY_BASE",
+      "category": "COMMERCIAL",
+      "id": "AMBIGUITY_BASE",
+      "route": null,
+      "scenario": "AMBIGUITY_BASE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/ambiguity-base.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:AMBIGUITY_SURCHARGE",
+      "category": "COMMERCIAL",
+      "id": "AMBIGUITY_SURCHARGE",
+      "route": null,
+      "scenario": "AMBIGUITY_SURCHARGE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/ambiguity-surcharge.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:AMBIGUITY_LOCAL",
+      "category": "COMMERCIAL",
+      "id": "AMBIGUITY_LOCAL",
+      "route": null,
+      "scenario": "AMBIGUITY_LOCAL",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/ambiguity-local.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:OUTAGE_TIMEOUT",
+      "category": "COMMERCIAL",
+      "id": "OUTAGE_TIMEOUT",
+      "route": null,
+      "scenario": "OUTAGE_TIMEOUT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/outage-timeout.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:OUTAGE_503",
+      "category": "COMMERCIAL",
+      "id": "OUTAGE_503",
+      "route": null,
+      "scenario": "OUTAGE_503",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/outage-503.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:OUTAGE_CIRCUIT",
+      "category": "COMMERCIAL",
+      "id": "OUTAGE_CIRCUIT",
+      "route": null,
+      "scenario": "OUTAGE_CIRCUIT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/outage-circuit.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:CHARGE_DISABLED",
+      "category": "COMMERCIAL",
+      "id": "CHARGE_DISABLED",
+      "route": null,
+      "scenario": "CHARGE_DISABLED",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/charge-disabled.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "COMMERCIAL:RECONFIRM_NO_CHARGE",
+      "category": "COMMERCIAL",
+      "id": "RECONFIRM_NO_CHARGE",
+      "route": null,
+      "scenario": "RECONFIRM_NO_CHARGE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "http-evidence",
+        "database-evidence",
+        "correlation-proof"
+      ],
+      "destination": "results/commercial/reconfirm-no-charge.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-375-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-375-LIGHT",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-375-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-375-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-375-DARK",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-375-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-768-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-768-LIGHT",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-768-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-768-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-768-DARK",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-768-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-1024-LIGHT",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-1024-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-1024-DARK",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-1024-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1440-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-1440-LIGHT",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-1440-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1440-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-LIST_FILTER-1440-DARK",
+      "route": "/charge-agreements",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-list-filter-1440-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-375-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-375-LIGHT",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-375-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-375-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-375-DARK",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-375-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-768-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-768-LIGHT",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-768-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-768-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-768-DARK",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-768-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-1024-LIGHT",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-1024-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-1024-DARK",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-1024-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1440-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-1440-LIGHT",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-1440-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1440-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-CREATE_EDIT-1440-DARK",
+      "route": "/charge-agreements/new",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-create-edit-1440-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-375-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-375-LIGHT",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-375-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-375-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-375-DARK",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-375-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-768-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-768-LIGHT",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-768-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-768-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-768-DARK",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-768-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-1024-LIGHT",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-1024-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-1024-DARK",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-1024-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1440-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-1440-LIGHT",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-1440-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1440-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-DETAIL_LIFECYCLE-1440-DARK",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-detail-lifecycle-1440-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-375-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-375-LIGHT",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-375-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-375-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-375-DARK",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-375-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-768-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-768-LIGHT",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-768-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-768-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-768-DARK",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-768-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-1024-LIGHT",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-1024-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-1024-DARK",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-1024-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1440-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-1440-LIGHT",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-1440-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1440-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-MANUAL_EVIDENCE-1440-DARK",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-manual-evidence-1440-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-375-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-375-LIGHT",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-375-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-375-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-375-DARK",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-375-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-768-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-768-LIGHT",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-768-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-768-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-768-DARK",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-768-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-1024-LIGHT",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-1024-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-1024-DARK",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-1024-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1440-LIGHT",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-1440-LIGHT",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-1440-light.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1440-DARK",
+      "category": "BROWSER_STRUCTURAL",
+      "id": "STRUCT-BOOKING_PRICING-1440-DARK",
+      "route": "/booking/[id]",
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "screenshot",
+        "assertion-json",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-structural/struct-booking-pricing-1440-dark.json",
+      "dependsOn": [
+        "SECURITY:SEC-U06-001"
+      ],
+      "legalSkippedAfter": [
+        "SECURITY:SEC-U06-001"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-LIST_FILTER-LOADING",
+      "category": "BROWSER_STATE",
+      "id": "STATE-LIST_FILTER-LOADING",
+      "route": "/charge-agreements",
+      "scenario": "LIST_FILTER_LOADING",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-list-filter-loading.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-LIST_FILTER-POPULATED",
+      "category": "BROWSER_STATE",
+      "id": "STATE-LIST_FILTER-POPULATED",
+      "route": "/charge-agreements",
+      "scenario": "AGREEMENT_PRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-list-filter-populated.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-LIST_FILTER-EMPTY",
+      "category": "BROWSER_STATE",
+      "id": "STATE-LIST_FILTER-EMPTY",
+      "route": "/charge-agreements",
+      "scenario": "LIST_FILTER_EMPTY",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-list-filter-empty.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-LIST_FILTER-BACKEND_ERROR",
+      "category": "BROWSER_STATE",
+      "id": "STATE-LIST_FILTER-BACKEND_ERROR",
+      "route": "/charge-agreements",
+      "scenario": "LIST_FILTER_BACKEND_ERROR",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-list-filter-backend-error.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-LIST_FILTER-FORBIDDEN",
+      "category": "BROWSER_STATE",
+      "id": "STATE-LIST_FILTER-FORBIDDEN",
+      "route": "/charge-agreements",
+      "scenario": "LIST_FILTER_FORBIDDEN",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-list-filter-forbidden.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-CREATE_EDIT-PRISTINE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-CREATE_EDIT-PRISTINE",
+      "route": "/charge-agreements/new",
+      "scenario": "CREATE_EDIT_PRISTINE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-create-edit-pristine.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-CREATE_EDIT-INVALID_SUMMARY_FOCUS",
+      "category": "BROWSER_STATE",
+      "id": "STATE-CREATE_EDIT-INVALID_SUMMARY_FOCUS",
+      "route": "/charge-agreements/new",
+      "scenario": "CREATE_EDIT_INVALID_SUMMARY_FOCUS",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-create-edit-invalid-summary-focus.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-CREATE_EDIT-REFERENCE_LOADING_ERROR",
+      "category": "BROWSER_STATE",
+      "id": "STATE-CREATE_EDIT-REFERENCE_LOADING_ERROR",
+      "route": "/charge-agreements/new",
+      "scenario": "CREATE_EDIT_REFERENCE_LOADING_ERROR",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-create-edit-reference-loading-error.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-CREATE_EDIT-DIRTY_NAVIGATION",
+      "category": "BROWSER_STATE",
+      "id": "STATE-CREATE_EDIT-DIRTY_NAVIGATION",
+      "route": "/charge-agreements/new",
+      "scenario": "CREATE_EDIT_DIRTY_NAVIGATION",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-create-edit-dirty-navigation.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-CREATE_EDIT-OPTIMISTIC_CONFLICT",
+      "category": "BROWSER_STATE",
+      "id": "STATE-CREATE_EDIT-OPTIMISTIC_CONFLICT",
+      "route": "/charge-agreements/new",
+      "scenario": "CREATE_EDIT_OPTIMISTIC_CONFLICT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-create-edit-optimistic-conflict.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-CREATE_EDIT-DENIED",
+      "category": "BROWSER_STATE",
+      "id": "STATE-CREATE_EDIT-DENIED",
+      "route": "/charge-agreements/new",
+      "scenario": "CREATE_EDIT_DENIED",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-create-edit-denied.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-CREATE_EDIT-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-DETAIL_LIFECYCLE-DRAFT",
+      "category": "BROWSER_STATE",
+      "id": "STATE-DETAIL_LIFECYCLE-DRAFT",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": "DETAIL_LIFECYCLE_DRAFT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-detail-lifecycle-draft.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-DETAIL_LIFECYCLE-APPROVED_IMMUTABLE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-DETAIL_LIFECYCLE-APPROVED_IMMUTABLE",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": "AGREEMENT_PRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-detail-lifecycle-approved-immutable.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-DETAIL_LIFECYCLE-HISTORY",
+      "category": "BROWSER_STATE",
+      "id": "STATE-DETAIL_LIFECYCLE-HISTORY",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": "SUCCESSOR_REPRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-detail-lifecycle-history.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-DETAIL_LIFECYCLE-APPROVAL_PENDING_SUCCESS_CONFLICT",
+      "category": "BROWSER_STATE",
+      "id": "STATE-DETAIL_LIFECYCLE-APPROVAL_PENDING_SUCCESS_CONFLICT",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": "DETAIL_LIFECYCLE_APPROVAL_PENDING_SUCCESS_CONFLICT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-detail-lifecycle-approval-pending-success-conflict.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-DETAIL_LIFECYCLE-DIALOG_ESCAPE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-DETAIL_LIFECYCLE-DIALOG_ESCAPE",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": "DETAIL_LIFECYCLE_DIALOG_ESCAPE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-detail-lifecycle-dialog-escape.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-DETAIL_LIFECYCLE-DIALOG_TAB_RESTORE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-DETAIL_LIFECYCLE-DIALOG_TAB_RESTORE",
+      "route": "/charge-agreements/[agreementId]",
+      "scenario": "DETAIL_LIFECYCLE_DIALOG_TAB_RESTORE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-detail-lifecycle-dialog-tab-restore.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-MANUAL_EVIDENCE-OPEN_RESULT",
+      "category": "BROWSER_STATE",
+      "id": "STATE-MANUAL_EVIDENCE-OPEN_RESULT",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": "NO_RATE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-manual-evidence-open-result.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-MANUAL_EVIDENCE-NO_AMOUNT_TOTAL",
+      "category": "BROWSER_STATE",
+      "id": "STATE-MANUAL_EVIDENCE-NO_AMOUNT_TOTAL",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": "NO_RATE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-manual-evidence-no-amount-total.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-MANUAL_EVIDENCE-EMPTY",
+      "category": "BROWSER_STATE",
+      "id": "STATE-MANUAL_EVIDENCE-EMPTY",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": "MANUAL_EVIDENCE_EMPTY",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-manual-evidence-empty.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-MANUAL_EVIDENCE-DENIED_NO_DISCLOSURE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-MANUAL_EVIDENCE-DENIED_NO_DISCLOSURE",
+      "route": "/charge-agreements/manual-pricing",
+      "scenario": "MANUAL_EVIDENCE_DENIED_NO_DISCLOSURE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-manual-evidence-denied-no-disclosure.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-MANUAL_EVIDENCE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-FIRST_PRICE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-FIRST_PRICE",
+      "route": "/booking/[id]",
+      "scenario": "AGREEMENT_PRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-first-price.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-AGREEMENT_RESULT",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-AGREEMENT_RESULT",
+      "route": "/booking/[id]",
+      "scenario": "AGREEMENT_PRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-agreement-result.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-TARIFF_RESULT",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-TARIFF_RESULT",
+      "route": "/booking/[id]",
+      "scenario": "TARIFF_FALLBACK",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-tariff-result.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-REPRICE_CURRENT_PRIOR",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-REPRICE_CURRENT_PRIOR",
+      "route": "/booking/[id]",
+      "scenario": "SUCCESSOR_REPRICE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-reprice-current-prior.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-LEGACY_EVIDENCE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-LEGACY_EVIDENCE",
+      "route": "/booking/[id]",
+      "scenario": "BOOKING_PRICING_LEGACY_EVIDENCE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-legacy-evidence.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-NO_RATE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-NO_RATE",
+      "route": "/booking/[id]",
+      "scenario": "NO_RATE",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-no-rate.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-AMBIGUITY",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-AMBIGUITY",
+      "route": "/booking/[id]",
+      "scenario": "AMBIGUITY_AGREEMENT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-ambiguity.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-OUTAGE",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-OUTAGE",
+      "route": "/booking/[id]",
+      "scenario": "OUTAGE_503",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-outage.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-CIRCUIT_OPEN",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-CIRCUIT_OPEN",
+      "route": "/booking/[id]",
+      "scenario": "OUTAGE_CIRCUIT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-circuit-open.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-MALFORMED",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-MALFORMED",
+      "route": "/booking/[id]",
+      "scenario": "BOOKING_PRICING_MALFORMED",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-malformed.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-CONFLICT",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-CONFLICT",
+      "route": "/booking/[id]",
+      "scenario": "BOOKING_PRICING_CONFLICT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-conflict.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "BROWSER_STATE:STATE-BOOKING_PRICING-IN_PROGRESS",
+      "category": "BROWSER_STATE",
+      "id": "STATE-BOOKING_PRICING-IN_PROGRESS",
+      "route": "/booking/[id]",
+      "scenario": "BOOKING_PRICING_IN_PROGRESS",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot",
+        "axe-report",
+        "sanitized-trace"
+      ],
+      "destination": "results/browser-state/state-booking-pricing-in-progress.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-BOOKING_PRICING-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "DESIGN_DEPENDENCY:DS-01",
+      "category": "DESIGN_DEPENDENCY",
+      "id": "DS-01",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot"
+      ],
+      "destination": "results/design-dependency/ds-01.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "DESIGN_DEPENDENCY:DS-02",
+      "category": "DESIGN_DEPENDENCY",
+      "id": "DS-02",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot"
+      ],
+      "destination": "results/design-dependency/ds-02.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "DESIGN_DEPENDENCY:DS-03",
+      "category": "DESIGN_DEPENDENCY",
+      "id": "DS-03",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "assertion-json",
+        "screenshot"
+      ],
+      "destination": "results/design-dependency/ds-03.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-DETAIL_LIFECYCLE-1024-LIGHT"
+      ]
+    },
+    {
+      "key": "OBSERVABILITY:LATENCY",
+      "category": "OBSERVABILITY",
+      "id": "LATENCY",
+      "route": null,
+      "scenario": "LATENCY",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "metric-delta",
+        "safe-log-hops",
+        "redaction-report"
+      ],
+      "destination": "results/observability/latency.json",
+      "dependsOn": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ]
+    },
+    {
+      "key": "OBSERVABILITY:TERMINAL_OUTCOME",
+      "category": "OBSERVABILITY",
+      "id": "TERMINAL_OUTCOME",
+      "route": null,
+      "scenario": "TERMINAL_OUTCOME",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "metric-delta",
+        "safe-log-hops",
+        "redaction-report"
+      ],
+      "destination": "results/observability/terminal-outcome.json",
+      "dependsOn": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ]
+    },
+    {
+      "key": "OBSERVABILITY:BASIS",
+      "category": "OBSERVABILITY",
+      "id": "BASIS",
+      "route": null,
+      "scenario": "BASIS",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "metric-delta",
+        "safe-log-hops",
+        "redaction-report"
+      ],
+      "destination": "results/observability/basis.json",
+      "dependsOn": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ]
+    },
+    {
+      "key": "OBSERVABILITY:MANUAL_FALLBACK",
+      "category": "OBSERVABILITY",
+      "id": "MANUAL_FALLBACK",
+      "route": null,
+      "scenario": "MANUAL_FALLBACK",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "metric-delta",
+        "safe-log-hops",
+        "redaction-report"
+      ],
+      "destination": "results/observability/manual-fallback.json",
+      "dependsOn": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ]
+    },
+    {
+      "key": "OBSERVABILITY:REPLAY_CONFLICT",
+      "category": "OBSERVABILITY",
+      "id": "REPLAY_CONFLICT",
+      "route": null,
+      "scenario": "REPLAY_CONFLICT",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "metric-delta",
+        "safe-log-hops",
+        "redaction-report"
+      ],
+      "destination": "results/observability/replay-conflict.json",
+      "dependsOn": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ]
+    },
+    {
+      "key": "OBSERVABILITY:REDACTION",
+      "category": "OBSERVABILITY",
+      "id": "REDACTION",
+      "route": null,
+      "scenario": "REDACTION",
+      "correlationRequired": true,
+      "artifactKinds": [
+        "metric-delta",
+        "safe-log-hops",
+        "redaction-report"
+      ],
+      "destination": "results/observability/redaction.json",
+      "dependsOn": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ]
+    },
+    {
+      "key": "QUALITY:BACKEND",
+      "category": "QUALITY",
+      "id": "BACKEND",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/backend.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "QUALITY:FRONTEND",
+      "category": "QUALITY",
+      "id": "FRONTEND",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/frontend.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "QUALITY:CONTRACT",
+      "category": "QUALITY",
+      "id": "CONTRACT",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/contract.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "QUALITY:MIGRATION",
+      "category": "QUALITY",
+      "id": "MIGRATION",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/migration.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "QUALITY:COVERAGE",
+      "category": "QUALITY",
+      "id": "COVERAGE",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/coverage.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "QUALITY:NGINX",
+      "category": "QUALITY",
+      "id": "NGINX",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/nginx.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "QUALITY:PLAYWRIGHT",
+      "category": "QUALITY",
+      "id": "PLAYWRIGHT",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/playwright.json",
+      "dependsOn": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-375-LIGHT"
+      ],
+      "legalSkippedAfter": [
+        "BROWSER_STRUCTURAL:STRUCT-LIST_FILTER-375-LIGHT"
+      ]
+    },
+    {
+      "key": "QUALITY:PERFORMANCE",
+      "category": "QUALITY",
+      "id": "PERFORMANCE",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/performance.json",
+      "dependsOn": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:AGREEMENT_PRICE"
+      ]
+    },
+    {
+      "key": "QUALITY:RESTART_RESTORE",
+      "category": "QUALITY",
+      "id": "RESTART_RESTORE",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/restart-restore.json",
+      "dependsOn": [
+        "COMMERCIAL:NO_RATE"
+      ],
+      "legalSkippedAfter": [
+        "COMMERCIAL:NO_RATE"
+      ]
+    },
+    {
+      "key": "QUALITY:GIT_DIFF",
+      "category": "QUALITY",
+      "id": "GIT_DIFF",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "command-log",
+        "assertion-json"
+      ],
+      "destination": "results/quality/git-diff.json",
+      "dependsOn": [
+        "PRESERVATION:W0-01"
+      ],
+      "legalSkippedAfter": [
+        "PRESERVATION:W0-01"
+      ]
+    },
+    {
+      "key": "AUDIT:AIDLC_DETECTOR",
+      "category": "AUDIT",
+      "id": "AIDLC_DETECTOR",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "detector-output",
+        "manual-review"
+      ],
+      "destination": "results/audit/aidlc-detector.json",
+      "dependsOn": [
+        "QUALITY:GIT_DIFF"
+      ],
+      "legalSkippedAfter": [
+        "QUALITY:GIT_DIFF"
+      ]
+    },
+    {
+      "key": "AUDIT:AIDLC_MANUAL",
+      "category": "AUDIT",
+      "id": "AIDLC_MANUAL",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "detector-output",
+        "manual-review"
+      ],
+      "destination": "results/audit/aidlc-manual.json",
+      "dependsOn": [
+        "QUALITY:GIT_DIFF"
+      ],
+      "legalSkippedAfter": [
+        "QUALITY:GIT_DIFF"
+      ]
+    },
+    {
+      "key": "AUDIT:ERP_FIDELITY_DETECTOR",
+      "category": "AUDIT",
+      "id": "ERP_FIDELITY_DETECTOR",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "detector-output",
+        "manual-review"
+      ],
+      "destination": "results/audit/erp-fidelity-detector.json",
+      "dependsOn": [
+        "QUALITY:GIT_DIFF"
+      ],
+      "legalSkippedAfter": [
+        "QUALITY:GIT_DIFF"
+      ]
+    },
+    {
+      "key": "AUDIT:ERP_FIDELITY_MANUAL",
+      "category": "AUDIT",
+      "id": "ERP_FIDELITY_MANUAL",
+      "route": null,
+      "scenario": null,
+      "correlationRequired": false,
+      "artifactKinds": [
+        "detector-output",
+        "manual-review"
+      ],
+      "destination": "results/audit/erp-fidelity-manual.json",
+      "dependsOn": [
+        "QUALITY:GIT_DIFF"
+      ],
+      "legalSkippedAfter": [
+        "QUALITY:GIT_DIFF"
+      ]
+    }
+  ]
+}

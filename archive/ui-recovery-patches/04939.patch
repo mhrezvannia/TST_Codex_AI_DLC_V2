@@ -1,0 +1,848 @@
+*** Begin Patch
+*** Add File: D:/TST_Codex_ui_recovery/apps/auth/app/AuthBoundary.tsx
++import type { ReactNode } from "react";
++
++export function AuthBoundaryLayout({ children }: { children: ReactNode }) {
++  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "LOCAL DEMO";
++
++  return (
++    <div className="auth-gateway">
++      <a className="auth-gateway__skip-link" href="#auth-boundary-main">
++        Skip to main content
++      </a>
++
++      <header className="auth-gateway__header">
++        <div>
++          <span className="auth-gateway__wordmark">LinerCore</span>
++          <span className="auth-gateway__product-context">Shipping operations platform</span>
++        </div>
++        <span className="auth-gateway__environment">{environmentLabel}</span>
++      </header>
++
++      <main className="auth-gateway__main" id="auth-boundary-main">
++        {children}
++      </main>
++
++      <footer className="auth-gateway__footer">
++        <span>Authorized users only</span>
++        <span aria-hidden="true">&middot;</span>
++        <span>Contact your platform administrator for access support.</span>
++      </footer>
++    </div>
++  );
++}
++
++export function AuthStatePanel({
++  eyebrow,
++  title,
++  summary,
++  children
++}: {
++  eyebrow: string;
++  title: string;
++  summary: string;
++  children?: ReactNode;
++}) {
++  return (
++    <section className="auth-gateway__panel" aria-labelledby="auth-boundary-title">
++      <div className="auth-gateway__copy">
++        <p className="auth-gateway__eyebrow">{eyebrow}</p>
++        <h1 id="auth-boundary-title">{title}</h1>
++        <p className="auth-gateway__summary">{summary}</p>
++      </div>
++      {children}
++    </section>
++  );
++}
++
++export function DestinationSummary({ children }: { children: ReactNode }) {
++  return <p className="auth-gateway__destination">{children}</p>;
++}
++
++export function AuthNotice({
++  title,
++  children,
++  tone = "warning"
++}: {
++  title: string;
++  children: ReactNode;
++  tone?: "warning" | "error" | "success";
++}) {
++  return (
++    <div className={`auth-gateway__notice auth-gateway__notice--${tone}`} role={tone === "error" ? "alert" : "status"}>
++      <strong>{title}</strong>
++      <span>{children}</span>
++    </div>
++  );
++}
++
++export function SupportDetails({
++  items
++}: {
++  items: Array<{ term: string; description: ReactNode }>;
++}) {
++  return (
++    <details className="auth-gateway__details">
++      <summary>Technical details</summary>
++      <dl>
++        {items.map((item) => (
++          <div key={item.term}>
++            <dt>{item.term}</dt>
++            <dd>{item.description}</dd>
++          </div>
++        ))}
++      </dl>
++    </details>
++  );
++}
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/GatewayAction.tsx
+@@
+ export function GatewayAction({
+@@
+     >
+       <span aria-live="polite">{pending ? pendingLabel : label}</span>
+-      <span aria-hidden="true" className="auth-gateway__action-arrow">
+-        &rarr;
+-      </span>
+     </a>
+   );
+ }
++
++export function GatewayPostAction({
++  action,
++  label,
++  pendingLabel,
++  dataTestId
++}: {
++  action: string;
++  label: string;
++  pendingLabel: string;
++  dataTestId?: string;
++}) {
++  const [pending, setPending] = useState(false);
++  const pendingRef = useRef(false);
++
++  return (
++    <form
++      action={action}
++      method="post"
++      onSubmit={(event) => {
++        if (pendingRef.current) {
++          event.preventDefault();
++          return;
++        }
++        pendingRef.current = true;
++        setPending(true);
++      }}
++    >
++      <button
++        aria-busy={pending}
++        className="auth-gateway__primary-action"
++        data-testid={dataTestId}
++        disabled={pending}
++        type="submit"
++      >
++        <span aria-live="polite">{pending ? pendingLabel : label}</span>
++      </button>
++    </form>
++  );
++}
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/lib/auth-gateway.ts
+@@
+ export function gatewaySignInHref(destination: string) {
+   return `/auth/api/auth/sign-in?returnUrl=${encodeURIComponent(destination)}`;
+ }
+ 
++export function gatewayEntryHref(destination: string) {
++  return `/auth/?returnUrl=${encodeURIComponent(destination)}`;
++}
++
++export function signInHandoffHref(destination: string) {
++  return `/auth/sign-in?returnUrl=${encodeURIComponent(destination)}`;
++}
++
+ export async function identityServiceAvailable(fetcher: typeof fetch = fetch): Promise<boolean> {
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/page.tsx
+@@
+ import { headers } from "next/headers";
++import {
++  AuthBoundaryLayout,
++  AuthNotice,
++  AuthStatePanel,
++  DestinationSummary,
++  SupportDetails
++} from "./AuthBoundary";
+ import { GatewayAction } from "./GatewayAction";
+ import {
++  gatewayEntryHref,
+   gatewaySignInHref,
+   identityServiceAvailable,
+   resolveGatewayDestination,
+@@
+-  return (
+-    <div className="auth-gateway">
+-      <a className="auth-gateway__skip-link" href="#auth-gateway-main">
+-        Skip to main content
+-      </a>
+-
+-      <header className="auth-gateway__header">
+-        <div>
+-          <span className="auth-gateway__wordmark">LinerCore</span>
+-          <span className="auth-gateway__product-context">Shipping operations platform</span>
+-        </div>
+-        <span className="auth-gateway__environment">{environmentLabel}</span>
+-      </header>
+-
+-      <main className="auth-gateway__main" id="auth-gateway-main">
+-        <section className="auth-gateway__panel" aria-labelledby="auth-gateway-title">
+-          <div className="auth-gateway__copy">
+-            <p className="auth-gateway__eyebrow">Secure company access</p>
+-            <h1 id="auth-gateway-title">{content.title}</h1>
+-            <p className="auth-gateway__summary">{content.summary}</p>
+-            {content.destinationCopy ? <p className="auth-gateway__destination">{content.destinationCopy}</p> : null}
+-          </div>
+-
+-          {destination.invalid ? (
+-            <div className="auth-gateway__notice" role="status">
+-              <strong>We couldn&apos;t use that destination.</strong>
+-              <span>For your security, you&apos;ll continue to the LinerCore workspace instead.</span>
+-            </div>
+-          ) : null}
+-
+-          <GatewayAction
+-            dataTestId="auth-start-link"
+-            href={actionHref}
+-            label={content.actionLabel}
+-            pendingLabel={content.pendingLabel}
+-          />
+-
+-          {showTechnicalDetails ? (
+-            <details className="auth-gateway__details">
+-              <summary>Technical details</summary>
+-              <dl>
+-                <div>
+-                  <dt>Environment</dt>
+-                  <dd>{environmentLabel}</dd>
+-                </div>
+-                <div>
+-                  <dt>Session</dt>
+-                  <dd>{sessionLabel(sessionState.kind)}</dd>
+-                </div>
+-                <div>
+-                  <dt>Identity service</dt>
+-                  <dd>{identityAvailable ? "Available" : "Unavailable"}</dd>
+-                </div>
+-                <div>
+-                  <dt>Destination</dt>
+-                  <dd>{destination.label}</dd>
+-                </div>
+-                <div>
+-                  <dt>Request ID</dt>
+-                  <dd>{requestId}</dd>
+-                </div>
+-              </dl>
+-            </details>
+-          ) : null}
+-        </section>
+-      </main>
+-
+-      <footer className="auth-gateway__footer">
+-        <span>Authorized users only</span>
+-        <span aria-hidden="true">&middot;</span>
+-        <span>Contact your platform administrator for access support.</span>
+-      </footer>
+-    </div>
+-  );
++  return (
++    <AuthBoundaryLayout>
++      <AuthStatePanel eyebrow="Secure company access" title={content.title} summary={content.summary}>
++        {content.destinationCopy ? <DestinationSummary>{content.destinationCopy}</DestinationSummary> : null}
++
++        {destination.invalid ? (
++          <AuthNotice title="We couldn't use that destination.">
++            For your security, you&apos;ll continue to the LinerCore workspace instead.
++          </AuthNotice>
++        ) : null}
++
++        <GatewayAction
++          dataTestId="auth-start-link"
++          href={actionHref}
++          label={content.actionLabel}
++          pendingLabel={content.pendingLabel}
++        />
++
++        {showTechnicalDetails ? (
++          <SupportDetails
++            items={[
++              { term: "Environment", description: environmentLabel },
++              { term: "Session", description: sessionLabel(sessionState.kind) },
++              { term: "Identity service", description: identityAvailable ? "Available" : "Unavailable" },
++              { term: "Destination", description: destination.label },
++              { term: "Request ID", description: requestId }
++            ]}
++          />
++        ) : null}
++      </AuthStatePanel>
++    </AuthBoundaryLayout>
++  );
+@@
+-function gatewayEntryHref(destination: string) {
+-  return `/auth/?returnUrl=${encodeURIComponent(destination)}`;
+-}
+-
+ function sessionLabel(kind: ReturnType<typeof resolveGatewaySession>["kind"]) {
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/sign-in/page.tsx
+@@
+-import type { CSSProperties } from "react";
+-
+-export default async function SignInPage({ searchParams }: { searchParams?: Promise<{ returnUrl?: string }> }) {
+-  const params = await searchParams;
+-  const returnUrl = params?.returnUrl ?? "/session";
+-  return (
+-    <main style={styles.page}>
+-      <section style={styles.card}>
+-        <div>
+-          <p style={styles.eyebrow}>Secure handoff</p>
+-          <h1 style={styles.title}>Sign in</h1>
+-          <p style={styles.copy}>Continue through Keycloak. The BFF will exchange the callback, redact sensitive claims, and return you to the requested workspace.</p>
+-        </div>
+-        <div style={styles.contextGrid}>
+-          <div style={styles.contextItem}>
+-            <span>Return URL</span>
+-            <code>{returnUrl}</code>
+-          </div>
+-          <div style={styles.contextItem}>
+-            <span>Client</span>
+-            <code>linercore-platform</code>
+-          </div>
+-        </div>
+-        <a data-testid="sign-in-button" href={`/api/auth/sign-in?returnUrl=${encodeURIComponent(returnUrl)}`} style={styles.primaryAction}>
+-          Continue with Keycloak
+-        </a>
+-      </section>
+-    </main>
+-  );
+-}
+-
+-const styles: Record<string, CSSProperties> = {
+-  page: {
+-    minHeight: "calc(100vh - 118px)",
+-    display: "grid",
+-    placeItems: "center",
+-    padding: 26,
+-    background: "#f4f7fb"
+-  },
+-  card: {
+-    width: "min(100%, 620px)",
+-    display: "grid",
+-    gap: 20,
+-    background: "#ffffff",
+-    border: "1px solid #e1e7ee",
+-    borderRadius: 8,
+-    padding: 28,
+-    boxShadow: "0 18px 50px rgba(16, 34, 53, 0.08)"
+-  },
+-  eyebrow: {
+-    margin: "0 0 9px",
+-    color: "#2f73c4",
+-    fontSize: 12,
+-    fontWeight: 700,
+-    letterSpacing: "0.08em",
+-    textTransform: "uppercase"
+-  },
+-  title: {
+-    margin: 0,
+-    fontSize: 30,
+-    lineHeight: 1.1
+-  },
+-  copy: {
+-    margin: "12px 0 0",
+-    color: "#607080",
+-    lineHeight: 1.55
+-  },
+-  contextGrid: {
+-    display: "grid",
+-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+-    gap: 12
+-  },
+-  contextItem: {
+-    minWidth: 0,
+-    display: "grid",
+-    gap: 6,
+-    border: "1px solid #e6ebf2",
+-    borderRadius: 8,
+-    padding: 14,
+-    color: "#758392",
+-    fontSize: 13
+-  },
+-  primaryAction: {
+-    minHeight: 42,
+-    borderRadius: 8,
+-    background: "#11427a",
+-    color: "#ffffff",
+-    display: "inline-flex",
+-    alignItems: "center",
+-    justifyContent: "center",
+-    padding: "0 16px",
+-    textDecoration: "none",
+-    fontWeight: 700
+-  }
+-};
++import {
++  AuthBoundaryLayout,
++  AuthNotice,
++  AuthStatePanel,
++  DestinationSummary,
++  SupportDetails
++} from "../AuthBoundary";
++import { GatewayAction } from "../GatewayAction";
++import {
++  gatewayEntryHref,
++  gatewaySignInHref,
++  resolveGatewayDestination,
++  signInHandoffHref
++} from "../../lib/auth-gateway";
++
++type HandoffStatus = "cancelled" | "expired" | "failed" | "unavailable";
++type SearchParams = {
++  returnUrl?: string;
++  status?: string;
++};
++
++export default async function SignInPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
++  const params = (await searchParams) ?? {};
++  const destination = resolveGatewayDestination(params.returnUrl);
++  const status = handoffStatus(params.status);
++  const content = handoffContent(status, destination.label);
++  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "LOCAL DEMO";
++  const showTechnicalDetails = environmentLabel !== "PRODUCTION";
++  const actionHref =
++    status === "unavailable" ? signInHandoffHref(destination.href) : gatewaySignInHref(destination.href);
++
++  return (
++    <AuthBoundaryLayout>
++      <AuthStatePanel eyebrow={content.eyebrow} title={content.title} summary={content.summary}>
++        <DestinationSummary>Return to {destination.label}.</DestinationSummary>
++
++        {destination.invalid ? (
++          <AuthNotice title="We couldn't use that destination.">
++            For your security, the LinerCore workspace will be used instead.
++          </AuthNotice>
++        ) : null}
++
++        {status === "unavailable" ? (
++          <AuthNotice title="Company sign-in is unavailable." tone="error">
++            Try again shortly. No protected information has been displayed.
++          </AuthNotice>
++        ) : null}
++
++        <div className="auth-gateway__actions">
++          <GatewayAction
++            dataTestId="sign-in-button"
++            href={actionHref}
++            label={content.actionLabel}
++            pendingLabel={content.pendingLabel}
++          />
++          <a className="auth-gateway__secondary-action" href={gatewayEntryHref(destination.href)}>
++            Cancel
++          </a>
++        </div>
++
++        {showTechnicalDetails ? (
++          <SupportDetails
++            items={[
++              { term: "Environment", description: environmentLabel },
++              { term: "Destination", description: destination.label },
++              { term: "Handoff", description: status ? content.technicalStatus : "Ready" }
++            ]}
++          />
++        ) : null}
++      </AuthStatePanel>
++    </AuthBoundaryLayout>
++  );
++}
++
++function handoffStatus(value: string | undefined): HandoffStatus | null {
++  if (value === "cancelled" || value === "expired" || value === "failed" || value === "unavailable") {
++    return value;
++  }
++  return null;
++}
++
++function handoffContent(status: HandoffStatus | null, destinationLabel: string) {
++  if (status === "expired") {
++    return {
++      eyebrow: "Sign-in request expired",
++      title: "Your sign-in request expired",
++      summary: `Start a new secure sign-in to continue to ${destinationLabel}.`,
++      actionLabel: "Start again",
++      pendingLabel: "Opening company sign-in...",
++      technicalStatus: "Expired"
++    };
++  }
++
++  if (status === "cancelled") {
++    return {
++      eyebrow: "Sign-in cancelled",
++      title: "Sign-in was cancelled",
++      summary: `You can continue when you're ready to return to ${destinationLabel}.`,
++      actionLabel: "Continue to sign in",
++      pendingLabel: "Opening company sign-in...",
++      technicalStatus: "Cancelled"
++    };
++  }
++
++  if (status === "failed") {
++    return {
++      eyebrow: "Sign-in interrupted",
++      title: "Sign-in did not complete",
++      summary: `Try the secure company sign-in again to continue to ${destinationLabel}.`,
++      actionLabel: "Try again",
++      pendingLabel: "Opening company sign-in...",
++      technicalStatus: "Failed"
++    };
++  }
++
++  if (status === "unavailable") {
++    return {
++      eyebrow: "Company access",
++      title: "Sign-in is temporarily unavailable",
++      summary: "LinerCore couldn't reach the company identity service.",
++      actionLabel: "Check again",
++      pendingLabel: "Checking company sign-in...",
++      technicalStatus: "Unavailable"
++    };
++  }
++
++  return {
++    eyebrow: "Secure company access",
++    title: "Continue to company sign-in",
++    summary: "You'll sign in with your company account and return to the requested LinerCore workspace.",
++    actionLabel: "Continue to sign in",
++    pendingLabel: "Opening company sign-in...",
++    technicalStatus: "Ready"
++  };
++}
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/signed-out/page.tsx
+@@
+-import type { CSSProperties } from "react";
+-
+-export default function SignedOutPage() {
+-  return (
+-    <main style={styles.page}>
+-      <section style={styles.panel}>
+-        <p style={styles.eyebrow}>Session cleared</p>
+-        <h1 style={styles.title}>Signed out</h1>
+-        <p style={styles.copy}>Your Shared Platform session has been cleared.</p>
+-        <a data-testid="signed-out-sign-in-link" href="/sign-in" style={styles.primaryAction}>
+-          Sign in again
+-        </a>
+-      </section>
+-    </main>
+-  );
+-}
+-
+-const styles: Record<string, CSSProperties> = {
+-  page: { minHeight: "calc(100vh - 118px)", padding: 26, background: "#f4f7fb", display: "grid", placeItems: "start center" },
+-  panel: { width: "min(100%, 620px)", background: "#ffffff", border: "1px solid #e1e7ee", borderRadius: 8, padding: 28 },
+-  eyebrow: { margin: "0 0 9px", color: "#1e8e5a", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" },
+-  title: { margin: 0, fontSize: 30 },
+-  copy: { margin: "12px 0 20px", color: "#607080", lineHeight: 1.55 },
+-  primaryAction: { minHeight: 40, borderRadius: 8, background: "#11427a", color: "#ffffff", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0 16px", textDecoration: "none", fontWeight: 700 }
+-};
++import {
++  AuthBoundaryLayout,
++  AuthNotice,
++  AuthStatePanel,
++  DestinationSummary,
++  SupportDetails
++} from "../AuthBoundary";
++import { GatewayAction, GatewayPostAction } from "../GatewayAction";
++import { gatewayEntryHref, resolveGatewayDestination } from "../../lib/auth-gateway";
++
++type SignOutReason = "already" | "expired" | "failed" | "idp_incomplete" | "invalid";
++type SearchParams = {
++  reason?: string;
++  returnUrl?: string;
++};
++
++export default async function SignedOutPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
++  const params = (await searchParams) ?? {};
++  const destination = resolveGatewayDestination(params.returnUrl);
++  const reason = signOutReason(params.reason);
++  const content = signedOutContent(reason, destination.label);
++  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "LOCAL DEMO";
++  const showTechnicalDetails = environmentLabel !== "PRODUCTION";
++
++  return (
++    <AuthBoundaryLayout>
++      <AuthStatePanel eyebrow={content.eyebrow} title={content.title} summary={content.summary}>
++        {reason === "expired" || reason === "invalid" ? (
++          <DestinationSummary>Sign in again to continue to {destination.label}.</DestinationSummary>
++        ) : null}
++
++        {destination.invalid ? (
++          <AuthNotice title="We couldn't use the previous destination.">
++            Sign-in will return to the LinerCore workspace instead.
++          </AuthNotice>
++        ) : null}
++
++        {reason === "idp_incomplete" ? (
++          <AuthNotice title="Company single sign-on may still be active.">
++            The LinerCore application session is cleared, but another company application may still recognize you.
++          </AuthNotice>
++        ) : null}
++
++        {reason === "failed" ? (
++          <GatewayPostAction
++            action="/auth/api/auth/sign-out"
++            dataTestId="signed-out-retry-link"
++            label="Try sign out again"
++            pendingLabel="Signing out..."
++          />
++        ) : (
++          <GatewayAction
++            dataTestId="signed-out-sign-in-link"
++            href={gatewayEntryHref(destination.href)}
++            label="Sign in again"
++            pendingLabel="Opening secure access..."
++          />
++        )}
++
++        {showTechnicalDetails ? (
++          <SupportDetails
++            items={[
++              { term: "Environment", description: environmentLabel },
++              { term: "Session outcome", description: content.technicalStatus },
++              { term: "Destination", description: destination.label }
++            ]}
++          />
++        ) : null}
++      </AuthStatePanel>
++    </AuthBoundaryLayout>
++  );
++}
++
++function signOutReason(value: string | undefined): SignOutReason | null {
++  if (
++    value === "already" ||
++    value === "expired" ||
++    value === "failed" ||
++    value === "idp_incomplete" ||
++    value === "invalid"
++  ) {
++    return value;
++  }
++  return null;
++}
++
++function signedOutContent(reason: SignOutReason | null, destinationLabel: string) {
++  if (reason === "expired") {
++    return {
++      eyebrow: "Session expired",
++      title: "Your workspace session ended",
++      summary: `Your session expired before LinerCore could open ${destinationLabel}.`,
++      technicalStatus: "Expired"
++    };
++  }
++
++  if (reason === "invalid") {
++    return {
++      eyebrow: "Session ended",
++      title: "Your workspace session ended",
++      summary: "LinerCore couldn't verify the previous session, so protected workspace data was cleared.",
++      technicalStatus: "Invalid"
++    };
++  }
++
++  if (reason === "failed") {
++    return {
++      eyebrow: "Sign-out interrupted",
++      title: "Sign-out did not complete",
++      summary: "LinerCore couldn't confirm that the application session was cleared.",
++      technicalStatus: "Failed"
++    };
++  }
++
++  if (reason === "idp_incomplete") {
++    return {
++      eyebrow: "Application session cleared",
++      title: "You are signed out of LinerCore",
++      summary: "Your LinerCore application session was cleared.",
++      technicalStatus: "Identity-provider sign-out incomplete"
++    };
++  }
++
++  if (reason === "already") {
++    return {
++      eyebrow: "No active session",
++      title: "You are already signed out",
++      summary: "There is no active LinerCore application session in this browser.",
++      technicalStatus: "Already signed out"
++    };
++  }
++
++  return {
++    eyebrow: "Session cleared",
++    title: "You are signed out",
++    summary: "Your LinerCore application session was cleared.",
++    technicalStatus: "Signed out"
++  };
++}
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/callback/route.ts
+@@
+   const url = new URL(request.url);
+   const state = url.searchParams.get("state");
+   const code = url.searchParams.get("code");
++  const providerError = url.searchParams.get("error");
+   const rawTx = readCookie(request.headers.get("cookie"), OIDC_TRANSACTION_COOKIE_NAME);
+   const tx = decodeCookie<OidcTransaction>(rawTx);
+ 
++  if (providerError === "access_denied") {
++    const response = redirectResponse(publicUrl(request, "/auth/sign-in?status=cancelled"));
++    response.headers.append("Set-Cookie", clearCookieHeader(OIDC_TRANSACTION_COOKIE_NAME));
++    return response;
++  }
++
+   if (!tx || !state || state !== tx.state || !code) {
+-    const response = redirectResponse(publicUrl(request, "/auth/access-denied?reasonCode=AUTH_CALLBACK_INVALID"));
++    const response = redirectResponse(publicUrl(request, "/auth/sign-in?status=expired"));
+@@
+-    const response = redirectResponse(publicUrl(request, "/auth/access-denied?reasonCode=AUTH_CALLBACK_TOKEN_INVALID"));
++    const response = redirectResponse(publicUrl(request, "/auth/sign-in?status=failed"));
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/sign-out/route.ts
+@@
+-  logoutUrl.searchParams.set("post_logout_redirect_uri", publicUrl(request, "/signed-out").toString());
++  logoutUrl.searchParams.set("post_logout_redirect_uri", publicUrl(request, "/auth/signed-out").toString());
+*** Update File: D:/TST_Codex_ui_recovery/apps/shell/app/signed-out/page.tsx
+@@
+-export default function ShellSignedOutPage() {
+-  return (
+-    <main className="shell-signed-out" data-testid="shell-signed-out-page">
+-      <section className="shell-state">
+-        <p className="shell-eyebrow">Session cleared</p>
+-        <h1>Signed out</h1>
+-        <p className="shell-muted">Your LinerCore session has ended. Protected workspace routes require sign-in again.</p>
+-        <a className="shell-button shell-button-primary" href="/auth/sign-in" data-testid="shell-signed-out-sign-in">
+-          Sign in again
+-        </a>
+-      </section>
+-    </main>
+-  );
++import { redirect } from "next/navigation";
++
++const SIGN_OUT_REASONS = new Set(["already", "expired", "failed", "idp_incomplete", "invalid"]);
++
++export default async function ShellSignedOutPage({
++  searchParams
++}: {
++  searchParams?: Promise<{ reason?: string; returnUrl?: string }>;
++}) {
++  const params = (await searchParams) ?? {};
++  const canonicalParams = new URLSearchParams();
++
++  if (params.reason && SIGN_OUT_REASONS.has(params.reason)) {
++    canonicalParams.set("reason", params.reason);
++  }
++  if (params.returnUrl) {
++    canonicalParams.set("returnUrl", params.returnUrl);
++  }
++
++  const query = canonicalParams.toString();
++  redirect(query ? `/auth/signed-out?${query}` : "/auth/signed-out");
+ }
+*** Update File: D:/TST_Codex_ui_recovery/infrastructure/keycloak/linercore-local-realm.json
+@@
+-        "post.logout.redirect.uris": "http://127.0.0.1:8088/signed-out"
++        "post.logout.redirect.uris": "http://127.0.0.1:8088/auth/signed-out"
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/auth-gateway.css
+@@
+ .auth-gateway__notice {
+@@
+ }
+ 
++.auth-gateway__notice--error {
++  border-color: #e2a6a0;
++  background: var(--erp-color-danger-bg);
++  color: var(--erp-color-danger);
++}
++
++.auth-gateway__notice--success {
++  border-color: #9fcdb8;
++  background: var(--erp-color-success-bg);
++  color: var(--erp-color-success);
++}
++
++.auth-gateway__actions {
++  display: grid;
++  gap: var(--erp-space-2);
++}
++
++.auth-gateway form {
++  display: grid;
++  margin: 0;
++}
++
+ .auth-gateway__primary-action {
+@@
+   background: var(--erp-color-primary);
+   color: var(--erp-color-on-primary);
++  cursor: pointer;
++  font: inherit;
+   font-weight: 700;
+@@
+ }
+ 
++.auth-gateway__primary-action:focus-visible,
++.auth-gateway__secondary-action:focus-visible,
++.auth-gateway__details summary:focus-visible,
++.auth-gateway__skip-link:focus-visible {
++  outline: none;
++  box-shadow: var(--erp-focus-ring);
++}
++
+ .auth-gateway__primary-action:hover {
+@@
+ .auth-gateway__primary-action[aria-disabled="true"] {
+@@
+ }
+ 
+-.auth-gateway__action-arrow {
+-  font-size: 18px;
+-  line-height: 1;
++.auth-gateway__primary-action:disabled {
++  cursor: wait;
++  opacity: 0.78;
++}
++
++.auth-gateway__secondary-action {
++  display: inline-flex;
++  width: 100%;
++  min-height: 44px;
++  align-items: center;
++  justify-content: center;
++  padding: 0 var(--erp-space-4);
++  border: 1px solid transparent;
++  border-radius: var(--erp-radius-sm);
++  color: var(--erp-color-primary);
++  cursor: pointer;
++  font-weight: 700;
++  text-align: center;
++  text-decoration: none;
++  transition: background-color 160ms ease, border-color 160ms ease;
++}
++
++.auth-gateway__secondary-action:hover {
++  border-color: var(--erp-color-border);
++  background: var(--erp-color-surface-2);
++  color: var(--erp-color-primary-hover);
+ }
+@@
+ @media (prefers-reduced-motion: reduce) {
+-  .auth-gateway__primary-action {
++  .auth-gateway__primary-action,
++  .auth-gateway__secondary-action {
+     transition: none;
+   }
+ }
+*** End Patch

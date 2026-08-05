@@ -1,0 +1,75 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\lib\auth-gateway.ts
+@@
+ const DESTINATIONS = [
+   { prefix: "/bookings", label: "Bookings" },
+@@
+   { prefix: "/container-movement", label: "Equipment Journeys" }
+ ] as const;
+ 
++export function canonicalAuthReturnUrl(value: string | null | undefined): string {
++  const safeValue = safeReturnUrl(value, "/");
++  if (safeValue === "/booking"
++      || safeValue.startsWith("/booking?")
++      || safeValue.startsWith("/booking#")
++      || safeValue.startsWith("/booking/")) {
++    return `/bookings${safeValue.slice("/booking".length)}`;
++  }
++  return safeValue;
++}
++
+ export function resolveGatewayDestination(value: string | null | undefined): GatewayDestination {
+   if (!value?.trim()) {
+     return { href: "/", label: "LinerCore workspace", invalid: false };
+   }
+ 
+-  const safeValue = safeReturnUrl(value, "/");
++  const safeValue = canonicalAuthReturnUrl(value);
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\lib\auth-server.ts
+@@
+ import { createHash, randomBytes } from "node:crypto";
+ import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
++import { canonicalAuthReturnUrl } from "./auth-gateway";
+@@
+ export function createOidcTransaction(returnUrl: string): OidcTransaction {
+   return {
+@@
+-    returnUrl: safeReturnUrl(returnUrl),
++    returnUrl: canonicalAuthReturnUrl(returnUrl),
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\lib\auth-gateway.test.ts
+@@
+-import {
++import {
++  canonicalAuthReturnUrl,
+   gatewayEntryHref,
+@@
+ } from "./auth-gateway";
+@@
+ describe("resolveGatewayDestination", () => {
++  it("normalizes legacy singular Booking destinations", () => {
++    expect(canonicalAuthReturnUrl("/booking")).toBe("/bookings");
++    expect(canonicalAuthReturnUrl("/booking/booking-1?tab=pricing"))
++      .toBe("/bookings/booking-1?tab=pricing");
++    expect(canonicalAuthReturnUrl("/booking-assets/_next/app.js"))
++      .toBe("/booking-assets/_next/app.js");
++  });
++
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\lib\auth-server.test.ts
+@@
+ test("creates a standards-compliant PKCE transaction", () => {
+   const transaction = createOidcTransaction("/booking");
+ 
+   expect(transaction.pkceVerifier.length).toBeGreaterThanOrEqual(43);
+   expect(createPkceChallenge(transaction.pkceVerifier)).toMatch(/^[A-Za-z0-9_-]{43}$/);
+-  expect(transaction.returnUrl).toBe("/booking");
++  expect(transaction.returnUrl).toBe("/bookings");
+ });
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\app\ShellFrame.tsx
+@@
+-            href="/booking"
++            href="/bookings"
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\app\page.tsx
+@@
+-          <p><a href="/booking" data-testid="shell-open-booking">Open Booking</a></p>
++          <p><a href="/bookings" data-testid="shell-open-booking">Open Booking</a></p>
+*** End Patch

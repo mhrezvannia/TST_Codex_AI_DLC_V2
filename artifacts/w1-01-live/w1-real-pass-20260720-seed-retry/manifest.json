@@ -1,0 +1,217 @@
+{
+  "runId": "w1-real-pass-20260720-seed-retry",
+  "startedAt": "2026-07-19T21:57:33.483Z",
+  "completedAt": "2026-07-19T22:13:56.765Z",
+  "status": "FAILED",
+  "branch": "unknown",
+  "commit": "unknown",
+  "dirtySummary": "not captured",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "nginxHostPort": "8088",
+    "realMessagingRequired": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "gates": [
+    {
+      "id": "preflight",
+      "section": "preflight",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --preflight",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T21:57:33.671Z",
+      "completedAt": "2026-07-19T21:57:33.671Z",
+      "artifactPath": "preflight/preflight.txt",
+      "summary": "{\n  \"status\": \"PASS\",\n  \"failures\": []\n}"
+    },
+    {
+      "id": "compose-config",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "docker compose config --quiet",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T21:57:33.944Z",
+      "completedAt": "2026-07-19T21:57:33.944Z",
+      "artifactPath": "compose/compose-config.txt",
+      "summary": ""
+    },
+    {
+      "id": "compose-start",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "docker compose --profile full up -d --build",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T22:06:56.637Z",
+      "completedAt": "2026-07-19T22:06:56.640Z",
+      "artifactPath": "compose/compose-start.txt",
+      "summary": "#1 [internal] load local bake definitions\n#1 reading from stdin 6.29kB done\n#1 DONE 0.0s\n\n#2 [charge-agreement-service internal] load build definition from spring-service.Dockerfile\n#2 transferring dockerfile: 388B 0.0s done\n#2 DONE 0.1s\n\n#3 [apps-charge-agreements internal] load build definition from next-app.Dockerfile\n#3 transferring dockerfile: 1.77kB 0.0s done\n#3 DONE 0.1s\n\n#4 [apps-booking internal] load metadata for docker.io/library/node:24-alpine\n#4 DONE 0.3s\n\n#5 [container-movement-service internal] load metadata for docker.io/library/eclipse-temurin:21-jre\n#5 DONE 0.3s\n\n#6 [apps-reference-data internal] load build context\n#6 DONE 0.0s\n\n#7 [container-movement-service 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec\n#7 resolve docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec 0.1s done\n#7 DONE 0.1s\n\n#8 [apps-reference-data deps  1/17] FROM docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#8 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#8 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.1s done\n#8 DONE 0.1s\n\n#9 [charge-agreement-service internal] load build context\n#9 transferring context: 334B 0.0s done\n#9 DONE 0.1s\n\n#10 [charge-agreement-service 3/3] COPY services/charge-agreement-service/container/target/charge-agreement-container-0.1.0-SNAPSHOT.jar /app/app.jar\n#10 CACHED\n\n#11 [identity-service internal] load build context\n#11 transferring context: 294B done\n#11 DONE 0.1s\n\n#12 [reference-data-service internal] load build context\n#12 transferring context: 324B 0.0s done\n#12 DONE 0.1s\n\n#13 [identity-service 2/3] WORKDIR /app\n#13 CACHED\n\n#14 [identity-service 3/3] COPY services/identity-service/container/target/identity-container-0.1.0-\n\n... output truncated ...\n\nce-data-1 Created \n Container linercore-shared-platform-container-movement-service-1 Created \n Container linercore-shared-platform-charge-agreement-service-1 Created \n Container linercore-shared-platform-apps-charge-agreements-1 Creating \n Container linercore-shared-platform-booking-service-1 Creating \n Container linercore-shared-platform-apps-charge-agreements-1 Created \n Container linercore-shared-platform-booking-service-1 Created \n Container linercore-shared-platform-apps-booking-1 Creating \n Container linercore-shared-platform-apps-booking-1 Created \n Container linercore-shared-platform-apps-shell-1 Creating \n Container linercore-shared-platform-apps-shell-1 Created \n Container linercore-shared-platform-nginx-1 Creating \n Container linercore-shared-platform-nginx-1 Created \n Container linercore-shared-platform-seed-loader-1 Creating \n Container linercore-shared-platform-seed-loader-1 Created \n Container linercore-shared-platform-prometheus-1 Starting \n Container linercore-shared-platform-kafka-1 Starting \n Container linercore-shared-platform-contract-devtools-1 Starting \n Container linercore-shared-platform-postgres-1 Starting \n Container linercore-shared-platform-keycloak-1 Starting \n Container linercore-shared-platform-elasticsearch-1 Starting \n Container linercore-shared-platform-jaeger-1 Starting \n Container linercore-shared-platform-contract-devtools-1 Started \n Container linercore-shared-platform-prometheus-1 Started \n Container linercore-shared-platform-keycloak-1 Started \n Container linercore-shared-platform-elasticsearch-1 Started \n Container linercore-shared-platform-kibana-1 Starting \n Container linercore-shared-platform-jaeger-1 Started \n Container linercore-shared-platform-grafana-1 Starting \n Container linercore-shared-platform-otel-collector-1 Starting \n Container linercore-shared-platform-kafka-1 Started \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-postgres-1 Started \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-kibana-1 Started \n Container linercore-shared-platform-grafana-1 Started \n Container linercore-shared-platform-otel-collector-1 Started \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-identity-service-1 Starting \n Container linercore-shared-platform-identity-service-1 Started \n Container linercore-shared-platform-apps-auth-1 Starting \n Container linercore-shared-platform-apps-auth-1 Started \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Starting \n Container linercore-shared-platform-schema-registry-1 Started \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-reference-data-service-1 Starting \n Container linercore-shared-platform-reference-data-service-1 Started \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-apps-reference-data-1 Starting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-charge-agreement-service-1 Starting \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-container-movement-service-1 Starting \n Container linercore-shared-platform-apps-reference-data-1 Started \n Container linercore-shared-platform-container-movement-service-1 Started \n Container linercore-shared-platform-charge-agreement-service-1 Started \n Container linercore-shared-platform-apps-charge-agreements-1 Starting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-booking-service-1 Starting \n Container linercore-shared-platform-apps-charge-agreements-1 Started \n Container linercore-shared-platform-booking-service-1 Started \n Container linercore-shared-platform-booking-service-1 Waiting \n Container linercore-shared-platform-booking-service-1 Healthy \n Container linercore-shared-platform-apps-booking-1 Starting \n Container linercore-shared-platform-apps-booking-1 Started \n Container linercore-shared-platform-apps-shell-1 Starting \n Container linercore-shared-platform-apps-shell-1 Started \n Container linercore-shared-platform-nginx-1 Starting \n Container linercore-shared-platform-nginx-1 Started \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-keycloak-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-keycloak-1 Healthy \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-seed-loader-1 Starting \n Container linercore-shared-platform-seed-loader-1 Started"
+    },
+    {
+      "id": "contracts",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-004"
+      ],
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T22:06:56.995Z",
+      "completedAt": "2026-07-19T22:06:56.995Z",
+      "artifactPath": "quality/contracts.txt",
+      "summary": "{\n  \"status\": \"ok\",\n  \"catalogVersion\": \"0.2.0\",\n  \"contracts\": 13,\n  \"healthSnapshot\": {\n    \"snapshotId\": \"contract-health-2026-07-19T22:06:56.951Z\",\n    \"generatedAt\": \"2026-07-19T22:06:56.963Z\",\n    \"overallStatus\": \"green\",\n    \"staleThreshold\": \"P7D\",\n    \"seamStatuses\": [\n      {\n        \"contractId\": \"api-reference-data-service\",\n        \"seamId\": \"reference-data-http\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"reference-data-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/reference-data-service.yaml\",\n        \"linkedStories\": [\n          \"US-SP-004\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-004\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"api-identity-service\",\n        \"seamId\": \"identity-http\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"identity-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/identity-service.yaml\",\n        \"linkedStories\": [\n          \"US-SP-006\",\n          \"US-RUN-004\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"api-charge-agreement-service\",\n        \"seamId\": \"booking-charge-pricing-http\",\n        \"owner\": \"charge-agreement-pricing-domain\",\n        \"provider\": \"charge-agreement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/pricing.v1.yaml\",\n        \"linkedStories\": [\n          \"US-W1-003\",\n          \"US-W1-007\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-\n\n... output truncated ...\n\n\"US-SP-004\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-005\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"asyncapi-reference-data-events\",\n        \"seamId\": \"reference-data-events\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"reference-data-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/asyncapi/reference-data-events.yaml\",\n        \"linkedStories\": [\n          \"US-SP-004\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-005\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"asyncapi-booking-confirmed\",\n        \"seamId\": \"booking-confirmed-event\",\n        \"owner\": \"booking-confirmed-journey-integration\",\n        \"provider\": \"booking-service\",\n        \"consumer\": \"container-movement-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/asyncapi/booking-events.yaml\",\n        \"linkedStories\": [\n          \"US-BKG-005\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-BKG-006\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"asyncapi-container-movement-status\",\n        \"seamId\": \"container-movement-status-event\",\n        \"owner\": \"movement-status-booking-integration\",\n        \"provider\": \"container-movement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/asyncapi/container-movement-events.yaml\",\n        \"linkedStories\": [\n          \"US-CMM-006\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CMM-007\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"event-booking-confirmed\",\n        \"seamId\": \"booking-confirmed-event\",\n        \"owner\": \"booking-confirmed-journey-integration\",\n        \"provider\": \"booking-service\",\n        \"consumer\": \"container-movement-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/avro/booking.confirmed.avsc\",\n        \"linkedStories\": [\n          \"US-BKG-005\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-BKG-006\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"event-container-movement-status\",\n        \"seamId\": \"container-movement-status-event\",\n        \"owner\": \"movement-status-booking-integration\",\n        \"provider\": \"container-movement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/avro/containermovement.status.avsc\",\n        \"linkedStories\": [\n          \"US-CMM-006\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CMM-007\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"pact-booking-charge-pricing\",\n        \"seamId\": \"booking-charge-pricing-http\",\n        \"owner\": \"booking-charge-pricing-integration\",\n        \"provider\": \"charge-agreement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/booking-charge-pricing-fixtures.json\",\n        \"linkedStories\": [\n          \"US-W1-003\",\n          \"US-W1-007\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-W1-003\",\n          \"FR-W1-004\",\n          \"FR-W1-013\",\n          \"NFR-W1-001\"\n        ]\n      },\n      {\n        \"contractId\": \"pact-booking-charge-dnd\",\n        \"seamId\": \"booking-charge-dnd-http\",\n        \"owner\": \"dnd-pricing-integration\",\n        \"provider\": \"charge-agreement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/booking-charge-dnd-fixtures.json\",\n        \"linkedStories\": [\n          \"US-BKG-005\",\n          \"US-RUN-004\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CHG-008\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"message-pact-booking-confirmed\",\n        \"seamId\": \"booking-confirmed-event\",\n        \"owner\": \"booking-confirmed-journey-integration\",\n        \"provider\": \"booking-service\",\n        \"consumer\": \"container-movement-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/booking-confirmed-message-fixtures.json\",\n        \"linkedStories\": [\n          \"US-BKG-005\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-BKG-006\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"message-pact-container-movement-status\",\n        \"seamId\": \"container-movement-status-event\",\n        \"owner\": \"movement-status-booking-integration\",\n        \"provider\": \"container-movement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/container-movement-status-message-fixtures.json\",\n        \"linkedStories\": [\n          \"US-CMM-006\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CMM-007\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      }\n    ],\n    \"blockingFailures\": []\n  }\n}"
+    },
+    {
+      "id": "seed-dry-run",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T22:06:57.254Z",
+      "completedAt": "2026-07-19T22:06:57.254Z",
+      "artifactPath": "seed/seed-dry-run.txt",
+      "summary": "{\n  \"status\": \"dry-run\",\n  \"seedPackId\": \"shared-platform-mvp-defaults\",\n  \"seedVersion\": \"2026.07.02\",\n  \"correlationId\": \"0333eb09-5a2d-46a6-8b9e-6a4a5ef7dae9\",\n  \"created\": 19,\n  \"updated\": 0,\n  \"skipped\": 0,\n  \"failed\": 0,\n  \"failures\": [],\n  \"records\": [\n    {\n      \"key\": \"PARTY_CUSTOMER:LOCAL-CARRIER\",\n      \"id\": \"party-customer-local-carrier\",\n      \"fingerprint\": \"0c090b235d13a85359e111295629a7b485eab56013aee60ae6cdae76fa2efa00\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:US\",\n      \"id\": \"location-country-us\",\n      \"fingerprint\": \"e91742c3e9ee3c286ce51b1b353e84c54597f79aa7e8a4a95a93bd41b8011dc6\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NL\",\n      \"id\": \"location-country-nl\",\n      \"fingerprint\": \"acbf4d560bb8a8d0b8279e74964d9937367a6cd854134efbb312843f1e592ca9\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:USNYC\",\n      \"id\": \"location-usnyc\",\n      \"fingerprint\": \"2aeb12041a5537a3344c520609dac4bf6e94f99e1535301068dcfa3ddd6efb45\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NLRTM\",\n      \"id\": \"location-nlrot\",\n      \"fingerprint\": \"a71f5c61b9bfa5d541afedf49f02326fef09567c6380593f74c574cd1afa4536\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:NA\",\n      \"id\": \"region-na\",\n      \"fingerprint\": \"db764b62f93ab56be4d969b7cbe1b4a638db8bd8d84020d8efe03768cebc6ae9\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:EU\",\n      \"id\": \"region-eu\",\n      \"fingerprint\": \"09134daeb6c5a1c1fd9d0d646513a8d9b9aed9af1eaa5fbdddbf18db554d2b33\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:9387425\",\n      \"id\": \"vessel-linercore-atlas\",\n      \"fingerprint\": \"a3dfe68e1fcf4aceed7f93fc47cf590b36ff370297b15d05fa28417fc9a0dc65\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:LC001E\",\n      \"id\": \"voyage-local-001\",\n      \"fingerprint\": \"b6b998d002c3acac751e5b04b7a6be23648b70720c44a2a85eee5415f006e081\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:LC002E\",\n      \"id\": \"voyage-local-002\",\n      \"fingerprint\": \"bf61768de0fdc75920c615ce1501aa1fffcbb11c316d282e06686884cff068f1\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CURRENCY:USD\",\n      \"id\": \"currency-usd\",\n      \"fingerprint\": \"897125a73ff638caed78da72fd452467aaa72a7f87ddcbc191767ecae3d6dc64\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:OFR\",\n      \"id\": \"charge-code-ofr\",\n      \"fingerprint\": \"813ceaf8b616c41384901bc7e851809a36d8b9e4a57e6b70c58dbadb16c4f8db\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:BAF\",\n      \"id\": \"charge-code-baf\",\n      \"fingerprint\": \"1840f71117057b9e8ba40e72b845e45c648a0ccbbe2c04e1137ed3cb1cc62842\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:THC\",\n      \"id\": \"charge-code-thc\",\n      \"fingerprint\": \"6795639a2ace5a7234ff3fa0c42b349167eabaf404653affc3b492ac68091c59\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:22G1\",\n      \"id\": \"equipment-type-22g1\",\n      \"fingerprint\": \"5b1be64fd02612c49c102390ed61e85dd9b4eba133a923bd0e769988dcf311ae\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:42G1\",\n      \"id\": \"equipment-type-42g1\",\n      \"fingerprint\": \"f2c3f2d852096727a66ce737340ae24b0aac468f634ab35ad8eb53505f894015\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:45G1\",\n      \"id\": \"equipment-type-45g1\",\n      \"fingerprint\": \"fec3361b02165b4beb24638844a6542fd9dad627b1f279b03e91d1e321ebaf0d\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"COMMODITY:GEN\",\n      \"id\": \"commodity-general-cargo\",\n      \"fingerprint\": \"f457e7e0486cb5eb346ec0b2353d2c2be6f5cb79a83728db2e0d181b66d8126a\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"TRADE_LANE:NA-EU\",\n      \"id\": \"trade-lane-na-eu\",\n      \"fingerprint\": \"d760160e1eb6221ed0b0e18b3bc14aedd5e088dff787050a2bbc8c5947bcb0f0\",\n      \"status\": \"created\"\n    }\n  ]\n}"
+    },
+    {
+      "id": "seed-live",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-seed-retry/seed/seed-apply.json",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T22:06:58.477Z",
+      "completedAt": "2026-07-19T22:06:58.477Z",
+      "artifactPath": "seed/seed-live.txt",
+      "summary": "{\n  \"status\": \"applied\",\n  \"seedPackId\": \"shared-platform-mvp-defaults\",\n  \"seedVersion\": \"2026.07.02\",\n  \"correlationId\": \"c7ec06d5-d0ef-4fd2-a8e0-d44b1dc1333c\",\n  \"created\": 0,\n  \"updated\": 0,\n  \"skipped\": 19,\n  \"failed\": 0,\n  \"failures\": [],\n  \"records\": [\n    {\n      \"key\": \"PARTY_CUSTOMER:LOCAL-CARRIER\",\n      \"id\": \"party-customer-local-carrier\",\n      \"fingerprint\": \"0c090b235d13a85359e111295629a7b485eab56013aee60ae6cdae76fa2efa00\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"LOCATION:US\",\n      \"id\": \"location-country-us\",\n      \"fingerprint\": \"e91742c3e9ee3c286ce51b1b353e84c54597f79aa7e8a4a95a93bd41b8011dc6\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"LOCATION:NL\",\n      \"id\": \"location-country-nl\",\n      \"fingerprint\": \"acbf4d560bb8a8d0b8279e74964d9937367a6cd854134efbb312843f1e592ca9\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"LOCATION:USNYC\",\n      \"id\": \"location-usnyc\",\n      \"fingerprint\": \"2aeb12041a5537a3344c520609dac4bf6e94f99e1535301068dcfa3ddd6efb45\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"LOCATION:NLRTM\",\n      \"id\": \"location-nlrot\",\n      \"fingerprint\": \"a71f5c61b9bfa5d541afedf49f02326fef09567c6380593f74c574cd1afa4536\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"REGION:NA\",\n      \"id\": \"region-na\",\n      \"fingerprint\": \"db764b62f93ab56be4d969b7cbe1b4a638db8bd8d84020d8efe03768cebc6ae9\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"REGION:EU\",\n      \"id\": \"region-eu\",\n      \"fingerprint\": \"09134daeb6c5a1c1fd9d0d646513a8d9b9aed9af1eaa5fbdddbf18db554d2b33\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:9387425\",\n      \"id\": \"vessel-linercore-atlas\",\n      \"fingerprint\": \"a3dfe68e1fcf4aceed7f93fc47cf590b36ff370297b15d05fa28417fc9a0dc65\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:LC001E\",\n      \"id\": \"voyage-local-001\",\n      \"fingerprint\": \"b6b998d002c3acac751e5b04b7a6be23648b70720c44a2a85eee5415f006e081\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:LC002E\",\n      \"id\": \"voyage-local-002\",\n      \"fingerprint\": \"bf61768de0fdc75920c615ce1501aa1fffcbb11c316d282e06686884cff068f1\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"CURRENCY:USD\",\n      \"id\": \"currency-usd\",\n      \"fingerprint\": \"897125a73ff638caed78da72fd452467aaa72a7f87ddcbc191767ecae3d6dc64\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:OFR\",\n      \"id\": \"charge-code-ofr\",\n      \"fingerprint\": \"813ceaf8b616c41384901bc7e851809a36d8b9e4a57e6b70c58dbadb16c4f8db\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:BAF\",\n      \"id\": \"charge-code-baf\",\n      \"fingerprint\": \"1840f71117057b9e8ba40e72b845e45c648a0ccbbe2c04e1137ed3cb1cc62842\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"CHARGE_CODE:THC\",\n      \"id\": \"charge-code-thc\",\n      \"fingerprint\": \"6795639a2ace5a7234ff3fa0c42b349167eabaf404653affc3b492ac68091c59\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:22G1\",\n      \"id\": \"equipment-type-22g1\",\n      \"fingerprint\": \"5b1be64fd02612c49c102390ed61e85dd9b4eba133a923bd0e769988dcf311ae\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:42G1\",\n      \"id\": \"equipment-type-42g1\",\n      \"fingerprint\": \"f2c3f2d852096727a66ce737340ae24b0aac468f634ab35ad8eb53505f894015\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"EQUIPMENT_TYPE:45G1\",\n      \"id\": \"equipment-type-45g1\",\n      \"fingerprint\": \"fec3361b02165b4beb24638844a6542fd9dad627b1f279b03e91d1e321ebaf0d\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"COMMODITY:GEN\",\n      \"id\": \"commodity-general-cargo\",\n      \"fingerprint\": \"f457e7e0486cb5eb346ec0b2353d2c2be6f5cb79a83728db2e0d181b66d8126a\",\n      \"status\": \"skipped\"\n    },\n    {\n      \"key\": \"TRADE_LANE:NA-EU\",\n      \"id\": \"trade-lane-na-eu\",\n      \"fingerprint\": \"d760160e1eb6221ed0b0e18b3bc14aedd5e088dff787050a2bbc8c5947bcb0f0\",\n      \"status\": \"skipped\"\n    }\n  ],\n  \"identityAssignments\": [\n    {\n      \"targetSubjectId\": \"local.reference.admin\",\n      \"roleCode\": \"reference-admin\",\n      \"status\": \"already-applied\"\n    },\n    {\n      \"targetSubjectId\": \"local.reference.admin\",\n      \"roleCode\": \"platform-operator\",\n      \"status\": \"already-applied\"\n    },\n    {\n      \"targetSubjectId\": \"local.carrier.user\",\n      \"roleCode\": \"customer-service\",\n      \"status\": \"already-applied\"\n    },\n    {\n      \"targetSubjectId\": \"local.booking.user\",\n      \"roleCode\": \"booking-desk\",\n      \"status\": \"already-applied\"\n    }\n  ]\n}"
+    },
+    {
+      "id": "booking-ui-health",
+      "section": "journey",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T22:08:01.996Z",
+      "completedAt": "2026-07-19T22:08:01.996Z",
+      "artifactPath": "journey/booking-ui-health.txt",
+      "summary": "<!DOCTYPE html>\n<html class=\"login-pf\">\n\n<head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n    <meta name=\"robots\" content=\"noindex, nofollow\">\n\n            <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/>\n    <title>Sign in to linercore-local</title>\n    <link rel=\"icon\" href=\"/resources/mbhwf/login/keycloak/img/favicon.ico\" />\n            <link href=\"/resources/mbhwf/common/keycloak/node_modules/@patternfly/patternfly/patternfly.min.css\" rel=\"stylesheet\" />\n            <link href=\"/resources/mbhwf/common/keycloak/node_modules/patternfly/dist/css/patternfly.min.css\" rel=\"stylesheet\" />\n            <link href=\"/resources/mbhwf/common/keycloak/node_modules/patternfly/dist/css/patternfly-additions.min.css\" rel=\"stylesheet\" />\n            <link href=\"/resources/mbhwf/common/keycloak/lib/pficon/pficon.css\" rel=\"stylesheet\" />\n            <link href=\"/resources/mbhwf/login/keycloak/css/login.css\" rel=\"stylesheet\" />\n    <script src=\"/resources/mbhwf/login/keycloak/js/menu-button-links.js\" type=\"module\"></script>\n        <script type=\"module\">\n            import { checkCookiesAndSetTimer } from \"/resources/mbhwf/login/keycloak/js/authChecker.js\";\n\n            checkCookiesAndSetTimer(\n              \"f63271c2-83a0-431b-b3d9-3dcf4f0e001b\",\n              \"YbYXrLv_zYc\",\n              \"/realms/linercore-local/login-actions/restart?client_id=linercore-auth&tab_id=YbYXrLv_zYc&skip_logout=true\"\n            );\n        </script>\n</head>\n\n<body class=\"\">\n<div class=\"login-pf-page\">\n    <div id=\"kc-header\" class=\"login-pf-page-header\">\n        <div id=\"kc-header-wrapper\"\n             class=\"\">linercore-local</div>\n    </div>\n    <div class=\"card-pf\">\n        <header class=\"login-pf-header\">\n                <h1 id=\"kc-page-title\">        Sign in to your account\n\n</h1>\n      </header>\n      <div id=\"kc-content\">\n        <div id=\"kc-content-wrapper\">\n\n\n        <div id=\"kc-form\">\n          <div id=\"kc-form-wrapp"
+    },
+    {
+      "id": "replay-restart",
+      "section": "replay-restart",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-seed-retry/replay-restart/evidence.json",
+      "status": "FAIL",
+      "exitCode": 1,
+      "startedAt": "2026-07-19T22:13:56.761Z",
+      "completedAt": "2026-07-19T22:13:56.761Z",
+      "artifactPath": "replay-restart/replay-restart.txt",
+      "summary": "{\n  \"status\": \"failed\",\n  \"summary\": {\n    \"passed\": 3,\n    \"planned\": 0,\n    \"blocked\": 1,\n    \"failed\": 4\n  }\n}"
+    },
+    {
+      "id": "quality-gates",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-006"
+      ],
+      "command": "node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-seed-retry/quality/evidence.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T22:13:56.764Z",
+      "completedAt": "2026-07-19T22:13:56.764Z",
+      "artifactPath": "quality/quality-gates.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "aidlc-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/aidlc-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T22:13:56.764Z",
+      "completedAt": "2026-07-19T22:13:56.765Z",
+      "artifactPath": "audits/aidlc-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "erp-fidelity-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T22:13:56.765Z",
+      "completedAt": "2026-07-19T22:13:56.765Z",
+      "artifactPath": "audits/erp-fidelity-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "preflight/preflight.txt",
+      "sha256": "82f97e65551a22c31cf9e24b3972909614ed654bb0c7b9c729b800f9efcd192d",
+      "bytes": 135
+    },
+    {
+      "path": "compose/compose-config.txt",
+      "sha256": "fb4d606947f2266b286ef1196727a880eb1121710e94840a77e6dc0419d69d5c",
+      "bytes": 82
+    },
+    {
+      "path": "compose/compose-start.txt",
+      "sha256": "5b430e9b7ebc5de411b3d5388292d65a1ee8a20ceadbc48afa881ebf4a2e94f6",
+      "bytes": 8123
+    },
+    {
+      "path": "quality/contracts.txt",
+      "sha256": "fed2b60936d3d5bee0c81f86dd3af83d70a50c5cba8934ea242e571fdd07ec5a",
+      "bytes": 8118
+    },
+    {
+      "path": "seed/seed-dry-run.txt",
+      "sha256": "288ba35034420fe49d3e1c412e6a6769e932f8361f1a4059c385f7449864fdb8",
+      "bytes": 4097
+    },
+    {
+      "path": "seed/seed-live.txt",
+      "sha256": "88dd6a2c12f60d702a5107797d39112406c4495297386edd1fc3ee1de3c418d6",
+      "bytes": 4757
+    },
+    {
+      "path": "journey/booking-ui-health.txt",
+      "sha256": "fbcb186008e6d2d9de40ae1be3677c2ec9899c72198d27f162100522bc5ac150",
+      "bytes": 2130
+    },
+    {
+      "path": "replay-restart/replay-restart.txt",
+      "sha256": "83a38b403499eccd64d91353d389ccf9957809dca19a00c56cf07eb8ae3d8d93",
+      "bytes": 319
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "name": "koffi",
+    "version": "2.14.1",
+    "npmIntegrity": "sha512-IMFL3IbRDXacSIjs7pPbPxgNlJ2hUtawQXU2QPdr6iw38jmv5AesAUG8HPX00xl0PPA2BbEa3noTw1YdHY+gHg==",
+    "tarballSha256": "caef9269d18a61616fffe2b7a5592e899c7c5cd2d62257cf37548c3b412f836c"
+  },
+  "native": {
+    "platform": "win32",
+    "arch": "x64",
+    "relativePath": "node_modules/koffi/build/koffi/win32_x64/koffi.node",
+    "sha256": "c56266742f01bb5e4a35cc159abfba3383964824e6c8face9dcb7d2f0d21006b"
+  },
+  "failureStatus": "BLOCKED",
+  "pathBasedFallback": false
+}

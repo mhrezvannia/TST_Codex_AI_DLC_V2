@@ -1,0 +1,230 @@
+gate=contracts
+status=FAIL
+exitCode=1
+command=node scripts/validate-contract-catalog.mjs
+
+{
+  "status": "failed",
+  "failures": [
+    "booking.confirmed schema missing field eventId",
+    "booking.confirmed schema missing field eventType",
+    "booking.confirmed schema missing field schemaVersion",
+    "booking.confirmed schema missing field occurredAt",
+    "booking.confirmed schema missing field idempotencyKey",
+    "booking.confirmed schema missing field bookingId",
+    "booking.confirmed schema missing field bookingRevision",
+    "booking.confirmed schema missing field pricingRef",
+    "containermovement.status schema missing field eventId",
+    "containermovement.status schema missing field eventType",
+    "containermovement.status schema missing field schemaVersion",
+    "containermovement.status schema missing field occurredAt",
+    "containermovement.status schema missing field idempotencyKey",
+    "containermovement.status schema missing field containerId",
+    "containermovement.status schema missing field bookingId",
+    "containermovement.status schema missing field movementStatus",
+    "containermovement.status schema missing field sequenceNumber",
+    "downstream runtime out of scope: services/container-movement-service",
+    "downstream runtime out of scope: apps/booking"
+  ],
+  "healthSnapshot": {
+    "snapshotId": "contract-health-2026-07-19T21:24:28.126Z",
+    "generatedAt": "2026-07-19T21:24:28.139Z",
+    "overallStatus": "red",
+    "staleThreshold": "P7D",
+    "seamStatuses": [
+      {
+        "contractId": "api-reference-data-service",
+        "seamId": "reference-data-http",
+        "owner": "shared-platform",
+        "provider": "reference-data-service",
+        "consumer": "enterprise-services",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/openapi/reference-data-service.yaml",
+        "linkedStories": [
+          "US-SP-004",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-SP-004",
+          "FR-SP-007",
+ 
+
+... output truncated ...
+
+nkedStories": [
+          "US-BKG-005",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-BKG-006",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "asyncapi-container-movement-status",
+        "seamId": "container-movement-status-event",
+        "owner": "movement-status-booking-integration",
+        "provider": "container-movement-service",
+        "consumer": "booking-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/asyncapi/container-movement-events.yaml",
+        "linkedStories": [
+          "US-CMM-006",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-CMM-007",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "event-booking-confirmed",
+        "seamId": "booking-confirmed-event",
+        "owner": "booking-confirmed-journey-integration",
+        "provider": "booking-service",
+        "consumer": "container-movement-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/avro/booking.confirmed.avsc",
+        "linkedStories": [
+          "US-BKG-005",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-BKG-006",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "event-container-movement-status",
+        "seamId": "container-movement-status-event",
+        "owner": "movement-status-booking-integration",
+        "provider": "container-movement-service",
+        "consumer": "booking-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/avro/containermovement.status.avsc",
+        "linkedStories": [
+          "US-CMM-006",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-CMM-007",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "pact-booking-charge-pricing",
+        "seamId": "booking-charge-pricing-http",
+        "owner": "booking-charge-pricing-integration",
+        "provider": "charge-agreement-service",
+        "consumer": "booking-service",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/booking-charge-pricing-fixtures.json",
+        "linkedStories": [
+          "US-W1-003",
+          "US-W1-007"
+        ],
+        "linkedRequirements": [
+          "FR-W1-003",
+          "FR-W1-004",
+          "FR-W1-013",
+          "NFR-W1-001"
+        ]
+      },
+      {
+        "contractId": "pact-booking-charge-dnd",
+        "seamId": "booking-charge-dnd-http",
+        "owner": "dnd-pricing-integration",
+        "provider": "charge-agreement-service",
+        "consumer": "booking-service",
+        "protocol": "http",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/booking-charge-dnd-fixtures.json",
+        "linkedStories": [
+          "US-BKG-005",
+          "US-RUN-004"
+        ],
+        "linkedRequirements": [
+          "FR-CHG-008",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "message-pact-booking-confirmed",
+        "seamId": "booking-confirmed-event",
+        "owner": "booking-confirmed-journey-integration",
+        "provider": "booking-service",
+        "consumer": "container-movement-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/booking-confirmed-message-fixtures.json",
+        "linkedStories": [
+          "US-BKG-005",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-BKG-006",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      },
+      {
+        "contractId": "message-pact-container-movement-status",
+        "seamId": "container-movement-status-event",
+        "owner": "movement-status-booking-integration",
+        "provider": "container-movement-service",
+        "consumer": "booking-service",
+        "protocol": "kafka",
+        "status": "green",
+        "lifecycleStatus": "candidate_executable",
+        "artifactPath": "contracts/pact/container-movement-status-message-fixtures.json",
+        "linkedStories": [
+          "US-CMM-006",
+          "US-SP-006"
+        ],
+        "linkedRequirements": [
+          "FR-CMM-007",
+          "FR-SP-007",
+          "NFR-COMP-001"
+        ]
+      }
+    ],
+    "blockingFailures": [
+      "booking.confirmed schema missing field eventId",
+      "booking.confirmed schema missing field eventType",
+      "booking.confirmed schema missing field schemaVersion",
+      "booking.confirmed schema missing field occurredAt",
+      "booking.confirmed schema missing field idempotencyKey",
+      "booking.confirmed schema missing field bookingId",
+      "booking.confirmed schema missing field bookingRevision",
+      "booking.confirmed schema missing field pricingRef",
+      "containermovement.status schema missing field eventId",
+      "containermovement.status schema missing field eventType",
+      "containermovement.status schema missing field schemaVersion",
+      "containermovement.status schema missing field occurredAt",
+      "containermovement.status schema missing field idempotencyKey",
+      "containermovement.status schema missing field containerId",
+      "containermovement.status schema missing field bookingId",
+      "containermovement.status schema missing field movementStatus",
+      "containermovement.status schema missing field sequenceNumber",
+      "downstream runtime out of scope: services/container-movement-service",
+      "downstream runtime out of scope: apps/booking"
+    ]
+  }
+}

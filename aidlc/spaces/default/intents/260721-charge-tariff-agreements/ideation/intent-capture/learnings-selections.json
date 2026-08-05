@@ -1,0 +1,13 @@
+{
+  "stage_slug": "intent-capture",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03 live acceptance, make no-rate MANUAL_PRICING_REQUIRED the focal degraded-path demonstration while preserving timeout, 503, and circuit-open contract behavior without expanding the thin slice.",
+      "source": "orchestrator"
+    }
+  ]
+}

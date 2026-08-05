@@ -25,8 +25,8 @@ public record ReferenceRecord(
         attributes = attributes == null ? Map.of() : Map.copyOf(attributes);
     }
 
-    public ReferenceRecord withUpdate(String newDisplayName, Map<String, String> newAttributes, AuditActor actor, Instant now, String reason) {
-        return new ReferenceRecord(id, set, code, newDisplayName, status, version + 1, createdBy, createdAt,
+    public ReferenceRecord withUpdate(ReferenceCode newCode, String newDisplayName, Map<String, String> newAttributes, AuditActor actor, Instant now, String reason) {
+        return new ReferenceRecord(id, set, newCode, newDisplayName, status, version + 1, createdBy, createdAt,
                 actor, now, statusChangedBy, statusChangedAt, reason, newAttributes);
     }
 

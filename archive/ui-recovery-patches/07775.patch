@@ -1,0 +1,27 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\ui\src\primitives.tsx
+@@
+   context,
+   showMark = true,
+-  className
++  className,
++  dataTestId
+ }: {
+   href?: string;
+   context?: string;
+   showMark?: boolean;
+   className?: string;
++  dataTestId?: string;
+ }) {
+@@
+   );
+   return href
+-    ? <a className={cx("erp-product-wordmark", className)} href={href} aria-label="LinerCore home">{content}</a>
++    ? <a className={cx("erp-product-wordmark", className)} data-testid={dataTestId} href={href} aria-label="LinerCore home">{content}</a>
+     : <span className={cx("erp-product-wordmark", className)}>{content}</span>;
+ }
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\app\ShellFrame.tsx
+@@
+-          <ProductWordmark className="shell-brand" href="/" />
++          <ProductWordmark className="shell-brand" dataTestId="shell-home-link" href="/" />
+*** End Patch

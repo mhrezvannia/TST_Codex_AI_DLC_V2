@@ -32,9 +32,11 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 public class ReferenceDataApplicationService {
     private final ReferenceRepository references;
@@ -80,6 +82,7 @@ public class ReferenceDataApplicationService {
         return HealthDocument.up("reference-data-service");
     }
 
+    @Transactional
     public ReferenceRecord create(ReferenceMutationCommand command) {
         return createWithId(new ReferenceId(ids.nextId()), command);
     }
@@ -97,6 +100,7 @@ public class ReferenceDataApplicationService {
         return saved;
     }
 
+    @Transactional
     public ReferenceRecord update(ReferenceId id, long expectedVersion, ReferenceMutationCommand command) {
         requireMutationPermission(command);
         Optional<ReferenceRecord> existingRecord = references.findById(command.set(), id);
@@ -107,7 +111,11 @@ public class ReferenceDataApplicationService {
         if (existing.version() != expectedVersion) {
             throw new IllegalStateException("stale reference version");
         }
-        ReferenceRecord updated = existing.withUpdate(command.displayName(), command.attributes(),
+        ReferenceCode requestedCode = new ReferenceCode(command.code());
+        if (!existing.code().equals(requestedCode)) {
+            references.rejectDuplicateActiveCode(existing.set(), requestedCode);
+        }
+        ReferenceRecord updated = existing.withUpdate(requestedCode, command.displayName(), command.attributes(),
                 new AuditActor(command.actorSubjectId(), command.actorDisplayName()), now(), command.reason());
         validateOrThrow(updated);
         ReferenceRecord saved = references.save(updated);
@@ -115,6 +123,7 @@ public class ReferenceDataApplicationService {
         return saved;
     }
 
+    @Transactional
     public ReferenceRecord deactivate(ReferenceSet set, ReferenceId id, String reason, String actorSubjectId, String correlationId) {
         ReferenceMutationCommand command = ReferenceMutationCommand.statusCommand(set, actorSubjectId, reason, correlationId);
         requireMutationPermission(command);
@@ -125,12 +134,25 @@ public class ReferenceDataApplicationService {
         return saved;
     }
 
+    @Transactional
+    public ReferenceRecord reactivate(ReferenceSet set, ReferenceId id, String reason, String actorSubjectId, String correlationId) {
+        ReferenceMutationCommand command = ReferenceMutationCommand.statusCommand(set, actorSubjectId, reason, correlationId);
+        requireMutationPermission(command);
+        ReferenceRecord existing = references.findById(set, id).orElseThrow();
+        references.rejectDuplicateActiveCode(existing.set(), existing.code());
+        ReferenceRecord saved = references.save(existing.withStatus(ReferenceStatus.ACTIVE,
+                new AuditActor(actorSubjectId, actorSubjectId), now(), reason));
+        appendChange(saved, ReferenceOperation.REACTIVATED, existing, command)
+                .ifPresent(change -> enqueueOutbox(saved, ReferenceOperation.REACTIVATED, change, command));
+        return saved;
+    }
+
     public ValidationResult validateOnly(ReferenceMutationCommand command) {
         AuditActor actor = new AuditActor(command.actorSubjectId(), command.actorDisplayName());
         ReferenceRecord candidate = new ReferenceRecord(new ReferenceId("validation-only"), command.set(), new ReferenceCode(command.code()),
                 command.displayName(), ReferenceStatus.ACTIVE, 1, actor, now(), actor, now(), null, null,
                 command.reason(), command.attributes());
-        return validator.validate(candidate, references.activeRecordsById(ReferenceSet.REGION));
+        return validator.validate(candidate, relatedRecords());
     }
 
     public ReferencePage list(ReferenceSet set, boolean includeInactive, int page, int size) {
@@ -159,6 +181,7 @@ public class ReferenceDataApplicationService {
         return outbox.claimAvailable(workerId, now(), Math.max(1, Math.min(batchSize, 100)));
     }
 
+    @Transactional
     public PublishBatchResult publishOutboxBatch(String workerId, int batchSize) {
         requireOutbox();
         requirePublisher();
@@ -201,7 +224,7 @@ public class ReferenceDataApplicationService {
     }
 
     private void validateOrThrow(ReferenceRecord record) {
-        ValidationResult result = validator.validate(record, references.activeRecordsById(ReferenceSet.REGION));
+        ValidationResult result = validator.validate(record, relatedRecords());
         if (!result.valid()) {
             throw new IllegalArgumentException(String.join(",", result.errors()));
         }
@@ -223,15 +246,23 @@ public class ReferenceDataApplicationService {
         if (outbox == null) {
             return;
         }
-        Map<String, String> payload = Map.of(
-                "id", record.id().value(),
-                "code", record.code().value(),
-                "displayName", record.displayName(),
-                "status", record.status().name(),
-                "version", String.valueOf(record.version()));
+        Map<String, String> payload = new HashMap<>(record.attributes());
+        payload.put("id", record.id().value());
+        payload.put("code", record.code().value());
+        payload.put("displayName", record.displayName());
+        payload.put("status", record.status().name());
+        payload.put("version", String.valueOf(record.version()));
         ReferenceChangedFact fact = new ReferenceChangedFact(change.changeId(), record.set(), record.id().value(),
                 record.code().value(), operation, command.attributes(), payload, change.changedAt(), command.correlationId());
         outbox.enqueue(eventMapper.toOutboxEvent(ids.nextId(), fact));
+    }
+
+    private Map<String, ReferenceRecord> relatedRecords() {
+        Map<String, ReferenceRecord> related = new HashMap<>();
+        for (ReferenceSet set : List.of(ReferenceSet.REGION, ReferenceSet.LOCATION, ReferenceSet.VESSEL_VOYAGE)) {
+            related.putAll(references.activeRecordsById(set));
+        }
+        return Map.copyOf(related);
     }
 
     private void requireOutbox() {

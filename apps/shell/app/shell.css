@@ -1,0 +1,748 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--erp-color-bg);
+  color: var(--erp-color-text);
+}
+
+a {
+  text-underline-offset: 3px;
+}
+
+.shell-skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 8px;
+  left: 8px;
+  padding: 10px 14px;
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  transform: translateY(-150%);
+}
+
+.shell-skip-link:focus {
+  transform: translateY(0);
+}
+
+.shell-frame {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+}
+
+.shell-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 18px 12px;
+  border-right: 1px solid var(--erp-color-border);
+  background: #102a43;
+  color: #c9d7e5;
+}
+
+.shell-brand {
+  min-height: 44px;
+  padding: 0 10px;
+  color: #ffffff;
+}
+
+.shell-sidebar .erp-side-navigation {
+  margin-top: 24px;
+}
+
+.shell-workspace {
+  min-width: 0;
+}
+
+.shell-topbar {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--erp-color-border);
+  background: var(--erp-color-surface);
+}
+
+.shell-mobile-nav {
+  display: none;
+  margin-right: auto;
+}
+
+.shell-mobile-nav summary,
+.shell-user-menu summary {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 9px;
+  border-radius: var(--erp-radius-sm);
+  color: var(--erp-color-text);
+  font-size: var(--erp-font-size-sm);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.shell-mobile-nav summary::-webkit-details-marker,
+.shell-user-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.shell-user-menu {
+  position: relative;
+}
+
+.shell-user-menu > div {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 4px);
+  right: 0;
+  width: min(260px, calc(100vw - 24px));
+  padding: 6px;
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-surface);
+  box-shadow: var(--erp-shadow-2);
+}
+
+.shell-user-identity {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--erp-color-border);
+}
+
+.shell-user-identity strong,
+.shell-user-identity span {
+  overflow-wrap: anywhere;
+}
+
+.shell-user-identity span {
+  color: var(--erp-color-text-muted);
+  font-size: var(--erp-font-size-xs);
+}
+
+.shell-user-menu a,
+.shell-user-menu button {
+  width: 100%;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--erp-color-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--erp-font-size-sm);
+  text-align: left;
+  text-decoration: none;
+}
+
+.shell-user-menu a:hover,
+.shell-user-menu button:hover {
+  background: var(--erp-color-surface-2);
+}
+
+.shell-user-menu button:hover {
+  color: var(--erp-color-danger);
+}
+
+.shell-main {
+  width: min(100%, 1440px);
+  min-width: 0;
+  margin: 0 auto;
+  padding: 18px 28px 48px;
+}
+
+.shell-main > .erp-breadcrumbs {
+  margin-bottom: 8px;
+}
+
+.shell-overview {
+  display: grid;
+  gap: 24px;
+}
+
+.shell-overview-layout {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.shell-overview-column {
+  min-width: 0;
+  display: grid;
+  gap: 24px;
+}
+
+.shell-overview-section {
+  min-width: 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--erp-color-border);
+}
+
+.shell-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.shell-section-heading h2 {
+  margin: 0;
+  color: var(--erp-color-text);
+  font-size: var(--erp-font-size-lg);
+}
+
+.shell-section-heading a {
+  color: var(--erp-color-primary);
+  font-size: var(--erp-font-size-sm);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.shell-work-list {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-surface);
+  list-style: none;
+}
+
+.shell-work-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(140px, 0.8fr) auto;
+  gap: 16px;
+  align-items: center;
+  min-height: 62px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--erp-color-border);
+}
+
+.shell-work-row:last-child {
+  border-bottom: 0;
+}
+
+.shell-work-row:hover,
+.shell-work-row:focus-within {
+  background: #f2f7fb;
+}
+
+.shell-work-row a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--erp-color-primary);
+  font-size: var(--erp-font-size-sm);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.shell-work-row a:hover {
+  text-decoration: underline;
+}
+
+.shell-work-row p,
+.shell-work-row small {
+  margin: 3px 0 0;
+  color: var(--erp-color-text-muted);
+  font-size: var(--erp-font-size-xs);
+}
+
+.shell-work-row__route {
+  min-width: 0;
+  color: var(--erp-color-text);
+  font-size: var(--erp-font-size-sm);
+}
+
+.shell-module-list {
+  display: grid;
+  border-top: 1px solid var(--erp-color-border);
+}
+
+.shell-module-link {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 58px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--erp-color-border);
+  color: var(--erp-color-text);
+  text-decoration: none;
+}
+
+.shell-module-link > svg {
+  color: var(--erp-color-primary);
+}
+
+.shell-module-link strong,
+.shell-module-link span {
+  display: block;
+}
+
+.shell-module-link span {
+  margin-top: 2px;
+  color: var(--erp-color-text-muted);
+  font-size: var(--erp-font-size-xs);
+}
+
+.shell-module-link:hover strong {
+  color: var(--erp-color-primary);
+}
+
+.shell-support-details {
+  margin-top: 0;
+}
+
+/* Compatibility styles for the legacy /booking routes still owned by Shell. */
+.shell-page-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--erp-color-border);
+}
+
+.shell-page-heading h1 {
+  margin: 0;
+  font-size: var(--erp-font-size-xl);
+  letter-spacing: 0;
+}
+
+.shell-eyebrow {
+  margin: 0 0 6px;
+  color: var(--erp-color-info);
+  font-size: var(--erp-font-size-xs);
+  font-weight: 750;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.shell-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.shell-panel,
+.shell-state {
+  background: var(--erp-color-surface);
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-md);
+  padding: 18px;
+}
+
+.shell-panel h2,
+.shell-state h2 {
+  margin-top: 0;
+  font-size: 17px;
+}
+
+.shell-table-wrap {
+  overflow-x: auto;
+  border-top: 1px solid var(--erp-color-border-strong);
+}
+
+.shell-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--erp-color-surface);
+  color: var(--erp-color-text);
+}
+
+.shell-table th,
+.shell-table td {
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--erp-color-border);
+  color: var(--erp-color-text);
+  text-align: left;
+  vertical-align: top;
+}
+
+.shell-table th {
+  color: var(--erp-color-text-muted);
+  font-size: var(--erp-font-size-xs);
+}
+
+.shell-table tbody tr:hover,
+.shell-table tbody tr:focus-within {
+  background: #f2f7fb;
+}
+
+.shell-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-left: 4px solid var(--erp-color-info);
+  background: var(--erp-color-info-bg);
+  color: var(--erp-color-text);
+  font-size: var(--erp-font-size-xs);
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.shell-muted {
+  color: var(--erp-color-text-muted);
+}
+
+.shell-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.shell-pricing {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+  width: 100%;
+}
+
+.shell-pricing > * {
+  min-width: 0;
+}
+
+.shell-pricing h2,
+.shell-pricing h3,
+.shell-pricing p {
+  margin: 0;
+}
+
+.shell-pricing-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.shell-pricing-header p {
+  margin-top: 5px;
+}
+
+.shell-pricing-selector {
+  display: grid;
+  gap: 6px;
+  width: min(360px, 100%);
+  font-weight: 650;
+}
+
+.shell-pricing-selector select {
+  min-height: 42px;
+  width: 100%;
+  border: 1px solid var(--erp-color-border-strong);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-surface);
+  padding: 8px 10px;
+  color: var(--erp-color-text);
+}
+
+.shell-pricing-skeleton {
+  display: grid;
+  gap: 10px;
+}
+
+.shell-pricing-lines {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.shell-pricing-lines .shell-table {
+  min-width: 820px;
+}
+
+.shell-pricing-technical,
+.shell-pricing-facts dd {
+  overflow-wrap: anywhere;
+}
+
+.shell-pricing-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.shell-pricing-facts div {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-surface-2);
+}
+
+.shell-pricing-facts dt {
+  color: var(--erp-color-text-muted);
+  font-size: var(--erp-font-size-xs);
+  font-weight: 750;
+}
+
+.shell-pricing-facts dd {
+  margin: 4px 0 0;
+}
+
+.shell-booking-form {
+  display: grid;
+  gap: 22px;
+}
+
+.shell-booking-form fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 20px 0;
+  border: 0;
+  border-top: 1px solid var(--erp-color-border-strong);
+}
+
+.shell-booking-form legend {
+  grid-column: 1 / -1;
+  padding: 0 0 12px;
+  font-size: var(--erp-font-size-lg);
+  font-weight: 750;
+}
+
+.shell-booking-form label {
+  display: grid;
+  gap: 6px;
+  font-weight: 650;
+}
+
+.shell-booking-form input {
+  min-height: 42px;
+  width: 100%;
+  border: 1px solid var(--erp-color-border-strong);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-surface);
+  padding: 9px 10px;
+  color: var(--erp-color-text);
+}
+
+.shell-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shell-booking-actions {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.shell-booking-actions h2,
+.shell-booking-actions p {
+  margin: 0;
+}
+
+.shell-booking-actions p {
+  margin-top: 5px;
+}
+
+.shell-button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border: 1px solid var(--erp-color-border-strong);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-surface);
+  color: var(--erp-color-text);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.shell-button-primary {
+  border-color: var(--erp-color-primary);
+  background: var(--erp-color-primary);
+  color: var(--erp-color-on-primary);
+}
+
+.shell-button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.shell-error {
+  color: var(--erp-color-danger);
+}
+
+.shell-denied {
+  border-left: 4px solid var(--erp-color-warning);
+}
+
+.shell-denied-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.shell-denied-facts div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-warning-bg);
+}
+
+.shell-denied-facts dt {
+  color: var(--erp-color-warning);
+  font-size: var(--erp-font-size-xs);
+  font-weight: 750;
+}
+
+.shell-denied-facts dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1023px) {
+  .shell-frame {
+    grid-template-columns: 184px minmax(0, 1fr);
+  }
+
+  .shell-sidebar {
+    padding-inline: 8px;
+  }
+
+  .shell-main {
+    padding-inline: 22px;
+  }
+
+  .shell-overview-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .shell-frame {
+    display: block;
+  }
+
+  .shell-sidebar {
+    display: none;
+  }
+
+  .shell-topbar {
+    min-height: 54px;
+    padding-inline: 12px;
+  }
+
+  .shell-mobile-nav {
+    display: block;
+    position: relative;
+  }
+
+  .shell-mobile-nav[open] > .erp-side-navigation {
+    position: absolute;
+    z-index: 30;
+    top: calc(100% + 5px);
+    left: 0;
+    width: min(260px, calc(100vw - 24px));
+    display: grid;
+    gap: 3px;
+    padding: 6px;
+    border: 1px solid var(--erp-color-border);
+    border-radius: var(--erp-radius-sm);
+    background: var(--erp-color-surface);
+    box-shadow: var(--erp-shadow-2);
+    color: var(--erp-color-text);
+  }
+
+  .shell-mobile-nav .erp-side-navigation a:hover {
+    background: var(--erp-color-surface-2);
+    color: var(--erp-color-text);
+  }
+
+  .shell-mobile-nav .erp-side-navigation a[aria-current="page"] {
+    border-left-color: var(--erp-color-primary);
+    background: var(--erp-color-info-bg);
+    color: var(--erp-color-primary);
+  }
+
+  .shell-user-menu summary span {
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .shell-main {
+    padding: 14px 16px 36px;
+  }
+
+  .shell-work-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+  }
+
+  .shell-work-row__route {
+    grid-column: 1 / -1;
+  }
+
+  .shell-page-heading,
+  .shell-booking-actions,
+  .shell-pricing-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .shell-grid,
+  .shell-denied-facts,
+  .shell-pricing-facts,
+  .shell-booking-form fieldset {
+    grid-template-columns: 1fr;
+  }
+
+  .shell-booking-actions .shell-actions {
+    justify-content: flex-start;
+  }
+
+  .shell-table th:nth-child(3),
+  .shell-table td:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-skip-link {
+    transition: none;
+  }
+}

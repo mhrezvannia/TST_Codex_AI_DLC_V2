@@ -1,0 +1,24 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\keycloak\themes\linercore\login\login.ftl
+@@
+                         <button class="${properties.kcFormPasswordVisibilityButtonClass!}" type="button"
+                                 aria-label="${msg("showPassword")}" aria-controls="password"
++                                title="${msg("showPassword")}"
+                                 data-password-toggle
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\keycloak\themes\linercore\login\resources\js\linercore-login.js
+@@
+   const form = document.getElementById("kc-form-login");
+   const password = document.getElementById("password");
+   const capsLockWarning = document.getElementById("linercore-caps-lock");
++  const passwordToggle = document.querySelector("[data-password-toggle]");
++
++  if (passwordToggle) {
++    passwordToggle.addEventListener("click", () => {
++      requestAnimationFrame(() => {
++        passwordToggle.title = passwordToggle.getAttribute("aria-label") ?? "";
++      });
++    });
++  }
+ 
+   if (password && capsLockWarning) {
+*** End Patch

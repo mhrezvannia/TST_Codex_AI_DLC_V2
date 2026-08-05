@@ -1,25 +1,139 @@
-import type { CSSProperties } from "react";
+import {
+  AuthBoundaryLayout,
+  AuthNotice,
+  AuthStatePanel,
+  DestinationSummary,
+  SupportDetails
+} from "../AuthBoundary";
+import { GatewayAction, GatewayPostAction } from "../GatewayAction";
+import { gatewayEntryHref, resolveGatewayDestination } from "../../lib/auth-gateway";
 
-export default function SignedOutPage() {
+type SignOutReason = "already" | "expired" | "failed" | "idp_incomplete" | "invalid";
+type SearchParams = {
+  reason?: string;
+  returnUrl?: string;
+};
+
+export default async function SignedOutPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
+  const params = (await searchParams) ?? {};
+  const destination = resolveGatewayDestination(params.returnUrl);
+  const reason = signOutReason(params.reason);
+  const content = signedOutContent(reason, destination.label);
+  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "LOCAL DEMO";
+  const showTechnicalDetails = environmentLabel !== "PRODUCTION";
+
   return (
-    <main style={styles.page}>
-      <section style={styles.panel}>
-        <p style={styles.eyebrow}>Session cleared</p>
-        <h1 style={styles.title}>Signed out</h1>
-        <p style={styles.copy}>Your Shared Platform session has been cleared.</p>
-        <a data-testid="signed-out-sign-in-link" href="/sign-in" style={styles.primaryAction}>
-          Sign in again
-        </a>
-      </section>
-    </main>
+    <AuthBoundaryLayout>
+      <AuthStatePanel eyebrow={content.eyebrow} title={content.title} summary={content.summary}>
+        {reason === "expired" || reason === "invalid" ? (
+          <DestinationSummary>Sign in again to continue to {destination.label}.</DestinationSummary>
+        ) : null}
+
+        {destination.invalid ? (
+          <AuthNotice title="We couldn't use the previous destination.">
+            Sign-in will return to the LinerCore workspace instead.
+          </AuthNotice>
+        ) : null}
+
+        {reason === "idp_incomplete" ? (
+          <AuthNotice title="Company single sign-on may still be active.">
+            The LinerCore application session is cleared, but another company application may still recognize you.
+          </AuthNotice>
+        ) : null}
+
+        {reason === "failed" ? (
+          <GatewayPostAction
+            action="/auth/api/auth/sign-out"
+            dataTestId="signed-out-retry-link"
+            label="Try sign out again"
+            pendingLabel="Signing out..."
+          />
+        ) : (
+          <GatewayAction
+            dataTestId="signed-out-sign-in-link"
+            href={gatewayEntryHref(destination.href)}
+            label="Sign in again"
+            pendingLabel="Opening secure access..."
+          />
+        )}
+
+        {showTechnicalDetails ? (
+          <SupportDetails
+            items={[
+              { term: "Environment", description: environmentLabel },
+              { term: "Session outcome", description: content.technicalStatus },
+              { term: "Destination", description: destination.label }
+            ]}
+          />
+        ) : null}
+      </AuthStatePanel>
+    </AuthBoundaryLayout>
   );
 }
 
-const styles: Record<string, CSSProperties> = {
-  page: { minHeight: "calc(100vh - 118px)", padding: 26, background: "#f4f7fb", display: "grid", placeItems: "start center" },
-  panel: { width: "min(100%, 620px)", background: "#ffffff", border: "1px solid #e1e7ee", borderRadius: 8, padding: 28 },
-  eyebrow: { margin: "0 0 9px", color: "#1e8e5a", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" },
-  title: { margin: 0, fontSize: 30 },
-  copy: { margin: "12px 0 20px", color: "#607080", lineHeight: 1.55 },
-  primaryAction: { minHeight: 40, borderRadius: 8, background: "#11427a", color: "#ffffff", display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0 16px", textDecoration: "none", fontWeight: 700 }
-};
+function signOutReason(value: string | undefined): SignOutReason | null {
+  if (
+    value === "already" ||
+    value === "expired" ||
+    value === "failed" ||
+    value === "idp_incomplete" ||
+    value === "invalid"
+  ) {
+    return value;
+  }
+  return null;
+}
+
+function signedOutContent(reason: SignOutReason | null, destinationLabel: string) {
+  if (reason === "expired") {
+    return {
+      eyebrow: "Session expired",
+      title: "Your workspace session ended",
+      summary: `Your session expired before LinerCore could open ${destinationLabel}.`,
+      technicalStatus: "Expired"
+    };
+  }
+
+  if (reason === "invalid") {
+    return {
+      eyebrow: "Session ended",
+      title: "Your workspace session ended",
+      summary: "LinerCore couldn't verify the previous session, so protected workspace data was cleared.",
+      technicalStatus: "Invalid"
+    };
+  }
+
+  if (reason === "failed") {
+    return {
+      eyebrow: "Sign-out interrupted",
+      title: "Sign-out did not complete",
+      summary: "LinerCore couldn't confirm that the application session was cleared.",
+      technicalStatus: "Failed"
+    };
+  }
+
+  if (reason === "idp_incomplete") {
+    return {
+      eyebrow: "Application session cleared",
+      title: "You are signed out of LinerCore",
+      summary: "Your LinerCore application session was cleared.",
+      technicalStatus: "Identity-provider sign-out incomplete"
+    };
+  }
+
+  if (reason === "already") {
+    return {
+      eyebrow: "No active session",
+      title: "You are already signed out",
+      summary: "There is no active LinerCore application session in this browser.",
+      technicalStatus: "Already signed out"
+    };
+  }
+
+  return {
+    eyebrow: "Session cleared",
+    title: "You are signed out",
+    summary: "Your LinerCore application session was cleared.",
+    technicalStatus: "Signed out"
+  };
+}

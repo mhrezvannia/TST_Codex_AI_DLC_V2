@@ -1,0 +1,10 @@
+*** Begin Patch
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/sign-out/route.test.ts
+@@
+ import { describe, expect, test } from "vitest";
++import { SESSION_COOKIE_NAME } from "@erp/auth";
+ import { POST } from "./route";
+@@
+-    expect(response.headers.get("Set-Cookie")).toContain("linercore_session=");
++    expect(response.headers.get("Set-Cookie")).toContain(`${SESSION_COOKIE_NAME}=`);
+*** End Patch

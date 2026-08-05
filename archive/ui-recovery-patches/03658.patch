@@ -1,0 +1,93 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\lib\bookings.ts
+@@
+ const backendUrl = () => process.env.BOOKING_SERVICE_URL ?? "http://booking-service:8085";
+ const MAX_COMMAND_BODY_BYTES = 32 * 1024;
++const BOOKING_READ_TIMEOUT_MS = 5000;
++const BOOKING_READ_ATTEMPTS = 2;
+@@
+ async function loadJson<T>(path: string, actorSubjectId?: string | null): Promise<BookingLoad<T>> {
+   const correlationId = crypto.randomUUID();
+   if (!actorSubjectId?.trim()) {
+     return { ok: false, status: 401, message: "A signed-in Booking actor is required" };
+   }
+-  const controller = new AbortController();
+-  const timeout = setTimeout(() => controller.abort(), 2500);
+   try {
+-    const response = await fetch(`${backendUrl()}${path}`, {
+-      headers: serviceHeaders(correlationId, actorSubjectId),
+-      cache: "no-store",
+-      signal: controller.signal
+-    });
++    const response = await fetchBookingRead(`${backendUrl()}${path}`, serviceHeaders(correlationId, actorSubjectId));
+     const payload = await response.json().catch(() => null);
+     if (!response.ok) {
+       return { ok: false, status: response.status, message: payload?.message ?? "Booking request failed" };
+     }
+     return { ok: true, value: payload as T };
+-  } catch {
++  } catch (error) {
++    console.error("Booking service read unavailable", {
++      correlationId,
++      path,
++      error: error instanceof Error ? error.name : "UnknownError"
++    });
+     return { ok: false, status: 503, message: "Booking service is unavailable" };
+-  } finally {
+-    clearTimeout(timeout);
+   }
+ }
++
++async function fetchBookingRead(url: string, headers: Headers): Promise<Response> {
++  let lastError: unknown;
++
++  for (let attempt = 0; attempt < BOOKING_READ_ATTEMPTS; attempt += 1) {
++    const controller = new AbortController();
++    const timeout = setTimeout(() => controller.abort(), BOOKING_READ_TIMEOUT_MS);
++    try {
++      return await fetch(url, {
++        headers,
++        cache: "no-store",
++        signal: controller.signal
++      });
++    } catch (error) {
++      lastError = error;
++    } finally {
++      clearTimeout(timeout);
++    }
++  }
++
++  throw lastError;
++}
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\lib\bookings.test.ts
+@@
+   it("does not fetch Booking reads without an actor", async () => {
+@@
+     }
+   });
++
++  it("retries one transient Booking read transport failure", async () => {
++    process.env.BOOKING_SERVICE_TOKEN = "server-only-token";
++    const originalFetch = global.fetch;
++    let calls = 0;
++    global.fetch = (() => {
++      calls += 1;
++      if (calls === 1) return Promise.reject(new TypeError("connection reset"));
++      return Promise.resolve(Response.json({ items: [], returned: 0, page: 0, size: 25 }));
++    }) as typeof fetch;
++
++    try {
++      const result = await loadBookings(new URLSearchParams({ page: "0", size: "25" }), "local.booking.user");
++
++      expect(result).toEqual({
++        ok: true,
++        value: { items: [], returned: 0, page: 0, size: 25 }
++      });
++      expect(calls).toBe(2);
++    } finally {
++      global.fetch = originalFetch;
++    }
++  });
+ 
+   it("derives proxy actor from the session cookie", async () => {
+*** End Patch

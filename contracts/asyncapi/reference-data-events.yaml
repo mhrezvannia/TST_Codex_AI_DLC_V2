@@ -10,3 +10,24 @@ channels:
         name: ReferenceDataCurrencyChanged
         payload:
           $ref: "../avro/referencedata.currency.changed.avsc"
+  referencedata.voyage.changed:
+    subscribe:
+      summary: Reference data vessel or voyage change event.
+      message:
+        name: ReferenceDataVoyageChanged
+        payload:
+          $ref: "../avro/referencedata.voyage.changed.avsc"
+  referencedata.equipment-type.changed:
+    subscribe:
+      summary: Reference data equipment type change event.
+      message:
+        name: ReferenceDataEquipmentTypeChanged
+        payload:
+          $ref: "../avro/referencedata.equipment-type.changed.avsc"
+  referencedata.charge-code.changed:
+    subscribe:
+      summary: Reference data charge code change event.
+      message:
+        name: ReferenceDataChargeCodeChanged
+        payload:
+          $ref: "../avro/referencedata.charge-code.changed.avsc"

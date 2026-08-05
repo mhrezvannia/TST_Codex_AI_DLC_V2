@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260728130533-111336e90400-a6fa0e28",
+  "workspaceDigest": "111336e90400cbf439bce8f8269de9feee8925502e78f1e7b5098718f206baf0",
+  "command": "node scripts/w2-02-pricing-fixture.mjs --json",
+  "startedAt": "2026-07-28T13:38:51.593Z",
+  "finishedAt": "2026-07-28T13:38:54.258Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "de66ce65e0a2530a78d0ee3ae2d9a953f61b33d71960cf7543be641954cfc4c3",
+  "outputBytes": 167,
+  "fixture": {
+    "name": "approved-charge-agreement",
+    "status": "PASS",
+    "agreementId": "c158538a-7ce6-49e4-b13f-367f7f9bd3d3",
+    "agreementNumber": "W2-02-LIVE-NA-EU-GEN",
+    "source": "created"
+  }
+}

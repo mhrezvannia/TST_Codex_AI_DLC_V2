@@ -8,16 +8,14 @@
 # Model/provider settings should be in:
 # C:\Users\mohammad.rezvannia\.codex\config.toml
 
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 model_context_window = 1000000
 model_reasoning_effort = "high"
+sandbox_mode = "workspace-write"
 
 # AI-DLC rules/memory directory
 [shell_environment_policy]
 set = { AIDLC_RULES_DIR = "aidlc/spaces/default/memory" }
-
-# Sandbox
-sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]
 network_access = true

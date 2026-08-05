@@ -1,0 +1,77 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\ui\src\primitives.tsx
+@@
+-export function Field({ label, hint, error, htmlFor, children }: { label: string; hint?: string; error?: string; htmlFor?: string; children: ReactNode }) {
++export function Field({
++  label,
++  hint,
++  error,
++  errorId,
++  htmlFor,
++  required,
++  children
++}: {
++  label: string;
++  hint?: string;
++  error?: string;
++  errorId?: string;
++  htmlFor?: string;
++  required?: boolean;
++  children: ReactNode;
++}) {
+   return (
+     <label className="erp-field" htmlFor={htmlFor}>
+-      <span className="erp-field__label">{label}</span>
++      <span className="erp-field__label">
++        {label}{required ? <span aria-hidden="true"> *</span> : null}
++        {required ? <span className="erp-sr-only"> (required)</span> : null}
++      </span>
+       {children}
+       {hint && !error ? <span className="erp-field__hint">{hint}</span> : null}
+-      {error ? <span className="erp-field__error">{error}</span> : null}
++      {error ? <span className="erp-field__error" id={errorId}>{error}</span> : null}
+     </label>
+   );
+ }
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\new\BookingCreateForm.tsx
+@@
+   const comboOptions = useMemo(() => ({
+-    customers: toComboOptions(options.customers),
+-    locations: toComboOptions(options.locations),
+-    voyages: toComboOptions(options.voyages.filter((option) => option.attributes.recordType === "VOYAGE")),
+-    equipment: toComboOptions(options.equipment)
++    customers: toComboOptions(options.customers, "id"),
++    locations: toComboOptions(options.locations, "code"),
++    voyages: toComboOptions(
++      options.voyages.filter((option) => option.attributes.recordType === "VOYAGE"),
++      "id"
++    ),
++    equipment: toComboOptions(options.equipment, "code")
+@@
+               error={errors.customerId}
++              errorId="customerId-error"
+@@
+-              <Field label="Voyage" error={errors.voyageId} htmlFor="booking-voyageId" required>
++              <Field label="Voyage" error={errors.voyageId} errorId="voyageId-error" htmlFor="booking-voyageId" required>
+@@
+-              <Field label="Place of loading" error={errors.loadUnLocode} htmlFor="booking-loadUnLocode" required>
++              <Field label="Place of loading" error={errors.loadUnLocode} errorId="loadUnLocode-error" htmlFor="booking-loadUnLocode" required>
+@@
+-              <Field label="Place of discharge" error={errors.dischargeUnLocode} htmlFor="booking-dischargeUnLocode" required>
++              <Field label="Place of discharge" error={errors.dischargeUnLocode} errorId="dischargeUnLocode-error" htmlFor="booking-dischargeUnLocode" required>
+@@
+-              <Field label="Equipment type" error={errors.equipmentTypeCode} htmlFor="booking-equipmentTypeCode" required>
++              <Field label="Equipment type" error={errors.equipmentTypeCode} errorId="equipmentTypeCode-error" htmlFor="booking-equipmentTypeCode" required>
+@@
+                 error={errors.equipmentId}
++                errorId="equipmentId-error"
+@@
+-              <Field label="Commodity code" error={errors.commodityCode} htmlFor="booking-commodityCode" required>
++              <Field label="Commodity code" error={errors.commodityCode} errorId="commodityCode-error" htmlFor="booking-commodityCode" required>
+@@
+-function toComboOptions(options: ReferenceOption[]) {
++function toComboOptions(options: ReferenceOption[], value: "id" | "code") {
+   return options.map((option) => ({
+-    value: option.id,
++    value: option[value],
+*** End Patch

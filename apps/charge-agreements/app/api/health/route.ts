@@ -1,5 +1,16 @@
-import { jsonHealth } from "@erp/api-core";
+import { chargeConfigurationReadiness } from "../../../lib/bff/config";
 
 export function GET() {
-  return Response.json(jsonHealth("apps-charge-agreements"));
+  const ready = chargeConfigurationReadiness().ready;
+  return Response.json(
+    {
+      service: "apps-charge-agreements",
+      status: ready ? "UP" : "DOWN",
+      timestamp: new Date().toISOString()
+    },
+    {
+      status: ready ? 200 : 503,
+      headers: { "content-type": "application/json; charset=utf-8" }
+    }
+  );
 }

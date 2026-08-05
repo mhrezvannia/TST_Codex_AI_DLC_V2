@@ -1,0 +1,274 @@
+*** Begin Patch
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/sign-in/page.test.tsx
+@@
+ import { render, screen } from "@testing-library/react";
++import { describe, expect, test } from "vitest";
+ import SignInPage from "./page";
+ 
+-test("renders Keycloak sign-in action", async () => {
+-  render(await SignInPage({ searchParams: Promise.resolve({ returnUrl: "/session" }) }));
+-  expect(screen.getByRole("heading", { name: "Sign in" })).toBeInTheDocument();
+-  expect(screen.getByTestId("sign-in-button")).toHaveAttribute("href", "/api/auth/sign-in?returnUrl=%2Fsession");
++describe("SignInPage", () => {
++  test("renders a business-language handoff through the Auth edge route", async () => {
++    render(await SignInPage({ searchParams: Promise.resolve({ returnUrl: "/bookings" }) }));
++
++    expect(screen.getByRole("heading", { name: "Continue to company sign-in" })).toBeInTheDocument();
++    expect(screen.getByText("Return to Bookings.")).toBeInTheDocument();
++    expect(screen.getByTestId("sign-in-button")).toHaveAttribute(
++      "href",
++      "/auth/api/auth/sign-in?returnUrl=%2Fbookings"
++    );
++    expect(screen.getByRole("link", { name: "Cancel" })).toHaveAttribute(
++      "href",
++      "/auth/?returnUrl=%2Fbookings"
++    );
++    expect(screen.queryByText("Keycloak")).not.toBeInTheDocument();
++    expect(screen.queryByText("linercore-platform")).not.toBeInTheDocument();
++  });
++
++  test("falls back safely from an external destination", async () => {
++    render(
++      await SignInPage({
++        searchParams: Promise.resolve({ returnUrl: "https://attacker.example/collect" })
++      })
++    );
++
++    expect(screen.getByText("We couldn't use that destination.")).toBeInTheDocument();
++    expect(screen.getByText("Return to LinerCore workspace.")).toBeInTheDocument();
++    expect(screen.getByTestId("sign-in-button")).toHaveAttribute(
++      "href",
++      "/auth/api/auth/sign-in?returnUrl=%2F"
++    );
++  });
++
++  test("renders expired and unavailable recovery states", async () => {
++    const { unmount } = render(
++      await SignInPage({
++        searchParams: Promise.resolve({ returnUrl: "/reference-data", status: "expired" })
++      })
++    );
++
++    expect(screen.getByRole("heading", { name: "Your sign-in request expired" })).toBeInTheDocument();
++    expect(screen.getByTestId("sign-in-button")).toHaveTextContent("Start again");
++    unmount();
++
++    render(
++      await SignInPage({
++        searchParams: Promise.resolve({ returnUrl: "/reference-data", status: "unavailable" })
++      })
++    );
++
++    expect(screen.getByRole("heading", { name: "Sign-in is temporarily unavailable" })).toBeInTheDocument();
++    expect(screen.getByRole("alert")).toHaveTextContent("Company sign-in is unavailable");
++    expect(screen.getByTestId("sign-in-button")).toHaveAttribute(
++      "href",
++      "/auth/sign-in?returnUrl=%2Freference-data"
++    );
++  });
+ });
+*** Add File: D:/TST_Codex_ui_recovery/apps/auth/app/signed-out/page.test.tsx
++import { render, screen } from "@testing-library/react";
++import { describe, expect, test } from "vitest";
++import SignedOutPage from "./page";
++
++describe("SignedOutPage", () => {
++  test("renders the canonical signed-out confirmation without protected content", async () => {
++    render(await SignedOutPage({}));
++
++    expect(screen.getByRole("heading", { name: "You are signed out" })).toBeInTheDocument();
++    expect(screen.getByTestId("signed-out-sign-in-link")).toHaveAttribute(
++      "href",
++      "/auth/?returnUrl=%2F"
++    );
++    expect(screen.queryByText("local.booking.user")).not.toBeInTheDocument();
++    expect(screen.queryByText(/token|cookie/i)).not.toBeInTheDocument();
++  });
++
++  test("preserves a safe business destination after expiry", async () => {
++    render(
++      await SignedOutPage({
++        searchParams: Promise.resolve({ reason: "expired", returnUrl: "/bookings/booking-1" })
++      })
++    );
++
++    expect(screen.getByRole("heading", { name: "Your workspace session ended" })).toBeInTheDocument();
++    expect(screen.getByText("Sign in again to continue to Bookings.")).toBeInTheDocument();
++    expect(screen.getByTestId("signed-out-sign-in-link")).toHaveAttribute(
++      "href",
++      "/auth/?returnUrl=%2Fbookings%2Fbooking-1"
++    );
++  });
++
++  test("neutralizes an unsafe return destination", async () => {
++    render(
++      await SignedOutPage({
++        searchParams: Promise.resolve({ reason: "invalid", returnUrl: "//attacker.example" })
++      })
++    );
++
++    expect(screen.getByText("We couldn't use the previous destination.")).toBeInTheDocument();
++    expect(screen.getByTestId("signed-out-sign-in-link")).toHaveAttribute(
++      "href",
++      "/auth/?returnUrl=%2F"
++    );
++  });
++
++  test("uses a POST retry when sign-out did not complete", async () => {
++    render(
++      await SignedOutPage({
++        searchParams: Promise.resolve({ reason: "failed" })
++      })
++    );
++
++    const retry = screen.getByTestId("signed-out-retry-link");
++    expect(retry).toHaveTextContent("Try sign out again");
++    expect(retry.closest("form")).toHaveAttribute("action", "/auth/api/auth/sign-out");
++    expect(retry.closest("form")).toHaveAttribute("method", "post");
++  });
++});
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/GatewayAction.test.tsx
+@@
+-import { GatewayAction } from "./GatewayAction";
++import { GatewayAction, GatewayPostAction } from "./GatewayAction";
+@@
+ test("announces redirect progress and prevents duplicate activation", () => {
+@@
+   expect(duplicateClick.defaultPrevented).toBe(true);
+ });
++
++test("announces POST progress and disables duplicate submission", () => {
++  render(
++    <GatewayPostAction
++      action="/auth/api/auth/sign-out"
++      dataTestId="post-action"
++      label="Sign out"
++      pendingLabel="Signing out..."
++    />
++  );
++
++  const action = screen.getByTestId("post-action");
++  fireEvent.submit(action.closest("form") as HTMLFormElement);
++
++  expect(action).toBeDisabled();
++  expect(action).toHaveAttribute("aria-busy", "true");
++  expect(action).toHaveTextContent("Signing out...");
++});
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/lib/auth-gateway.test.ts
+@@
+ import {
++  gatewayEntryHref,
+   gatewaySignInHref,
+   identityServiceAvailable,
+   resolveGatewayDestination,
+-  resolveGatewaySession
++  resolveGatewaySession,
++  signInHandoffHref
+ } from "./auth-gateway";
+@@
+   it("builds sign-in actions through the Auth edge route", () => {
+     expect(gatewaySignInHref("/bookings")).toBe("/auth/api/auth/sign-in?returnUrl=%2Fbookings");
++    expect(gatewayEntryHref("/bookings")).toBe("/auth/?returnUrl=%2Fbookings");
++    expect(signInHandoffHref("/bookings")).toBe("/auth/sign-in?returnUrl=%2Fbookings");
+   });
+*** Add File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/callback/route.test.ts
++import { describe, expect, test } from "vitest";
++import { GET } from "./route";
++
++describe("OIDC callback recovery", () => {
++  test("routes a missing or expired transaction back to the sign-in handoff", async () => {
++    const response = await GET(new Request("http://127.0.0.1:8088/auth/api/auth/callback"));
++
++    expect(response.status).toBe(303);
++    expect(response.headers.get("Location")).toBe(
++      "http://127.0.0.1:8088/auth/sign-in?status=expired"
++    );
++    expect(response.headers.get("Set-Cookie")).toContain("linercore_oidc=");
++  });
++
++  test("maps identity-provider cancellation to a recoverable business state", async () => {
++    const response = await GET(
++      new Request("http://127.0.0.1:8088/auth/api/auth/callback?error=access_denied")
++    );
++
++    expect(response.status).toBe(303);
++    expect(response.headers.get("Location")).toBe(
++      "http://127.0.0.1:8088/auth/sign-in?status=cancelled"
++    );
++  });
++});
+*** Add File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/sign-out/route.test.ts
++import { describe, expect, test } from "vitest";
++import { POST } from "./route";
++
++describe("Auth sign-out", () => {
++  test("clears the application session and returns to the canonical Auth boundary", () => {
++    const response = POST(
++      new Request("http://apps-auth:3000/api/auth/sign-out", {
++        headers: {
++          "x-forwarded-host": "127.0.0.1:8088",
++          "x-forwarded-proto": "http"
++        },
++        method: "POST"
++      })
++    );
++
++    const location = new URL(response.headers.get("Location") as string);
++    expect(response.status).toBe(303);
++    expect(location.searchParams.get("client_id")).toBe("linercore-platform");
++    expect(location.searchParams.get("post_logout_redirect_uri")).toBe(
++      "http://127.0.0.1:8088/auth/signed-out"
++    );
++    expect(response.headers.get("Set-Cookie")).toContain("linercore_session=");
++  });
++});
+*** Update File: D:/TST_Codex_ui_recovery/apps/shell/app/signed-out/page.test.tsx
+@@
+-import { render, screen } from "@testing-library/react";
++import { redirect } from "next/navigation";
+ import { describe, expect, it } from "vitest";
+ import ShellSignedOutPage from "./page";
+ 
++vi.mock("next/navigation", () => ({
++  redirect: vi.fn()
++}));
++
+ describe("ShellSignedOutPage", () => {
+-  it("renders a stable signed-out state without stale identity or Booking data", () => {
+-    render(<ShellSignedOutPage />);
+-
+-    expect(screen.getByTestId("shell-signed-out-page")).toHaveTextContent("Signed out");
+-    expect(screen.getByTestId("shell-signed-out-sign-in").getAttribute("href")).toBe("/auth/sign-in");
+-    expect(screen.queryByTestId("shell-user-menu")).not.toBeInTheDocument();
+-    expect(screen.queryByTestId("shell-booking-list")).not.toBeInTheDocument();
+-    expect(screen.queryByText("local.booking.user")).not.toBeInTheDocument();
++  it("delegates the legacy Shell route to the canonical Auth signed-out page", async () => {
++    await ShellSignedOutPage({});
++
++    expect(redirect).toHaveBeenCalledWith("/auth/signed-out");
++  });
++
++  it("preserves only supported state and the candidate return destination", async () => {
++    await ShellSignedOutPage({
++      searchParams: Promise.resolve({
++        reason: "expired",
++        returnUrl: "/bookings/booking-1"
++      })
++    });
++
++    expect(redirect).toHaveBeenCalledWith(
++      "/auth/signed-out?reason=expired&returnUrl=%2Fbookings%2Fbooking-1"
++    );
++  });
++
++  it("drops an unsupported reason", async () => {
++    await ShellSignedOutPage({
++      searchParams: Promise.resolve({
++        reason: "unexpected"
++      })
++    });
++
++    expect(redirect).toHaveBeenCalledWith("/auth/signed-out");
+   });
+ });
+*** End Patch

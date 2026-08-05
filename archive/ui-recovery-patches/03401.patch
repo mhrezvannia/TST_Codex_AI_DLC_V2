@@ -1,0 +1,29 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\keycloak\themes\linercore\login\resources\css\linercore-login.css
+@@
+-body.login-pf {
++html.login-pf body {
+   margin: 0;
+   min-width: 320px;
+-  background: var(--erp-color-bg);
++  background: var(--erp-color-bg);
++  background-image: none;
+   color: var(--erp-color-text);
+   font-family: var(--erp-font-sans);
+   font-size: 14px;
+   line-height: 1.5;
+ }
+ 
+-body.login-pf,
+-body.login-pf::before {
++html.login-pf body,
++html.login-pf body::before {
+   background-image: none;
+ }
+@@
+ .login-pf-page .login-pf-header {
+   margin: 0 0 var(--erp-space-6);
+   padding: 0;
++  text-align: left;
+ }
+*** End Patch

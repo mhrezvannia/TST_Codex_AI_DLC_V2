@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "intent": "W2-04-container-journey-track-trace",
+  "generatedAt": "2026-08-02T08:59:39.779Z",
+  "decision": "PASS",
+  "stack": "linercore-wave-a",
+  "bookingId": "499dc85c-0999-445d-af9a-d81f0959be1b",
+  "journeyId": "86f12200-237c-41c9-b0aa-e7a425e31f73",
+  "containerId": "MSCU6639870",
+  "expectedMovements": [
+    {
+      "sequence": "1",
+      "eventClassifierCode": "PLN",
+      "moveCode": "LOAD",
+      "locationId": "USNYC"
+    },
+    {
+      "sequence": "2",
+      "eventClassifierCode": "PLN",
+      "moveCode": "DISC",
+      "locationId": "NLRTM"
+    }
+  ],
+  "wrongNext": {
+    "code": "OUT_OF_SEQUENCE_MOVEMENT",
+    "message": "expected GTOT as next captured movement",
+    "currentLifecycle": "ALLOCATED",
+    "requiredNextMove": "GTOT",
+    "correlationId": "w2-04-1785661178916-wrong-next"
+  },
+  "accepted": [
+    {
+      "eventType": "GTOT",
+      "status": "GATED_OUT",
+      "historyCount": 1
+    },
+    {
+      "eventType": "ACT_LOAD",
+      "status": "IN_TRANSIT",
+      "historyCount": 2
+    },
+    {
+      "eventType": "ACT_DISC",
+      "status": "DISCHARGED",
+      "historyCount": 3
+    },
+    {
+      "eventType": "ACT_GTIN",
+      "status": "RETURNED_EMPTY",
+      "historyCount": 4
+    }
+  ],
+  "duplicate": {
+    "code": "DUPLICATE_MOVEMENT",
+    "message": "idempotency key has already been accepted",
+    "currentLifecycle": "GATED_OUT",
+    "requiredNextMove": "LOAD",
+    "correlationId": "w2-04-1785661178916-gtot"
+  },
+  "finalStatus": "RETURNED_EMPTY",
+  "history": [
+    {
+      "eventId": "b557e394-6d21-4f73-bc79-59ac555543a0",
+      "eventType": "GTOT",
+      "containerId": "MSCU6639870",
+      "locationId": "USNYC",
+      "eventTime": "2026-08-02T08:59:38.997Z",
+      "dedupeKey": "w2-04-1785661178916-gtot",
+      "correlationId": "w2-04-1785661178916-gtot"
+    },
+    {
+      "eventId": "a9ec8b04-b8ab-4cbf-8888-8a400be96551",
+      "eventType": "ACT_LOAD",
+      "containerId": "MSCU6639870",
+      "locationId": "USNYC",
+      "eventTime": "2026-08-02T08:59:39.076Z",
+      "dedupeKey": "w2-04-1785661178916-act_load",
+      "correlationId": "w2-04-1785661178916-act_load"
+    },
+    {
+      "eventId": "8bc84b8a-af28-4b84-bb0e-e1b465755609",
+      "eventType": "ACT_DISC",
+      "containerId": "MSCU6639870",
+      "locationId": "NLRTM",
+      "eventTime": "2026-08-02T08:59:39.116Z",
+      "dedupeKey": "w2-04-1785661178916-act_disc",
+      "correlationId": "w2-04-1785661178916-act_disc"
+    },
+    {
+      "eventId": "d311d235-4000-400f-964e-8cd515a626ed",
+      "eventType": "ACT_GTIN",
+      "containerId": "MSCU6639870",
+      "locationId": "NLRTM",
+      "eventTime": "2026-08-02T08:59:39.146Z",
+      "dedupeKey": "w2-04-1785661178916-act_gtin",
+      "correlationId": "w2-04-1785661178916-act_gtin"
+    }
+  ],
+  "bookingProjection": {
+    "bookingRef": "499dc85c-0999-445d-af9a-d81f0959be1b",
+    "containerRef": "MSCU6639870",
+    "movementId": "d311d235-4000-400f-964e-8cd515a626ed",
+    "moveCode": "GTIN",
+    "eventClassifierCode": "ACT",
+    "occurredDateTime": "2026-08-02T08:59:39.146Z",
+    "receivedDateTime": "2026-08-02T08:59:39.170948Z",
+    "derivedStatus": "RETURNED_EMPTY",
+    "emptyIndicatorCode": "EMPTY",
+    "transshipment": false,
+    "location": {
+      "unLocationCode": "NLRTM",
+      "facilityCode": null,
+      "facilityTypeCode": null
+    },
+    "eventId": "ec33b492-530a-4e8b-8367-97e16a6b7480",
+    "source": "container-movement-service",
+    "eventTime": "2026-08-02T08:59:39.170948Z",
+    "dataSchemaVersion": 1,
+    "correlationId": "w2-04-1785661178916-act_gtin",
+    "projectedAt": "2026-08-02T08:59:39.756210Z"
+  },
+  "performance": {
+    "thresholds": {
+      "p95Ms": 2000,
+      "maxMs": 5000,
+      "propagationMs": 120000
+    },
+    "sampleCount": 6,
+    "p50Ms": 31.12,
+    "p95Ms": 57.75,
+    "maxMs": 57.75,
+    "samples": [
+      {
+        "method": "POST",
+        "url": "/api/container-movement/journeys/86f12200-237c-41c9-b0aa-e7a425e31f73/movements",
+        "status": 409,
+        "durationMs": 31.12
+      },
+      {
+        "method": "POST",
+        "url": "/api/container-movement/journeys/86f12200-237c-41c9-b0aa-e7a425e31f73/movements",
+        "status": 200,
+        "durationMs": 57.75
+      },
+      {
+        "method": "POST",
+        "url": "/api/container-movement/journeys/86f12200-237c-41c9-b0aa-e7a425e31f73/movements",
+        "status": 409,
+        "durationMs": 19.15
+      },
+      {
+        "method": "POST",
+        "url": "/api/container-movement/journeys/86f12200-237c-41c9-b0aa-e7a425e31f73/movements",
+        "status": 200,
+        "durationMs": 39.6
+      },
+      {
+        "method": "POST",
+        "url": "/api/container-movement/journeys/86f12200-237c-41c9-b0aa-e7a425e31f73/movements",
+        "status": 200,
+        "durationMs": 29.64
+      },
+      {
+        "method": "POST",
+        "url": "/api/container-movement/journeys/86f12200-237c-41c9-b0aa-e7a425e31f73/movements",
+        "status": 200,
+        "durationMs": 31.73
+      }
+    ]
+  },
+  "preservation": {
+    "managerDemoMutated": false,
+    "historicalW1Result": "BLOCKED_WAIVED"
+  }
+}

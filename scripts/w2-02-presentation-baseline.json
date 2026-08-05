@@ -1,0 +1,10 @@
+{
+  "apps/reference-data/app/ReferenceDataWorkbench.tsx": { "sha256": "3704c940fdedbac4d5dc13c543fd4c6542b8b6d3a7fca32570f54a41140e2e3e", "rules": ["hardcoded-color", "local-style-system"] },
+  "apps/charge-agreements/app/ChargeAgreementWorkbench.tsx": { "sha256": "de39278d790a878bf3907185c55bdc900703fd70d18b194b23121898f57dc76d", "rules": ["hardcoded-color", "local-style-system"] },
+  "apps/auth/app/access-denied/page.tsx": { "sha256": "25a0e92075d33832f4afe4539e4d253edd9588341f464e067517d49d1af8200b", "rules": ["hardcoded-color", "local-style-system"] },
+  "apps/auth/app/signed-out/page.tsx": { "sha256": "9b6df515fdd0573bf5a2e30972ebc89d4adef7e64880ae338a342534d18f236b", "rules": ["hardcoded-color", "local-style-system"] },
+  "apps/auth/app/page.tsx": { "sha256": "bdcb0f01ab773d41a3889d5d3ee60878bc84fad03cd95d3741467ece78928d81", "rules": ["hardcoded-color", "local-style-system"] },
+  "apps/auth/app/request-access/page.tsx": { "sha256": "b249e5210ce16ba90fda8bbb1cb75f7a1098406ba11694401de303c867463709", "rules": ["hardcoded-color", "local-style-system"] },
+  "apps/auth/app/sign-in/page.tsx": { "sha256": "9b3f7b5e17dd44ea55de6cb0b394677b6e180214d013147de192cd4e44667b11", "rules": ["hardcoded-color", "local-style-system"] },
+  "apps/auth/app/session/page.tsx": { "sha256": "3d08b8dd5e6c3e1f06bad10cbcbd5f975010178f6be085d31835164776480007", "rules": ["hardcoded-color", "local-style-system"] }
+}

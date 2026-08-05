@@ -1,0 +1,21 @@
+{
+  "stage_slug": "scope-definition",
+  "selections": [
+    {
+      "candidate_id": "260721-c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat W2-03 Charge administration, real Booking pricing consumption, repricing, manual no-rate handling, owned UI, and observed live/audit acceptance as one inseparable minimum release; separated pieces are progress evidence, not substitute releases.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Sequence W2-03 as a walking-skeleton and risk-first vertical backlog that proves a real Charge-to-Booking itemised line early; do not batch database, backend, frontend, and evidence as isolated horizontal releases.",
+      "source": "orchestrator"
+    }
+  ]
+}

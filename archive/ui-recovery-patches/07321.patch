@@ -1,0 +1,55 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\lib\bookings.test.ts
+@@
+-import { bookingReturnTo, loadBookings, proxyBooking, safeBookingReturnTo, serviceHeaders, validateCommandRequest } from "./bookings";
++import {
++  bookingReturnTo,
++  isValidBookingId,
++  loadBooking,
++  loadBookings,
++  proxyBooking,
++  safeBookingReturnTo,
++  serviceHeaders,
++  validateCommandRequest
++} from "./bookings";
+@@
+   it("preserves only safe booking-list return state", () => {
+@@
+     expect(safeBookingReturnTo(`/bookings?search=${"x".repeat(121)}`)).toBe("/bookings");
+   });
++
++  it("validates Booking record identifiers before route reads", () => {
++    expect(isValidBookingId("ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a")).toBe(true);
++    expect(isValidBookingId("not-a-booking-id")).toBe(false);
++    expect(isValidBookingId("ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a/extra")).toBe(false);
++  });
++
++  it("normalizes denied reads without exposing backend wording", async () => {
++    process.env.BOOKING_SERVICE_TOKEN = "server-only-token";
++    const originalFetch = global.fetch;
++    global.fetch = (() => Promise.resolve(Response.json({
++      code: "forbidden",
++      message: "booking command denied",
++      correlationId: "corr-safe"
++    }, { status: 403 }))) as typeof fetch;
++
++    try {
++      const result = await loadBooking(
++        "ecebf4a8-bbbd-4468-980b-0e9dfdf0e73a",
++        "local.booking.user"
++      );
++
++      expect(result).toMatchObject({
++        ok: false,
++        status: 403,
++        code: "BOOKING_ACCESS_DENIED",
++        retryable: false,
++        supportReference: "corr-safe"
++      });
++      expect(JSON.stringify(result)).not.toContain("booking command denied");
++    } finally {
++      global.fetch = originalFetch;
++    }
++  });
+ });
+*** End Patch

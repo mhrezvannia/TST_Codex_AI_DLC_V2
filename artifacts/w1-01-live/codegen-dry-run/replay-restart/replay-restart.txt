@@ -1,0 +1,6 @@
+gate=replay-restart
+status=PLANNED
+exitCode=
+command=node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_W1-01/artifacts/w1-01-live/codegen-dry-run/replay-restart/evidence.json
+
+dry-run: command not executed

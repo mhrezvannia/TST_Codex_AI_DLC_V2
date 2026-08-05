@@ -1,0 +1,36 @@
+﻿{
+    "fixtures":  {
+                     "customerId":  "00000000-0000-4000-8000-000000000101",
+                     "destinationId":  "00000000-0000-4000-8000-000000000103",
+                     "originId":  "00000000-0000-4000-8000-000000000102",
+                     "equipmentId":  "00000000-0000-4000-8000-000000000104"
+                 },
+    "currency":  {
+                     "id":  {
+                                "value":  "1fd94cf0-b35d-48cc-ac93-9a6cb5acb421"
+                            },
+                     "set":  "CURRENCY",
+                     "code":  {
+                                  "value":  "W0-USD"
+                              },
+                     "displayName":  "W0 US Dollar",
+                     "status":  "ACTIVE",
+                     "version":  1,
+                     "createdBy":  {
+                                       "subjectId":  "reference-admin",
+                                       "displayName":  "Reference Admin"
+                                   },
+                     "createdAt":  "2026-07-13T12:28:05.583056379Z",
+                     "updatedBy":  {
+                                       "subjectId":  "reference-admin",
+                                       "displayName":  "Reference Admin"
+                                   },
+                     "updatedAt":  "2026-07-13T12:28:05.583059943Z",
+                     "statusChangedBy":  null,
+                     "statusChangedAt":  null,
+                     "changeReason":  "W0 live eventing proof",
+                     "attributes":  {
+
+                                    }
+                 }
+}

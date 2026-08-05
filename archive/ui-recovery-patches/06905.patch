@@ -1,0 +1,335 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\ui\src\primitives.tsx
+@@
+ import type {
+   ButtonHTMLAttributes,
+   InputHTMLAttributes,
+   ReactNode,
+   SelectHTMLAttributes,
+   TableHTMLAttributes
+ } from "react";
++import { LucideIcon, type LucideIconName } from "./icons";
+ import { designSystemCss } from "./styles";
+@@
+-type ButtonVariant = "default" | "primary" | "danger" | "ghost";
++type ButtonVariant = "default" | "primary" | "danger" | "ghost";
+ export function Button({
+   variant = "default",
+   size,
++  busy = false,
++  busyLabel,
++  icon,
+   className,
+   type = "button",
++  children,
+   ...rest
+-}: { variant?: ButtonVariant; size?: "sm" } & ButtonHTMLAttributes<HTMLButtonElement>) {
++}: {
++  variant?: ButtonVariant;
++  size?: "sm";
++  busy?: boolean;
++  busyLabel?: ReactNode;
++  icon?: LucideIconName;
++} & ButtonHTMLAttributes<HTMLButtonElement>) {
+   return (
+     <button
+       type={type}
+       className={cx("erp-btn", variant !== "default" && `erp-btn--${variant}`, size === "sm" && "erp-btn--sm", className)}
++      aria-busy={busy || undefined}
++      disabled={busy || rest.disabled}
+       {...rest}
+-    />
++    >
++      {busy ? <LucideIcon className="erp-btn__spinner" name="refresh-cw" size={16} /> : icon ? <LucideIcon name={icon} size={16} /> : null}
++      <span>{busy ? busyLabel ?? children : children}</span>
++    </button>
+   );
+ }
+@@
+ const STATUS_TONE: Record<string, BadgeTone> = {
+   CONFIRMED: "success",
+   RECONFIRMED: "success",
+   PRICED: "info",
+   VALIDATED: "info",
+-  PRICING_PENDING: "warning",
++  PRICING_PENDING: "info",
+   DRAFT: "neutral",
+   AMENDED: "warning",
++  VALIDATION_BLOCKED: "warning",
++  MANUAL_PRICING: "warning",
+   EXCEPTION: "danger",
+   CANCELLED: "danger"
+ };
++const STATUS_LABEL: Record<string, string> = {
++  CONFIRMED: "Confirmed",
++  RECONFIRMED: "Reconfirmed",
++  PRICED: "Priced",
++  VALIDATED: "Validated",
++  PRICING_PENDING: "Pricing pending",
++  DRAFT: "Draft",
++  AMENDED: "Amended",
++  VALIDATION_BLOCKED: "Validation blocked",
++  MANUAL_PRICING: "Manual pricing",
++  EXCEPTION: "Exception",
++  CANCELLED: "Cancelled"
++};
+ export function StatusBadge({ status }: { status: string }) {
+-  return <Badge tone={STATUS_TONE[status] ?? "neutral"} dot>{status}</Badge>;
++  return <Badge tone={STATUS_TONE[status] ?? "neutral"} dot>{STATUS_LABEL[status] ?? sentenceCase(status)}</Badge>;
+ }
+@@
+-export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
++export function EmptyState({
++  title,
++  children,
++  headingLevel = 2
++}: {
++  title: string;
++  children?: ReactNode;
++  headingLevel?: 1 | 2 | 3;
++}) {
++  const heading = headingLevel === 1
++    ? <h1 className="erp-empty__title">{title}</h1>
++    : headingLevel === 3
++      ? <h3 className="erp-empty__title">{title}</h3>
++      : <h2 className="erp-empty__title">{title}</h2>;
+   return (
+     <div className="erp-empty">
+-      <p className="erp-empty__title">{title}</p>
++      {heading}
+       {children ? <div>{children}</div> : null}
+     </div>
+   );
+ }
+@@
+-export function StatusStrip({ children }: { children: ReactNode }) {
++export type StatusTone = "neutral" | "info" | "success" | "warning" | "danger";
++export function StatusStrip({
++  title,
++  tone = "neutral",
++  icon,
++  actions,
++  announce = "polite",
++  id,
++  tabIndex,
++  children
++}: {
++  title?: string;
++  tone?: StatusTone;
++  icon?: LucideIconName;
++  actions?: ReactNode;
++  announce?: "off" | "polite" | "assertive";
++  id?: string;
++  tabIndex?: number;
++  children: ReactNode;
++}) {
+   return (
+-    <div className="erp-status" aria-live="polite">
+-      {children}
++    <div
++      className={cx("erp-status", tone !== "neutral" && `erp-status--${tone}`)}
++      aria-live={announce}
++      id={id}
++      tabIndex={tabIndex}
++    >
++      {icon ? <LucideIcon className="erp-status__icon" name={icon} size={18} /> : null}
++      <div className="erp-status__content">
++        {title ? <h2 className="erp-status__title">{title}</h2> : null}
++        <div className="erp-status__body">{children}</div>
++      </div>
++      {actions ? <div className="erp-status__actions">{actions}</div> : null}
+     </div>
+   );
+ }
++
++export type BreadcrumbItem = { label: string; href?: string };
++export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
++  return (
++    <nav className="erp-breadcrumbs" aria-label="Breadcrumb">
++      <ol>
++        {items.map((item, index) => {
++          const current = index === items.length - 1;
++          return (
++            <li key={`${item.label}-${index}`}>
++              {item.href && !current ? <a href={item.href}>{item.label}</a> : <span aria-current={current ? "page" : undefined}>{item.label}</span>}
++              {!current ? <LucideIcon name="chevron-right" size={14} /> : null}
++            </li>
++          );
++        })}
++      </ol>
++    </nav>
++  );
++}
++
++export function PageHeader({
++  eyebrow,
++  title,
++  description,
++  actions
++}: {
++  eyebrow?: string;
++  title: string;
++  description?: ReactNode;
++  actions?: ReactNode;
++}) {
++  return (
++    <header className="erp-page-header">
++      <div>
++        {eyebrow ? <p className="erp-page-header__eyebrow">{eyebrow}</p> : null}
++        <h1>{title}</h1>
++        {description ? <div className="erp-page-header__description">{description}</div> : null}
++      </div>
++      {actions ? <div className="erp-page-header__actions">{actions}</div> : null}
++    </header>
++  );
++}
++
++export function RecordHeader({
++  back,
++  title,
++  subtitle,
++  status,
++  meta,
++  blocker,
++  actions
++}: {
++  back?: ReactNode;
++  title: string;
++  subtitle?: ReactNode;
++  status?: ReactNode;
++  meta?: ReactNode;
++  blocker?: ReactNode;
++  actions?: ReactNode;
++}) {
++  return (
++    <header className="erp-record-header">
++      {back ? <div className="erp-record-header__back">{back}</div> : null}
++      <div className="erp-record-header__main">
++        <div className="erp-record-header__identity">
++          <h1>{title}</h1>
++          {subtitle ? <div className="erp-record-header__subtitle">{subtitle}</div> : null}
++          {status || meta ? <div className="erp-record-header__meta">{status}{meta}</div> : null}
++        </div>
++        {blocker || actions ? (
++          <div className="erp-record-header__command">
++            {blocker ? <div className="erp-record-header__blocker">{blocker}</div> : null}
++            {actions ? <div className="erp-record-header__actions">{actions}</div> : null}
++          </div>
++        ) : null}
++      </div>
++    </header>
++  );
++}
++
++export type RouteTab = { label: string; href: string; active?: boolean };
++export function RouteTabs({ label, tabs }: { label: string; tabs: RouteTab[] }) {
++  return (
++    <nav className="erp-route-tabs" aria-label={label}>
++      {tabs.map((tab) => (
++        <a key={tab.href} href={tab.href} aria-current={tab.active ? "page" : undefined}>
++          {tab.label}
++        </a>
++      ))}
++    </nav>
++  );
++}
++
++export type DefinitionItem = { term: ReactNode; description: ReactNode };
++export function DefinitionList({ items, columns = 2 }: { items: DefinitionItem[]; columns?: 1 | 2 | 3 | 4 }) {
++  return (
++    <dl className={`erp-definition-list erp-definition-list--${columns}`}>
++      {items.map((item, index) => (
++        <div key={index}>
++          <dt>{item.term}</dt>
++          <dd>{item.description}</dd>
++        </div>
++      ))}
++    </dl>
++  );
++}
++
++export function FilterToolbar({ children }: { children: ReactNode }) {
++  return <div className="erp-filter-toolbar">{children}</div>;
++}
++
++export function FilterChip({ label, removeHref }: { label: string; removeHref: string }) {
++  return (
++    <span className="erp-filter-chip">
++      {label}
++      <a href={removeHref} aria-label={`Remove ${label} filter`} title={`Remove ${label} filter`}>
++        <LucideIcon name="x" size={14} />
++      </a>
++    </span>
++  );
++}
++
++export function Pagination({
++  previousHref,
++  nextHref,
++  label
++}: {
++  previousHref?: string;
++  nextHref?: string;
++  label: string;
++}) {
++  return (
++    <nav className="erp-pagination" aria-label="Pagination">
++      {previousHref ? <a href={previousHref}><LucideIcon name="chevron-left" size={16} />Previous</a> : <span aria-disabled="true"><LucideIcon name="chevron-left" size={16} />Previous</span>}
++      <span>{label}</span>
++      {nextHref ? <a href={nextHref}>Next<LucideIcon name="chevron-right" size={16} /></a> : <span aria-disabled="true">Next<LucideIcon name="chevron-right" size={16} /></span>}
++    </nav>
++  );
++}
++
++export function FailureState({
++  icon,
++  title,
++  children,
++  actions,
++  technicalDetails
++}: {
++  icon: LucideIconName;
++  title: string;
++  children: ReactNode;
++  actions?: ReactNode;
++  technicalDetails?: ReactNode;
++}) {
++  return (
++    <section className="erp-failure-state">
++      <LucideIcon className="erp-failure-state__icon" name={icon} size={22} />
++      <div>
++        <h1 tabIndex={-1}>{title}</h1>
++        <div className="erp-failure-state__body">{children}</div>
++        {actions ? <div className="erp-failure-state__actions">{actions}</div> : null}
++        {technicalDetails}
++      </div>
++    </section>
++  );
++}
++
++export function PartialDataNotice({ children, actions }: { children: ReactNode; actions?: ReactNode }) {
++  return <StatusStrip title="Some booking details are unavailable" tone="warning" icon="triangle-alert" actions={actions}>{children}</StatusStrip>;
++}
++
++export function ConflictStrip({ title = "This record changed", children, actions }: { title?: string; children: ReactNode; actions?: ReactNode }) {
++  return <StatusStrip title={title} tone="warning" icon="history" actions={actions} id="record-conflict" tabIndex={-1}>{children}</StatusStrip>;
++}
++
++export function TechnicalDetails({ items }: { items: DefinitionItem[] }) {
++  return (
++    <details className="erp-technical-details">
++      <summary>Technical details</summary>
++      <DefinitionList items={items} columns={1} />
++    </details>
++  );
++}
++
++export function IdentifierValue({ children }: { children: ReactNode }) {
++  return <code className="erp-identifier">{children}</code>;
++}
++
++function sentenceCase(value: string) {
++  const normalized = value.replaceAll("_", " ").toLowerCase();
++  return normalized ? normalized[0].toUpperCase() + normalized.slice(1) : value;
++}
+*** End Patch

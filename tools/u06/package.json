@@ -1,0 +1,9 @@
+{
+  "name": "@linercore/u06-evidence-tools",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "dependencies": {
+    "koffi": "2.14.1"
+  }
+}

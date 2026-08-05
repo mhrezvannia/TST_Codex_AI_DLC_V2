@@ -1,0 +1,5 @@
+command=internal detector 6d scan for hardcoded auth
+status=BLOCKED
+exitCode=
+
+dry-run: command not executed

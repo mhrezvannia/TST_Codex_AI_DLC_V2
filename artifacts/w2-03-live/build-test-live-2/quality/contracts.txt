@@ -1,0 +1,6 @@
+gate=contracts
+status=SKIPPED
+exitCode=
+command=node scripts/validate-contract-catalog.mjs
+
+skipped after prior blocking gate

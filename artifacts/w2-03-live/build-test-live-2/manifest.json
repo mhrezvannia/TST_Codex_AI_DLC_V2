@@ -1,0 +1,301 @@
+{
+  "intent": "W2-03-charge-tariffs-and-agreements",
+  "runId": "build-test-live-2",
+  "generatedAt": "2026-07-26T08:18:44.878Z",
+  "status": "FAILED",
+  "composeProject": "linercore-wave-a",
+  "destructiveDatabaseResetAllowed": false,
+  "protectedComposeProject": "linercore-shared-platform",
+  "isolatedPorts": {
+    "POSTGRES_HOST_PORT": "55433",
+    "KEYCLOAK_HOST_PORT": "18080",
+    "KAFKA_HOST_PORT": "19092",
+    "SCHEMA_REGISTRY_HOST_PORT": "18081",
+    "IDENTITY_SERVICE_HOST_PORT": "18082",
+    "REFERENCE_DATA_SERVICE_HOST_PORT": "18083",
+    "CHARGE_AGREEMENT_SERVICE_HOST_PORT": "18084",
+    "BOOKING_SERVICE_HOST_PORT": "18085",
+    "CONTAINER_MOVEMENT_SERVICE_HOST_PORT": "18086",
+    "CHARGE_AGREEMENTS_UI_HOST_PORT": "13013",
+    "NGINX_HOST_PORT": "18088",
+    "PROMETHEUS_HOST_PORT": "19090",
+    "GRAFANA_HOST_PORT": "13004",
+    "JAEGER_UI_HOST_PORT": "16687",
+    "LINERCORE_NETWORK_NAME": "linercore-wave-a",
+    "COMPOSE_PARALLEL_LIMIT": "1"
+  },
+  "gates": [
+    {
+      "id": "demo-snapshot",
+      "section": "guard",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/demo-guard.mjs --snapshot D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live-2/guard/protected-before.json",
+      "status": "PASS",
+      "exitCode": 0,
+      "artifactPath": "guard/demo-snapshot.txt",
+      "summary": "{\n  \"capturedAt\": \"2026-07-26T08:04:53.000Z\",\n  \"protectedProject\": \"linercore-shared-platform\",\n  \"protectedState\": {\n    \"name\": \"linercore-shared-platform\",\n    \"status\": \"running(23)\",\n    \"configFiles\": \"D:\\\\TST_Codex_integ\\\\compose.yaml,D:\\\\TST_Codex_integ\\\\.codex\\\\tmp\\\\manager-demo-port-recovery.compose.yaml\"\n  }\n}"
+    },
+    {
+      "id": "preflight",
+      "section": "preflight",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --preflight",
+      "status": "PASS",
+      "exitCode": 0,
+      "artifactPath": "preflight/preflight.txt",
+      "summary": "{\n  \"status\": \"PASS\",\n  \"failures\": []\n}"
+    },
+    {
+      "id": "compose-config",
+      "section": "compose",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a --profile full config --quiet",
+      "status": "PASS",
+      "exitCode": 0,
+      "artifactPath": "compose/compose-config.txt",
+      "summary": ""
+    },
+    {
+      "id": "compose-start",
+      "section": "compose",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a --profile full up -d --build postgres kafka schema-registry identity-service reference-data-service charge-agreement-service booking-service apps-charge-agreements",
+      "status": "FAIL",
+      "exitCode": 1,
+      "artifactPath": "compose/compose-start.txt",
+      "summary": "#1 [internal] load local bake definitions\n#1 reading from stdin 3.27kB done\n#1 DONE 0.0s\n\n#2 [identity-service internal] load build definition from spring-service.Dockerfile\n#2 transferring dockerfile: 45B 0.0s\n#2 transferring dockerfile: 206B 0.1s done\n#2 DONE 0.3s\n\n#3 [apps-charge-agreements internal] load build definition from next-app.Dockerfile\n#3 transferring dockerfile: 1.74kB 0.1s done\n#3 DONE 0.2s\n\n#4 [identity-service internal] load metadata for docker.io/library/eclipse-temurin:21-jre\n#4 DONE 0.2s\n\n#5 [apps-charge-agreements internal] load metadata for docker.io/library/node:24-alpine\n#5 DONE 0.2s\n\n#6 [charge-agreement-service internal] load .dockerignore\n#6 transferring context: 228B 0.2s\n#6 transferring context: 232B 0.2s done\n#6 DONE 0.2s\n\n#7 [apps-charge-agreements internal] load build context\n#7 DONE 0.0s\n\n#8 [reference-data-service 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:273396ed5998598ed1091e8d72711c2d36980a0e65103859c55a4e977a41ffd3\n#8 resolve docker.io/library/eclipse-temurin:21-jre@sha256:273396ed5998598ed1091e8d72711c2d36980a0e65103859c55a4e977a41ffd3 0.0s done\n#8 DONE 0.1s\n\n#9 [apps-charge-agreements deps  1/17] FROM docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#9 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#9 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.1s done\n#9 DONE 0.1s\n\n#8 [booking-service 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:273396ed5998598ed1091e8d72711c2d36980a0e65103859c55a4e977a41ffd3\n#8 resolve docker.io/library/eclipse-temurin:21-jre@sha256:273396ed5998598ed1091e8d72711c2d36980a0e65103859c55a4e977a41ffd3 0.0s done\n#8 DONE 0.1s\n\n#10 [identity-service internal] load build context\n#10 transferring context: 2.85MB 5.0s\n#10 ...\n\n#7 [apps-charge-agreements internal] load build context\n#7 ...\n\n#10 [ident\n... output truncated ...\neference-data-service:local 0.0s done\n#38 unpacking to docker.io/linercore/reference-data-service:local 0.0s done\n#38 DONE 0.4s\n\n#36 [booking-service] exporting to image\n#36 exporting manifest list sha256:a9dc01ee10e56358d59096136c1f5d6df43ddfc2fefa8cc31b8ede056a97fb28 0.0s done\n#36 naming to docker.io/linercore/booking-service:local done\n#36 unpacking to docker.io/linercore/booking-service:local 0.0s done\n#36 DONE 0.5s\n\n#36 [booking-service] exporting to image\n#36 DONE 0.5s\n\n#39 [charge-agreement-service] exporting to image\n#39 exporting layers done\n#39 exporting manifest sha256:ae0d7c711e21204fd679daa41ae69d4cc04b2fdbb22da99bbae230c5b0476b2c done\n#39 exporting config sha256:f7e1e177f1eee4c8ca3b92e85e715c375d1c11dfd428bfafa64eed4981267e65 0.0s done\n#39 exporting attestation manifest sha256:0b7106cc80b4fc51ef3c8a5f38e33c1c8b227160892e482bdfb8fcf51889a7b3 0.1s done\n#39 exporting manifest list sha256:d041945d23e349360287c21317b160f78bb5c4908e8fc0be011fe73240cbaa8f 0.1s done\n#39 naming to docker.io/linercore/charge-agreement-service:local 0.0s done\n#39 unpacking to docker.io/linercore/charge-agreement-service:local 0.1s done\n#39 DONE 0.6s\n\n#33 [apps-charge-agreements deps 17/17] RUN node .yarn/releases/yarn-4.5.3.cjs install --immutable\n#33 ...\n\n#40 [reference-data-service] resolving provenance for metadata file\n#40 DONE 0.3s\n\n#41 [booking-service] resolving provenance for metadata file\n#41 DONE 0.2s\n\n#42 [charge-agreement-service] resolving provenance for metadata file\n#42 DONE 0.0s\n\n#33 [apps-charge-agreements deps 17/17] RUN node .yarn/releases/yarn-4.5.3.cjs install --immutable\n\n Image linercore/apps-charge-agreements:local Building \n Image linercore/reference-data-service:local Building \n Image linercore/identity-service:local Building \n Image linercore/booking-service:local Building \n Image linercore/charge-agreement-service:local Building \ntarget apps-charge-agreements: failed to receive status: rpc error: code = Unavailable desc = error reading from server: EOF"
+    },
+    {
+      "id": "charge-health",
+      "section": "runtime",
+      "mapsTo": [
+        "W2-03-S1",
+        "W2-03-S2",
+        "W2-03-S3"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --probe http://127.0.0.1:18084/actuator/health",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "artifactPath": "runtime/charge-health.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "booking-health",
+      "section": "runtime",
+      "mapsTo": [
+        "W2-03-S4"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --probe http://127.0.0.1:18085/actuator/health",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "artifactPath": "runtime/booking-health.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "charge-ui-health",
+      "section": "runtime",
+      "mapsTo": [
+        "W2-03-S1",
+        "W2-03-S2",
+        "W2-03-S3"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --probe http://127.0.0.1:13013/api/health",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "artifactPath": "runtime/charge-ui-health.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "live-journey",
+      "section": "journey",
+      "mapsTo": [
+        "W2-03-S1",
+        "W2-03-S2",
+        "W2-03-S3",
+        "W2-03-S4",
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --journey D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live-2/journey/scenarios.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "artifactPath": "journey/live-journey.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "restart-services",
+      "section": "restart",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a restart postgres charge-agreement-service booking-service",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "artifactPath": "restart/restart-services.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "restart-persistence",
+      "section": "restart",
+      "mapsTo": [
+        "W2-03-S4",
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --verify-restart D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live-2/journey/scenarios.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "artifactPath": "restart/restart-persistence.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "contracts",
+      "section": "quality",
+      "mapsTo": [
+        "W2-03-S4",
+        "W2-03-S5"
+      ],
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "artifactPath": "quality/contracts.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "aidlc-audit",
+      "section": "audits",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --audit aidlc",
+      "status": "PASS",
+      "exitCode": 0,
+      "artifactPath": "audits/aidlc-audit.txt",
+      "summary": "=== 1. Placeholder / no-op / stub adapters (are these wired into prod? is there a real sibling?) ===\n  none found\n\n=== 1b. Where placeholder beans are instantiated (check the profile — should be local-only) ===\n  none found\n\n=== 2. Gates that 'verify/validate' by existence only (includes/existsSync/!== undefined) ===\n  none found\n\n=== 3. Outbox producers (enqueue) — each needs a relay AND a scheduler draining it ===\n-- enqueue sites:\n  none\n-- relay methods (drain the outbox):\n  none — outbox may be write-only\n\n=== 4. Schedulers / background workers (without one, relays never run in prod) ===\n  NONE — no background dispatch exists\n\n=== 5. Async event contracts vs. synchronous delivery of the same event (drift) ===\n-- events declared async in contracts/docs:\ndocs\\aidlc-v2-slicing-playbook.md:12:Double-horizontal slicing means **the vertical thread that forces integration to be real is never pulled.** And because each unit's Definition of Done is layer-local (\"domain tests pass,\" \"API tests pass\") — with `U10`'s DoD literally saying *\"without requiring Kafka live proof\"* — the facade/degenerate outcomes were **specified**, not accidental. The fix is not more documents. It is **vertical slicing + end-to-end Definitions of Done.**\r\ndocs\\enterprise-gap-summary.md:19:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`\r\ndocs\\enterprise-gap-summary.md:21:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`\r\ndocs\\enterprise-gap-summary.md:43:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`: 15 graph nodes found.\r\ndocs\\enterprise-gap-summary.md:45:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`: 15 graph nodes found.\r\ndocs\\enterprise-gap-summary.md:65:- `booking.confirmed` and `containermovement.status` are now explicit async event contracts with payload, schema, compatibility, security, observability, and message-pact expectations.\r\ndocs\\enterprise-technical-environment.md:33:\n... output truncated ...\nished-Language messages via the outbox | Mandated |\r\ndocs\\enterprise-technical-environment.md:195:| Asynchronous (events) | Everything else (state changes, decoupled flows) | Kafka + Avro + the common envelope below |\r\ndocs\\enterprise-technical-environment.md:230:- **Correlation ID** propagated across every hop (sync and async; carried in the event envelope and in REST headers).\r\ndocs\\enterprise-technical-environment.md:266:| `pricing-messaging` | In/out adapter (Kafka) | Yes (`spring-kafka`, Avro) | Publishers/listeners implementing message ports; domain↔Avro mappers | `pricing-application-service`, kafka infra |\r\ndocs\\enterprise-technical-environment.md:272:1. **Domain core is framework-free** — depends on `common-domain` and nothing else (no Spring/JPA/Kafka/Jackson). Invariants live in hand-written builders/entities.\r\ndocs\\enterprise-technical-environment.md:291:- **Atomic design** (`atoms / molecules / organisms / templates / skeletons`) for shared UI only; business-specific components stay inside their app. **Skeletons required** for every async loading state.\r\ndocs\\enterprise-technical-environment.md:317:- **At rest**: encryption for all PostgreSQL stores and Kafka volumes, with on-premises key management (HashiCorp Vault / HSM).\r\ndocs\\enterprise-technical-environment.md:364:**OpenTelemetry + W3C Trace Context**, exported through the **OpenTelemetry Collector** to **Jaeger** (self-hosted, confirmed). Propagation across every service boundary (sync and async) is required; correlation id is carried in the event envelope and REST headers.\r\n-- direct HTTP calls that may be delivering those 'events':\n\n=== 6. State-change + outbox paths lacking a transactional boundary ===\n-- @Transactional usages (expect these around save+enqueue):\n  NONE — dual-write hazard likely\n\n=== 7. Definition-of-done: was live E2E actually run? ===\n  no unchecked live-E2E markers found (verify manually)\n\nDone. Each section lists LEADS. Confirm every hit against the source before reporting."
+    },
+    {
+      "id": "erp-fidelity-audit",
+      "section": "audits",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --audit erp-fidelity",
+      "status": "PASS",
+      "exitCode": 0,
+      "artifactPath": "audits/erp-fidelity-audit.txt",
+      "summary": "=== 1. Aggregate shape — arrays/value-objects in contracts vs. flat scalars in domain ===\n-- array/nested fields the CONTRACTS declare:\ncontracts\\openapi\\reference-data-service.yaml:193:        - equipment-type\r\ncontracts\\asyncapi\\reference-data-events.yaml:20:  referencedata.equipment-type.changed:\r\ncontracts\\asyncapi\\reference-data-events.yaml:22:      summary: Reference data equipment type change event.\r\ncontracts\\asyncapi\\reference-data-events.yaml:26:          $ref: \"../avro/referencedata.equipment-type.changed.avsc\"\r\ncontracts\\avro\\referencedata.equipment-type.changed.avsc:5:  \"doc\": \"Reference data equipment type change event.\",\r\ncontracts\\avro\\booking.confirmed.avsc:22:            \"name\": \"routing\",\r\ncontracts\\avro\\booking.confirmed.avsc:24:              \"type\": \"array\",\r\ncontracts\\avro\\booking.confirmed.avsc:25:              \"items\": {\r\ncontracts\\avro\\booking.confirmed.avsc:38:            \"name\": \"equipment\",\r\ncontracts\\avro\\booking.confirmed.avsc:40:              \"type\": \"array\",\r\ncontracts\\avro\\booking.confirmed.avsc:41:              \"items\": {\r\n-- how the domain models them (look for flat String instead):\nservices\\container-movement-service\\application-service\\src\\test\\java\\com\\linercore\\platform\\containermovement\\applicationservice\\ContainerMovementApplicationServiceTest.java:192:    private BookingConfirmedEvent bookingConfirmed(String eventId, int revision, String idempotencyKey, String origin, String destination) {\r\nservices\\charge-agreement-service\\container\\src\\main\\java\\com\\linercore\\platform\\chargeagreement\\container\\api\\RateAuthorityApiController.java:107:            String equipmentTypeId, String locationId, BigDecimal amount, String currencyId, LocalDate validFrom,\nservices\\charge-agreement-service\\container\\src\\main\\java\\com\\linercore\\platform\\chargeagreement\\container\\api\\RateAuthorityApiController.java:125:            String chargeCodeId, String tradeLaneId, String equipmentTypeId, String locationId, String basis,\nservices\\container-movemen\n... output truncated ...\nin\\java\\com\\linercore\\platform\\containermovement\\applicationservice\\event\\BookingConfirmedEvent.java:70:            String equipmentTypeId) {\r\nservices\\container-movement-service\\application-service\\src\\main\\java\\com\\linercore\\platform\\containermovement\\applicationservice\\event\\BookingConfirmedEvent.java:136:    public record EquipmentAssignment(String equipmentTypeCode, int quantity, String equipmentId) {\r\nservices\\charge-agreement-service\\container\\src\\main\\java\\com\\linercore\\platform\\chargeagreement\\container\\api\\PricingApiController.java:97:            String equipmentType,\r\n\n=== 2. Field-name drift & self-disagreement (compare against contract names by hand) ===\n\n=== 3. Stringly-typed escape hatches (real domain fields hidden in bags) ===\n\n=== 4. Standards-on-paper — industry standard in docs vs. code (edit STD for your standard) ===\n-- in DOCS:\n211\n-- in CODE (java/ts/avsc):\n0\n  (docs >> 0 while code == 0 means the standard is aspirational only)\n\n=== 5. Named capabilities that are ZERO/near-zero in code (adjust list per vision) ===\n  invoice        0 hits\n  capacity       0 hits\n  tariff         0 hits\n  surcharge      0 hits\n  reefer         0 hits\n  voyage         0 hits\n  vessel         0 hits\n  track.?trace   0 hits\n  routing        0 hits\n\n=== 6a. UI — missing detail routes (expect a [id] page per entity) ===\n-- dynamic [id] PAGE routes found:\napps/booking/app/bookings/[bookingId]/page.tsx\napps/shell/app/booking/[bookingId]/page.tsx\napps/shell/app/bookings/[bookingId]/page.tsx\n\n=== 6b. UI — inline hardcoded colors & local style objects (no design tokens) ===\n93\n  hex-color/inline-style occurrences in app TSX (high = ad-hoc styling, no design system)\n\n=== 6c. UI — design system size (a real one is many files, not one) ===\n6\n  files in packages/ui (1 = placeholder, not a design system)\n\n=== 6d. UI — hardcoded auth user (login not wired into business screens) ===\n  none found\n\nDone. LEADS only — confirm each against the vision/contract docs before reporting."
+    },
+    {
+      "id": "compose-cleanup",
+      "section": "cleanup",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a --profile full down",
+      "status": "PASS",
+      "exitCode": 0,
+      "artifactPath": "cleanup/compose-cleanup.txt",
+      "summary": "time=\"2026-07-26T11:48:43+03:30\" level=warning msg=\"Warning: No resource found to remove for project \\\"linercore-wave-a\\\".\""
+    },
+    {
+      "id": "demo-verify",
+      "section": "guard",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/demo-guard.mjs --verify D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live-2/guard/protected-before.json",
+      "status": "FAIL",
+      "exitCode": 1,
+      "artifactPath": "guard/demo-verify.txt",
+      "summary": "{\n  \"status\": \"FAIL\",\n  \"failures\": [\n    \"protected linercore-shared-platform Compose state changed during W2-03 acceptance\"\n  ],\n  \"before\": {\n    \"name\": \"linercore-shared-platform\",\n    \"status\": \"running(23)\",\n    \"configFiles\": \"D:\\\\TST_Codex_integ\\\\compose.yaml,D:\\\\TST_Codex_integ\\\\.codex\\\\tmp\\\\manager-demo-port-recovery.compose.yaml\"\n  },\n  \"after\": {\n    \"name\": \"linercore-shared-platform\",\n    \"status\": \"running(9)\",\n    \"configFiles\": \"D:\\\\TST_Codex_integ\\\\compose.yaml,D:\\\\TST_Codex_integ\\\\.codex\\\\tmp\\\\manager-demo-port-recovery.compose.yaml\"\n  }\n}"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "audits/aidlc-audit.txt",
+      "sha256": "7fd10d250b27ae56267704063e9a7e0ff4d561f84e2ee96a7ffb042d47f62a11",
+      "bytes": 4147
+    },
+    {
+      "path": "audits/erp-fidelity-audit.txt",
+      "sha256": "34ba1158365f54280563c59d6dfbf865304f5feeee6aaa86b23613a0408f99a1",
+      "bytes": 4157
+    },
+    {
+      "path": "cleanup/compose-cleanup.txt",
+      "sha256": "20e8b446450e01613be26a1de79a183dbe9ffd8037af64ed9a9406dc7fdd411a",
+      "bytes": 232
+    },
+    {
+      "path": "compose/compose-config.txt",
+      "sha256": "b71470572517ac5fe14d6a78789b6e56bf820e87c282ec612289bf9425d144e2",
+      "bytes": 118
+    },
+    {
+      "path": "compose/compose-start.txt",
+      "sha256": "7fd45fc3f154c3e5e1f1b76447b59eff8393607b42e3bc7aeb885ea9ad6110d1",
+      "bytes": 4277
+    },
+    {
+      "path": "guard/demo-snapshot.txt",
+      "sha256": "5b06c343007e7daaadbd8ac167a192681fc9a0951cbe187d83606820e7e908b9",
+      "bytes": 500
+    },
+    {
+      "path": "guard/demo-verify.txt",
+      "sha256": "c503b1931f4203106c79e5f9cbc07df2cde8bc7bc239ff19f8110da2cecbf86d",
+      "bytes": 738
+    },
+    {
+      "path": "guard/protected-before.json",
+      "sha256": "e4fb3deea05e05a08935959c88ad765ccb542887f50b837f63a7d75bf58b07b2",
+      "bytes": 324
+    },
+    {
+      "path": "journey/live-journey.txt",
+      "sha256": "5b65a55c6f7d9f9700f55fba214ece3d7b7261a4dcb56cb86bdb06eb9ba7117a",
+      "bytes": 216
+    },
+    {
+      "path": "preflight/preflight.txt",
+      "sha256": "eb14083c72f23a27e99a8d163b936fd32ebd12f2eef18648ac0534f66ce95418",
+      "bytes": 139
+    },
+    {
+      "path": "quality/contracts.txt",
+      "sha256": "0ab584a8be7c4994f40dcf522dc5db394ca52ebe8c02ca1862595140f8c7fb32",
+      "bytes": 126
+    },
+    {
+      "path": "restart/restart-persistence.txt",
+      "sha256": "25529ca464b4b7b8251ba323a162b91652e705db2efb320fce2ca9f4ee55909c",
+      "bytes": 230
+    },
+    {
+      "path": "restart/restart-services.txt",
+      "sha256": "08b075a559b6f70c396a759356f7748c42df3dca536f19afe9818ef2c9e0aa1b",
+      "bytes": 183
+    },
+    {
+      "path": "runtime/booking-health.txt",
+      "sha256": "83750e40e5d44174145ffa995fb47f590957272a38c8064fc226eb8ca405c664",
+      "bytes": 174
+    },
+    {
+      "path": "runtime/charge-health.txt",
+      "sha256": "139768b44620758f1796206fcfa11810ef523e8b84cca170da5d7d7707cc31f5",
+      "bytes": 173
+    },
+    {
+      "path": "runtime/charge-ui-health.txt",
+      "sha256": "015426c36b2eb07cbda5483f1b7ffeb6dd86a8d5c25e1144ec098d2f2a358013",
+      "bytes": 171
+    }
+  ]
+}

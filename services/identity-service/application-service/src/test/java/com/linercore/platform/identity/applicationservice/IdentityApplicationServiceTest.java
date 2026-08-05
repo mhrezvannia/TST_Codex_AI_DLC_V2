@@ -71,6 +71,19 @@ class IdentityApplicationServiceTest {
     }
 
     @Test
+    void allowsBookingUserAndDeniesReferenceAdminForBookingCreate() {
+        subjects.add("local.booking.user");
+        assignments.save(active("local.booking.user", RoleCode.BOOKING_DESK));
+        subjects.add("local.reference.admin");
+        assignments.save(active("local.reference.admin", RoleCode.REFERENCE_ADMIN));
+
+        assertEquals(DecisionResult.ALLOW,
+                service.authorize(request("local.booking.user", "booking", "create")).result());
+        assertEquals(DecisionResult.DENY,
+                service.authorize(request("local.reference.admin", "booking", "create")).result());
+    }
+
+    @Test
     void serviceSubjectCanUseAssignedPlatformOperatorPermission() {
         subjects.addService("svc-reference-data");
         assignments.save(active("svc-reference-data", RoleCode.PLATFORM_OPERATOR));

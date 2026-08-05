@@ -1,0 +1,32 @@
+gate=quality-gates
+status=FAIL
+exitCode=1
+command=node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-final-pass/quality/evidence.json
+
+{
+  "status": "failed",
+  "failedRequired": [
+    "frontend-reference-data-test",
+    "frontend-reference-data-typecheck",
+    "package-auth-test",
+    "package-auth-typecheck",
+    "package-auth-lint",
+    "package-shared-types-test",
+    "package-shared-types-typecheck",
+    "package-shared-types-lint",
+    "frontend-auth-test",
+    "frontend-auth-typecheck",
+    "frontend-auth-lint",
+    "frontend-auth-build",
+    "frontend-charge-agreements-test",
+    "frontend-charge-agreements-typecheck",
+    "frontend-booking-test",
+    "frontend-booking-typecheck",
+    "frontend-booking-lint",
+    "frontend-booking-build",
+    "frontend-shell-test",
+    "frontend-shell-typecheck",
+    "frontend-shell-lint",
+    "frontend-shell-build"
+  ]
+}

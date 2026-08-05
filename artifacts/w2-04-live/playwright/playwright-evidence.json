@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-08-02T09:04:07.869Z",
+  "bookingId": "499dc85c-0999-445d-af9a-d81f0959be1b",
+  "viewports": [
+    {
+      "width": 375,
+      "screenshot": "D:\\TST_Codex_phase1_merge\\artifacts\\w2-04-live\\playwright\\booking-returned-empty-375.png",
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "focusedTag": "A"
+    },
+    {
+      "width": 768,
+      "screenshot": "D:\\TST_Codex_phase1_merge\\artifacts\\w2-04-live\\playwright\\booking-returned-empty-768.png",
+      "innerWidth": 768,
+      "scrollWidth": 768,
+      "focusedTag": "A"
+    },
+    {
+      "width": 1024,
+      "screenshot": "D:\\TST_Codex_phase1_merge\\artifacts\\w2-04-live\\playwright\\booking-returned-empty-1024.png",
+      "innerWidth": 1024,
+      "scrollWidth": 1024,
+      "focusedTag": "A"
+    },
+    {
+      "width": 1440,
+      "screenshot": "D:\\TST_Codex_phase1_merge\\artifacts\\w2-04-live\\playwright\\booking-returned-empty-1440.png",
+      "innerWidth": 1440,
+      "scrollWidth": 1440,
+      "focusedTag": "A"
+    }
+  ],
+  "decision": "PASS",
+  "completedAt": "2026-08-02T09:04:21.449Z"
+}

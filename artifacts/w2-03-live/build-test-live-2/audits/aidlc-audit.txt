@@ -1,0 +1,51 @@
+gate=aidlc-audit
+status=PASS
+exitCode=0
+command=node scripts/w2-03-live-acceptance.mjs --audit aidlc
+
+=== 1. Placeholder / no-op / stub adapters (are these wired into prod? is there a real sibling?) ===
+  none found
+
+=== 1b. Where placeholder beans are instantiated (check the profile — should be local-only) ===
+  none found
+
+=== 2. Gates that 'verify/validate' by existence only (includes/existsSync/!== undefined) ===
+  none found
+
+=== 3. Outbox producers (enqueue) — each needs a relay AND a scheduler draining it ===
+-- enqueue sites:
+  none
+-- relay methods (drain the outbox):
+  none — outbox may be write-only
+
+=== 4. Schedulers / background workers (without one, relays never run in prod) ===
+  NONE — no background dispatch exists
+
+=== 5. Async event contracts vs. synchronous delivery of the same event (drift) ===
+-- events declared async in contracts/docs:
+docs\aidlc-v2-slicing-playbook.md:12:Double-horizontal slicing means **the vertical thread that forces integration to be real is never pulled.** And because each unit's Definition of Done is layer-local ("domain tests pass," "API tests pass") — with `U10`'s DoD literally saying *"without requiring Kafka live proof"* — the facade/degenerate outcomes were **specified**, not accidental. The fix is not more documents. It is **vertical slicing + end-to-end Definitions of Done.**
+docs\enterprise-gap-summary.md:19:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`
+docs\enterprise-gap-summary.md:21:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`
+docs\enterprise-gap-summary.md:43:- `docs/enterprise-contracts/async-event-contract-booking-confirmed.md`: 15 graph nodes found.
+docs\enterprise-gap-summary.md:45:- `docs/enterprise-contracts/async-event-contract-containermovement-status.md`: 15 graph nodes found.
+docs\enterprise-gap-summary.md:65:- `booking.confirmed` and `containermovement.status` are now explicit async event contracts with payload, schema, compatibility, security, observability, and message-pact expectations.
+docs\enterprise-technical-environment.md:33:
+... output truncated ...
+ished-Language messages via the outbox | Mandated |
+docs\enterprise-technical-environment.md:195:| Asynchronous (events) | Everything else (state changes, decoupled flows) | Kafka + Avro + the common envelope below |
+docs\enterprise-technical-environment.md:230:- **Correlation ID** propagated across every hop (sync and async; carried in the event envelope and in REST headers).
+docs\enterprise-technical-environment.md:266:| `pricing-messaging` | In/out adapter (Kafka) | Yes (`spring-kafka`, Avro) | Publishers/listeners implementing message ports; domain↔Avro mappers | `pricing-application-service`, kafka infra |
+docs\enterprise-technical-environment.md:272:1. **Domain core is framework-free** — depends on `common-domain` and nothing else (no Spring/JPA/Kafka/Jackson). Invariants live in hand-written builders/entities.
+docs\enterprise-technical-environment.md:291:- **Atomic design** (`atoms / molecules / organisms / templates / skeletons`) for shared UI only; business-specific components stay inside their app. **Skeletons required** for every async loading state.
+docs\enterprise-technical-environment.md:317:- **At rest**: encryption for all PostgreSQL stores and Kafka volumes, with on-premises key management (HashiCorp Vault / HSM).
+docs\enterprise-technical-environment.md:364:**OpenTelemetry + W3C Trace Context**, exported through the **OpenTelemetry Collector** to **Jaeger** (self-hosted, confirmed). Propagation across every service boundary (sync and async) is required; correlation id is carried in the event envelope and REST headers.
+-- direct HTTP calls that may be delivering those 'events':
+
+=== 6. State-change + outbox paths lacking a transactional boundary ===
+-- @Transactional usages (expect these around save+enqueue):
+  NONE — dual-write hazard likely
+
+=== 7. Definition-of-done: was live E2E actually run? ===
+  no unchecked live-E2E markers found (verify manually)
+
+Done. Each section lists LEADS. Confirm every hit against the source before reporting.

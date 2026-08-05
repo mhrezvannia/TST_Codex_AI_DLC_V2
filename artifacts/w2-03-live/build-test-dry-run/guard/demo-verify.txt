@@ -1,0 +1,6 @@
+gate=demo-verify
+status=PLANNED
+exitCode=
+command=node scripts/demo-guard.mjs --verify D:/TST_Codex_integ/artifacts/w2-03-live/build-test-dry-run/guard/protected-before.json
+
+dry-run: command not executed

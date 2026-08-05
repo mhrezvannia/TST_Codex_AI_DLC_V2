@@ -1,0 +1,6 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\request-access\page.test.tsx
+@@
+-  expect(screen.getByText("No request has been created.")).toBeInTheDocument();
++  expect(screen.getByText(/No request has been created\./)).toBeInTheDocument();
+*** End Patch

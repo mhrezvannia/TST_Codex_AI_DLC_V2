@@ -1,0 +1,110 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\new\BookingCreateForm.tsx
+@@
+                 placeholder="Search code or customer name"
++                required
+@@
+                   placeholder="Search voyage code or vessel"
++                  required
+@@
+                   placeholder="Search UN/LOCODE or location"
++                  required
+@@
+                   placeholder="Search UN/LOCODE or location"
++                  required
+@@
+                   placeholder="Search ISO size/type code"
++                  required
+@@
+                   autoComplete="off"
++                  required
+@@
+                   autoComplete="off"
++                  required
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\new\BookingCreateForm.test.tsx
+@@
+-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+-import { describe, expect, it, vi } from "vitest";
++import { fireEvent, render, screen, waitFor } from "@testing-library/react";
++import { afterEach, describe, expect, it, vi } from "vitest";
+@@
+ describe("BookingCreateForm", () => {
++  afterEach(() => {
++    vi.restoreAllMocks();
++  });
++
+@@
+     expect(customerLink.getAttribute("href")).toBe("#booking-customerId");
+   });
++
++  it("prevents duplicate draft submission while the request is active", async () => {
++    const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
++    vi.stubGlobal("fetch", fetchMock);
++    render(<BookingCreateForm options={catalog} />);
++
++    selectOption("booking-customerId", /CUST-1 - Local Demo Carrier/);
++    selectOption("booking-voyageId", /LC002E - LinerCore Atlas/);
++    selectOption("booking-equipmentTypeCode", /22G1 - 20 foot dry/);
++    fireEvent.change(screen.getByTestId("booking-equipmentId"), {
++      target: { value: "LCRU1000055" }
++    });
++    fireEvent.change(screen.getByTestId("booking-commodityCode"), {
++      target: { value: "GENERAL" }
++    });
++
++    const submit = screen.getByTestId("booking-submit");
++    fireEvent.click(submit);
++    fireEvent.click(submit);
++
++    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
++    expect(submit.getAttribute("aria-busy")).toBe("true");
++    expect(submit).toBeDisabled();
++  });
+ });
++
++function selectOption(testId: string, optionName: RegExp) {
++  const input = screen.getByTestId(testId);
++  fireEvent.focus(input);
++  fireEvent.mouseDown(screen.getByRole("option", { name: optionName }));
++}
+*** Add File: D:\TST_Codex_ui_recovery\packages\ui\src\primitives.test.tsx
++import { render, screen } from "@testing-library/react";
++import { describe, expect, it } from "vitest";
++import { FailureState, Field, Input, StatusBadge } from "./primitives";
++
++describe("shared ERP primitives", () => {
++  it("maps raw status enums to sentence-case text with a non-color marker", () => {
++    render(<StatusBadge status="MANUAL_PRICING" />);
++
++    expect(screen.getByText("Manual pricing")).toBeTruthy();
++    expect(screen.getByText("Manual pricing").querySelector("[aria-hidden='true']")).toBeTruthy();
++  });
++
++  it("links required field errors to the control", () => {
++    render(
++      <Field
++        label="Equipment ID"
++        htmlFor="equipment"
++        error="Check digit is invalid"
++        errorId="equipment-error"
++        required
++      >
++        <Input id="equipment" aria-describedby="equipment-error" />
++      </Field>
++    );
++
++    expect(screen.getByLabelText(/Equipment ID/).getAttribute("aria-describedby")).toBe("equipment-error");
++    expect(screen.getByText("Check digit is invalid").id).toBe("equipment-error");
++  });
++
++  it("uses a focusable page heading for route-level failures", () => {
++    render(
++      <FailureState icon="cloud-off" title="Booking is temporarily unavailable">
++        <p>Try again later.</p>
++      </FailureState>
++    );
++
++    expect(screen.getByRole("heading", { level: 1 }).getAttribute("tabindex")).toBe("-1");
++  });
++});
+*** End Patch

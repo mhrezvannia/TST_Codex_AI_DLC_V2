@@ -1,0 +1,160 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\package.json
+@@
+   "dependencies": {
+     "@erp/auth": "workspace:*",
+     "@erp/shared-types": "workspace:*",
++    "@erp/ui": "workspace:*",
+     "next": "^15.1.3",
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\app\layout.tsx
+@@
+ import type { ReactNode } from "react";
++import { DesignSystemStyles } from "@erp/ui";
+ import "./shell.css";
+@@
+   return (
+-    <html lang="en">
+-      <body>{children}</body>
++    <html data-theme="light" lang="en">
++      <body>
++        <DesignSystemStyles />
++        {children}
++      </body>
+     </html>
+   );
+ }
+*** Delete File: D:\TST_Codex_ui_recovery\apps\shell\app\ShellFrame.tsx
+*** Add File: D:\TST_Codex_ui_recovery\apps\shell\app\ShellFrame.tsx
++import type { ReactNode } from "react";
++import type { SessionSummary } from "@erp/auth";
++import {
++  Breadcrumbs,
++  EnvironmentBadge,
++  LucideIcon,
++  ProductWordmark,
++  SideNavigation,
++  type SideNavigationItem
++} from "@erp/ui";
++
++export type ShellActivePath = "home" | "booking" | "reference-data" | "charge-agreements";
++
++export function ShellFrame({
++  activePath,
++  breadcrumbs,
++  children,
++  session
++}: {
++  activePath: ShellActivePath;
++  breadcrumbs: string[];
++  children: ReactNode;
++  session: SessionSummary;
++}) {
++  const navigation = moduleNavigation(session, activePath);
++  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "Local demo";
++
++  return (
++    <>
++      <a className="shell-skip-link" href="#shell-main">Skip to main content</a>
++      <div className="shell-frame">
++        <aside className="shell-sidebar">
++          <ProductWordmark className="shell-brand" href="/" />
++          <SideNavigation items={navigation} label="LinerCore modules" />
++        </aside>
++
++        <div className="shell-workspace">
++          <header className="shell-topbar">
++            <details className="shell-mobile-nav">
++              <summary aria-label="Open navigation">
++                <LucideIcon name="menu" />
++                <span>LinerCore</span>
++              </summary>
++              <SideNavigation items={navigation} label="Mobile modules" />
++            </details>
++
++            <EnvironmentBadge>{environmentLabel}</EnvironmentBadge>
++
++            <details className="shell-user-menu" data-testid="shell-user-menu">
++              <summary aria-label={`Open user menu for ${session.displayName || session.subject}`}>
++                <LucideIcon name="user" />
++                <span>{session.displayName || session.subject}</span>
++              </summary>
++              <div>
++                <div className="shell-user-identity">
++                  <strong>{session.displayName || session.subject}</strong>
++                  <span>{session.subject}</span>
++                </div>
++                <a href="/auth/session">Account and session</a>
++                <form action="/api/auth/sign-out" method="post">
++                  <button type="submit" data-testid="shell-sign-out-button">
++                    <LucideIcon name="log-out" size={16} />
++                    Sign out
++                  </button>
++                </form>
++              </div>
++            </details>
++          </header>
++
++          <main className="shell-main" id="shell-main">
++            <Breadcrumbs items={breadcrumbItems(breadcrumbs)} />
++            {children}
++          </main>
++        </div>
++      </div>
++    </>
++  );
++}
++
++export function moduleNavigation(session: SessionSummary, activePath: ShellActivePath): SideNavigationItem[] {
++  const permissions = new Set(session.permissions ?? []);
++  const items: SideNavigationItem[] = [
++    {
++      href: "/",
++      label: "Home",
++      icon: "home",
++      active: activePath === "home",
++      testId: "shell-nav-home"
++    }
++  ];
++
++  if (permissions.has("booking:read")) {
++    items.push({
++      href: "/bookings",
++      label: "Bookings",
++      icon: "clipboard-list",
++      active: activePath === "booking",
++      testId: "shell-nav-booking"
++    });
++  }
++  if (permissions.has("reference-data:read")) {
++    items.push({
++      href: "/reference-data/",
++      label: "Reference Data",
++      icon: "database",
++      active: activePath === "reference-data",
++      testId: "shell-nav-reference-data"
++    });
++  }
++  if (permissions.has("charge-agreement:read")) {
++    items.push({
++      href: "/charge-agreements/",
++      label: "Service Contracts & Rates",
++      icon: "file-text",
++      active: activePath === "charge-agreements",
++      testId: "shell-nav-charge-agreements"
++    });
++  }
++
++  return items;
++}
++
++function breadcrumbItems(labels: string[]) {
++  return labels.map((rawLabel, index) => {
++    const label = rawLabel === "Shell" ? "Home" : rawLabel;
++    const current = index === labels.length - 1;
++    if (current) return { label };
++    if (index === 0) return { label, href: "/" };
++    if (label === "Bookings" || label === "Booking") return { label: "Bookings", href: "/bookings" };
++    return { label };
++  });
++}
+*** End Patch

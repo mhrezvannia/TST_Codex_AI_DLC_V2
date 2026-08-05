@@ -1,0 +1,88 @@
+{
+  "generatedAt": "2026-07-19T22:13:56.724Z",
+  "mode": "live",
+  "runId": "w1-01-replay-restart-1784499236727",
+  "status": "failed",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "bookingTopic": "booking.confirmed",
+    "movementTopic": "containermovement.status",
+    "bookingDetailSource": "booking-local-projection",
+    "replayRequiresAuthorization": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "summary": {
+    "passed": 3,
+    "planned": 0,
+    "blocked": 1,
+    "failed": 4
+  },
+  "steps": [
+    {
+      "id": "compose-services",
+      "command": "docker compose ps --format json",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-07-20 01:32:07 +0330 +0330\",\"ExitCode\":0,\"Health\":\"\",\"ID\":\"cef0c01f1e2e\",\"Image\":\"linercore/apps-auth:local\",\"Labels\":\"com.docker.compose.project=linercore-shared-platform,com.docker.compose.version=5.2.0,com.docker.compose.config-hash=326974819ac3756c9ab212f872794431ef34318b69566371bd9a2e312e81f1a1,com.docker.compose.image=sha256:c1dec8d3a175a2dcf47c3ae42295b9517b01401af0a3bcb5e10eb912c6691c1b,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=D:\\\\TST_Codex_merge_w2\\\\compose.yaml,com.docker.compose.project.working_dir=D:\\\\TST_Codex_merge_w2,com.docker.compose.service=apps-auth,desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.depends_on=identity-service:service_started:false\",\"LocalVolumes\":\"0\",\"Mounts\":\"\",\"Name\":\"linercore-shared-platform-apps-auth-1\",\"Names\":\"linercore-shared-platform-apps-auth-1\",\"Networks\":\"linercore-local\",\"Ports\":\"3000/tcp\",\"Project\":\"linercore-shared-platform\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":3000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"7 minutes ago\",\"Service\":\"apps-auth\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 minutes\"}\n{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-07-20 01:32:08 +0330 +0330\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"8e28ce343ff3\",\"Image\":\"linercore/apps-booking:local\",\"Labels\":\"com.docker.compose.config-hash=ac3b742c915c6b297b5f3a07d4f4efe52e6fd129dde7a3077d83e4ce062063bb,com.docker.compose.container-number=1,com.docker.compose.depends_on=booking-service:service_healthy:false,com.docker.compose.image=sha256:746d18972ea526877a72c55dc57f904d04506e1e729c97541e8ba980b80fa831,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=D:\\\\TST_Codex_merge_w2\\\\compose.yaml,com.docker.compose.service=apps-booking,desktop.docker.io/ports/3000/tcp=:3001,com.docker.compose.project=linercore-shared-platform,com.docker.compose.project.working_dir=D:\\\\TST_Codex_merge_w2,com.docker.c"
+    },
+    {
+      "id": "booking-health-before",
+      "command": "node scripts/replay-restart-proof.mjs --probe http://localhost:8088/api/bookings",
+      "status": "failed",
+      "exitCode": 3221226505,
+      "missingExpectedOutput": [],
+      "summary": "probe failed 404\nAssertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\\win\\async.c, line 94"
+    },
+    {
+      "id": "capture-business-counts-before",
+      "command": "docker compose exec -T postgres psql -U linercore -d linercore_booking -c \"SELECT COUNT(*) AS bookings FROM bookings; SELECT COUNT(*) AS booking_outbox FROM booking_outbox; SELECT COUNT(*) AS booking_consumed_events FROM booking_consumed_events; SELECT COUNT(*) AS booking_movement_status FROM booking_movement_status;\"",
+      "status": "failed",
+      "exitCode": null,
+      "missingExpectedOutput": [],
+      "summary": ""
+    },
+    {
+      "id": "restart-booking",
+      "command": "docker compose restart booking-service",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "Container linercore-shared-platform-booking-service-1 Restarting \n Container linercore-shared-platform-booking-service-1 Started"
+    },
+    {
+      "id": "booking-health-after",
+      "command": "node scripts/replay-restart-proof.mjs --probe http://localhost:8088/api/bookings",
+      "status": "failed",
+      "exitCode": 3221226505,
+      "missingExpectedOutput": [],
+      "summary": "probe failed 404\nAssertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\\win\\async.c, line 94"
+    },
+    {
+      "id": "restart-cmm",
+      "command": "docker compose restart container-movement-service",
+      "status": "passed",
+      "exitCode": 0,
+      "missingExpectedOutput": [],
+      "summary": "Container linercore-shared-platform-container-movement-service-1 Restarting \n Container linercore-shared-platform-container-movement-service-1 Started"
+    },
+    {
+      "id": "capture-business-counts-after",
+      "command": "docker compose exec -T postgres psql -U linercore -d linercore_booking -c \"SELECT COUNT(*) AS bookings FROM bookings; SELECT COUNT(*) AS booking_outbox FROM booking_outbox; SELECT COUNT(*) AS booking_consumed_events FROM booking_consumed_events; SELECT COUNT(*) AS booking_movement_status FROM booking_movement_status;\"",
+      "status": "blocked",
+      "exitCode": 1,
+      "missingExpectedOutput": [],
+      "summary": "ERROR:  relation \"bookings\" does not exist\nLINE 1: SELECT COUNT(*) AS bookings FROM bookings; SELECT COUNT(*) A...\n                                         ^"
+    },
+    {
+      "id": "topic-presence",
+      "command": "docker compose exec -T kafka kafka-topics --bootstrap-server kafka:9092 --list",
+      "status": "failed",
+      "exitCode": 0,
+      "missingExpectedOutput": [
+        "booking.confirmed"
+      ],
+      "summary": "__consumer_offsets\n_schemas\ncontainermovement.status\nreferencedata.events"
+    }
+  ]
+}

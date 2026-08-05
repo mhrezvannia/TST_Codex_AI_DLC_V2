@@ -1,0 +1,13 @@
+{
+  "stage_slug": "market-research",
+  "selections": [
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03, build the bounded pricing authority on the existing W0/W1 foundations now while preserving a future partner/import seam; evaluate optimization, external distribution, and broader rating dimensions only through a later approved intent.",
+      "source": "orchestrator"
+    }
+  ]
+}

@@ -2,17 +2,23 @@ name: Quality Gates
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, integ/main-reconciled]
+  push:
+    branches: [main, integ/main-reconciled]
   workflow_dispatch:
 
 jobs:
   quality-gates:
-    name: Shared Platform quality gates
+    name: Program quality gates
     runs-on: [self-hosted, on-prem, linux]
-    timeout-minutes: 45
+    timeout-minutes: 60
     permissions:
       contents: read
       checks: write
+    env:
+      POSTGRES_HOST_PORT: "55432"
+      GRAFANA_HOST_PORT: "3003"
+      MESSAGING_REQUIRE_REAL: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,11 +30,127 @@ jobs:
           java-version: "21"
           cache: maven
 
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
       - name: Enable Corepack
         run: corepack enable
 
+      - name: Verify self-hosted runner prerequisites
+        run: |
+          node --version
+          java --version
+          docker compose version
+          bun --version
+          bash --version
+          rg --version
+
       - name: Install frontend dependencies
         run: corepack yarn install --immutable
+
+      - name: Backend service tests
+        run: mvn -f services/pom.xml -q test
+
+      - name: Workspace script tests
+        run: node --test scripts/w1-live-acceptance.test.mjs scripts/w2-01-live-acceptance.test.mjs scripts/w2-04-live-acceptance.test.mjs scripts/verify-contract-providers.test.mjs scripts/replay-restart-proof.test.mjs scripts/local-readiness.test.mjs scripts/run-quality-gates.test.mjs scripts/seed-local.test.mjs
+
+      - name: W2-04 contract and acceptance harness validation
+        run: |
+          npm run contracts:validate
+          npm run contracts:verify
+          node --check scripts/w2-04-live-acceptance.mjs
+          node --check scripts/w2-04-playwright.mjs
+
+      - name: Dependency advisory gate
+        run: corepack yarn npm audit --all --severity high
+
+      - name: Shared auth package tests
+        run: corepack yarn workspace @erp/auth test
+
+      - name: Shared auth package typecheck
+        run: corepack yarn workspace @erp/auth typecheck
+
+      - name: Shared auth package lint
+        run: corepack yarn workspace @erp/auth lint
+
+      - name: Shared types package tests
+        run: corepack yarn workspace @erp/shared-types test
+
+      - name: Shared types package typecheck
+        run: corepack yarn workspace @erp/shared-types typecheck
+
+      - name: Shared types package lint
+        run: corepack yarn workspace @erp/shared-types lint
+
+      - name: Shared UI package tests
+        run: corepack yarn workspace @erp/ui test
+
+      - name: Shared UI package typecheck
+        run: corepack yarn workspace @erp/ui typecheck
+
+      - name: Shared UI package lint
+        run: corepack yarn workspace @erp/ui lint
+
+      - name: Shared UI package build
+        run: corepack yarn workspace @erp/ui build
+
+      - name: W2-02 presentation anti-drift and evidence helper tests
+        run: |
+          corepack yarn w2-02:anti-drift
+          corepack yarn w2-02:test:scripts
+          corepack yarn w2-02:test:auth-state
+          corepack yarn exec tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --types node --skipLibCheck playwright.config.ts tests/w2-02/booking.spec.ts
+
+      # Historical W1 live proof remains BLOCKED/waived. These deterministic W2-02
+      # checks do not reclassify it and do not operate either Compose project.
+
+      - name: Auth frontend tests
+        run: corepack yarn workspace @erp/app-auth test
+
+      - name: Auth frontend typecheck
+        run: corepack yarn workspace @erp/app-auth typecheck
+
+      - name: Auth frontend lint
+        run: corepack yarn workspace @erp/app-auth lint
+
+      - name: Booking frontend tests
+        run: corepack yarn workspace @erp/app-booking test
+
+      - name: Booking frontend typecheck
+        run: corepack yarn workspace @erp/app-booking typecheck
+
+      - name: Booking frontend lint
+        run: corepack yarn workspace @erp/app-booking lint
+
+      - name: Booking frontend build
+        run: corepack yarn workspace @erp/app-booking build
+
+      - name: Shell frontend tests
+        run: corepack yarn workspace @erp/app-shell test
+
+      - name: Shell frontend typecheck
+        run: corepack yarn workspace @erp/app-shell typecheck
+
+      - name: Shell frontend lint
+        run: corepack yarn workspace @erp/app-shell lint
+
+      - name: Shell frontend build
+        run: corepack yarn workspace @erp/app-shell build
+
+      - name: Compose static validation
+        run: docker compose config --quiet
+
+      - name: W1 live acceptance dry run
+        run: node scripts/w1-live-acceptance.mjs --dry-run --run-id ci-dry-run
+
+      - name: W2-01 live evidence package
+        run: |
+          node scripts/w2-01-live-acceptance.mjs --output-root artifacts/w2-01-live/app-shell-auth
+          node scripts/w2-01-live-acceptance.mjs --validate --output-root artifacts/w2-01-live/app-shell-auth
 
       - name: Run quality gate aggregator
         run: node scripts/run-quality-gates.mjs --all --evidence artifacts/quality-gates/evidence.json
@@ -37,13 +159,26 @@ jobs:
         if: always()
         run: node scripts/local-readiness.mjs --evidence artifacts/readiness/local-readiness.json
 
+      - name: Run AI-DLC audit detector
+        if: always()
+        run: mkdir -p artifacts/quality-gates && bash .claude/skills/aidlc-audit/detectors.sh | tee artifacts/quality-gates/aidlc-audit.txt
+
+      - name: Run ERP fidelity detector
+        if: always()
+        run: mkdir -p artifacts/quality-gates && bash .claude/skills/erp-fidelity-audit/detectors.sh | tee artifacts/quality-gates/erp-fidelity-audit.txt
+
       - name: Upload quality evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: quality-gate-evidence
+          retention-days: 14
           path: |
             artifacts/quality-gates/evidence.json
             artifacts/readiness/local-readiness.json
             artifacts/contracts-live-verification.json
             artifacts/seed-apply-attempt.json
+            artifacts/w1-01-live/ci-dry-run/**
+            artifacts/w2-01-live/app-shell-auth/**
+            artifacts/w2-04-live/**
+            artifacts/quality-gates/*.txt

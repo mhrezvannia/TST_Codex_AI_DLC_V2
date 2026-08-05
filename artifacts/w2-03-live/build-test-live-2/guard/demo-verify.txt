@@ -1,0 +1,21 @@
+gate=demo-verify
+status=FAIL
+exitCode=1
+command=node scripts/demo-guard.mjs --verify D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live-2/guard/protected-before.json
+
+{
+  "status": "FAIL",
+  "failures": [
+    "protected linercore-shared-platform Compose state changed during W2-03 acceptance"
+  ],
+  "before": {
+    "name": "linercore-shared-platform",
+    "status": "running(23)",
+    "configFiles": "D:\\TST_Codex_integ\\compose.yaml,D:\\TST_Codex_integ\\.codex\\tmp\\manager-demo-port-recovery.compose.yaml"
+  },
+  "after": {
+    "name": "linercore-shared-platform",
+    "status": "running(9)",
+    "configFiles": "D:\\TST_Codex_integ\\compose.yaml,D:\\TST_Codex_integ\\.codex\\tmp\\manager-demo-port-recovery.compose.yaml"
+  }
+}

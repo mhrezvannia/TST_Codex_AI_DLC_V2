@@ -1,0 +1,110 @@
+
+=== 1. Aggregate shape — arrays/value-objects in contracts vs. flat scalars in domain ===
+-- array/nested fields the CONTRACTS declare:
+contracts\asyncapi\reference-data-events.yaml:20:  referencedata.equipment-type.changed:
+contracts\asyncapi\reference-data-events.yaml:22:      summary: Reference data equipment type change event.
+contracts\asyncapi\reference-data-events.yaml:26:          $ref: "../avro/referencedata.equipment-type.changed.avsc"
+contracts\openapi\reference-data-service.yaml:193:        - equipment-type
+contracts\avro\referencedata.equipment-type.changed.avsc:5:  "doc": "Reference data equipment type change event.",
+-- how the domain models them (look for flat String instead):
+services\reference-data-service\domain-core\src\main\java\com\linercore\platform\referencedata\domain\validation\ReferenceValidator.java:24:            String origin = record.attributes().get("originRegionId");
+services\reference-data-service\domain-core\src\main\java\com\linercore\platform\referencedata\domain\validation\ReferenceValidator.java:25:            String destination = record.attributes().get("destinationRegionId");
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:185:            String containerId,
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:204:            String originLocationId,
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:205:            String destinationLocationId,
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:206:            String containerId,
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:207:            String equipmentTypeId) {
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:212:            String containerId,
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:224:            String containerId,
+services\container-movement-service\container\src\main\java\com\linercore\platform\containermovement\container\api\ContainerMovementApiController.java:240:            String containerId,
+
+=== 2. Field-name drift & self-disagreement (compare against contract names by hand) ===
+contracts\avro\booking.confirmed.avsc:18:    { "name": "originLocationId", "type": "string" },
+contracts\avro\booking.confirmed.avsc:19:    { "name": "destinationLocationId", "type": "string" },
+contracts\avro\booking.confirmed.avsc:21:    { "name": "equipmentTypeId", "type": "string" }
+contracts\avro\containermovement.status.avsc:16:    { "name": "movementStatus", "type": "string" },
+services\booking-service\messaging\src\test\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisherSerdeTest.java:39:                Map.entry("originLocationId", "loc-origin"),
+services\booking-service\messaging\src\test\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisherSerdeTest.java:40:                Map.entry("destinationLocationId", "loc-destination"),
+services\booking-service\messaging\src\test\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisherSerdeTest.java:42:                Map.entry("equipmentTypeId", "equipment-40hc"));
+services\booking-service\messaging\src\test\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisherSerdeTest.java:79:        assertEquals("loc-origin", string(received, "originLocationId"));
+services\booking-service\messaging\src\test\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisherSerdeTest.java:80:        assertEquals("loc-destination", string(received, "destinationLocationId"));
+services\booking-service\messaging\src\test\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisherSerdeTest.java:82:        assertEquals("equipment-40hc", string(received, "equipmentTypeId"));
+services\booking-service\messaging\src\main\resources\avro\booking.confirmed.avsc:18:    { "name": "originLocationId", "type": "string" },
+services\booking-service\messaging\src\main\resources\avro\booking.confirmed.avsc:19:    { "name": "destinationLocationId", "type": "string" },
+services\booking-service\messaging\src\main\resources\avro\booking.confirmed.avsc:21:    { "name": "equipmentTypeId", "type": "string" }
+services\charge-agreement-service\container\src\main\java\com\linercore\platform\chargeagreement\container\api\ChargeAgreementApiController.java:128:            @RequestParam(name = "originLocationId", required = false) String originLocationId,
+services\charge-agreement-service\container\src\main\java\com\linercore\platform\chargeagreement\container\api\ChargeAgreementApiController.java:129:            @RequestParam(name = "destinationLocationId", required = false) String destinationLocationId,
+services\charge-agreement-service\container\src\main\java\com\linercore\platform\chargeagreement\container\api\ChargeAgreementApiController.java:135:                originLocationId, destinationLocationId, commodityId, effectiveDate, actor, correlation(correlationId)));
+services\booking-service\messaging\src\main\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisher.java:54:        record.put("originLocationId", payload.get("originLocationId"));
+services\booking-service\messaging\src\main\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisher.java:55:        record.put("destinationLocationId", payload.get("destinationLocationId"));
+services\booking-service\messaging\src\main\java\com\linercore\platform\booking\messaging\KafkaBookingEventPublisher.java:57:        record.put("equipmentTypeId", payload.get("equipmentTypeId"));
+services\booking-service\dataaccess\src\main\java\com\linercore\platform\booking\dataaccess\jdbc\JdbcBookingRepository.java:45:                booking.originLocationId(),
+services\booking-service\dataaccess\src\main\java\com\linercore\platform\booking\dataaccess\jdbc\JdbcBookingRepository.java:46:                booking.destinationLocationId(),
+services\booking-service\domain-core\src\test\java\com\linercore\platform\booking\domain\outbox\BookingEventMapperTest.java:33:        assertEquals("40HC", event.payload().get("equipmentTypeId"));
+services\charge-agreement-service\application-service\src\main\java\com\linercore\platform\chargeagreement\applicationservice\query\ActiveAgreementLookupQuery.java:8:        String originLocationId,
+services\charge-agreement-service\application-service\src\main\java\com\linercore\platform\chargeagreement\applicationservice\query\ActiveAgreementLookupQuery.java:9:        String destinationLocationId,
+services\booking-service\domain-core\src\main\java\com\linercore\platform\booking\domain\outbox\BookingEventMapper.java:32:                        entry("originLocationId", booking.originLocationId()),
+services\booking-service\domain-core\src\main\java\com\linercore\platform\booking\domain\outbox\BookingEventMapper.java:33:                        entry("destinationLocationId", booking.destinationLocationId()),
+services\booking-service\domain-core\src\main\java\com\linercore\platform\booking\domain\outbox\BookingEventMapper.java:35:                        entry("equipmentTypeId", booking.equipmentType())),
+services\booking-service\container\src\main\java\com\linercore\platform\booking\container\integration\HttpContainerMovementClient.java:33:        payload.put("originLocationId", booking.originLocationId());
+services\booking-service\container\src\main\java\com\linercore\platform\booking\container\integration\HttpContainerMovementClient.java:34:        payload.put("destinationLocationId", booking.destinationLocationId());
+services\booking-service\container\src\main\java\com\linercore\platform\booking\container\integration\HttpContainerMovementClient.java:36:        payload.put("equipmentTypeId", booking.equipmentType());
+
+=== 3. Stringly-typed escape hatches (real domain fields hidden in bags) ===
+apps\reference-data\lib\service-clients.ts:36:  attributes?: Record<string, string>;
+apps\reference-data\lib\service-clients.ts:281:  attributes?: Record<string, string>;
+apps\reference-data\app\ReferenceDataWorkbench.tsx:274:  const labels: Record<string, string> = {
+packages\ui\src\index.tsx:179:  const hrefs: Record<string, string> = {
+packages\ui\src\contrast.test.ts:25:function tokensFor(selector: string): Record<string, string> {
+packages\ui\src\contrast.test.ts:30:  const out: Record<string, string> = {};
+apps\booking\app\BookingWorkbench.tsx:137:          { label: "Movement status", value: selected?.attributes.movementStatus ?? "Not received" }
+apps\booking\app\BookingWorkbench.tsx:191:                <div><dt style={dt}>Movement</dt><dd style={dd}>{selected.attributes.movementStatus ?? "Not started"}</dd></div>
+services\reference-data-service\domain-core\src\main\java\com\linercore\platform\referencedata\domain\model\ReferenceRecord.java:20:        Map<String, String> attributes) {
+services\reference-data-service\domain-core\src\test\java\com\linercore\platform\referencedata\domain\validation\ReferenceValidatorTest.java:82:    private ReferenceRecord record(ReferenceSet set, Map<String, String> attributes) {
+services\reference-data-service\domain-core\src\test\java\com\linercore\platform\referencedata\domain\validation\ReferenceValidatorTest.java:86:    private ReferenceRecord record(String id, ReferenceSet set, Map<String, String> attributes) {
+services\reference-data-service\domain-core\src\test\java\com\linercore\platform\referencedata\domain\validation\ReferenceValidatorTest.java:90:    private ReferenceRecord record(String id, ReferenceSet set, String code, Map<String, String> attributes) {
+services\reference-data-service\application-service\src\test\java\com\linercore\platform\referencedata\applicationservice\ReferenceDataApplicationServiceTest.java:105:    private ReferenceMutationCommand command(ReferenceSet set, String code, String name, Map<String, String> attributes) {
+services\reference-data-service\application-service\src\test\java\com\linercore\platform\referencedata\applicationservice\ReferenceEventOutboxApplicationServiceTest.java:92:    private ReferenceMutationCommand command(ReferenceSet set, String code, String name, Map<String, String> attributes) {
+services\booking-service\application-service\src\main\java\com\linercore\platform\booking\applicationservice\pricing\ChargePricingRequest.java:14:        Map<String, String> attributes,
+services\booking-service\domain-core\src\main\java\com\linercore\platform\booking\domain\model\Booking.java:21:        Map<String, String> attributes) {
+services\booking-service\domain-core\src\main\java\com\linercore\platform\booking\domain\model\Booking.java:46:            Map<String, String> attributes,
+services\reference-data-service\application-service\src\main\java\com\linercore\platform\referencedata\applicationservice\command\ReferenceMutationCommand.java:10:        Map<String, String> attributes,
+services\booking-service\application-service\src\main\java\com\linercore\platform\booking\applicationservice\BookingApplicationService.java:171:    public Booking amend(BookingId id, Map<String, String> attributes, String actorSubjectId, String correlationId) {
+services\booking-service\container\src\main\java\com\linercore\platform\booking\container\api\BookingApiController.java:252:            Map<String, String> attributes,
+
+=== 4. Standards-on-paper — industry standard in docs vs. code (edit STD for your standard) ===
+-- in DOCS:
+206
+-- in CODE (java/ts/avsc):
+5
+  (docs >> 0 while code == 0 means the standard is aspirational only)
+
+=== 5. Named capabilities that are ZERO/near-zero in code (adjust list per vision) ===
+  invoice        1 hits
+  capacity       0 hits
+  tariff         0 hits
+  surcharge      1 hits
+  reefer         0 hits
+  voyage         33 hits
+  vessel         35 hits
+  track.?trace   0 hits
+  routing        1 hits
+
+=== 6a. UI — missing detail routes (expect a [id] page per entity) ===
+-- dynamic [id] PAGE routes found:
+  NONE — no detail pages exist
+
+=== 6b. UI — inline hardcoded colors & local style objects (no design tokens) ===
+110
+  hex-color/inline-style occurrences in app TSX (high = ad-hoc styling, no design system)
+
+=== 6c. UI — design system size (a real one is many files, not one) ===
+6
+  files in packages/ui (1 = placeholder, not a design system)
+
+=== 6d. UI — hardcoded auth user (login not wired into business screens) ===
+apps\booking\app\BookingWorkbench.tsx:83:        actorSubjectId: "local-user",
+apps\booking\app\BookingWorkbench.tsx:95:      ? { idempotencyKey: `pricing-ui-${Date.now()}`, actorSubjectId: "local-user", correlationId: `booking-ui-${Date.now()}` }
+apps\booking\app\BookingWorkbench.tsx:96:      : { actorSubjectId: "local-user", correlationId: `booking-ui-${Date.now()}` };
+
+Done. LEADS only — confirm each against the vision/contract docs before reporting.

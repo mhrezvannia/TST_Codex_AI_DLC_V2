@@ -1,0 +1,13 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\app\ShellFrame.tsx
+@@
+-              <SideNavigation items={navigation} label="Mobile modules" />
++              <SideNavigation
++                items={navigation.map(({ testId: _testId, ...item }) => item)}
++                label="Mobile modules"
++              />
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\app\ShellFrame.test.tsx
+@@
+-    expect(screen.getAllByTestId("shell-nav-reference-data")).toHaveLength(2);
++    expect(screen.getByTestId("shell-nav-reference-data")).toBeInTheDocument();
+*** End Patch

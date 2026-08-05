@@ -14,7 +14,7 @@ to list intents, `$aidlc --doctor` to validate setup, and
 
 - **Codex CLI ≥ 0.139.0**: earlier releases do not surface the real agent role in subagent hook payloads and do not resolve hyphenated agent TOMLs. `$aidlc --doctor` enforces the pin. Check with `codex --version`.
 - **bun**: Required for CLI tools and hook scripts (state management, audit logging, jump orchestration). Install via `curl -fsSL https://bun.sh/install | bash`. On Windows: `npm install -g bun` or `powershell -c "irm bun.sh/install.ps1 | iex"`. `bun` must be on your PATH for the non-interactive shells the harness spawns — these source `~/.zshenv` (zsh) or `~/.bashrc` (bash), NOT `~/.zshrc`.
-- **Model provider**: The shipped `.codex/config.toml` defaults to **Amazon Bedrock** — the orchestrator on `openai.gpt-5.5`, agents on `openai.gpt-5.4` (the D-7 model map). Set your AWS profile/region under `[model_providers.amazon-bedrock.aws]` (shipped defaults `profile = "default"`, `region = "us-east-1"`); you need Bedrock model access and AWS credentials on the default SDK credential chain. For OpenAI auth instead, comment out `model_provider` and the `[model_providers]` block. Note: `web_search` is unavailable on Bedrock, so the market-research stage degrades gracefully.
+- **Model provider**: This workspace uses OpenAI through `codex login` with a ChatGPT account. `.codex/config.toml` and the AI-DLC agent TOMLs pin `gpt-5.6-sol` with high reasoning as the default. Do not add Bedrock, AWS credentials, `model_provider`, or `[model_providers]` settings unless the user explicitly changes providers. Model selection may be overridden per worker when a later task benefits from a different available model; when Codex cannot apply the change directly, ask the user to select it in the ChatGPT/Codex surface.
 - **MCP servers (optional)**: Codex reads MCP server definitions from `[mcp_servers.<name>]` tables in `config.toml` (project `.codex/config.toml` or `~/.codex/config.toml`). The shipped config declares none — add the servers you need there. Credentials flow through your environment; a server you have no credentials for is simply unavailable and never blocks a workflow.
 - **Locking**: Audit log file locking is handled portably using mkdir-based locking in the system temp directory (no external dependencies).
 - **Hook permissions**: All 10 hooks are TypeScript (`.ts`) and run via `bun`. No executable bits required — works identically on macOS, Linux, and native Windows PowerShell.
@@ -65,3 +65,30 @@ Commit the `aidlc/` workspace tree — the record (state, the per-clone audit sh
 - `aidlc/.aidlc-clone-id` (per-clone audit-shard token) and `aidlc/.aidlc-sessions/`
 - `aidlc/spaces/*/intents/*/runtime-graph.json` (also covers per-Bolt worktree fragments by relative-path glob)
 - `aidlc/spaces/*/intents/*/.aidlc-*` (recovery, hooks-health, sensors scratch)
+
+## Intent Workflow (program backlog — read this first for any delivery work)
+
+All delivery work is organized as **vertical intents** in a single program backlog:
+`docs/intents/00-INTENT-BACKLOG.md` (DAG, waves, ownership, dependency & merge protocol).
+
+Before starting any intent:
+1. Read `docs/aidlc-v2-slicing-playbook.md` (slicing rules, two-layer model, folder conventions).
+2. Read the intent's statement in `docs/intents/` — its **Context Pack** section lists the exact docs to load.
+3. Artifact shapes are governed by binding templates in `aidlc/spaces/default/memory/templates/` (skeleton + sensor gate in one file).
+4. Exit gate for every intent: DoD observed on the live Compose stack + `aidlc-audit` + `erp-fidelity-audit` green (see `.claude/skills/`).
+
+Review context: `docs/codex-review-findings.md`, `docs/erp-business-ui-gap-analysis.md`, `docs/erp-workflow-map.md`.
+
+## UI/UX Contract
+
+For every UI-bearing intent or code change, invoke the project `ui-ux-pro-max`
+skill and load `design-system/linercore/MASTER.md` plus
+`design-system/linercore/SESSION-PROMPT.md` before producing mockups, application
+design, or frontend code. These files define the one shared shell, token system,
+page patterns, responsive/a11y evidence, and Wave A ownership boundaries.
+
+Skill output is advisory. Reject marketing, hero, conversion, decorative, or
+dark-default recommendations that conflict with the active intent, enterprise
+technical standards, or the LinerCore operational-console contract. Domain
+sessions may add only their named page override under
+`design-system/linercore/pages/`; W2-02 owns the master and `packages/ui`.

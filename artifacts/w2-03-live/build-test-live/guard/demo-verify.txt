@@ -1,0 +1,6 @@
+gate=demo-verify
+status=FAIL
+exitCode=1
+command=node scripts/demo-guard.mjs --verify D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live/guard/protected-before.json
+
+failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.

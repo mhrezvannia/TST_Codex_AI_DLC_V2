@@ -1,0 +1,5 @@
+command=internal detector 6d scan for hardcoded auth
+status=PASS
+exitCode=0
+
+zero hardcoded-auth hits for mounted shell/Booking surfaces

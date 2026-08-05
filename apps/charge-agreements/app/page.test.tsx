@@ -1,24 +1,28 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import ChargeAgreementsHomePage from "./page";
-import { skeletonModuleInfo } from "../lib/charge-agreements";
 
 describe("ChargeAgreementsHomePage", () => {
   beforeEach(() => {
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      json: async () => ({ ...skeletonModuleInfo, backendStatus: "fallback" })
-    }));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      items: [],
+      page: 0,
+      size: 25,
+      total: 0,
+      hasMore: false,
+      canCreate: false
+    }), { status: 200 })));
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it("renders the walking skeleton workbench", async () => {
+  it("renders the agreement authority list lifecycle", async () => {
     render(<ChargeAgreementsHomePage />);
 
-    expect(screen.getByRole("heading", { name: "Charge Agreements" })).toBeInTheDocument();
-    expect(screen.getByTestId("new-agreement")).toBeDisabled();
-    expect(screen.getAllByText("AGR-SKEL-001")).toHaveLength(2);
-    await waitFor(() => expect(fetch).toHaveBeenCalledWith("/api/module-info", { cache: "no-store" }));
+    expect(screen.getByRole("heading", { name: "Charge agreements" })).toBeInTheDocument();
+    expect(screen.getByTestId("agreement-list-status")).toHaveTextContent("Loading");
+    expect(await screen.findByText("No agreements match these filters")).toBeInTheDocument();
+    expect(screen.queryByTestId("create-agreement-link")).not.toBeInTheDocument();
   });
 });

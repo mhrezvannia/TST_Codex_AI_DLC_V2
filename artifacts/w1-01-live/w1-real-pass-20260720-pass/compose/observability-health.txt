@@ -1,0 +1,18 @@
+gate=observability-health
+status=PASS
+exitCode=0
+command=node scripts/w1-live-acceptance.mjs --observability-health
+
+{
+  "status": "PASS",
+  "services": [
+    {
+      "url": "http://127.0.0.1:19200/_cluster/health",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:15601/api/status",
+      "status": 200
+    }
+  ]
+}

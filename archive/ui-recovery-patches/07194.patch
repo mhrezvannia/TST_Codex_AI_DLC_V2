@@ -1,0 +1,6 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\BookingValidationPanel.test.tsx
+@@
+-    const link = await screen.findByRole("link", { name: "Discharge location: inactive" });
++    const link = await screen.findByRole("link", { name: "Place of discharge: inactive" });
+*** End Patch

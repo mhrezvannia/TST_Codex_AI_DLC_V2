@@ -1,0 +1,14 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\shell\app\ShellFrame.tsx
+@@
+               <SideNavigation
+-                items={navigation.map(({ testId: _testId, ...item }) => item)}
++                items={navigation.map((item) => ({
++                  href: item.href,
++                  label: item.label,
++                  icon: item.icon,
++                  active: item.active
++                }))}
+                 label="Mobile modules"
+               />
+*** End Patch

@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-07-19T06:06:57.870Z",
+  "composeProject": "linercore-shared-platform",
+  "entrypointUrl": "http://127.0.0.1:8088",
+  "status": "BLOCKED",
+  "services": [
+    {
+      "name": "nginx",
+      "expected": "available through local Compose/Nginx",
+      "observed": "not checked - dry-run",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "name": "apps-shell",
+      "expected": "available through local Compose/Nginx",
+      "observed": "not checked - dry-run",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "name": "apps-auth",
+      "expected": "available through local Compose/Nginx",
+      "observed": "not checked - dry-run",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "name": "apps-booking",
+      "expected": "available through local Compose/Nginx",
+      "observed": "not checked - dry-run",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "name": "booking-service",
+      "expected": "available through local Compose/Nginx",
+      "observed": "not checked - dry-run",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "name": "identity-service",
+      "expected": "available through local Compose/Nginx",
+      "observed": "not checked - dry-run",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "name": "keycloak",
+      "expected": "available through local Compose/Nginx",
+      "observed": "not checked - dry-run",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    }
+  ]
+}

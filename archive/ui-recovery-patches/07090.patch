@@ -1,0 +1,14 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\lib\bookings.ts
+@@
+ export async function loadBookingReferenceCatalog(
+@@
+ }
++
++export function loadReferenceOptions(
++  set: "PARTY_CUSTOMER" | "LOCATION" | "VESSEL_VOYAGE" | "EQUIPMENT_TYPE",
++  actorSubjectId?: string | null
++) {
++  return loadJson<ReferenceOption[]>(`/api/reference-options?set=${set}`, actorSubjectId);
++}
+*** End Patch

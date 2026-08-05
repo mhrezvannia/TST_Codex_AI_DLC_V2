@@ -1,0 +1,6 @@
+gate=booking-ui-health
+status=BLOCKED
+exitCode=1
+command=node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings
+
+fetch failed

@@ -1,0 +1,6 @@
+gate=charge-ui-health
+status=PLANNED
+exitCode=
+command=node scripts/w2-03-live-acceptance.mjs --probe http://127.0.0.1:13013/api/health
+
+dry-run: command not executed

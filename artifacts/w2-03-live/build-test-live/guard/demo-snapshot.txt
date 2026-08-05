@@ -1,0 +1,14 @@
+gate=demo-snapshot
+status=PASS
+exitCode=0
+command=node scripts/demo-guard.mjs --snapshot D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live/guard/protected-before.json
+
+{
+  "capturedAt": "2026-07-26T07:52:21.087Z",
+  "protectedProject": "linercore-shared-platform",
+  "protectedState": {
+    "name": "linercore-shared-platform",
+    "status": "running(23)",
+    "configFiles": "D:\\TST_Codex_integ\\compose.yaml,D:\\TST_Codex_integ\\.codex\\tmp\\manager-demo-port-recovery.compose.yaml"
+  }
+}

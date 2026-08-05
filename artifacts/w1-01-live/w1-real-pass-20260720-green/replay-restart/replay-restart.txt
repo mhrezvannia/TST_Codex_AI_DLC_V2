@@ -1,0 +1,14 @@
+gate=replay-restart
+status=PASS
+exitCode=0
+command=node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-green/replay-restart/evidence.json
+
+{
+  "status": "passed",
+  "summary": {
+    "passed": 10,
+    "planned": 0,
+    "blocked": 0,
+    "failed": 0
+  }
+}

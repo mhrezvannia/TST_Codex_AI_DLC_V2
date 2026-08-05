@@ -1,0 +1,9 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\lib\auth-server.ts
+@@
+   decodeSignedCookie,
+   encodeSignedCookie,
+   isAuthBypassEnabled as sharedIsAuthBypassEnabled,
+-  safeReturnUrl,
+   sessionFromCookieHeader,
+*** End Patch

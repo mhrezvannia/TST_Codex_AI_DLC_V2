@@ -1,0 +1,197 @@
+{
+  "runId": "w1-real-pass-20260720-serialized",
+  "startedAt": "2026-07-19T21:17:31.664Z",
+  "completedAt": "2026-07-19T21:24:28.184Z",
+  "status": "FAILED",
+  "branch": "unknown",
+  "commit": "unknown",
+  "dirtySummary": "not captured",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "nginxHostPort": "8088",
+    "realMessagingRequired": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "gates": [
+    {
+      "id": "preflight",
+      "section": "preflight",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --preflight",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T21:17:31.875Z",
+      "completedAt": "2026-07-19T21:17:31.875Z",
+      "artifactPath": "preflight/preflight.txt",
+      "summary": "{\n  \"status\": \"PASS\",\n  \"failures\": []\n}"
+    },
+    {
+      "id": "compose-config",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "docker compose config --quiet",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T21:17:32.256Z",
+      "completedAt": "2026-07-19T21:17:32.256Z",
+      "artifactPath": "compose/compose-config.txt",
+      "summary": ""
+    },
+    {
+      "id": "compose-start",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "docker compose --profile full up -d --build",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T21:24:27.711Z",
+      "completedAt": "2026-07-19T21:24:27.712Z",
+      "artifactPath": "compose/compose-start.txt",
+      "summary": "#1 [internal] load local bake definitions\n#1 reading from stdin 6.29kB done\n#1 DONE 0.0s\n\n#2 [container-movement-service internal] load build definition from spring-service.Dockerfile\n#2 transferring dockerfile: 388B 0.0s done\n#2 DONE 0.1s\n\n#3 [apps-auth internal] load build definition from next-app.Dockerfile\n#3 transferring dockerfile: 1.77kB 0.0s done\n#3 DONE 0.1s\n\n#4 [reference-data-service internal] load metadata for docker.io/library/eclipse-temurin:21-jre\n#4 DONE 0.2s\n\n#5 [apps-auth internal] load metadata for docker.io/library/node:24-alpine\n#5 DONE 0.2s\n\n#6 [apps-auth internal] load build context\n#6 DONE 0.0s\n\n#7 [apps-auth deps  1/17] FROM docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#7 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#7 ...\n\n#8 [reference-data-service internal] load build context\n#8 transferring context: 324B 0.0s done\n#8 DONE 0.1s\n\n#9 [booking-service internal] load build context\n#9 transferring context: 289B 0.0s done\n#9 DONE 0.2s\n\n#10 [container-movement-service 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec\n#10 resolve docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec 0.2s done\n#10 DONE 0.2s\n\n#11 [identity-service internal] load build context\n#11 transferring context: 294B 0.1s done\n#11 DONE 0.2s\n\n#7 [apps-booking deps  1/17] FROM docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#7 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.2s done\n#7 DONE 0.2s\n\n#12 [reference-data-service 3/3] COPY services/reference-data-service/container/target/reference-data-container-0.1.0-SNAPSHOT.jar /app/app.jar\n#12 CACHED\n\n#13 [identity-service 3/3] COPY services/identity-ser\n\n... output truncated ...\n\nce-data-1 Created \n Container linercore-shared-platform-container-movement-service-1 Created \n Container linercore-shared-platform-charge-agreement-service-1 Created \n Container linercore-shared-platform-apps-charge-agreements-1 Creating \n Container linercore-shared-platform-booking-service-1 Creating \n Container linercore-shared-platform-apps-charge-agreements-1 Created \n Container linercore-shared-platform-booking-service-1 Created \n Container linercore-shared-platform-apps-booking-1 Creating \n Container linercore-shared-platform-apps-booking-1 Created \n Container linercore-shared-platform-apps-shell-1 Creating \n Container linercore-shared-platform-apps-shell-1 Created \n Container linercore-shared-platform-nginx-1 Creating \n Container linercore-shared-platform-nginx-1 Created \n Container linercore-shared-platform-seed-loader-1 Creating \n Container linercore-shared-platform-seed-loader-1 Created \n Container linercore-shared-platform-keycloak-1 Starting \n Container linercore-shared-platform-prometheus-1 Starting \n Container linercore-shared-platform-elasticsearch-1 Starting \n Container linercore-shared-platform-jaeger-1 Starting \n Container linercore-shared-platform-kafka-1 Starting \n Container linercore-shared-platform-postgres-1 Starting \n Container linercore-shared-platform-contract-devtools-1 Starting \n Container linercore-shared-platform-contract-devtools-1 Started \n Container linercore-shared-platform-jaeger-1 Started \n Container linercore-shared-platform-otel-collector-1 Starting \n Container linercore-shared-platform-kafka-1 Started \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-elasticsearch-1 Started \n Container linercore-shared-platform-kibana-1 Starting \n Container linercore-shared-platform-prometheus-1 Started \n Container linercore-shared-platform-grafana-1 Starting \n Container linercore-shared-platform-postgres-1 Started \n Container linercore-shared-platform-keycloak-1 Started \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-otel-collector-1 Started \n Container linercore-shared-platform-kibana-1 Started \n Container linercore-shared-platform-grafana-1 Started \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-identity-service-1 Starting \n Container linercore-shared-platform-identity-service-1 Started \n Container linercore-shared-platform-apps-auth-1 Starting \n Container linercore-shared-platform-apps-auth-1 Started \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Starting \n Container linercore-shared-platform-schema-registry-1 Started \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-reference-data-service-1 Starting \n Container linercore-shared-platform-reference-data-service-1 Started \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-apps-reference-data-1 Starting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-apps-reference-data-1 Started \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-charge-agreement-service-1 Starting \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-container-movement-service-1 Starting \n Container linercore-shared-platform-container-movement-service-1 Started \n Container linercore-shared-platform-charge-agreement-service-1 Started \n Container linercore-shared-platform-apps-charge-agreements-1 Starting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-booking-service-1 Starting \n Container linercore-shared-platform-apps-charge-agreements-1 Started \n Container linercore-shared-platform-booking-service-1 Started \n Container linercore-shared-platform-booking-service-1 Waiting \n Container linercore-shared-platform-booking-service-1 Healthy \n Container linercore-shared-platform-apps-booking-1 Starting \n Container linercore-shared-platform-apps-booking-1 Started \n Container linercore-shared-platform-apps-shell-1 Starting \n Container linercore-shared-platform-apps-shell-1 Started \n Container linercore-shared-platform-nginx-1 Starting \n Container linercore-shared-platform-nginx-1 Started \n Container linercore-shared-platform-schema-registry-1 Waiting \n Container linercore-shared-platform-keycloak-1 Waiting \n Container linercore-shared-platform-kafka-1 Waiting \n Container linercore-shared-platform-postgres-1 Waiting \n Container linercore-shared-platform-kafka-1 Healthy \n Container linercore-shared-platform-schema-registry-1 Healthy \n Container linercore-shared-platform-keycloak-1 Healthy \n Container linercore-shared-platform-postgres-1 Healthy \n Container linercore-shared-platform-seed-loader-1 Starting \n Container linercore-shared-platform-seed-loader-1 Started"
+    },
+    {
+      "id": "contracts",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-004"
+      ],
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "status": "FAIL",
+      "exitCode": 1,
+      "startedAt": "2026-07-19T21:24:28.182Z",
+      "completedAt": "2026-07-19T21:24:28.182Z",
+      "artifactPath": "quality/contracts.txt",
+      "summary": "{\n  \"status\": \"failed\",\n  \"failures\": [\n    \"booking.confirmed schema missing field eventId\",\n    \"booking.confirmed schema missing field eventType\",\n    \"booking.confirmed schema missing field schemaVersion\",\n    \"booking.confirmed schema missing field occurredAt\",\n    \"booking.confirmed schema missing field idempotencyKey\",\n    \"booking.confirmed schema missing field bookingId\",\n    \"booking.confirmed schema missing field bookingRevision\",\n    \"booking.confirmed schema missing field pricingRef\",\n    \"containermovement.status schema missing field eventId\",\n    \"containermovement.status schema missing field eventType\",\n    \"containermovement.status schema missing field schemaVersion\",\n    \"containermovement.status schema missing field occurredAt\",\n    \"containermovement.status schema missing field idempotencyKey\",\n    \"containermovement.status schema missing field containerId\",\n    \"containermovement.status schema missing field bookingId\",\n    \"containermovement.status schema missing field movementStatus\",\n    \"containermovement.status schema missing field sequenceNumber\",\n    \"downstream runtime out of scope: services/container-movement-service\",\n    \"downstream runtime out of scope: apps/booking\"\n  ],\n  \"healthSnapshot\": {\n    \"snapshotId\": \"contract-health-2026-07-19T21:24:28.126Z\",\n    \"generatedAt\": \"2026-07-19T21:24:28.139Z\",\n    \"overallStatus\": \"red\",\n    \"staleThreshold\": \"P7D\",\n    \"seamStatuses\": [\n      {\n        \"contractId\": \"api-reference-data-service\",\n        \"seamId\": \"reference-data-http\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"reference-data-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/reference-data-service.yaml\",\n        \"linkedStories\": [\n          \"US-SP-004\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-004\",\n          \"FR-SP-007\",\n \n\n... output truncated ...\n\nnkedStories\": [\n          \"US-BKG-005\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-BKG-006\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"asyncapi-container-movement-status\",\n        \"seamId\": \"container-movement-status-event\",\n        \"owner\": \"movement-status-booking-integration\",\n        \"provider\": \"container-movement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/asyncapi/container-movement-events.yaml\",\n        \"linkedStories\": [\n          \"US-CMM-006\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CMM-007\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"event-booking-confirmed\",\n        \"seamId\": \"booking-confirmed-event\",\n        \"owner\": \"booking-confirmed-journey-integration\",\n        \"provider\": \"booking-service\",\n        \"consumer\": \"container-movement-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/avro/booking.confirmed.avsc\",\n        \"linkedStories\": [\n          \"US-BKG-005\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-BKG-006\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"event-container-movement-status\",\n        \"seamId\": \"container-movement-status-event\",\n        \"owner\": \"movement-status-booking-integration\",\n        \"provider\": \"container-movement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/avro/containermovement.status.avsc\",\n        \"linkedStories\": [\n          \"US-CMM-006\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CMM-007\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"pact-booking-charge-pricing\",\n        \"seamId\": \"booking-charge-pricing-http\",\n        \"owner\": \"booking-charge-pricing-integration\",\n        \"provider\": \"charge-agreement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/booking-charge-pricing-fixtures.json\",\n        \"linkedStories\": [\n          \"US-W1-003\",\n          \"US-W1-007\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-W1-003\",\n          \"FR-W1-004\",\n          \"FR-W1-013\",\n          \"NFR-W1-001\"\n        ]\n      },\n      {\n        \"contractId\": \"pact-booking-charge-dnd\",\n        \"seamId\": \"booking-charge-dnd-http\",\n        \"owner\": \"dnd-pricing-integration\",\n        \"provider\": \"charge-agreement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/booking-charge-dnd-fixtures.json\",\n        \"linkedStories\": [\n          \"US-BKG-005\",\n          \"US-RUN-004\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CHG-008\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"message-pact-booking-confirmed\",\n        \"seamId\": \"booking-confirmed-event\",\n        \"owner\": \"booking-confirmed-journey-integration\",\n        \"provider\": \"booking-service\",\n        \"consumer\": \"container-movement-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/booking-confirmed-message-fixtures.json\",\n        \"linkedStories\": [\n          \"US-BKG-005\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-BKG-006\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"message-pact-container-movement-status\",\n        \"seamId\": \"container-movement-status-event\",\n        \"owner\": \"movement-status-booking-integration\",\n        \"provider\": \"container-movement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"kafka\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/pact/container-movement-status-message-fixtures.json\",\n        \"linkedStories\": [\n          \"US-CMM-006\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-CMM-007\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      }\n    ],\n    \"blockingFailures\": [\n      \"booking.confirmed schema missing field eventId\",\n      \"booking.confirmed schema missing field eventType\",\n      \"booking.confirmed schema missing field schemaVersion\",\n      \"booking.confirmed schema missing field occurredAt\",\n      \"booking.confirmed schema missing field idempotencyKey\",\n      \"booking.confirmed schema missing field bookingId\",\n      \"booking.confirmed schema missing field bookingRevision\",\n      \"booking.confirmed schema missing field pricingRef\",\n      \"containermovement.status schema missing field eventId\",\n      \"containermovement.status schema missing field eventType\",\n      \"containermovement.status schema missing field schemaVersion\",\n      \"containermovement.status schema missing field occurredAt\",\n      \"containermovement.status schema missing field idempotencyKey\",\n      \"containermovement.status schema missing field containerId\",\n      \"containermovement.status schema missing field bookingId\",\n      \"containermovement.status schema missing field movementStatus\",\n      \"containermovement.status schema missing field sequenceNumber\",\n      \"downstream runtime out of scope: services/container-movement-service\",\n      \"downstream runtime out of scope: apps/booking\"\n    ]\n  }\n}"
+    },
+    {
+      "id": "seed-dry-run",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:24:28.184Z",
+      "completedAt": "2026-07-19T21:24:28.184Z",
+      "artifactPath": "seed/seed-dry-run.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "seed-live",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-serialized/seed/seed-apply.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:24:28.184Z",
+      "completedAt": "2026-07-19T21:24:28.184Z",
+      "artifactPath": "seed/seed-live.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "booking-ui-health",
+      "section": "journey",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:24:28.184Z",
+      "completedAt": "2026-07-19T21:24:28.184Z",
+      "artifactPath": "journey/booking-ui-health.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "replay-restart",
+      "section": "replay-restart",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-serialized/replay-restart/evidence.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:24:28.184Z",
+      "completedAt": "2026-07-19T21:24:28.184Z",
+      "artifactPath": "replay-restart/replay-restart.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "quality-gates",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-006"
+      ],
+      "command": "node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-serialized/quality/evidence.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:24:28.184Z",
+      "completedAt": "2026-07-19T21:24:28.184Z",
+      "artifactPath": "quality/quality-gates.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "aidlc-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/aidlc-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:24:28.184Z",
+      "completedAt": "2026-07-19T21:24:28.184Z",
+      "artifactPath": "audits/aidlc-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "erp-fidelity-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:24:28.184Z",
+      "completedAt": "2026-07-19T21:24:28.184Z",
+      "artifactPath": "audits/erp-fidelity-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "preflight/preflight.txt",
+      "sha256": "82f97e65551a22c31cf9e24b3972909614ed654bb0c7b9c729b800f9efcd192d",
+      "bytes": 135
+    },
+    {
+      "path": "compose/compose-config.txt",
+      "sha256": "fb4d606947f2266b286ef1196727a880eb1121710e94840a77e6dc0419d69d5c",
+      "bytes": 82
+    },
+    {
+      "path": "compose/compose-start.txt",
+      "sha256": "3f434ba85d305e2b32846cd28195c3c30da3ad7e5bad9580656d0acb0ddda055",
+      "bytes": 8123
+    },
+    {
+      "path": "quality/contracts.txt",
+      "sha256": "2867c0c8edab47774ace83ff9691aa4d4c20dbbfaa8434722ed221ae21a54906",
+      "bytes": 8118
+    }
+  ]
+}

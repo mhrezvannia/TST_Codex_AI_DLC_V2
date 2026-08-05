@@ -1,0 +1,19 @@
+﻿## integ/main-reconciled
+ M contracts/avro/booking.confirmed.avsc
+ M services/booking-service/application-service/src/main/java/com/linercore/platform/booking/applicationservice/BookingApplicationService.java
+ M services/booking-service/application-service/src/main/java/com/linercore/platform/booking/applicationservice/command/CreateBookingCommand.java
+ M services/booking-service/application-service/src/main/java/com/linercore/platform/booking/applicationservice/pricing/ChargePricingPortAdapter.java
+ M services/booking-service/application-service/src/main/java/com/linercore/platform/booking/applicationservice/pricing/ChargePricingRequest.java
+ M services/booking-service/container/src/main/java/com/linercore/platform/booking/container/api/BookingApiController.java
+ M services/booking-service/container/src/main/java/com/linercore/platform/booking/container/integration/HttpContainerMovementClient.java
+ M services/booking-service/dataaccess/src/main/java/com/linercore/platform/booking/dataaccess/jdbc/JdbcBookingRepository.java
+ M services/booking-service/dataaccess/src/main/resources/db/booking-schema.sql
+ M services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/model/Booking.java
+ M services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/outbox/BookingEventMapper.java
+ M services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/outbox/BookingOutboxEvent.java
+ M services/booking-service/messaging/src/main/java/com/linercore/platform/booking/messaging/KafkaBookingEventPublisher.java
+ M services/booking-service/messaging/src/main/resources/avro/booking.confirmed.avsc
+ M services/container-movement-service/application-service/src/main/java/com/linercore/platform/containermovement/applicationservice/event/BookingConfirmedEvent.java
+?? services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/model/EquipmentLine.java
+?? services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/model/RoutingLeg.java
+?? services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/model/UnLocode.java

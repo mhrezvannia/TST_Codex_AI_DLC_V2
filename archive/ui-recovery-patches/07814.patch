@@ -1,0 +1,39 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\ui\src\primitives.test.tsx
+@@
+-import { FailureState, Field, Input, StatusBadge } from "./primitives";
++import {
++  EnvironmentBadge,
++  FailureState,
++  Field,
++  Input,
++  ProductWordmark,
++  SideNavigation,
++  StatusBadge
++} from "./primitives";
+@@
+   it("uses a focusable page heading for route-level failures", () => {
+@@
+     expect(screen.getByRole("heading", { level: 1 }).getAttribute("tabindex")).toBe("-1");
+   });
++
++  it("renders shared product identity and semantic authorized navigation", () => {
++    render(
++      <>
++        <ProductWordmark href="/" context="Shipping operations platform" />
++        <EnvironmentBadge>Local demo</EnvironmentBadge>
++        <SideNavigation
++          items={[
++            { href: "/", label: "Home", icon: "home" },
++            { href: "/bookings", label: "Bookings", icon: "clipboard-list", active: true }
++          ]}
++        />
++      </>
++    );
++
++    expect(screen.getByRole("link", { name: "LinerCore home" })).toHaveAttribute("href", "/");
++    expect(screen.getByText("Local demo")).toBeInTheDocument();
++    expect(screen.getByRole("link", { name: "Bookings" })).toHaveAttribute("aria-current", "page");
++  });
+ });
+*** End Patch

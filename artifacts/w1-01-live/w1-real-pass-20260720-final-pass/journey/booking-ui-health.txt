@@ -1,0 +1,51 @@
+gate=booking-ui-health
+status=PASS
+exitCode=0
+command=node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings
+
+<!DOCTYPE html>
+<html class="login-pf">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+
+            <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Sign in to linercore-local</title>
+    <link rel="icon" href="/resources/t6lco/login/keycloak/img/favicon.ico" />
+            <link href="/resources/t6lco/common/keycloak/node_modules/@patternfly/patternfly/patternfly.min.css" rel="stylesheet" />
+            <link href="/resources/t6lco/common/keycloak/node_modules/patternfly/dist/css/patternfly.min.css" rel="stylesheet" />
+            <link href="/resources/t6lco/common/keycloak/node_modules/patternfly/dist/css/patternfly-additions.min.css" rel="stylesheet" />
+            <link href="/resources/t6lco/common/keycloak/lib/pficon/pficon.css" rel="stylesheet" />
+            <link href="/resources/t6lco/login/keycloak/css/login.css" rel="stylesheet" />
+    <script src="/resources/t6lco/login/keycloak/js/menu-button-links.js" type="module"></script>
+        <script type="module">
+            import { checkCookiesAndSetTimer } from "/resources/t6lco/login/keycloak/js/authChecker.js";
+
+            checkCookiesAndSetTimer(
+              "8b6c2457-b1e6-42a1-9acf-528ed23f176e",
+              "YwbvHibUlq0",
+              "/realms/linercore-local/login-actions/restart?client_id=linercore-auth&tab_id=YwbvHibUlq0&skip_logout=true"
+            );
+        </script>
+</head>
+
+<body class="">
+<div class="login-pf-page">
+    <div id="kc-header" class="login-pf-page-header">
+        <div id="kc-header-wrapper"
+             class="">linercore-local</div>
+    </div>
+    <div class="card-pf">
+        <header class="login-pf-header">
+                <h1 id="kc-page-title">        Sign in to your account
+
+</h1>
+      </header>
+      <div id="kc-content">
+        <div id="kc-content-wrapper">
+
+
+        <div id="kc-form">
+          <div id="kc-form-wrapp

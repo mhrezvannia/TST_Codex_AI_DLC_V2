@@ -1,0 +1,6 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\layout.tsx
+@@
+-    <html lang="en">
++    <html lang="en" data-theme="light">
+*** End Patch

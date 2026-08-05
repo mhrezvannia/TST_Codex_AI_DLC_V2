@@ -1,0 +1,88 @@
+*** Begin Patch
+*** Delete File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\not-found.tsx
+*** Add File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\not-found.tsx
++import { Breadcrumbs, FailureState } from "@erp/ui";
++
++export default function BookingNotFound() {
++  return (
++    <main className="booking-page" id="booking-main">
++      <Breadcrumbs items={[
++        { label: "Home", href: "/" },
++        { label: "Bookings", href: "/bookings" },
++        { label: "Not found" }
++      ]} />
++      <FailureState
++        icon="file-question"
++        title="Booking not found"
++        actions={
++          <>
++            <a className="erp-btn erp-btn--primary" href="/bookings">Back to bookings</a>
++            <a className="erp-btn erp-btn--ghost" href="/">Return to workspace</a>
++          </>
++        }
++      >
++        <p>The booking may no longer be available, or the link may be out of date.</p>
++      </FailureState>
++    </main>
++  );
++}
+*** Add File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\error.tsx
++"use client";
++
++import { useState } from "react";
++import { Breadcrumbs, Button, FailureState, IdentifierValue, TechnicalDetails } from "@erp/ui";
++
++export default function BookingRouteError({
++  error,
++  reset
++}: {
++  error: Error & { digest?: string };
++  reset: () => void;
++}) {
++  const [busy, setBusy] = useState(false);
++
++  return (
++    <main className="booking-page" id="booking-main">
++      <Breadcrumbs items={[
++        { label: "Home", href: "/" },
++        { label: "Bookings", href: "/bookings" },
++        { label: "Unavailable" }
++      ]} />
++      <FailureState
++        icon="alert-circle"
++        title="Booking could not be displayed"
++        actions={
++          <>
++            <Button
++              variant="primary"
++              busy={busy}
++              busyLabel="Retrying"
++              onClick={() => {
++                setBusy(true);
++                reset();
++              }}
++            >
++              Retry
++            </Button>
++            <a className="erp-btn" href="/bookings">Back to bookings</a>
++          </>
++        }
++        technicalDetails={error.digest ? (
++          <TechnicalDetails items={[
++            { term: "Support reference", description: <IdentifierValue>{error.digest}</IdentifierValue> }
++          ]} />
++        ) : undefined}
++      >
++        <p>An unexpected display error occurred. Your booking data was not changed.</p>
++      </FailureState>
++    </main>
++  );
++}
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\page.tsx
+@@
+-                  {event.actorSubjectId ? `By ${event.actorSubjectId} Â· ` : ""}
++                  {event.actorSubjectId ? `By ${event.actorSubjectId} | ` : ""}
+@@
+-                    {event.revision !== undefined ? ` Â· Revision ${event.revision}` : ""}
++                    {event.revision !== undefined ? ` | Revision ${event.revision}` : ""}
+*** End Patch

@@ -1,0 +1,28 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\lib\bookings.test.ts
+@@
+-      expect(result).toEqual({ ok: false, status: 401, message: "A signed-in Booking actor is required" });
++      expect(result).toMatchObject({
++        ok: false,
++        status: 401,
++        code: "AUTH_REQUIRED",
++        message: "Sign in again to return to Booking.",
++        retryable: false
++      });
+@@
+-      expect(payload).toMatchObject({ code: "forbidden", message: "booking command denied" });
++      expect(payload).toMatchObject({
++        code: "forbidden",
++        message: "You do not have permission to perform this Booking action."
++      });
++      expect(JSON.stringify(payload)).not.toContain("booking command denied");
+@@
+     expect(returnTo).toBe("/bookings?search=BKG-1&status=DRAFT&page=2");
+     expect(safeBookingReturnTo(returnTo)).toBe(returnTo);
+     expect(safeBookingReturnTo("https://attacker.example")).toBe("/bookings");
++    expect(safeBookingReturnTo("//attacker.example/bookings")).toBe("/bookings");
++    expect(safeBookingReturnTo("/bookings/123")).toBe("/bookings");
++    expect(safeBookingReturnTo("/bookings?returnTo=https://attacker.example")).toBe("/bookings");
++    expect(safeBookingReturnTo(`/bookings?search=${"x".repeat(121)}`)).toBe("/bookings");
+   });
+*** End Patch

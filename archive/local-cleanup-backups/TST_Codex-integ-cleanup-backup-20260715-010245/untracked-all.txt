@@ -1,0 +1,3 @@
+﻿services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/model/EquipmentLine.java
+services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/model/RoutingLeg.java
+services/booking-service/domain-core/src/main/java/com/linercore/platform/booking/domain/model/UnLocode.java

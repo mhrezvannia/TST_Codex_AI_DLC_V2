@@ -1,0 +1,22 @@
+*** Begin Patch
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/callback/route.test.ts
+@@
+ import { describe, expect, test } from "vitest";
++import { OIDC_TRANSACTION_COOKIE_NAME } from "@erp/auth";
+ import { GET } from "./route";
+@@
+-    expect(response.headers.get("Set-Cookie")).toContain("linercore_oidc=");
++    expect(response.headers.get("Set-Cookie")).toContain(`${OIDC_TRANSACTION_COOKIE_NAME}=`);
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/sign-out/route.test.ts
+@@
+-    expect(location.searchParams.get("client_id")).toBe("linercore-platform");
++    expect(location.searchParams.get("client_id")).toBe("linercore-auth");
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/lib/auth-server.test.ts
+@@
+-  expect(response.headers.get("Location")).toBe("http://keycloak:8080/realms/linercore-local/protocol/openid-connect/logout?client_id=linercore-auth&post_logout_redirect_uri=http%3A%2F%2Ferp.local%2Fsigned-out");
++  expect(response.headers.get("Location")).toBe("http://keycloak:8080/realms/linercore-local/protocol/openid-connect/logout?client_id=linercore-auth&post_logout_redirect_uri=http%3A%2F%2Ferp.local%2Fauth%2Fsigned-out");
+*** Update File: D:/TST_Codex_ui_recovery/apps/shell/app/signed-out/page.test.tsx
+@@
+-import { describe, expect, it } from "vitest";
++import { describe, expect, it, vi } from "vitest";
+*** End Patch

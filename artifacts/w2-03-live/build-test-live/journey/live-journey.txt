@@ -1,0 +1,6 @@
+gate=live-journey
+status=SKIPPED
+exitCode=
+command=node scripts/w2-03-live-acceptance.mjs --journey D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live/journey/scenarios.json
+
+skipped after prior blocking gate

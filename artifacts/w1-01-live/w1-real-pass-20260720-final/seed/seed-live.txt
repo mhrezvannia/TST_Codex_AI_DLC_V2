@@ -1,0 +1,14 @@
+gate=seed-live
+status=FAIL
+exitCode=1
+command=node scripts/seed-local.mjs --wait --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-final/seed/seed-apply.json
+
+file:///D:/TST_Codex_merge_w2/scripts/seed-local.mjs:256
+    throw new Error(`unhealthy services: ${[...pending.keys()].join(", ")}`);
+          ^
+
+Error: unhealthy services: nginx, identity-service, reference-data-service, schema-registry
+    at waitForHealth (file:///D:/TST_Codex_merge_w2/scripts/seed-local.mjs:256:11)
+    at async file:///D:/TST_Codex_merge_w2/scripts/seed-local.mjs:404:5
+
+Node.js v24.18.0

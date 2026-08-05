@@ -1,0 +1,9 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\keycloak\themes\linercore\login\resources\css\linercore-login.css
+@@
+ .pf-c-form-control[aria-invalid="true"] {
+   border-color: var(--erp-color-danger);
++  background-image: none;
++  padding-right: var(--erp-space-3);
+ }
+*** End Patch

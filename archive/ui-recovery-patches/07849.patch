@@ -1,0 +1,10 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\ui\package.json
+@@
+-    "build": "tsc --noEmit",
+-    "lint": "eslint src --ext .ts,.tsx",
+-    "typecheck": "tsc --noEmit",
++    "build": "node ../../node_modules/typescript/bin/tsc --noEmit",
++    "lint": "node ../../node_modules/eslint/bin/eslint.js src --ext .ts,.tsx",
++    "typecheck": "node ../../node_modules/typescript/bin/tsc --noEmit",
+*** End Patch

@@ -1,0 +1,40 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\shared-types\src\index.ts
+@@
+-  if (fields.equipmentId && !/^[A-Za-z]{3}[UJZujz][0-9]{7}$/.test(fields.equipmentId)) {
+-    errors.equipmentId = "Use an ISO 6346 equipment identifier";
++  if (fields.equipmentId && !isValidIso6346(fields.equipmentId)) {
++    errors.equipmentId = "Use a valid ISO 6346 equipment identifier, including its check digit";
+@@
+ }
++
++export function isValidIso6346(value: string) {
++  const normalized = value.trim().toUpperCase();
++  if (!/^[A-Z]{3}[UJZ][0-9]{7}$/.test(normalized)) return false;
++  const characters = normalized.slice(0, 10);
++  const expected = Number(normalized[10]);
++  const sum = Array.from(characters).reduce((total, character, index) => {
++    const digit = /\d/.test(character)
++      ? Number(character)
++      : iso6346LetterValue(character);
++    return total + digit * (2 ** index);
++  }, 0);
++  return (sum % 11) % 10 === expected;
++}
++
++function iso6346LetterValue(character: string) {
++  const sequential = character.charCodeAt(0) - 55;
++  return sequential + Math.floor((sequential - 1) / 10);
++}
+*** Update File: D:\TST_Codex_ui_recovery\packages\shared-types\src\index.test.ts
+@@
+-import { mapBookingServerFields, validateBookingDraft } from "./index";
++import { isValidIso6346, mapBookingServerFields, validateBookingDraft } from "./index";
+@@
+ describe("booking form shared behavior", () => {
++  it("validates the ISO 6346 check digit", () => {
++    expect(isValidIso6346("LCRU1000055")).toBe(true);
++    expect(isValidIso6346("LCRU1000054")).toBe(false);
++    expect(isValidIso6346("not-a-container")).toBe(false);
++  });
+*** End Patch

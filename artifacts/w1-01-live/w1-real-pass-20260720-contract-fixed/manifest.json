@@ -1,0 +1,192 @@
+{
+  "runId": "w1-real-pass-20260720-contract-fixed",
+  "startedAt": "2026-07-19T21:29:58.405Z",
+  "completedAt": "2026-07-19T21:44:59.015Z",
+  "status": "FAILED",
+  "branch": "unknown",
+  "commit": "unknown",
+  "dirtySummary": "not captured",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "nginxHostPort": "8088",
+    "realMessagingRequired": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "gates": [
+    {
+      "id": "preflight",
+      "section": "preflight",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --preflight",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T21:29:58.550Z",
+      "completedAt": "2026-07-19T21:29:58.550Z",
+      "artifactPath": "preflight/preflight.txt",
+      "summary": "{\n  \"status\": \"PASS\",\n  \"failures\": []\n}"
+    },
+    {
+      "id": "compose-config",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "docker compose config --quiet",
+      "status": "PASS",
+      "exitCode": 0,
+      "startedAt": "2026-07-19T21:29:58.991Z",
+      "completedAt": "2026-07-19T21:29:58.991Z",
+      "artifactPath": "compose/compose-config.txt",
+      "summary": ""
+    },
+    {
+      "id": "compose-start",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "docker compose --profile full up -d --build",
+      "status": "FAIL",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.014Z",
+      "completedAt": "2026-07-19T21:44:59.014Z",
+      "artifactPath": "compose/compose-start.txt",
+      "summary": "#1 [internal] load local bake definitions\n#1 reading from stdin 6.29kB 0.0s done\n#1 DONE 0.0s\n\n#2 [apps-auth internal] load build definition from next-app.Dockerfile\n#2 transferring dockerfile: 1.77kB 0.0s done\n#2 DONE 0.1s\n\n#3 [reference-data-service internal] load build definition from spring-service.Dockerfile\n#3 transferring dockerfile: 388B 0.0s done\n#3 DONE 0.1s\n\n#2 [apps-shell internal] load build definition from next-app.Dockerfile\n#2 DONE 0.1s\n\n#4 [apps-shell internal] load metadata for docker.io/library/node:24-alpine\n#4 DONE 0.2s\n\n#5 [identity-service internal] load metadata for docker.io/library/eclipse-temurin:21-jre\n#5 DONE 0.2s\n\n#6 [apps-booking internal] load build context\n#6 DONE 0.0s\n\n#7 [apps-booking deps  1/17] FROM docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd\n#7 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.1s done\n#7 DONE 0.1s\n\n#8 [identity-service 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec\n#8 resolve docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec 0.1s done\n#8 DONE 0.1s\n\n#6 [apps-booking internal] load build context\n#6 transferring context: 27B 0.0s\n#6 transferring context: 46.46kB 1.7s done\n#6 DONE 1.8s\n\n#9 [container-movement-service internal] load build context\n#9 ...\n\n#10 [apps-shell deps  4/17] COPY .yarn ./.yarn\n#10 CACHED\n\n#11 [apps-shell deps  6/17] COPY apps/booking/package.json ./apps/booking/package.json\n#11 CACHED\n\n#12 [apps-shell deps  8/17] COPY apps/reference-data/package.json ./apps/reference-data/package.json\n#12 CACHED\n\n#13 [apps-shell deps  9/17] COPY apps/shell/package.json ./apps/shell/package.json\n#13 CACHED\n\n#14 [apps-shell deps  2/17] WORKDIR /app\n#14 CACHED\n\n#15 [apps-shell deps  5/17] COPY apps/auth/package.json ./apps/auth/package.json\n#15 CACHED\n\n#16 [apps-shell deps 16/17] COPY packages/utils/package.json ./packages/utils/package.json\n#16 CACHED\n\n#17 [apps-shell deps 14/17] COPY packages/transformers/package.json ./packages/transformers/package.json\n#17 CACHED\n\n#18 [apps-shell deps 10/17] COPY packages/api-core/package.json ./packages/api-core/package.json\n#18 CACHED\n\n#19 [apps-shell deps  7/17] COPY apps/charge-agreements/package.json ./apps/charge-agreements/package.json\n#19 CACHED\n\n#20 [apps-shell deps 13/17] COPY packages/shared-types/package.json ./packages/shared-types/package.json\n#20 CACHED\n\n#21 [apps-shell deps  3/17] COPY package.json yarn.lock .yarnrc.yml ./\n#21 CACHED\n\n#22 [apps-shell deps 11/17] COPY packages/auth/package.json ./packages/auth/package.json\n#22 CACHED\n\n#23 [apps-shell deps 12/17] COPY packages/config/package.json ./packages/config/package.json\n#23 CACHED\n\n#24 [apps-shell deps 15/17] COPY packages/ui/package.json ./packages/ui/package.json\n#24 CACHED\n\n#25 [apps-shell deps 17/17] RUN node .yarn/releases/yarn-4.5.3.cjs install --immutable\n#25 CACHED\n\n#9 [container-movement-service internal] load build context\n#9 ...\n\n#26 [apps-shell builder 1/2] COPY . .\n#26 DONE 0.6s\n\n#9 [container-movement-service internal] load build context\n#9 ...\n\n#27 [reference-data-service internal] load build context\n#27 ...\n\n#28 [identity-service internal] load build context\n#28 ...\n\n#29 [booking-service internal] load build context\n#29 ...\n\n#30 [charge-agreement-service internal] load build context\n#30 ...\n\n#31 [apps-charge-agreements builder 2/2] RUN node .yarn/releases/yarn-4.5.3.cjs workspace @erp/app-charge-agreements build\n#31 ...\n\n#32 [apps-booking builder 2/2] RUN node .yarn/releases/yarn-4.5.3.cjs workspace @erp/app-booking build\n#32 ...\n\n#33 [apps-shell builder 2/2] RUN node .yarn/releases/yarn-4.5.3.cjs workspace @erp/app-shell build\n#33 ...\n\n#34 [apps-reference-data builder 2/2] RUN node .yarn/releases/yarn-4.5.3.cjs workspace @erp/app-reference-data build\n#34 ...\n\n#35 [apps-auth builder 2/2] RUN node .yarn/releases/yarn-4.5.3.cjs workspace @erp/app-auth build\n\n Image linercore/container-movement-service:local Building \n Image linercore/booking-service:local Building \n Image linercore/apps-booking:local Building \n Image linercore/apps-shell:local Building \n Image linercore/reference-data-service:local Building \n Image linercore/identity-service:local Building \n Image linercore/apps-reference-data:local Building \n Image linercore/apps-charge-agreements:local Building \n Image linercore/apps-auth:local Building \n Image linercore/charge-agreement-service:local Building"
+    },
+    {
+      "id": "contracts",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-004"
+      ],
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "quality/contracts.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "seed-dry-run",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "seed/seed-dry-run.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "seed-live",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-contract-fixed/seed/seed-apply.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "seed/seed-live.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "booking-ui-health",
+      "section": "journey",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "journey/booking-ui-health.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "replay-restart",
+      "section": "replay-restart",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-contract-fixed/replay-restart/evidence.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "replay-restart/replay-restart.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "quality-gates",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-006"
+      ],
+      "command": "node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-contract-fixed/quality/evidence.json",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "quality/quality-gates.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "aidlc-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/aidlc-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "audits/aidlc-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    },
+    {
+      "id": "erp-fidelity-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
+      "status": "SKIPPED",
+      "exitCode": null,
+      "startedAt": "2026-07-19T21:44:59.015Z",
+      "completedAt": "2026-07-19T21:44:59.015Z",
+      "artifactPath": "audits/erp-fidelity-audit.txt",
+      "summary": "skipped after prior blocking gate"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "preflight/preflight.txt",
+      "sha256": "82f97e65551a22c31cf9e24b3972909614ed654bb0c7b9c729b800f9efcd192d",
+      "bytes": 135
+    },
+    {
+      "path": "compose/compose-config.txt",
+      "sha256": "fb4d606947f2266b286ef1196727a880eb1121710e94840a77e6dc0419d69d5c",
+      "bytes": 82
+    },
+    {
+      "path": "compose/compose-start.txt",
+      "sha256": "7136059714fead4336229dc63aaaf6a67f6d97df27226e0047691a107710385b",
+      "bytes": 4675
+    }
+  ]
+}

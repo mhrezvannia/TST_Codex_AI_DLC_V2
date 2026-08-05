@@ -1,0 +1,760 @@
+*** Begin Patch
+*** Delete File: D:\TST_Codex_ui_recovery\apps\auth\app\page.tsx
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\page.tsx
++import { headers } from "next/headers";
++import { GatewayAction } from "./GatewayAction";
++import {
++  gatewaySignInHref,
++  identityServiceAvailable,
++  resolveGatewayDestination,
++  resolveGatewaySession
++} from "../lib/auth-gateway";
++
++type SearchParams = {
++  returnUrl?: string;
++};
++
++export default async function AuthHomePage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
++  const [params, headerStore, identityAvailable] = await Promise.all([
++    searchParams ?? Promise.resolve({}),
++    headers(),
++    identityServiceAvailable()
++  ]);
++  const destination = resolveGatewayDestination(params.returnUrl);
++  const sessionState = resolveGatewaySession(headerStore.get("cookie"));
++  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "LOCAL DEMO";
++  const showTechnicalDetails = environmentLabel !== "PRODUCTION";
++  const requestId = headerStore.get("x-correlation-id") ?? "Not available";
++
++  const content = gatewayContent(sessionState, destination.label, identityAvailable);
++  const actionHref = identityAvailable
++    ? sessionState.kind === "active"
++      ? destination.href
++      : gatewaySignInHref(destination.href)
++    : gatewayEntryHref(destination.href);
++
++  return (
++    <div className="auth-gateway">
++      <a className="auth-gateway__skip-link" href="#auth-gateway-main">
++        Skip to main content
++      </a>
++
++      <header className="auth-gateway__header">
++        <div>
++          <span className="auth-gateway__wordmark">LinerCore</span>
++          <span className="auth-gateway__product-context">Shipping operations platform</span>
++        </div>
++        <span className="auth-gateway__environment">{environmentLabel}</span>
++      </header>
++
++      <main className="auth-gateway__main" id="auth-gateway-main">
++        <section className="auth-gateway__panel" aria-labelledby="auth-gateway-title">
++          <div className="auth-gateway__copy">
++            <p className="auth-gateway__eyebrow">Secure company access</p>
++            <h1 id="auth-gateway-title">{content.title}</h1>
++            <p className="auth-gateway__summary">{content.summary}</p>
++            {content.destinationCopy ? <p className="auth-gateway__destination">{content.destinationCopy}</p> : null}
++          </div>
++
++          {destination.invalid ? (
++            <div className="auth-gateway__notice" role="status">
++              <strong>We couldn&apos;t use that destination.</strong>
++              <span>For your security, you&apos;ll continue to the LinerCore workspace instead.</span>
++            </div>
++          ) : null}
++
++          <GatewayAction
++            dataTestId="auth-start-link"
++            href={actionHref}
++            label={content.actionLabel}
++            pendingLabel={content.pendingLabel}
++          />
++
++          {showTechnicalDetails ? (
++            <details className="auth-gateway__details">
++              <summary>Technical details</summary>
++              <dl>
++                <div>
++                  <dt>Environment</dt>
++                  <dd>{environmentLabel}</dd>
++                </div>
++                <div>
++                  <dt>Session</dt>
++                  <dd>{sessionLabel(sessionState.kind)}</dd>
++                </div>
++                <div>
++                  <dt>Identity service</dt>
++                  <dd>{identityAvailable ? "Available" : "Unavailable"}</dd>
++                </div>
++                <div>
++                  <dt>Destination</dt>
++                  <dd>{destination.label}</dd>
++                </div>
++                <div>
++                  <dt>Request ID</dt>
++                  <dd>{requestId}</dd>
++                </div>
++              </dl>
++            </details>
++          ) : null}
++        </section>
++      </main>
++
++      <footer className="auth-gateway__footer">
++        <span>Authorized users only</span>
++        <span aria-hidden="true">&middot;</span>
++        <span>Contact your platform administrator for access support.</span>
++      </footer>
++    </div>
++  );
++}
++
++function gatewayContent(
++  sessionState: ReturnType<typeof resolveGatewaySession>,
++  destinationLabel: string,
++  identityAvailable: boolean
++) {
++  if (!identityAvailable) {
++    return {
++      title: "Workspace access is temporarily unavailable",
++      summary: "We can't verify your access right now. No changes have been made.",
++      destinationCopy: null,
++      actionLabel: "Try again",
++      pendingLabel: "Checking access..."
++    };
++  }
++
++  if (sessionState.kind === "active") {
++    return {
++      title: sessionState.session.displayName ? `Welcome back, ${sessionState.session.displayName}` : "Welcome back",
++      summary: "Your company session is active.",
++      destinationCopy: `Continue to ${destinationLabel}.`,
++      actionLabel: destinationLabel === "LinerCore workspace" ? "Continue to workspace" : `Continue to ${destinationLabel}`,
++      pendingLabel: destinationLabel === "LinerCore workspace" ? "Opening workspace..." : `Opening ${destinationLabel}...`
++    };
++  }
++
++  if (sessionState.kind === "expired") {
++    return {
++      title: "Your session has expired",
++      summary: `Sign in again to continue to ${destinationLabel}.`,
++      destinationCopy: null,
++      actionLabel: "Sign in again",
++      pendingLabel: "Opening secure sign in..."
++    };
++  }
++
++  return {
++    title: "Sign in to LinerCore",
++    summary: "Use your company account to access LinerCore securely.",
++    destinationCopy:
++      destinationLabel === "LinerCore workspace"
++        ? "After sign-in, you'll continue to the LinerCore workspace."
++        : `After sign-in, you'll continue to ${destinationLabel}.`,
++    actionLabel: "Sign in",
++    pendingLabel: "Opening secure sign in..."
++  };
++}
++
++function gatewayEntryHref(destination: string) {
++  return `/auth/?returnUrl=${encodeURIComponent(destination)}`;
++}
++
++function sessionLabel(kind: ReturnType<typeof resolveGatewaySession>["kind"]) {
++  if (kind === "active") return "Active";
++  if (kind === "expired") return "Expired";
++  return "Not detected";
++}
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\GatewayAction.tsx
++"use client";
++
++import { useState } from "react";
++
++export function GatewayAction({
++  href,
++  label,
++  pendingLabel,
++  dataTestId
++}: {
++  href: string;
++  label: string;
++  pendingLabel: string;
++  dataTestId?: string;
++}) {
++  const [pending, setPending] = useState(false);
++
++  return (
++    <a
++      aria-busy={pending}
++      aria-disabled={pending}
++      className="auth-gateway__primary-action"
++      data-testid={dataTestId}
++      href={href}
++      onClick={(event) => {
++        if (pending) {
++          event.preventDefault();
++          return;
++        }
++        setPending(true);
++      }}
++    >
++      <span>{pending ? pendingLabel : label}</span>
++      <span aria-hidden="true" className="auth-gateway__action-arrow">
++        &rarr;
++      </span>
++    </a>
++  );
++}
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\lib\auth-gateway.ts
++import {
++  SESSION_COOKIE_NAME,
++  decodeSessionCookie,
++  isSessionExpired,
++  readCookieValue,
++  safeReturnUrl,
++  type AuthSession
++} from "@erp/auth";
++
++export type GatewayDestination = {
++  href: string;
++  label: string;
++  invalid: boolean;
++};
++
++export type GatewaySessionState =
++  | { kind: "signed-out" }
++  | { kind: "expired" }
++  | { kind: "active"; session: AuthSession };
++
++const DESTINATIONS = [
++  { prefix: "/bookings", label: "Bookings" },
++  { prefix: "/charge-agreements", label: "Service Contracts & Rates" },
++  { prefix: "/reference-data", label: "Reference Data" },
++  { prefix: "/container-movement", label: "Equipment Journeys" }
++] as const;
++
++export function resolveGatewayDestination(value: string | null | undefined): GatewayDestination {
++  if (!value?.trim()) {
++    return { href: "/", label: "LinerCore workspace", invalid: false };
++  }
++
++  const safeValue = safeReturnUrl(value, "/");
++  const path = safeValue.split(/[?#]/, 1)[0];
++  if (path === "/") {
++    return { href: "/", label: "LinerCore workspace", invalid: value.trim() !== "/" };
++  }
++
++  const destination = DESTINATIONS.find(({ prefix }) => path === prefix || path.startsWith(`${prefix}/`));
++  if (!destination) {
++    return { href: "/", label: "LinerCore workspace", invalid: true };
++  }
++
++  return { href: safeValue, label: destination.label, invalid: false };
++}
++
++export function resolveGatewaySession(cookieHeader: string | null | undefined): GatewaySessionState {
++  const cookieValue = readCookieValue(cookieHeader, SESSION_COOKIE_NAME);
++  const session = decodeSessionCookie(cookieValue);
++  if (!session) return { kind: "signed-out" };
++  if (isSessionExpired(session)) return { kind: "expired" };
++  return { kind: "active", session };
++}
++
++export function gatewaySignInHref(destination: string) {
++  return `/auth/api/auth/sign-in?returnUrl=${encodeURIComponent(destination)}`;
++}
++
++export async function identityServiceAvailable(fetcher: typeof fetch = fetch): Promise<boolean> {
++  const controller = new AbortController();
++  const timeout = setTimeout(() => controller.abort(), 1500);
++  const serviceUrl = process.env.IDENTITY_SERVICE_URL ?? "http://identity-service:8082";
++
++  try {
++    const response = await fetcher(`${serviceUrl}/actuator/health`, {
++      cache: "no-store",
++      signal: controller.signal
++    });
++    return response.ok;
++  } catch {
++    return false;
++  } finally {
++    clearTimeout(timeout);
++  }
++}
+*** Delete File: D:\TST_Codex_ui_recovery\apps\auth\app\layout.tsx
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\layout.tsx
++import type { ReactNode } from "react";
++import { DesignSystemStyles } from "@erp/ui";
++import "./auth-gateway.css";
++
++export const metadata = {
++  title: "LinerCore Auth",
++  description: "Secure company access to LinerCore"
++};
++
++export default function RootLayout({ children }: { children: ReactNode }) {
++  return (
++    <html data-theme="light" lang="en">
++      <body>
++        <DesignSystemStyles />
++        {children}
++      </body>
++    </html>
++  );
++}
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\auth-gateway.css
++html,
++body {
++  min-width: 320px;
++  min-height: 100%;
++}
++
++body {
++  margin: 0;
++  background: var(--erp-color-bg);
++  color: var(--erp-color-text);
++  font-family: var(--erp-font-sans);
++}
++
++* {
++  box-sizing: border-box;
++}
++
++.auth-gateway {
++  display: grid;
++  min-height: 100vh;
++  grid-template-rows: auto 1fr auto;
++  background: var(--erp-color-bg);
++}
++
++.auth-gateway__skip-link {
++  position: fixed;
++  z-index: 10;
++  top: var(--erp-space-3);
++  left: var(--erp-space-3);
++  padding: var(--erp-space-2) var(--erp-space-3);
++  transform: translateY(-160%);
++  border: 1px solid var(--erp-color-border);
++  border-radius: var(--erp-radius-sm);
++  background: var(--erp-color-surface);
++  color: var(--erp-color-primary);
++  font-weight: 700;
++}
++
++.auth-gateway__skip-link:focus {
++  transform: translateY(0);
++}
++
++.auth-gateway__header {
++  display: flex;
++  min-height: 64px;
++  align-items: center;
++  justify-content: space-between;
++  gap: var(--erp-space-4);
++  padding: 0 max(var(--erp-space-6), calc((100vw - 1120px) / 2));
++  border-bottom: 1px solid var(--erp-color-border);
++  background: var(--erp-color-surface);
++}
++
++.auth-gateway__header > div {
++  display: flex;
++  min-width: 0;
++  align-items: baseline;
++  gap: var(--erp-space-3);
++}
++
++.auth-gateway__wordmark {
++  color: var(--erp-color-text);
++  font-size: 20px;
++  font-weight: 750;
++}
++
++.auth-gateway__product-context {
++  color: var(--erp-color-text-muted);
++  font-size: var(--erp-font-size-sm);
++}
++
++.auth-gateway__environment {
++  flex: 0 0 auto;
++  padding: 4px 8px;
++  border: 1px solid var(--erp-color-border);
++  border-radius: var(--erp-radius-sm);
++  background: var(--erp-color-surface-2);
++  color: var(--erp-color-text-muted);
++  font-size: 11px;
++  font-weight: 700;
++}
++
++.auth-gateway__main {
++  display: grid;
++  width: 100%;
++  padding: clamp(32px, 9vh, 88px) var(--erp-space-4);
++  place-items: start center;
++}
++
++.auth-gateway__panel {
++  display: grid;
++  width: min(100%, 480px);
++  gap: var(--erp-space-5);
++  padding: var(--erp-space-8);
++  border: 1px solid var(--erp-color-border);
++  border-radius: var(--erp-radius-md);
++  background: var(--erp-color-surface);
++  box-shadow: var(--erp-shadow-1);
++}
++
++.auth-gateway__copy {
++  display: grid;
++  gap: var(--erp-space-2);
++}
++
++.auth-gateway__eyebrow {
++  margin: 0;
++  color: var(--erp-color-info);
++  font-size: var(--erp-font-size-xs);
++  font-weight: 700;
++  text-transform: uppercase;
++}
++
++.auth-gateway h1 {
++  margin: 0;
++  color: var(--erp-color-text);
++  font-size: var(--erp-font-size-xl);
++  font-weight: 700;
++  line-height: 1.25;
++  letter-spacing: 0;
++}
++
++.auth-gateway__summary,
++.auth-gateway__destination {
++  margin: 0;
++  color: var(--erp-color-text-muted);
++  font-size: var(--erp-font-size-md);
++  line-height: 1.55;
++}
++
++.auth-gateway__destination {
++  color: var(--erp-color-text);
++  font-weight: 650;
++}
++
++.auth-gateway__notice {
++  display: grid;
++  gap: var(--erp-space-1);
++  padding: var(--erp-space-3);
++  border: 1px solid #e6c993;
++  border-radius: var(--erp-radius-sm);
++  background: var(--erp-color-warning-bg);
++  color: var(--erp-color-warning);
++  font-size: var(--erp-font-size-sm);
++  line-height: 1.45;
++}
++
++.auth-gateway__primary-action {
++  display: inline-flex;
++  width: 100%;
++  min-height: 44px;
++  align-items: center;
++  justify-content: center;
++  gap: var(--erp-space-2);
++  padding: 0 var(--erp-space-4);
++  border: 1px solid var(--erp-color-primary);
++  border-radius: var(--erp-radius-sm);
++  background: var(--erp-color-primary);
++  color: var(--erp-color-on-primary);
++  font-weight: 700;
++  text-align: center;
++  text-decoration: none;
++  transition: background-color 160ms ease, border-color 160ms ease;
++}
++
++.auth-gateway__primary-action:hover {
++  border-color: var(--erp-color-primary-hover);
++  background: var(--erp-color-primary-hover);
++  color: var(--erp-color-on-primary);
++}
++
++.auth-gateway__primary-action[aria-disabled="true"] {
++  cursor: wait;
++  opacity: 0.78;
++}
++
++.auth-gateway__action-arrow {
++  font-size: 18px;
++  line-height: 1;
++}
++
++.auth-gateway__details {
++  border-top: 1px solid var(--erp-color-border);
++  color: var(--erp-color-text-muted);
++  font-size: var(--erp-font-size-sm);
++}
++
++.auth-gateway__details summary {
++  min-height: 44px;
++  padding: var(--erp-space-3) 0 0;
++  cursor: pointer;
++  color: var(--erp-color-text);
++  font-weight: 650;
++}
++
++.auth-gateway__details dl {
++  display: grid;
++  gap: var(--erp-space-2);
++  margin: var(--erp-space-2) 0 0;
++}
++
++.auth-gateway__details dl > div {
++  display: grid;
++  grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.2fr);
++  gap: var(--erp-space-3);
++  padding: var(--erp-space-2) 0;
++  border-bottom: 1px solid var(--erp-color-border);
++}
++
++.auth-gateway__details dt {
++  color: var(--erp-color-text-muted);
++}
++
++.auth-gateway__details dd {
++  min-width: 0;
++  margin: 0;
++  overflow-wrap: anywhere;
++  color: var(--erp-color-text);
++  font-weight: 650;
++}
++
++.auth-gateway__footer {
++  display: flex;
++  min-height: 56px;
++  align-items: center;
++  justify-content: center;
++  flex-wrap: wrap;
++  gap: var(--erp-space-2);
++  padding: var(--erp-space-3) var(--erp-space-4);
++  color: var(--erp-color-text-muted);
++  font-size: var(--erp-font-size-xs);
++  text-align: center;
++}
++
++@media (max-width: 600px) {
++  .auth-gateway__header {
++    min-height: 72px;
++    align-items: flex-start;
++    padding: var(--erp-space-4);
++  }
++
++  .auth-gateway__header > div {
++    display: grid;
++    gap: 2px;
++  }
++
++  .auth-gateway__product-context {
++    font-size: var(--erp-font-size-xs);
++  }
++
++  .auth-gateway__main {
++    padding: var(--erp-space-6) var(--erp-space-4);
++  }
++
++  .auth-gateway__panel {
++    gap: var(--erp-space-4);
++    padding: var(--erp-space-6);
++  }
++
++  .auth-gateway__details dl > div {
++    grid-template-columns: 1fr;
++    gap: 2px;
++  }
++
++  .auth-gateway__footer {
++    display: grid;
++  }
++
++  .auth-gateway__footer [aria-hidden="true"] {
++    display: none;
++  }
++}
++
++@media (max-height: 620px) {
++  .auth-gateway__main {
++    padding-top: var(--erp-space-5);
++  }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .auth-gateway__primary-action {
++    transition: none;
++  }
++}
+*** Delete File: D:\TST_Codex_ui_recovery\apps\auth\app\page.test.tsx
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\page.test.tsx
++import { render, screen } from "@testing-library/react";
++import { headers } from "next/headers";
++import { afterEach, beforeEach, expect, test, vi } from "vitest";
++import { SESSION_COOKIE_NAME, encodeSessionCookie, type AuthSession } from "@erp/auth";
++import AuthHomePage from "./page";
++
++vi.mock("next/headers", () => ({
++  headers: vi.fn()
++}));
++
++const originalFetch = global.fetch;
++
++beforeEach(() => {
++  vi.mocked(headers).mockResolvedValue(new Headers({ "x-correlation-id": "request-1" }) as never);
++  global.fetch = vi.fn(() => Promise.resolve(Response.json({ status: "UP" })));
++});
++
++afterEach(() => {
++  global.fetch = originalFetch;
++  vi.clearAllMocks();
++});
++
++test("renders a signed-out product entry with the auth edge prefix", async () => {
++  render(await AuthHomePage({ searchParams: Promise.resolve({ returnUrl: "/bookings" }) }));
++
++  expect(screen.getByRole("heading", { name: "Sign in to LinerCore" })).toBeInTheDocument();
++  expect(screen.getByText("After sign-in, you'll continue to Bookings.")).toBeInTheDocument();
++  expect(screen.getByTestId("auth-start-link")).toHaveAttribute(
++    "href",
++    "/auth/api/auth/sign-in?returnUrl=%2Fbookings"
++  );
++  expect(screen.getByText("Technical details").closest("details")).not.toHaveAttribute("open");
++  expect(screen.queryByText("BFF guarded")).not.toBeInTheDocument();
++});
++
++test("routes an active session back to the requested workspace", async () => {
++  vi.mocked(headers).mockResolvedValue(
++    new Headers({
++      cookie: `${SESSION_COOKIE_NAME}=${encodeSessionCookie(testSession())}`,
++      "x-correlation-id": "request-2"
++    }) as never
++  );
++
++  render(await AuthHomePage({ searchParams: Promise.resolve({ returnUrl: "/bookings" }) }));
++
++  expect(screen.getByRole("heading", { name: "Welcome back, Booking Operator" })).toBeInTheDocument();
++  expect(screen.getByTestId("auth-start-link")).toHaveTextContent("Continue to Bookings");
++  expect(screen.getByTestId("auth-start-link")).toHaveAttribute("href", "/bookings");
++});
++
++test("falls back safely from an external return destination", async () => {
++  render(await AuthHomePage({ searchParams: Promise.resolve({ returnUrl: "https://attacker.example/steal" }) }));
++
++  expect(screen.getByText("We couldn't use that destination.")).toBeInTheDocument();
++  expect(screen.getByTestId("auth-start-link")).toHaveAttribute(
++    "href",
++    "/auth/api/auth/sign-in?returnUrl=%2F"
++  );
++});
++
++test("shows a recoverable identity-service unavailable state", async () => {
++  global.fetch = vi.fn(() => Promise.resolve(new Response(null, { status: 503 })));
++
++  render(await AuthHomePage({ searchParams: Promise.resolve({ returnUrl: "/bookings" }) }));
++
++  expect(
++    screen.getByRole("heading", { name: "Workspace access is temporarily unavailable" })
++  ).toBeInTheDocument();
++  expect(screen.getByTestId("auth-start-link")).toHaveTextContent("Try again");
++  expect(screen.getByTestId("auth-start-link")).toHaveAttribute("href", "/auth/?returnUrl=%2Fbookings");
++});
++
++function testSession(): AuthSession {
++  return {
++    sessionId: "session-1",
++    subjectId: "local.booking.user",
++    subjectType: "user",
++    displayName: "Booking Operator",
++    roles: ["booking-desk"],
++    permissions: ["booking:read"],
++    issuedAt: "2026-07-27T00:00:00Z",
++    expiresAt: "2099-07-27T00:00:00Z",
++    policyVersion: "keycloak:linercore-local"
++  };
++}
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\lib\auth-gateway.test.ts
++import { describe, expect, it } from "vitest";
++import { SESSION_COOKIE_NAME, encodeSessionCookie, type AuthSession } from "@erp/auth";
++import {
++  gatewaySignInHref,
++  identityServiceAvailable,
++  resolveGatewayDestination,
++  resolveGatewaySession
++} from "./auth-gateway";
++
++describe("Auth Gateway state", () => {
++  it("maps supported ERP destinations to business labels", () => {
++    expect(resolveGatewayDestination("/bookings/booking-1?tab=pricing")).toEqual({
++      href: "/bookings/booking-1?tab=pricing",
++      label: "Bookings",
++      invalid: false
++    });
++    expect(resolveGatewayDestination("/charge-agreements")).toMatchObject({
++      label: "Service Contracts & Rates",
++      invalid: false
++    });
++    expect(resolveGatewayDestination("/container-movement/journey-1")).toMatchObject({
++      label: "Equipment Journeys",
++      invalid: false
++    });
++  });
++
++  it("rejects external and unknown internal destinations", () => {
++    expect(resolveGatewayDestination("https://attacker.example")).toEqual({
++      href: "/",
++      label: "LinerCore workspace",
++      invalid: true
++    });
++    expect(resolveGatewayDestination("/admin/internal")).toEqual({
++      href: "/",
++      label: "LinerCore workspace",
++      invalid: true
++    });
++  });
++
++  it("distinguishes active, expired, and missing sessions", () => {
++    const active = testSession("2099-07-27T00:00:00Z");
++    const expired = testSession("2026-07-01T00:00:00Z");
++
++    expect(resolveGatewaySession(`${SESSION_COOKIE_NAME}=${encodeSessionCookie(active)}`)).toMatchObject({
++      kind: "active"
++    });
++    expect(resolveGatewaySession(`${SESSION_COOKIE_NAME}=${encodeSessionCookie(expired)}`)).toEqual({
++      kind: "expired"
++    });
++    expect(resolveGatewaySession(null)).toEqual({ kind: "signed-out" });
++  });
++
++  it("builds sign-in actions through the Auth edge route", () => {
++    expect(gatewaySignInHref("/bookings")).toBe("/auth/api/auth/sign-in?returnUrl=%2Fbookings");
++  });
++
++  it("reports identity service availability without exposing its response", async () => {
++    const available = await identityServiceAvailable(
++      (() => Promise.resolve(Response.json({ status: "UP" }))) as typeof fetch
++    );
++    const unavailable = await identityServiceAvailable(
++      (() => Promise.resolve(new Response(null, { status: 503 }))) as typeof fetch
++    );
++
++    expect(available).toBe(true);
++    expect(unavailable).toBe(false);
++  });
++});
++
++function testSession(expiresAt: string): AuthSession {
++  return {
++    sessionId: "session-1",
++    subjectId: "local.booking.user",
++    subjectType: "user",
++    displayName: "Booking Operator",
++    roles: ["booking-desk"],
++    permissions: ["booking:read"],
++    issuedAt: "2026-07-01T00:00:00Z",
++    expiresAt,
++    policyVersion: "keycloak:linercore-local"
++  };
++}
+*** End Patch

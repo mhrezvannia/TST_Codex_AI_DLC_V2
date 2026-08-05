@@ -1,0 +1,92 @@
+*** Begin Patch
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/lib/auth-gateway.ts
+@@
+ export function gatewayEntryHref(destination: string) {
+   return `/auth/?returnUrl=${encodeURIComponent(destination)}`;
+ }
+ 
+-export function signInHandoffHref(destination: string) {
+-  return `/auth/sign-in?returnUrl=${encodeURIComponent(destination)}`;
+-}
+-
+ export async function identityServiceAvailable(fetcher: typeof fetch = fetch): Promise<boolean> {
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/sign-in/page.tsx
+@@
+ import {
+   gatewayEntryHref,
+   gatewaySignInHref,
+-  resolveGatewayDestination,
+-  signInHandoffHref
++  resolveGatewayDestination
+ } from "../../lib/auth-gateway";
+@@
+-  const actionHref =
+-    status === "unavailable" ? signInHandoffHref(destination.href) : gatewaySignInHref(destination.href);
++  const actionHref = gatewaySignInHref(destination.href);
+@@
+-      actionLabel: "Check again",
+-      pendingLabel: "Checking company sign-in...",
++      actionLabel: "Try again",
++      pendingLabel: "Opening company sign-in...",
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/callback/route.ts
+@@
+-  if (providerError === "access_denied") {
+-    const response = redirectResponse(publicUrl(request, "/auth/sign-in?status=cancelled"));
++  if (providerError) {
++    const status =
++      providerError === "access_denied"
++        ? "cancelled"
++        : providerError === "temporarily_unavailable" || providerError === "server_error"
++          ? "unavailable"
++          : "failed";
++    const recoveryParams = new URLSearchParams({ status });
++    if (tx?.returnUrl) {
++      recoveryParams.set("returnUrl", tx.returnUrl);
++    }
++    const response = redirectResponse(publicUrl(request, `/auth/sign-in?${recoveryParams.toString()}`));
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/lib/auth-gateway.test.ts
+@@
+   gatewayEntryHref,
+   gatewaySignInHref,
+   identityServiceAvailable,
+   resolveGatewayDestination,
+-  resolveGatewaySession,
+-  signInHandoffHref
++  resolveGatewaySession
+ } from "./auth-gateway";
+@@
+     expect(gatewaySignInHref("/bookings")).toBe("/auth/api/auth/sign-in?returnUrl=%2Fbookings");
+     expect(gatewayEntryHref("/bookings")).toBe("/auth/?returnUrl=%2Fbookings");
+-    expect(signInHandoffHref("/bookings")).toBe("/auth/sign-in?returnUrl=%2Fbookings");
+   });
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/sign-in/page.test.tsx
+@@
+     expect(screen.getByRole("heading", { name: "Sign-in is temporarily unavailable" })).toBeInTheDocument();
+     expect(screen.getByRole("alert")).toHaveTextContent("Company sign-in is unavailable");
+     expect(screen.getByTestId("sign-in-button")).toHaveAttribute(
+       "href",
+-      "/auth/sign-in?returnUrl=%2Freference-data"
++      "/auth/api/auth/sign-in?returnUrl=%2Freference-data"
+     );
+*** Update File: D:/TST_Codex_ui_recovery/apps/auth/app/api/auth/callback/route.test.ts
+@@
+   test("maps identity-provider cancellation to a recoverable business state", async () => {
+@@
+       "http://127.0.0.1:8088/auth/sign-in?status=cancelled"
+     );
+   });
++
++  test("maps an identity-provider outage to the unavailable state", async () => {
++    const response = await GET(
++      new Request(
++        "http://127.0.0.1:8088/auth/api/auth/callback?error=temporarily_unavailable"
++      )
++    );
++
++    expect(response.status).toBe(303);
++    expect(response.headers.get("Location")).toBe(
++      "http://127.0.0.1:8088/auth/sign-in?status=unavailable"
++    );
++  });
+ });
+*** End Patch

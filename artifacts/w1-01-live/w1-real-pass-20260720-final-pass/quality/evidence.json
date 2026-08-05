@@ -1,0 +1,320 @@
+{
+  "generatedAt": "2026-07-19T23:24:20.452Z",
+  "changedPaths": [
+    "<all>"
+  ],
+  "scopes": [
+    "workspace",
+    "services",
+    "apps/reference-data",
+    "apps/auth",
+    "apps/charge-agreements",
+    "apps/booking",
+    "apps/shell",
+    "packages",
+    "packages/auth",
+    "packages/shared-types",
+    "contracts",
+    "seeds",
+    "w2-01-live"
+  ],
+  "results": [
+    {
+      "gateId": "policy-package-manager",
+      "scope": "workspace",
+      "command": "policy",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/policy-package-manager.log"
+    },
+    {
+      "gateId": "backend-domain-purity",
+      "scope": "services",
+      "command": "policy",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/backend-domain-purity.log"
+    },
+    {
+      "gateId": "contracts-validate",
+      "scope": "contracts",
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"ok\",\n  \"catalogVersion\": \"0.2.0\",\n  \"contracts\": 13,\n  \"healthSnapshot\": {\n    \"snapshotId\": \"contract-health-2026-07-19T23:23:08.627Z\",\n    \"generatedAt\": \"2026-07-19T23:23:08.629Z\",\n    \"overallStatus\": \"green\",\n    \"staleThreshold\": \"P7D\",\n    \"seamStatuses\": [\n      {\n        \"contractId\": \"api-reference-data-service\",\n        \"seamId\": \"reference-data-http\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"reference-data-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/reference-data-service.yaml\",\n        \"linkedStories\": [\n          \"US-SP-004\",\n          \"US-SP-006\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-004\",\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"api-identity-service\",\n        \"seamId\": \"identity-http\",\n        \"owner\": \"shared-platform\",\n        \"provider\": \"identity-service\",\n        \"consumer\": \"enterprise-services\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/identity-service.yaml\",\n        \"linkedStories\": [\n          \"US-SP-006\",\n          \"US-RUN-004\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-SP-007\",\n          \"NFR-COMP-001\"\n        ]\n      },\n      {\n        \"contractId\": \"api-charge-agreement-service\",\n        \"seamId\": \"booking-charge-pricing-http\",\n        \"owner\": \"charge-agreement-pricing-domain\",\n        \"provider\": \"charge-agreement-service\",\n        \"consumer\": \"booking-service\",\n        \"protocol\": \"http\",\n        \"status\": \"green\",\n        \"lifecycleStatus\": \"candidate_executable\",\n        \"artifactPath\": \"contracts/openapi/pricing.v1.yaml\",\n        \"linkedStories\": [\n          \"US-W1-003\",\n          \"US-W1-007\"\n        ],\n        \"linkedRequirements\": [\n          \"FR-",
+      "evidencePath": "artifacts/quality-gates/contracts-validate.log"
+    },
+    {
+      "gateId": "contracts-verify",
+      "scope": "contracts",
+      "command": "node scripts/verify-contract-providers.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"ok\",\n  \"valid\": true,\n  \"failures\": [],\n  \"checks\": [\n    {\n      \"name\": \"contract catalog\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/{set}/records/{id}/history\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/reference-data-service.yaml declares /reference-sets/events\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/authorize\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/effective-permissions\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/identity-service.yaml declares /internal/identity/roles/assign\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml exists\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml declares /api/charge-agreements\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml declares /api/charge-agreements/active-lookup\",\n      \"status\": \"ok\"\n    },\n    {\n      \"name\": \"contracts/openapi/charge-agreements.yaml declares /api/pricing/quote\",\n    ",
+      "evidencePath": "artifacts/quality-gates/contracts-verify.log"
+    },
+    {
+      "gateId": "seed-validate",
+      "scope": "seeds",
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"dry-run\",\n  \"seedPackId\": \"shared-platform-mvp-defaults\",\n  \"seedVersion\": \"2026.07.02\",\n  \"correlationId\": \"4437443b-c35d-421f-97a3-3ae6fa5a6e12\",\n  \"created\": 19,\n  \"updated\": 0,\n  \"skipped\": 0,\n  \"failed\": 0,\n  \"failures\": [],\n  \"records\": [\n    {\n      \"key\": \"PARTY_CUSTOMER:LOCAL-CARRIER\",\n      \"id\": \"party-customer-local-carrier\",\n      \"fingerprint\": \"0c090b235d13a85359e111295629a7b485eab56013aee60ae6cdae76fa2efa00\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:US\",\n      \"id\": \"location-country-us\",\n      \"fingerprint\": \"e91742c3e9ee3c286ce51b1b353e84c54597f79aa7e8a4a95a93bd41b8011dc6\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NL\",\n      \"id\": \"location-country-nl\",\n      \"fingerprint\": \"acbf4d560bb8a8d0b8279e74964d9937367a6cd854134efbb312843f1e592ca9\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:USNYC\",\n      \"id\": \"location-usnyc\",\n      \"fingerprint\": \"2aeb12041a5537a3344c520609dac4bf6e94f99e1535301068dcfa3ddd6efb45\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"LOCATION:NLRTM\",\n      \"id\": \"location-nlrot\",\n      \"fingerprint\": \"a71f5c61b9bfa5d541afedf49f02326fef09567c6380593f74c574cd1afa4536\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:NA\",\n      \"id\": \"region-na\",\n      \"fingerprint\": \"db764b62f93ab56be4d969b7cbe1b4a638db8bd8d84020d8efe03768cebc6ae9\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"REGION:EU\",\n      \"id\": \"region-eu\",\n      \"fingerprint\": \"09134daeb6c5a1c1fd9d0d646513a8d9b9aed9af1eaa5fbdddbf18db554d2b33\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:9387425\",\n      \"id\": \"vessel-linercore-atlas\",\n      \"fingerprint\": \"a3dfe68e1fcf4aceed7f93fc47cf590b36ff370297b15d05fa28417fc9a0dc65\",\n      \"status\": \"created\"\n    },\n    {\n      \"key\": \"VESSEL_VOYAGE:LC001E\",\n      \"id\": \"voyage-local-001\",\n      \"fingerprint\": \"b6b998d002c3acac751e5b04b7a6be23648b70720c44a2a85eee5415f006e081\",\n      \"status\": \"created\"\n    },\n    ",
+      "evidencePath": "artifacts/quality-gates/seed-validate.log"
+    },
+    {
+      "gateId": "skeleton-validate",
+      "scope": "workspace",
+      "command": "node scripts/validate-skeleton.mjs",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"status\": \"ok\",\n  \"serviceRoots\": [\n    \"booking-service\",\n    \"charge-agreement-service\",\n    \"container-movement-service\",\n    \"identity-service\",\n    \"platform-messaging\",\n    \"reference-data-service\"\n  ]\n}\n",
+      "evidencePath": "artifacts/quality-gates/skeleton-validate.log"
+    },
+    {
+      "gateId": "frontend-reference-data-test",
+      "scope": "apps/reference-data",
+      "command": "node node_modules/vitest/vitest.mjs run apps/reference-data/app/page.test.tsx apps/reference-data/lib/reference-data.test.ts apps/reference-data/lib/contract-catalog.test.ts --config vitest.config.ts",
+      "required": true,
+      "status": "failed",
+      "summary": "node:internal/modules/cjs/loader:1520\r\n  throw err;\r\n  ^\r\n\r\nError: Cannot find module 'D:\\TST_Codex_merge_w2\\node_modules\\vitest\\vitest.mjs'\r\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1517:15)\r\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\r\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1122:12)\r\n    at Module._load (node:internal/modules/cjs/loader:1294:5)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\r\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\r\n    at node:internal/main/run_main_module:33:47 {\r\n  code: 'MODULE_NOT_FOUND',\r\n  requireStack: []\r\n}\r\n\r\nNode.js v24.18.0\r\n",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-test.log"
+    },
+    {
+      "gateId": "frontend-reference-data-typecheck",
+      "scope": "apps/reference-data",
+      "command": "corepack yarn workspace @erp/app-reference-data typecheck",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-typecheck.log"
+    },
+    {
+      "gateId": "package-auth-test",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth test",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/package-auth-test.log"
+    },
+    {
+      "gateId": "package-auth-typecheck",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth typecheck",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/package-auth-typecheck.log"
+    },
+    {
+      "gateId": "package-auth-lint",
+      "scope": "packages/auth",
+      "command": "corepack yarn workspace @erp/auth lint",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/package-auth-lint.log"
+    },
+    {
+      "gateId": "package-shared-types-test",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types test",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-test.log"
+    },
+    {
+      "gateId": "package-shared-types-typecheck",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types typecheck",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-typecheck.log"
+    },
+    {
+      "gateId": "package-shared-types-lint",
+      "scope": "packages/shared-types",
+      "command": "corepack yarn workspace @erp/shared-types lint",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/package-shared-types-lint.log"
+    },
+    {
+      "gateId": "frontend-auth-test",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth test",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-test.log"
+    },
+    {
+      "gateId": "frontend-auth-typecheck",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth typecheck",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-typecheck.log"
+    },
+    {
+      "gateId": "frontend-auth-lint",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth lint",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-lint.log"
+    },
+    {
+      "gateId": "frontend-auth-build",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth build",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-build.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-test",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements test",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-test.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-typecheck",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements typecheck",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-typecheck.log"
+    },
+    {
+      "gateId": "frontend-booking-test",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking test",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-test.log"
+    },
+    {
+      "gateId": "frontend-booking-typecheck",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking typecheck",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-typecheck.log"
+    },
+    {
+      "gateId": "frontend-booking-lint",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking lint",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-lint.log"
+    },
+    {
+      "gateId": "frontend-booking-build",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking build",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-build.log"
+    },
+    {
+      "gateId": "frontend-shell-test",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell test",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-test.log"
+    },
+    {
+      "gateId": "frontend-shell-typecheck",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell typecheck",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-typecheck.log"
+    },
+    {
+      "gateId": "frontend-shell-lint",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell lint",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-lint.log"
+    },
+    {
+      "gateId": "frontend-shell-build",
+      "scope": "apps/shell",
+      "command": "corepack yarn workspace @erp/app-shell build",
+      "required": true,
+      "status": "failed",
+      "summary": "\u001b[31m\u001b[1mUsage Error\u001b[22m\u001b[39m: Couldn't find the node_modules state file - running an install might help (findPackageLocation)\n\n\u001b[1m$ \u001b[22myarn run [--inspect] [--inspect-brk] [-T,--top-level] [-B,--binaries-only] [--require #0] <scriptName> ...\n",
+      "evidencePath": "artifacts/quality-gates/frontend-shell-build.log"
+    },
+    {
+      "gateId": "w2-01-live-acceptance",
+      "scope": "w2-01-live",
+      "command": "node scripts/w2-01-live-acceptance.mjs --output-root artifacts/w2-01-live/app-shell-auth && node scripts/w2-01-live-acceptance.mjs --validate --require-pass --output-root artifacts/w2-01-live/app-shell-auth",
+      "required": true,
+      "status": "passed",
+      "summary": "{\n  \"finalDecision\": \"PASS\",\n  \"evidenceRoot\": \"D:/TST_Codex_merge_w2/artifacts/w2-01-live/app-shell-auth\"\n}\n{\n  \"status\": \"PASS\",\n  \"failures\": []\n}\n",
+      "evidencePath": "artifacts/quality-gates/w2-01-live-acceptance.log"
+    },
+    {
+      "gateId": "backend-test",
+      "scope": "services",
+      "command": "mvn -f services/pom.xml test",
+      "required": true,
+      "status": "passed",
+      "summary": "SLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nSLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nSLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nSLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\nWARNING: A Java agent has been loaded dynamically (C:\\Users\\mohammad.rezvannia\\.m2\\repository\\net\\bytebuddy\\byte-buddy-agent\\1.14.19\\byte-buddy-agent-1.14.19.jar)\r\nWARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning\r\nWARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information\r\nWARNING: Dynamic loading of agents will be disallowed by default in a future release\r\nOpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended\r\nSLF4J(W): No SLF4J providers were found.\r\nSLF4J(W): Defaulting to no-operation (NOP) logger implementation\r\nSLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.\r\n",
+      "evidencePath": "artifacts/quality-gates/backend-test.log"
+    }
+  ],
+  "aggregate": {
+    "status": "failed",
+    "failedRequired": [
+      "frontend-reference-data-test",
+      "frontend-reference-data-typecheck",
+      "package-auth-test",
+      "package-auth-typecheck",
+      "package-auth-lint",
+      "package-shared-types-test",
+      "package-shared-types-typecheck",
+      "package-shared-types-lint",
+      "frontend-auth-test",
+      "frontend-auth-typecheck",
+      "frontend-auth-lint",
+      "frontend-auth-build",
+      "frontend-charge-agreements-test",
+      "frontend-charge-agreements-typecheck",
+      "frontend-booking-test",
+      "frontend-booking-typecheck",
+      "frontend-booking-lint",
+      "frontend-booking-build",
+      "frontend-shell-test",
+      "frontend-shell-typecheck",
+      "frontend-shell-lint",
+      "frontend-shell-build"
+    ]
+  }
+}

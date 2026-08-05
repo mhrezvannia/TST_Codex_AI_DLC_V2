@@ -1,0 +1,9 @@
+gate=quality-gates
+status=PASS
+exitCode=0
+command=node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_merge_w2/artifacts/w1-01-live/w1-real-pass-20260720-green/quality/evidence.json
+
+{
+  "status": "passed",
+  "failedRequired": []
+}

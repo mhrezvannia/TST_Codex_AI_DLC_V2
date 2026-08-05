@@ -1,0 +1,27 @@
+*** Begin Patch
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\next.config.mjs
++/** @type {import('next').NextConfig} */
++const nextConfig = {
++  assetPrefix: "/auth-assets"
++};
++
++export default nextConfig;
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\nginx\default.conf
+@@
+   location /auth/ {
+     proxy_pass http://apps-auth:3000/;
+     proxy_set_header Host $http_host;
+     proxy_set_header X-Forwarded-Host $http_host;
+     proxy_set_header X-Forwarded-Proto $scheme;
+     proxy_set_header X-Correlation-Id $request_id;
+   }
+ 
++  location /auth-assets/_next/ {
++    proxy_pass http://apps-auth:3000/_next/;
++    proxy_set_header Host $http_host;
++    proxy_set_header X-Forwarded-Host $http_host;
++    proxy_set_header X-Forwarded-Proto $scheme;
++    proxy_set_header X-Correlation-Id $request_id;
++  }
++
+*** End Patch

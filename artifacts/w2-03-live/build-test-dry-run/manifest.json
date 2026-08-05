@@ -1,0 +1,294 @@
+{
+  "intent": "W2-03-charge-tariffs-and-agreements",
+  "runId": "build-test-dry-run",
+  "generatedAt": "2026-07-26T07:45:40.234Z",
+  "status": "PLANNED",
+  "composeProject": "linercore-wave-a",
+  "destructiveDatabaseResetAllowed": false,
+  "protectedComposeProject": "linercore-shared-platform",
+  "isolatedPorts": {
+    "POSTGRES_HOST_PORT": "55433",
+    "KEYCLOAK_HOST_PORT": "18080",
+    "KAFKA_HOST_PORT": "19092",
+    "SCHEMA_REGISTRY_HOST_PORT": "18081",
+    "IDENTITY_SERVICE_HOST_PORT": "18082",
+    "REFERENCE_DATA_SERVICE_HOST_PORT": "18083",
+    "CHARGE_AGREEMENT_SERVICE_HOST_PORT": "18084",
+    "BOOKING_SERVICE_HOST_PORT": "18085",
+    "CONTAINER_MOVEMENT_SERVICE_HOST_PORT": "18086",
+    "CHARGE_AGREEMENTS_UI_HOST_PORT": "13013",
+    "NGINX_HOST_PORT": "18088",
+    "PROMETHEUS_HOST_PORT": "19090",
+    "GRAFANA_HOST_PORT": "13004",
+    "JAEGER_UI_HOST_PORT": "16687"
+  },
+  "gates": [
+    {
+      "id": "demo-snapshot",
+      "section": "guard",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/demo-guard.mjs --snapshot D:/TST_Codex_integ/artifacts/w2-03-live/build-test-dry-run/guard/protected-before.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "guard/demo-snapshot.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "preflight",
+      "section": "preflight",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --preflight",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "preflight/preflight.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "compose-config",
+      "section": "compose",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a --profile full config --quiet",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "compose/compose-config.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "compose-start",
+      "section": "compose",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a --profile full up -d --build postgres kafka schema-registry identity-service reference-data-service charge-agreement-service booking-service apps-charge-agreements",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "compose/compose-start.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "charge-health",
+      "section": "runtime",
+      "mapsTo": [
+        "W2-03-S1",
+        "W2-03-S2",
+        "W2-03-S3"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --probe http://127.0.0.1:18084/actuator/health",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "runtime/charge-health.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "booking-health",
+      "section": "runtime",
+      "mapsTo": [
+        "W2-03-S4"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --probe http://127.0.0.1:18085/actuator/health",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "runtime/booking-health.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "charge-ui-health",
+      "section": "runtime",
+      "mapsTo": [
+        "W2-03-S1",
+        "W2-03-S2",
+        "W2-03-S3"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --probe http://127.0.0.1:13013/api/health",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "runtime/charge-ui-health.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "live-journey",
+      "section": "journey",
+      "mapsTo": [
+        "W2-03-S1",
+        "W2-03-S2",
+        "W2-03-S3",
+        "W2-03-S4",
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --journey D:/TST_Codex_integ/artifacts/w2-03-live/build-test-dry-run/journey/scenarios.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "journey/live-journey.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "restart-services",
+      "section": "restart",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a restart postgres charge-agreement-service booking-service",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "restart/restart-services.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "restart-persistence",
+      "section": "restart",
+      "mapsTo": [
+        "W2-03-S4",
+        "W2-03-S5"
+      ],
+      "command": "node scripts/w2-03-live-acceptance.mjs --verify-restart D:/TST_Codex_integ/artifacts/w2-03-live/build-test-dry-run/journey/scenarios.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "restart/restart-persistence.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "contracts",
+      "section": "quality",
+      "mapsTo": [
+        "W2-03-S4",
+        "W2-03-S5"
+      ],
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "quality/contracts.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "aidlc-audit",
+      "section": "audits",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "bash .claude/skills/aidlc-audit/detectors.sh",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "audits/aidlc-audit.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "erp-fidelity-audit",
+      "section": "audits",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "audits/erp-fidelity-audit.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "compose-cleanup",
+      "section": "cleanup",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "docker compose -p linercore-wave-a --profile full down",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "cleanup/compose-cleanup.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "demo-verify",
+      "section": "guard",
+      "mapsTo": [
+        "W2-03-S5"
+      ],
+      "command": "node scripts/demo-guard.mjs --verify D:/TST_Codex_integ/artifacts/w2-03-live/build-test-dry-run/guard/protected-before.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "artifactPath": "guard/demo-verify.txt",
+      "summary": "dry-run: command not executed"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "audits/aidlc-audit.txt",
+      "sha256": "f75adc02c79ed467c1bcb8242490cfe3c23ff6fd18ac3247a8920eb7ff15bb6b",
+      "bytes": 126
+    },
+    {
+      "path": "audits/erp-fidelity-audit.txt",
+      "sha256": "81769f00b4203448d47206dca6782d48e74e3bfc3f39e26282bd8819a333c3c6",
+      "bytes": 140
+    },
+    {
+      "path": "cleanup/compose-cleanup.txt",
+      "sha256": "99a8e42ec50003ff99e706009ebbac8de3589a66e424f7b828af06c44950d02e",
+      "bytes": 140
+    },
+    {
+      "path": "compose/compose-config.txt",
+      "sha256": "3d104f120a5d145d92bc0eddefff613e2ee4ce6c5441d735f80a5653165e54f8",
+      "bytes": 149
+    },
+    {
+      "path": "compose/compose-start.txt",
+      "sha256": "e1308152dca880f73ddb9bd913195b15db1447c959702c5adad8cfb75c59ae16",
+      "bytes": 282
+    },
+    {
+      "path": "guard/demo-snapshot.txt",
+      "sha256": "bd536bb30d09e5dfaaf928c24c28229e3199db77b6d590184ff8f048e4713048",
+      "bytes": 209
+    },
+    {
+      "path": "guard/demo-verify.txt",
+      "sha256": "0cf28bd7747156d76463435918099f4540fc7c8ace960044d39779aa7c9f6a8b",
+      "bytes": 205
+    },
+    {
+      "path": "journey/live-journey.txt",
+      "sha256": "746d6e925598adffeb10a3e0fa8686d068ce99cfac246dfd89e997233edaceb4",
+      "bytes": 213
+    },
+    {
+      "path": "preflight/preflight.txt",
+      "sha256": "48d9f758171a2cfcbc60e4fd0ee819211acc41cd6802cab5e4aa7cda82bdb71d",
+      "bytes": 130
+    },
+    {
+      "path": "quality/contracts.txt",
+      "sha256": "6cd2beb4486dc4c69d3232ddee67159012f3037a54ab89cb3ca368b153113ac7",
+      "bytes": 122
+    },
+    {
+      "path": "restart/restart-persistence.txt",
+      "sha256": "2c02612358f19051e2cae9a247bc1b89456480581e1340baaef9755977feb7e9",
+      "bytes": 227
+    },
+    {
+      "path": "restart/restart-services.txt",
+      "sha256": "5725e581ae4755f08eb9fcd8fceb9fb7b739a3ccc449312b08b10c4bb300d69d",
+      "bytes": 179
+    },
+    {
+      "path": "runtime/booking-health.txt",
+      "sha256": "b9e1aa4f60e5ac9e3ca74cac46d724871a1d4309398d482ba243445d32ee6f3d",
+      "bytes": 170
+    },
+    {
+      "path": "runtime/charge-health.txt",
+      "sha256": "41ca326ae8e86f0342c314bfa75f1beb0428fe76da46cc032cfdbbdf4a685a8c",
+      "bytes": 169
+    },
+    {
+      "path": "runtime/charge-ui-health.txt",
+      "sha256": "de13e121561d64b1fc3f43e855ad47e27cf9919d202f406b18dff45014a96348",
+      "bytes": 167
+    }
+  ]
+}

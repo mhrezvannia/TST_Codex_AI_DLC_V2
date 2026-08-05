@@ -1,0 +1,6 @@
+gate=restart-services
+status=PLANNED
+exitCode=
+command=docker compose -p linercore-wave-a restart postgres charge-agreement-service booking-service
+
+dry-run: command not executed

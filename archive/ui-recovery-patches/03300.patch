@@ -1,0 +1,12 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\keycloak\themes\linercore\login\resources\js\linercore-login.js
+@@
+-  if (form) {
+-    form.addEventListener("submit", () => {
++  if (form) {
++    form.addEventListener("submit", (event) => {
+       if (form.dataset.submitting === "true") {
++        event.preventDefault();
+         return;
+       }
+*** End Patch

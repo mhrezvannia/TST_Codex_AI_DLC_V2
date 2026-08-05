@@ -1,0 +1,6 @@
+gate=compose-config
+status=PLANNED
+exitCode=
+command=docker compose -p linercore-wave-a --profile full config --quiet
+
+dry-run: command not executed

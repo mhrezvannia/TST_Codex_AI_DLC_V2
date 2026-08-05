@@ -1,0 +1,51 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\GatewayAction.tsx
+@@
+-import { useState } from "react";
++import { useRef, useState } from "react";
+@@
+ }) {
+   const [pending, setPending] = useState(false);
++  const pendingRef = useRef(false);
+@@
+       data-testid={dataTestId}
+       href={href}
+       onClick={(event) => {
+-        if (pending) {
++        if (pendingRef.current) {
+           event.preventDefault();
+           return;
+         }
++        pendingRef.current = true;
+         setPending(true);
+       }}
+     >
+-      <span>{pending ? pendingLabel : label}</span>
++      <span aria-live="polite">{pending ? pendingLabel : label}</span>
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\GatewayAction.test.tsx
++import { fireEvent, render, screen } from "@testing-library/react";
++import { expect, test } from "vitest";
++import { GatewayAction } from "./GatewayAction";
++
++test("announces redirect progress and prevents duplicate activation", () => {
++  render(
++    <GatewayAction
++      dataTestId="gateway-action"
++      href="/auth/api/auth/sign-in?returnUrl=%2Fbookings"
++      label="Sign in"
++      pendingLabel="Opening secure sign in..."
++    />
++  );
++
++  const action = screen.getByTestId("gateway-action");
++  fireEvent.click(action);
++
++  expect(action).toHaveAttribute("aria-busy", "true");
++  expect(action).toHaveAttribute("aria-disabled", "true");
++  expect(action).toHaveTextContent("Opening secure sign in...");
++
++  const duplicateClick = new MouseEvent("click", { bubbles: true, cancelable: true });
++  action.dispatchEvent(duplicateClick);
++  expect(duplicateClick.defaultPrevented).toBe(true);
++});
+*** End Patch

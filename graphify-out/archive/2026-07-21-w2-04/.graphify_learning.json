@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-07-21T21:16:38.516289+00:00",
+  "nodes": {
+    "aidlc_spaces_default_intents_260708_linercore_enterprise_inception_refined_mockups_design_system_mapping_booking": {
+      "code_fingerprint": "8ad9532292be6d8ed613296fdc501a94e60a3c867892eb5f79b541888ccc0e54",
+      "label": "Booking",
+      "last": "2026-07-21T19:07:25.394083+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-21T19:07:25.394083+00:00",
+          "outcome": "useful",
+          "q": "W2-04 safe extension seams for confirmation capture outbox Booking Identity and UI"
+        },
+        {
+          "date": "2026-07-21T13:08:08.161769+00:00",
+          "outcome": "useful",
+          "q": "What existing Container Movement and Booking UI routes, timeline patterns, shared shell components, and user flow should rough mockups preserve?"
+        }
+      ],
+      "score": 1.990121349,
+      "source_file": "aidlc/spaces/default/intents/260708-linercore-enterprise/inception/refined-mockups/design-system-mapping.md",
+      "status": "preferred",
+      "uses": 2
+    },
+    "aidlc_spaces_default_intents_260708_linercore_enterprise_inception_refined_mockups_interaction_spec_movementtimeline": {
+      "code_fingerprint": "772c97a2a57135b251b36853e39c1a2a792b06955b67dd585615dd462360f6f4",
+      "label": "MovementTimeline",
+      "last": "2026-07-21T19:07:25.394083+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-21T19:07:25.394083+00:00",
+          "outcome": "useful",
+          "q": "W2-04 safe extension seams for confirmation capture outbox Booking Identity and UI"
+        },
+        {
+          "date": "2026-07-21T13:08:08.161769+00:00",
+          "outcome": "useful",
+          "q": "What existing Container Movement and Booking UI routes, timeline patterns, shared shell components, and user flow should rough mockups preserve?"
+        },
+        {
+          "date": "2026-07-21T12:06:23.498065+00:00",
+          "outcome": "useful",
+          "q": "How do booking.confirmed, container movement, Booking consumption, timeline UI, and acceptance evidence connect in W2-04 and the current codebase?"
+        }
+      ],
+      "score": 2.981331402,
+      "source_file": "aidlc/spaces/default/intents/260708-linercore-enterprise/inception/refined-mockups/interaction-spec.md",
+      "status": "preferred",
+      "uses": 3
+    },
+    "docs_enterprise_contracts_async_event_contract_booking_confirmed_async_event_contract_booking_confirmed": {
+      "code_fingerprint": "dace47d78359c067cd47a039ccb84799aef7957dc239f06f42000c42d351b45d",
+      "label": "Async Event Contract — `booking.confirmed`",
+      "last": "2026-07-21T12:06:23.498065+00:00",
+      "provenance": [
+        {
+          "date": "2026-07-21T12:06:23.498065+00:00",
+          "outcome": "useful",
+          "q": "How do booking.confirmed, container movement, Booking consumption, timeline UI, and acceptance evidence connect in W2-04 and the current codebase?"
+        }
+      ],
+      "score": 0.991210053,
+      "source_file": "docs/enterprise-contracts/async-event-contract-booking-confirmed.md",
+      "status": "tentative",
+      "uses": 1
+    }
+  },
+  "version": 1
+}

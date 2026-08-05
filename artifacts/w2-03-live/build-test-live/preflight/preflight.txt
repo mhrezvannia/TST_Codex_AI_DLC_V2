@@ -1,0 +1,9 @@
+gate=preflight
+status=PASS
+exitCode=0
+command=node scripts/w2-03-live-acceptance.mjs --preflight
+
+{
+  "status": "PASS",
+  "failures": []
+}

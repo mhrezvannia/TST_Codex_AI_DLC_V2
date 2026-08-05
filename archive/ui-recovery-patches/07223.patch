@@ -1,0 +1,30 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\ui\src\interactive.tsx
+@@
+   required,
++  "data-testid": dataTestId,
+   "aria-label": ariaLabel
+@@
+   required?: boolean;
++  "data-testid"?: string;
+   "aria-label"?: string;
+@@
+         required={required}
++        data-testid={dataTestId}
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\new\BookingCreateForm.tsx
+@@
+                 id="booking-customerId"
++                data-testid="booking-customerId"
+@@
+                   id="booking-voyageId"
++                  data-testid="booking-voyageId"
+@@
+                   id="booking-loadUnLocode"
++                  data-testid="booking-loadUnLocode"
+@@
+                   id="booking-dischargeUnLocode"
++                  data-testid="booking-dischargeUnLocode"
+@@
+                   id="booking-equipmentTypeCode"
++                  data-testid="booking-equipmentTypeCode"
+*** End Patch

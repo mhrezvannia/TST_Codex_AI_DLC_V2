@@ -1,0 +1,6 @@
+gate=aidlc-audit
+status=PLANNED
+exitCode=
+command=bash .claude/skills/aidlc-audit/detectors.sh
+
+dry-run: command not executed

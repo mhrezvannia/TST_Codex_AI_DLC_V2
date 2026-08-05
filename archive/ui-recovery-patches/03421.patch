@@ -1,0 +1,14 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\keycloak\themes\linercore\login\login.ftl
+@@
+                         <input id="username" class="${properties.kcInputClass!}" name="username"
+-                               value="${(login.username!'')}" type="text" autofocus autocomplete="username"
++                               value="${(login.username!'')}" type="text" autocomplete="username"
++                               <#if !messagesPerField.existsError('username','password')>autofocus</#if>
+                                autocapitalize="none" spellcheck="false"
+@@
+                         <input id="password" class="${properties.kcInputClass!}" name="password"
+                                type="password" autocomplete="current-password"
++                               <#if messagesPerField.existsError('username','password')>autofocus</#if>
+                                <#if messagesPerField.existsError('username','password')>
+*** End Patch

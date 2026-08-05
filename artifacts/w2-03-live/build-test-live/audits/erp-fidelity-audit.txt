@@ -1,0 +1,6 @@
+gate=erp-fidelity-audit
+status=FAIL
+exitCode=1
+command=bash .claude/skills/erp-fidelity-audit/detectors.sh
+
+<3>WSL (13 - Relay) ERROR: CreateProcessCommon:798: execvpe(/bin/bash) failed: No such file or directory

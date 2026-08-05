@@ -1,0 +1,124 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\access-denied\page.test.tsx
+@@
+ test("renders safe access denied context", async () => {
+-  render(await AccessDeniedPage({ searchParams: Promise.resolve({ resource: "Reference Data", action: "create", correlationId: "corr-1" }) }));
+-  expect(screen.getByRole("heading", { name: "Access denied" })).toBeInTheDocument();
+-  expect(screen.getByText(/corr-1/)).toBeInTheDocument();
++  render(await AccessDeniedPage({
++    searchParams: Promise.resolve({
++      resource: "Reference Data",
++      action: "create a reference",
++      reasonCode: "DENY_NO_PERMISSION",
++      correlationId: "corr-1"
++    })
++  }));
++  expect(screen.getByRole("heading", { name: "You cannot create a reference" })).toBeInTheDocument();
++  expect(screen.getByText(/corr-1/)).toBeInTheDocument();
+   expect(screen.getByTestId("request-access-link")).toHaveAttribute(
+     "href",
+-    "/request-access?resource=Reference%20Data&action=create&correlationId=corr-1"
++    "/auth/request-access?resource=Reference%20Data&action=create%20a%20reference&correlationId=corr-1"
+   );
+ });
++
++test("does not expose unverified denial context", async () => {
++  render(await AccessDeniedPage({
++    searchParams: Promise.resolve({
++      resource: "<script>protected record</script>",
++      action: "approve",
++      reasonCode: "UNKNOWN_POLICY_DETAIL"
++    })
++  }));
++
++  expect(screen.getByRole("heading", { name: "We could not verify this access decision" })).toBeInTheDocument();
++  expect(screen.getByText("Protected resource: the requested workspace")).toBeInTheDocument();
++  expect(screen.queryByTestId("request-access-link")).not.toBeInTheDocument();
++  expect(screen.queryByText(/script/)).not.toBeInTheDocument();
++});
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\request-access\page.test.tsx
+@@
+-test("renders request access form", async () => {
+-  render(await RequestAccessPage({ searchParams: Promise.resolve({ resource: "Reference Data", action: "create" }) }));
+-  expect(screen.getByRole("heading", { name: "Request access" })).toBeInTheDocument();
+-  expect(screen.getByTestId("request-access-message")).toBeInTheDocument();
+-  expect(screen.getByTestId("request-access-submit")).toHaveAttribute("type", "submit");
++test("renders an honest unsupported state without a fake submission form", async () => {
++  render(await RequestAccessPage({
++    searchParams: Promise.resolve({
++      resource: "Reference Data",
++      action: "create a reference",
++      correlationId: "corr-2"
++    })
++  }));
++
++  expect(screen.getByRole("heading", { name: "Access requests are not available here" })).toBeInTheDocument();
++  expect(screen.getByText("No request has been created.")).toBeInTheDocument();
++  expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
++  expect(screen.queryByRole("button", { name: "Submit request" })).not.toBeInTheDocument();
++  expect(screen.getByText("corr-2")).toBeInTheDocument();
+ });
+*** Add File: D:\TST_Codex_ui_recovery\apps\auth\app\session\page.test.tsx
++import { render, screen } from "@testing-library/react";
++import { SESSION_COOKIE_NAME, encodeSessionCookie, type AuthSession } from "@erp/auth";
++import { headers } from "next/headers";
++import { redirect } from "next/navigation";
++import { beforeEach, describe, expect, test, vi } from "vitest";
++import SessionPage from "./page";
++
++vi.mock("next/headers", () => ({
++  headers: vi.fn()
++}));
++
++vi.mock("next/navigation", () => ({
++  redirect: vi.fn((location: string) => {
++    throw new Error(`REDIRECT:${location}`);
++  })
++}));
++
++describe("SessionPage", () => {
++  beforeEach(() => {
++    vi.clearAllMocks();
++  });
++
++  test("renders safe account, role, capability, and expiry facts", async () => {
++    vi.mocked(headers).mockResolvedValue(new Headers({
++      cookie: `${SESSION_COOKIE_NAME}=${encodeSessionCookie(testSession())}`,
++      "x-correlation-id": "corr-session"
++    }) as never);
++
++    render(await SessionPage());
++
++    expect(screen.getByRole("heading", { name: "Account and session" })).toBeInTheDocument();
++    expect(screen.getByText("Booking Operator")).toBeInTheDocument();
++    expect(screen.getByText("Booking Desk")).toBeInTheDocument();
++    expect(screen.getByText("Bookings: Read")).toBeInTheDocument();
++    expect(screen.getByTestId("session-json-link")).toHaveAttribute("href", "/auth/api/auth/session");
++    expect(screen.getByTestId("sign-out-button").closest("form")).toHaveAttribute(
++      "action",
++      "/auth/api/auth/sign-out"
++    );
++  });
++
++  test("redirects a missing session before account facts render", async () => {
++    vi.mocked(headers).mockResolvedValue(new Headers() as never);
++
++    await expect(SessionPage()).rejects.toThrow("REDIRECT:/auth/signed-out?reason=invalid&returnUrl=%2F");
++    expect(redirect).toHaveBeenCalled();
++  });
++});
++
++function testSession(): AuthSession {
++  return {
++    sessionId: "session-1",
++    subjectId: "local.booking.user",
++    subjectType: "user",
++    displayName: "Booking Operator",
++    roles: ["booking-desk"],
++    permissions: ["booking:read"],
++    issuedAt: "2026-07-27T00:00:00Z",
++    expiresAt: "2099-07-27T01:00:00Z",
++    policyVersion: "keycloak:linercore-local"
++  };
++}
+*** End Patch

@@ -1,0 +1,6 @@
+gate=compose-start
+status=PLANNED
+exitCode=
+command=docker compose -p linercore-wave-a --profile full up -d --build postgres kafka schema-registry identity-service reference-data-service charge-agreement-service booking-service apps-charge-agreements
+
+dry-run: command not executed

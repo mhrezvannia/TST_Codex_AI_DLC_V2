@@ -1,0 +1,6 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\infrastructure\keycloak\themes\linercore\login\template.ftl
+@@
+-<html class="${properties.kcHtmlClass!}" lang="${locale.currentLanguageTag!'en'}">
++<html class="${properties.kcHtmlClass!}" lang="<#if locale??>${locale.currentLanguageTag}<#else>en</#if>">
+*** End Patch

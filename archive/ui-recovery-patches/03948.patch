@@ -1,0 +1,7 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\auth\app\page.tsx
+@@
+   const [params, headerStore, identityAvailable] = await Promise.all([
+-    searchParams ?? Promise.resolve({}),
++    searchParams ?? Promise.resolve<SearchParams>({}),
+*** End Patch

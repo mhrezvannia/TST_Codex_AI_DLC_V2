@@ -1,0 +1,6 @@
+gate=restart-persistence
+status=SKIPPED
+exitCode=
+command=node scripts/w2-03-live-acceptance.mjs --verify-restart D:/TST_Codex_integ/artifacts/w2-03-live/build-test-live-2/journey/scenarios.json
+
+skipped after prior blocking gate

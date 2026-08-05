@@ -1,0 +1,160 @@
+gate=compose-start
+status=PASS
+exitCode=0
+command=docker compose --profile full up -d --build
+
+#1 [internal] load local bake definitions
+#1 reading from stdin 6.29kB done
+#1 DONE 0.0s
+
+#2 [reference-data-service internal] load build definition from spring-service.Dockerfile
+#2 transferring dockerfile: 388B 0.1s done
+#2 DONE 0.1s
+
+#3 [apps-shell internal] load build definition from next-app.Dockerfile
+#3 transferring dockerfile: 1.77kB 0.1s done
+#3 DONE 0.1s
+
+#4 [identity-service internal] load metadata for docker.io/library/eclipse-temurin:21-jre
+#4 DONE 0.1s
+
+#5 [apps-auth internal] load metadata for docker.io/library/node:24-alpine
+#5 DONE 0.1s
+
+#6 [container-movement-service 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec
+#6 resolve docker.io/library/eclipse-temurin:21-jre@sha256:d2b9f8f12212cadcfdf889461531784e8fd097feade954d65b31ee7a71c473ec 0.1s done
+#6 DONE 0.1s
+
+#7 [apps-shell deps  1/17] FROM docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
+#7 resolve docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd 0.1s done
+#7 DONE 0.1s
+
+#8 [apps-shell internal] load build context
+#8 transferring context:
+#8 transferring context: 45.29kB 1.0s done
+#8 DONE 1.0s
+
+#9 [booking-service internal] load build context
+#9 ...
+
+#10 [apps-charge-agreements deps 11/17] COPY packages/auth/package.json ./packages/auth/package.json
+#10 CACHED
+
+#11 [apps-charge-agreements deps  4/17] COPY .yarn ./.yarn
+#11 CACHED
+
+#12 [apps-charge-agreements deps 16/17] COPY packages/utils/package.json ./packages/utils/package.json
+#12 CACHED
+
+#13 [apps-charge-agreements deps 12/17] COPY packages/config/package.json ./packages/config/package.json
+#13 CACHED
+
+#14 [apps-charge-agreements deps  3/17] COPY package.json yarn.lock .yarnrc.yml ./
+#14 CACHED
+
+#15 [apps-charge-agreements deps 15/17] COPY packages/ui/package.json ./packages/ui/package.json
+#15 CACHED
+
+#16 [apps-charge-agreements deps 10/17] COPY packages/api
+
+... output truncated ...
+
+ce-data-1 Created 
+ Container linercore-shared-platform-charge-agreement-service-1 Created 
+ Container linercore-shared-platform-apps-charge-agreements-1 Creating 
+ Container linercore-shared-platform-booking-service-1 Creating 
+ Container linercore-shared-platform-container-movement-service-1 Created 
+ Container linercore-shared-platform-apps-charge-agreements-1 Created 
+ Container linercore-shared-platform-booking-service-1 Created 
+ Container linercore-shared-platform-apps-booking-1 Creating 
+ Container linercore-shared-platform-apps-booking-1 Created 
+ Container linercore-shared-platform-apps-shell-1 Creating 
+ Container linercore-shared-platform-apps-shell-1 Created 
+ Container linercore-shared-platform-nginx-1 Creating 
+ Container linercore-shared-platform-nginx-1 Created 
+ Container linercore-shared-platform-seed-loader-1 Creating 
+ Container linercore-shared-platform-seed-loader-1 Created 
+ Container linercore-shared-platform-elasticsearch-1 Starting 
+ Container linercore-shared-platform-contract-devtools-1 Starting 
+ Container linercore-shared-platform-kafka-1 Starting 
+ Container linercore-shared-platform-postgres-1 Starting 
+ Container linercore-shared-platform-prometheus-1 Starting 
+ Container linercore-shared-platform-jaeger-1 Starting 
+ Container linercore-shared-platform-keycloak-1 Starting 
+ Container linercore-shared-platform-contract-devtools-1 Started 
+ Container linercore-shared-platform-elasticsearch-1 Started 
+ Container linercore-shared-platform-kibana-1 Starting 
+ Container linercore-shared-platform-kafka-1 Started 
+ Container linercore-shared-platform-kafka-1 Waiting 
+ Container linercore-shared-platform-prometheus-1 Started 
+ Container linercore-shared-platform-keycloak-1 Started 
+ Container linercore-shared-platform-postgres-1 Started 
+ Container linercore-shared-platform-postgres-1 Waiting 
+ Container linercore-shared-platform-jaeger-1 Started 
+ Container linercore-shared-platform-otel-collector-1 Starting 
+ Container linercore-shared-platform-grafana-1 Starting 
+ Container linercore-shared-platform-kibana-1 Started 
+ Container linercore-shared-platform-otel-collector-1 Started 
+ Container linercore-shared-platform-grafana-1 Started 
+ Container linercore-shared-platform-postgres-1 Healthy 
+ Container linercore-shared-platform-identity-service-1 Starting 
+ Container linercore-shared-platform-identity-service-1 Started 
+ Container linercore-shared-platform-apps-auth-1 Starting 
+ Container linercore-shared-platform-apps-auth-1 Started 
+ Container linercore-shared-platform-kafka-1 Healthy 
+ Container linercore-shared-platform-schema-registry-1 Starting 
+ Container linercore-shared-platform-schema-registry-1 Started 
+ Container linercore-shared-platform-kafka-1 Waiting 
+ Container linercore-shared-platform-schema-registry-1 Waiting 
+ Container linercore-shared-platform-postgres-1 Waiting 
+ Container linercore-shared-platform-kafka-1 Healthy 
+ Container linercore-shared-platform-postgres-1 Healthy 
+ Container linercore-shared-platform-schema-registry-1 Healthy 
+ Container linercore-shared-platform-reference-data-service-1 Starting 
+ Container linercore-shared-platform-reference-data-service-1 Started 
+ Container linercore-shared-platform-apps-reference-data-1 Starting 
+ Container linercore-shared-platform-postgres-1 Waiting 
+ Container linercore-shared-platform-kafka-1 Waiting 
+ Container linercore-shared-platform-schema-registry-1 Waiting 
+ Container linercore-shared-platform-kafka-1 Waiting 
+ Container linercore-shared-platform-schema-registry-1 Waiting 
+ Container linercore-shared-platform-postgres-1 Waiting 
+ Container linercore-shared-platform-schema-registry-1 Healthy 
+ Container linercore-shared-platform-schema-registry-1 Healthy 
+ Container linercore-shared-platform-postgres-1 Healthy 
+ Container linercore-shared-platform-kafka-1 Healthy 
+ Container linercore-shared-platform-kafka-1 Healthy 
+ Container linercore-shared-platform-charge-agreement-service-1 Starting 
+ Container linercore-shared-platform-postgres-1 Healthy 
+ Container linercore-shared-platform-container-movement-service-1 Starting 
+ Container linercore-shared-platform-apps-reference-data-1 Started 
+ Container linercore-shared-platform-charge-agreement-service-1 Started 
+ Container linercore-shared-platform-apps-charge-agreements-1 Starting 
+ Container linercore-shared-platform-kafka-1 Waiting 
+ Container linercore-shared-platform-schema-registry-1 Waiting 
+ Container linercore-shared-platform-postgres-1 Waiting 
+ Container linercore-shared-platform-container-movement-service-1 Started 
+ Container linercore-shared-platform-postgres-1 Healthy 
+ Container linercore-shared-platform-kafka-1 Healthy 
+ Container linercore-shared-platform-schema-registry-1 Healthy 
+ Container linercore-shared-platform-booking-service-1 Starting 
+ Container linercore-shared-platform-apps-charge-agreements-1 Started 
+ Container linercore-shared-platform-booking-service-1 Started 
+ Container linercore-shared-platform-booking-service-1 Waiting 
+ Container linercore-shared-platform-booking-service-1 Healthy 
+ Container linercore-shared-platform-apps-booking-1 Starting 
+ Container linercore-shared-platform-apps-booking-1 Started 
+ Container linercore-shared-platform-apps-shell-1 Starting 
+ Container linercore-shared-platform-apps-shell-1 Started 
+ Container linercore-shared-platform-nginx-1 Starting 
+ Container linercore-shared-platform-nginx-1 Started 
+ Container linercore-shared-platform-keycloak-1 Waiting 
+ Container linercore-shared-platform-schema-registry-1 Waiting 
+ Container linercore-shared-platform-kafka-1 Waiting 
+ Container linercore-shared-platform-postgres-1 Waiting 
+ Container linercore-shared-platform-schema-registry-1 Healthy 
+ Container linercore-shared-platform-keycloak-1 Healthy 
+ Container linercore-shared-platform-postgres-1 Healthy 
+ Container linercore-shared-platform-kafka-1 Healthy 
+ Container linercore-shared-platform-seed-loader-1 Starting 
+ Container linercore-shared-platform-seed-loader-1 Started

@@ -1,0 +1,75 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\packages\ui\src\interactive.tsx
+@@
+   useRef,
+   useState,
++  type FocusEvent,
+   type KeyboardEvent,
+   type ReactNode
+ } from "react";
++import { LucideIcon } from "./icons";
+@@
+ export function Combobox({
+   options,
+   value,
+   onChange,
++  onBlur,
++  id,
++  name,
+   placeholder,
+   emptyLabel = "No matches",
++  disabled,
++  invalid,
++  describedBy,
++  required,
+   "aria-label": ariaLabel
+ }: {
+   options: ComboOption[];
+   value: string;
+   onChange: (value: string) => void;
++  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
++  id?: string;
++  name?: string;
+   placeholder?: string;
+   emptyLabel?: string;
++  disabled?: boolean;
++  invalid?: boolean;
++  describedBy?: string;
++  required?: boolean;
+   "aria-label"?: string;
+ }) {
+@@
+   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
++    if (disabled) return;
+     if (event.key === "ArrowDown") {
+@@
+       <input
++        id={id}
++        name={name}
+         className="erp-input"
+         role="combobox"
+         aria-expanded={open}
+         aria-controls={listId}
+         aria-autocomplete="list"
+         aria-label={ariaLabel}
++        aria-invalid={invalid || undefined}
++        aria-describedby={describedBy}
++        aria-activedescendant={open && filtered[activeIndex] ? `${listId}-${activeIndex}` : undefined}
+         placeholder={placeholder}
++        disabled={disabled}
++        required={required}
+         value={open ? query : selectedLabel}
+         onChange={(event) => { setQuery(event.target.value); setOpen(true); setActiveIndex(0); }}
+         onFocus={() => setOpen(true)}
++        onBlur={(event) => {
++          window.setTimeout(() => setOpen(false), 0);
++          onBlur?.(event);
++        }}
+         onKeyDown={onKeyDown}
+       />
+@@
+               <li
+                 key={option.value}
++                id={`${listId}-${index}`}
+                 role="option"
+*** End Patch

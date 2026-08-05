@@ -1,0 +1,47 @@
+*** Begin Patch
+*** Add File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\BookingRetryButton.tsx
++"use client";
++
++import { useState } from "react";
++import { useRouter } from "next/navigation";
++import { Button } from "@erp/ui";
++
++export function BookingRetryButton({ href }: { href: string }) {
++  const router = useRouter();
++  const [busy, setBusy] = useState(false);
++
++  return (
++    <Button
++      variant="primary"
++      busy={busy}
++      busyLabel="Retrying"
++      onClick={() => {
++        if (busy) return;
++        setBusy(true);
++        router.replace(href);
++        router.refresh();
++      }}
++    >
++      Retry
++    </Button>
++  );
++}
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\page.tsx
+@@
+ import {
+@@
+ } from "../../lib/bookings";
++import { BookingRetryButton } from "./BookingRetryButton";
+@@
+               {result.retryable ? (
+-                <a className="erp-btn erp-btn--primary" href={returnTo}>Retry</a>
++                <BookingRetryButton href={returnTo} />
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\page.tsx
+@@
+ import { BookingValidationPanel } from "./BookingValidationPanel";
+ import { JourneyStatusPanel } from "./JourneyStatusPanel";
++import { BookingRetryButton } from "../BookingRetryButton";
+@@
+-            {retryHref ? <a className="erp-btn erp-btn--primary" href={retryHref}>Retry</a> : null}
++            {retryHref ? <BookingRetryButton href={retryHref} /> : null}
+*** End Patch

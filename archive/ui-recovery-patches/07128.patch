@@ -1,0 +1,11 @@
+*** Begin Patch
+*** Update File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\new\BookingCreateForm.tsx
+@@
+-  const load = options.locations.find((option) => option.id === fields.loadUnLocode);
+-  const discharge = options.locations.find((option) => option.id === fields.dischargeUnLocode);
++  const load = options.locations.find((option) => option.code === fields.loadUnLocode);
++  const discharge = options.locations.find((option) => option.code === fields.dischargeUnLocode);
+@@
+-  if (fields.equipmentTypeCode && !options.equipment.some((option) => option.id === fields.equipmentTypeCode)) {
++  if (fields.equipmentTypeCode && !options.equipment.some((option) => option.code === fields.equipmentTypeCode)) {
+*** End Patch

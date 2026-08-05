@@ -1,0 +1,6 @@
+gate=compose-cleanup
+status=PLANNED
+exitCode=
+command=docker compose -p linercore-wave-a --profile full down
+
+dry-run: command not executed

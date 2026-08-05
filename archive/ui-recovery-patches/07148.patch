@@ -1,0 +1,205 @@
+*** Begin Patch
+*** Delete File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\BookingValidationPanel.tsx
+*** Add File: D:\TST_Codex_ui_recovery\apps\booking\app\bookings\[bookingId]\BookingValidationPanel.tsx
++"use client";
++
++import { useState } from "react";
++import { useRouter } from "next/navigation";
++import { Button, ConflictStrip, Dialog, StatusStrip } from "@erp/ui";
++import type { BookingStatus, BookingView } from "../../../lib/bookings";
++
++type ValidationSnapshot = BookingView["referenceValidation"];
++type Command = "validate" | "price" | "confirm";
++
++export function BookingValidationPanel({
++  bookingId,
++  status,
++  initialValidation
++}: {
++  bookingId: string;
++  status: BookingStatus;
++  initialValidation: ValidationSnapshot;
++}) {
++  const router = useRouter();
++  const [validation, setValidation] = useState(initialValidation);
++  const [busy, setBusy] = useState<Command | null>(null);
++  const [confirmOpen, setConfirmOpen] = useState(false);
++  const [error, setError] = useState<{ title: string; message: string; conflict?: boolean } | null>(null);
++  const command = commandForStatus(status);
++  const blocked = validation?.outcome === "BLOCKED"
++    ? validation.fieldResults.filter((field) => field.outcome !== "ACTIVE")
++    : [];
++
++  async function execute(nextCommand: Command) {
++    if (busy) return;
++    setBusy(nextCommand);
++    setError(null);
++    const idempotencyKey = crypto.randomUUID();
++    try {
++      const response = await fetch(
++        `/api/bookings/${encodeURIComponent(bookingId)}/${nextCommand}`,
++        {
++          method: "POST",
++          headers: {
++            "content-type": "application/json",
++            "idempotency-key": idempotencyKey
++          },
++          body: nextCommand === "price" ? JSON.stringify({ idempotencyKey }) : "{}"
++        }
++      );
++      const payload = await response.json().catch(() => ({}));
++      if (!response.ok) {
++        setError({
++          title: response.status === 409
++            ? "This booking changed"
++            : commandErrorTitle(nextCommand, payload.code),
++          message: payload.message ?? "The Booking action could not be completed.",
++          conflict: response.status === 409
++        });
++        return;
++      }
++      if (nextCommand === "validate") setValidation(payload.referenceValidation ?? null);
++      setConfirmOpen(false);
++      router.refresh();
++    } catch {
++      setError({
++        title: "Booking is temporarily unavailable",
++        message: "The action did not finish. Your booking was not changed."
++      });
++    } finally {
++      setBusy(null);
++    }
++  }
++
++  if (!command && blocked.length === 0 && !error) return null;
++
++  return (
++    <div className="booking-command-panel">
++      {command ? (
++        <Button
++          data-testid={`booking-${command}`}
++          variant="primary"
++          busy={busy === command}
++          busyLabel={busyLabel(command)}
++          onClick={() => command === "confirm" ? setConfirmOpen(true) : execute(command)}
++        >
++          {commandLabel(command)}
++        </Button>
++      ) : null}
++
++      {error?.conflict ? (
++        <ConflictStrip actions={<Button onClick={() => router.refresh()}>Reload booking</Button>}>
++          {error.message} The action was not replayed.
++        </ConflictStrip>
++      ) : error ? (
++        <StatusStrip
++          title={error.title}
++          tone="danger"
++          icon="alert-circle"
++          announce="assertive"
++          actions={command ? (
++            <Button
++              onClick={() => command === "confirm" ? setConfirmOpen(true) : execute(command)}
++              disabled={Boolean(busy)}
++            >
++              Retry
++            </Button>
++          ) : undefined}
++        >
++          <p>{error.message}</p>
++        </StatusStrip>
++      ) : null}
++
++      {blocked.length > 0 ? (
++        <StatusStrip title="Reference correction required" tone="warning" icon="triangle-alert">
++          <ul className="booking-correction-list">
++            {blocked.map((field) => (
++              <li key={field.fieldPath}>
++                <a href={`/bookings/new?correct=${encodeURIComponent(field.fieldPath)}`}>
++                  {fieldLabel(field.fieldPath)}: {reasonLabel(field.reasonCode)}
++                </a>
++              </li>
++            ))}
++          </ul>
++        </StatusStrip>
++      ) : null}
++
++      <Dialog
++        open={confirmOpen}
++        title="Confirm this booking?"
++        onClose={() => setConfirmOpen(false)}
++        actions={
++          <>
++            <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
++            <Button
++              data-testid="booking-confirm-submit"
++              variant="primary"
++              busy={busy === "confirm"}
++              busyLabel="Confirming booking"
++              onClick={() => execute("confirm")}
++            >
++              Confirm booking
++            </Button>
++          </>
++        }
++      >
++        <p>Confirmation commits the current priced booking for downstream operations.</p>
++      </Dialog>
++    </div>
++  );
++}
++
++function commandForStatus(status: BookingStatus): Command | null {
++  if (status === "DRAFT" || status === "VALIDATION_BLOCKED") return "validate";
++  if (status === "VALIDATED") return "price";
++  if (status === "PRICED") return "confirm";
++  return null;
++}
++
++function commandLabel(command: Command) {
++  if (command === "validate") return "Validate references";
++  if (command === "price") return "Price booking";
++  return "Confirm booking";
++}
++
++function busyLabel(command: Command) {
++  if (command === "validate") return "Validating references";
++  if (command === "price") return "Pricing booking";
++  return "Confirming booking";
++}
++
++function commandErrorTitle(command: Command, code?: string) {
++  if (command === "validate" && code === "REFERENCE_DATA_UNAVAILABLE") {
++    return "Reference Data unavailable";
++  }
++  if (command === "validate") return "Validation could not finish";
++  if (command === "price") return code === "PRICING_IN_PROGRESS"
++    ? "Pricing is already in progress"
++    : "Pricing could not finish";
++  return "Confirmation could not finish";
++}
++
++function fieldLabel(path: string) {
++  const labels: Record<string, string> = {
++    customerId: "Customer",
++    "routing[0].loadUnLocode": "Place of loading",
++    "routing[0].dischargeUnLocode": "Place of discharge",
++    "routing[0].voyageId": "Voyage",
++    "equipment[0].equipmentTypeCode": "Equipment type"
++  };
++  return labels[path] ?? "Booking field";
++}
++
++function reasonLabel(code: string) {
++  const labels: Record<string, string> = {
++    REFERENCE_NOT_FOUND: "not found",
++    REFERENCE_INACTIVE: "inactive",
++    REFERENCE_MISMATCH: "does not match",
++    VOYAGE_RECORD_REQUIRED: "not a voyage",
++    VOYAGE_ORIGIN_MISMATCH: "does not match voyage origin",
++    VOYAGE_DESTINATION_MISMATCH: "does not match voyage destination",
++    VOYAGE_ROUTE_MISMATCH: "does not match the selected route"
++  };
++  return labels[code] ?? "requires correction";
++}
+*** End Patch

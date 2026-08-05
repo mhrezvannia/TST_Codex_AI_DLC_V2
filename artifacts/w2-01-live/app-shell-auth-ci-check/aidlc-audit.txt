@@ -1,0 +1,5 @@
+command=bash .claude/skills/aidlc-audit/detectors.sh
+status=BLOCKED
+exitCode=
+
+dry-run: command not executed

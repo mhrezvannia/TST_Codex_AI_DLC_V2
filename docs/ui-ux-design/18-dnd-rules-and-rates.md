@@ -1,10 +1,37 @@
 # W3-01 D&D Rules and Rates - Design Candidate
 
-**Status:** Candidate for review; not approved and not implementation-binding  
+**Status:** Reviewed candidate; conformance review passed, not yet approved and not implementation-binding  
 **Prepared:** 2026-08-03  
+**Conformance review:** 2026-08-05, Claude Code (Step 3 of `docs/ui-ux-prompts/EXECUTION-GUIDE.md`)  
 **Owning domain:** Charge Calculation and Customer Agreement  
 **Primary persona:** Pricing Analyst  
 **AI-DLC position:** Design-only work while Refined Mockups 2.5 remains parked
+
+### Conformance review record — 2026-08-05
+
+The EXECUTION-GUIDE Step 3 review was executed against the approved Requirements
+Analysis and User Stories, the active intent statement and Context Pack,
+`design-system/linercore/MASTER.md`, `SESSION-PROMPT.md`, and
+`design-system/linercore/pages/dnd-rules-and-rates.md`.
+
+Result: **passed on every reviewable criterion** — business-scope traceability
+(§14), domain ownership (§3), route assumptions (§5, all labelled Proposed),
+the state and recovery matrix (§10), responsive behaviour at 375/390/768/1024/1440
+(§11), keyboard and focus order plus async announcements and non-color status
+(§12), and `@erp/ui` reuse with no `packages/ui` edits (§13). The rejections
+required by the guide — marketing composition, replacement palette/fonts,
+chart-first presentation, unsupported bulk actions, invented APIs — are recorded
+in §2.
+
+Two review corrections were applied: the font row in §2 now names the font the
+source prompt actually proposed, and §6.8 plus §16 Q1 now carry the recorded
+scope decision below.
+
+**Approval remains blocked, by this document's own preconditions.** The three
+`BLOCKED` rows in §13 and question 8 in §16 require observation of the running
+integrated Charge routes at `http://127.0.0.1`. That evidence was not available
+to the review session and has not been fabricated. Approval is therefore
+deferred to a session with the live Compose stack.
 
 ## 1. Decision summary
 
@@ -43,7 +70,7 @@ The candidate applies authority in this order:
 | Freely editable movement pair | Fixed rule-type pair and qualifiers | Rejected |
 | Mandatory calculation preview | Direct API is sufficient for W3-01 acceptance | Optional candidate only |
 | Enterprise Gateway, hero, sales CTA, logo carousel | Authenticated operational workbench | Rejected |
-| Replacement blue/amber palette and Fira fonts | LinerCore tokens and IBM Plex Sans/system stack | Rejected |
+| Replacement blue/amber palette; `Source Sans 3` or `Inter` as the interface font (source prompt §57) | LinerCore `--erp-*` tokens and `--erp-font-sans` (IBM Plex Sans with system fallbacks) per MASTER.md; no remote font dependency in Phase 1 | Rejected |
 | Chart-first dashboard and KPI cards | Lists, forms, definition lists, history tables, evidence | Rejected |
 | Spinner-first loading | Stable LinerCore skeletons plus one live status | Rejected |
 | Bulk editing and saved views | Not approved for W3-01 | Rejected |
@@ -240,9 +267,24 @@ The existing agreement detail may add a D&D section or in-route tab for the sele
 
 The view is read-only relationship evidence. It does not edit D&D terms inline and does not add a second agreement approval workflow.
 
-### 6.8 Optional bounded evaluation candidate
+### 6.8 Deferred bounded evaluation candidate
 
-The approved requirements do not require a calculation-preview UI. This candidate documents the prompt-requested action for review without making it release scope. If accepted, it is an in-page section on rule/rate detail, not a general simulation route or Booking workflow.
+**Scope decision, recorded 2026-08-05: deferred.** The evaluation UI is designed
+but is **not** W3-01 release scope. W3-01 proves evaluation through the API and
+live acceptance, as FR-09 permits.
+
+This resolves a genuine conflict between two inputs. The source prompt
+(`docs/ui-ux-prompts/18-dnd-rules-and-rates.md`, items 4 and 32 and the result
+specification at lines 45-48) reads the bounded evaluation action as mandatory.
+The approved W3-01 Requirements Analysis does not require a calculation-preview
+UI. Per the authority order in §2 and the EXECUTION-GUIDE rule that requirements
+and user stories govern business scope, the approved requirements win and the
+prompt's stronger reading is not binding.
+
+The design below is retained in full so promoting it later needs no redesign —
+only an explicit scope decision. If promoted, it is an in-page section on
+rule/rate detail, not a general simulation route and not a Booking workflow.
+Application Design should not build it while this deferral stands.
 
 #### Preconditions and inputs
 
@@ -636,7 +678,7 @@ These are required future observations, not results from this design-only run.
 
 ## 16. Unresolved questions
 
-1. **Optional evaluation UI:** Should the bounded evaluation section become approved W3-01 UI scope, or should implementation defer it and prove evaluation only through direct API/live acceptance as FR-09 permits? Recommendation: defer it as a mandatory UI surface; retain this design for a later explicit decision.
+1. ~~**Optional evaluation UI:**~~ **RESOLVED 2026-08-05 — deferred.** The bounded evaluation section is not W3-01 UI scope; evaluation is proven through direct API and live acceptance as FR-09 permits. The design is retained in §6.8 for a later explicit promotion decision. Application Design must not treat it as release scope. The recommendation in the original question was accepted as written.
 2. **Rule aggregate semantics:** Does `Create rule` create one configured aggregate instance per fixed rule type and applicability, or are the three rule types seeded catalogue records with only rates versioned beneath them? Application Design must choose without allowing arbitrary movement pairs.
 3. **Final route and identifier contract:** Confirm `ruleTypeId`, `dndRateId`, nested `/charge-agreements/dnd/*` spelling, legacy alias/redirect policy, and whether Draft rate edit uses `?mode=edit` like W2-03.
 4. **Administration API shape:** The current OpenAPI has trigger metadata but no `/dnd-pricing-requests` or D&D administration schemas. Confirm additive read/write view models, server-side filter/sort/pagination capabilities, concurrency tokens, and exact error envelopes before the routes become binding.
@@ -658,7 +700,7 @@ These are required future observations, not results from this design-only run.
 - [ ] List/search/filter/sort/pagination behavior is server-backed and includes loading, true empty, and filtered-empty states.
 - [ ] Draft, Approved, Scheduled, Effective, Expired, read-only, denied, conflict, no-rate, unavailable, degraded, and recovery states are complete.
 - [ ] Approved history is visibly immutable and only successors can change commercial terms.
-- [ ] Evaluation is clearly optional pending review and, if accepted, validates the exact echoed snapshot without reselection.
+- [x] Evaluation scope is resolved as deferred (§6.8, §16 Q1); the retained design validates the exact echoed snapshot without reselection if it is ever promoted.
 - [ ] Desktop and 375/390 mobile wireframes cover list, detail, forms, relationships, and optional evaluation.
 - [ ] WCAG 2.2 AA behavior covers labels, errors, keyboard order, focus trap/restore, announcements, contrast, reduced motion, and non-color status.
 - [ ] Responsive behavior is defined for 375, 390, 768, 1024, and 1440 px in light and dark themes.

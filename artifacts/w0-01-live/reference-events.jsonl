@@ -1,0 +1,193 @@
+﻿[2026-07-13 12:28:49,976] INFO Registered kafka:type=kafka.Log4jController MBean (kafka.utils.Log4jControllerRegistration$)
+[2026-07-13 12:28:50,526] INFO KafkaAvroDeserializerConfig values:
+	auto.register.schemas = true
+	avro.reflection.allow.null = false
+	avro.use.logical.type.converters = false
+	basic.auth.credentials.source = URL
+	basic.auth.user.info = [hidden]
+	bearer.auth.cache.expiry.buffer.seconds = 300
+	bearer.auth.client.id = null
+	bearer.auth.client.secret = null
+	bearer.auth.credentials.source = STATIC_TOKEN
+	bearer.auth.custom.provider.class = null
+	bearer.auth.identity.pool.id = null
+	bearer.auth.issuer.endpoint.url = null
+	bearer.auth.logical.cluster = null
+	bearer.auth.scope = null
+	bearer.auth.scope.claim.name = scope
+	bearer.auth.sub.claim.name = sub
+	bearer.auth.token = [hidden]
+	context.name.strategy = class io.confluent.kafka.serializers.context.NullContextNameStrategy
+	http.connect.timeout.ms = 60000
+	http.read.timeout.ms = 60000
+	id.compatibility.strict = true
+	key.subject.name.strategy = class io.confluent.kafka.serializers.subject.TopicNameStrategy
+	latest.cache.size = 1000
+	latest.cache.ttl.sec = -1
+	latest.compatibility.strict = true
+	max.schemas.per.subject = 1000
+	normalize.schemas = false
+	propagate.schema.tags = false
+	proxy.host =
+	proxy.port = -1
+	rule.actions = []
+	rule.executors = []
+	rule.service.loader.enable = true
+	schema.format = null
+	schema.reflection = false
+	schema.registry.basic.auth.user.info = [hidden]
+	schema.registry.ssl.cipher.suites = null
+	schema.registry.ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	schema.registry.ssl.endpoint.identification.algorithm = https
+	schema.registry.ssl.engine.factory.class = null
+	schema.registry.ssl.key.password = null
+	schema.registry.ssl.keymanager.algorithm = SunX509
+	schema.registry.ssl.keystore.certificate.chain = null
+	schema.registry.ssl.keystore.key = null
+	schema.registry.ssl.keystore.location = null
+	schema.registry.ssl.keystore.password = null
+	schema.registry.ssl.keystore.type = JKS
+	schema.registry.ssl.protocol = TLSv1.3
+	schema.registry.ssl.provider = null
+	schema.registry.ssl.secure.random.implementation = null
+	schema.registry.ssl.trustmanager.algorithm = PKIX
+	schema.registry.ssl.truststore.certificates = null
+	schema.registry.ssl.truststore.location = null
+	schema.registry.ssl.truststore.password = null
+	schema.registry.ssl.truststore.type = JKS
+	schema.registry.url = [http://schema-registry:8081]
+	specific.avro.key.type = null
+	specific.avro.reader = false
+	specific.avro.value.type = null
+	use.latest.version = false
+	use.latest.with.metadata = null
+	use.schema.id = -1
+	value.subject.name.strategy = class io.confluent.kafka.serializers.subject.TopicNameStrategy
+ (io.confluent.kafka.serializers.KafkaAvroDeserializerConfig)
+[2026-07-13 12:28:51,795] INFO ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [kafka:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = console-consumer
+	client.rack =
+	confluent.lkc.id = null
+	confluent.proxy.protocol.client.address = null
+	confluent.proxy.protocol.client.mode = PROXY
+	confluent.proxy.protocol.client.port = null
+	confluent.proxy.protocol.client.version = NONE
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = console-consumer-13143
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+ (org.apache.kafka.clients.consumer.ConsumerConfig)
+[2026-07-13 12:28:51,973] INFO initializing Kafka metrics collector (org.apache.kafka.common.telemetry.internals.KafkaMetricsCollector)
+[2026-07-13 12:28:52,211] INFO Kafka version: 7.7.1-ce (org.apache.kafka.common.utils.AppInfoParser)
+[2026-07-13 12:28:52,211] INFO Kafka commitId: e42eb4aa8aba3e1c (org.apache.kafka.common.utils.AppInfoParser)
+[2026-07-13 12:28:52,211] INFO Kafka startTimeMs: 1783945732208 (org.apache.kafka.common.utils.AppInfoParser)
+[2026-07-13 12:28:52,233] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Subscribed to topic(s): referencedata.events (org.apache.kafka.clients.consumer.internals.LegacyKafkaConsumer)
+[2026-07-13 12:28:53,278] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Cluster ID: MkU3OEVBNTcwNTJENDM2Qk (org.apache.kafka.clients.Metadata)
+[2026-07-13 12:28:53,283] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Discovered group coordinator kafka:9092 (id: 2147483646 rack: null) (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:53,289] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] (Re-)joining group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:53,329] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Request joining group due to: need to re-join with the given member-id: console-consumer-95510b77-ecf4-4b55-b173-92e9c57d918c (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:53,330] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] (Re-)joining group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:56,345] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Successfully joined group with generation Generation{generationId=1, memberId='console-consumer-95510b77-ecf4-4b55-b173-92e9c57d918c', protocol='range'} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:56,358] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Finished assignment for group at generation 1: {console-consumer-95510b77-ecf4-4b55-b173-92e9c57d918c=Assignment(partitions=[referencedata.events-0])} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:56,371] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Successfully synced group in generation Generation{generationId=1, memberId='console-consumer-95510b77-ecf4-4b55-b173-92e9c57d918c', protocol='range'} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:56,373] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Notifying assignor about the new Assignment(partitions=[referencedata.events-0]) (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:28:56,376] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Adding newly assigned partitions: referencedata.events-0 (org.apache.kafka.clients.consumer.internals.ConsumerRebalanceListenerInvoker)
+[2026-07-13 12:28:56,402] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Found no committed offset for partition referencedata.events-0 (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+{"eventId":"15131639-f3d6-4f8c-b775-b4f8e92fbe42","eventType":"referencedata.currency.changed","schemaVersion":"1.0.0","source":"reference-data-service","occurredAt":"2026-07-13T12:28:05.666664979Z","correlationId":{"string":"corr-w0-reference-live"},"entityId":"1fd94cf0-b35d-48cc-ac93-9a6cb5acb421","operation":"CREATED","producer":"reference-data-service/0.1.0","payload":{"schemaSubject":"referencedata.currency.changed-value","code":"W0-USD","producerIdentity":"reference-data-service","displayName":"W0 US Dollar","businessKey":"W0-USD","deduplicationKey":"CURRENCY:1fd94cf0-b35d-48cc-ac93-9a6cb5acb421:CREATED:728458a3-f486-4083-a3a3-5c25afda77c8","correlationId":"corr-w0-reference-live","changeId":"728458a3-f486-4083-a3a3-5c25afda77c8","id":"1fd94cf0-b35d-48cc-ac93-9a6cb5acb421","version":"1","status":"ACTIVE"}}
+[2026-07-13 12:29:11,909] ERROR Error processing message, terminating consumer process:  (kafka.tools.ConsoleConsumer$)
+org.apache.kafka.common.errors.TimeoutException
+[2026-07-13 12:29:11,973] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Revoke previously assigned partitions referencedata.events-0 (org.apache.kafka.clients.consumer.internals.ConsumerRebalanceListenerInvoker)
+[2026-07-13 12:29:11,974] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Member console-consumer-95510b77-ecf4-4b55-b173-92e9c57d918c sending LeaveGroup request to coordinator kafka:9092 (id: 2147483646 rack: null) due to the consumer is being closed (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:29:11,987] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Resetting generation and member id due to: consumer pro-actively leaving the group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:29:11,987] INFO [Consumer clientId=console-consumer, groupId=console-consumer-13143] Request joining group due to: consumer pro-actively leaving the group (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+[2026-07-13 12:29:12,168] INFO App info kafka.consumer for console-consumer unregistered (org.apache.kafka.common.utils.AppInfoParser)

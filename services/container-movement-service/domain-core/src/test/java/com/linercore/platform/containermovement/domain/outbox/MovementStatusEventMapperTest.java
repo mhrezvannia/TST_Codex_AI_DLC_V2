@@ -15,9 +15,9 @@ class MovementStatusEventMapperTest {
     @Test
     void mapsJourneyStatusToOutboxEvidence() {
         Instant now = Instant.parse("2026-07-01T00:00:00Z");
-        ContainerJourney journey = ContainerJourney.create(new JourneyId("journey-1"), "booking-1", "container-1",
+        ContainerJourney journey = ContainerJourney.create(new JourneyId("journey-1"), "booking-1", "MSCU6639870",
                 List.of("SGSIN", "NLRTM"), now)
-                .capture(new MovementEvent("event-1", MovementEventType.ACTUAL_DEPARTURE, "container-1", "SGSIN",
+                .capture(new MovementEvent("event-1", MovementEventType.ACTUAL_DEPARTURE, "MSCU6639870", "SGSIN",
                         now, new DedupeKey("dedupe-1"), "corr-1"));
 
         MovementStatusEvent event = new MovementStatusEventMapper().statusEvent("status-event-1", journey, "corr-1", now);
@@ -27,5 +27,13 @@ class MovementStatusEventMapperTest {
         assertEquals("container-movement-service", event.producerIdentity());
         assertEquals("booking-1", event.bookingId());
         assertEquals("corr-1", event.correlationId());
+        assertEquals("container-movement-service", event.payload().get("source"));
+        assertEquals("containermovement.status", event.payload().get("type"));
+        assertEquals("booking-1", event.payload().get("data.bookingRef"));
+        assertEquals("MSCU6639870", event.payload().get("data.containerRef"));
+        assertEquals("LOAD", event.payload().get("data.moveCode"));
+        assertEquals("ACT", event.payload().get("data.eventClassifierCode"));
+        assertEquals("IN_TRANSIT", event.payload().get("data.derivedStatus"));
+        assertEquals("SGSIN", event.payload().get("data.location.unLocationCode"));
     }
 }

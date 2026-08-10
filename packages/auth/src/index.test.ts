@@ -2,16 +2,26 @@ import {
   createAccessDeniedContext,
   createServiceSubject,
   createUserSubject,
+  actorSubjectFromRequest,
+  actorSubjectFromSession,
+  decodeSessionCookie,
+  encodeSessionCookie,
   evaluateAuthorization,
   isAuthBypassEnabled,
   isLocalBypassEnabled,
   isLocalRuntimeProfile,
   redactTokenLikeValues,
+  resolveCookieSigningSecret,
   safeReturnUrl,
+  safeSessionSummaryFromRequest,
+  sessionFromCookieHeader,
   summarizePermissions,
   toSessionSummary,
+  SESSION_COOKIE_NAME,
   type AuthSession
 } from "./index";
+
+const cookieSecret = "test-cookie-secret";
 
 test("keeps only internal return urls", () => {
   expect(safeReturnUrl("/session?tab=roles")).toBe("/session?tab=roles");
@@ -27,22 +37,64 @@ test("redacts token-like values", () => {
 });
 
 test("creates browser-safe session summary", () => {
-  const session: AuthSession = {
-    sessionId: "s1",
-    subjectId: "u1",
-    displayName: "User One",
-    roles: ["reference-admin"],
-    permissions: ["reference-data:create"],
-    issuedAt: "2026-07-01T00:00:00Z",
-    expiresAt: "2026-07-01T01:00:00Z",
-    policyVersion: "mvp"
-  };
+  const session = testSession();
 
   expect(toSessionSummary(session, "corr-1")).not.toHaveProperty("accessToken");
   expect(toSessionSummary(session, "corr-1")).toMatchObject({
     subjectType: "user",
     permissionSummary: { total: 1, byResource: { "reference-data": ["create"] } }
   });
+});
+
+test("decodes valid session cookies and rejects expired sessions", () => {
+  const active = testSession({ subjectId: "local.booking.user", expiresAt: "2099-07-01T00:00:00Z" });
+  const expired = testSession({ subjectId: "expired.user", expiresAt: "2020-07-01T00:00:00Z" });
+
+  expect(sessionFromCookieHeader(`${SESSION_COOKIE_NAME}=${encodeSessionCookie(active)}`)?.subjectId)
+    .toBe("local.booking.user");
+  expect(sessionFromCookieHeader(`${SESSION_COOKIE_NAME}=${encodeSessionCookie(expired)}`)).toBeNull();
+  expect(sessionFromCookieHeader(`${SESSION_COOKIE_NAME}=not-json`)).toBeNull();
+});
+
+test("rejects a session cookie whose payload or signature was tampered", () => {
+  const session = testSession({ subjectId: "local.booking.user" });
+  const cookie = encodeSessionCookie(session, cookieSecret);
+  const [payload, signature] = cookie.split(".");
+  const forgedPayload = Buffer.from(JSON.stringify({ ...session, subjectId: "forged.admin" }), "utf8")
+    .toString("base64url");
+  const forgedSignature = `${signature[0] === "A" ? "B" : "A"}${signature.slice(1)}`;
+
+  expect(decodeSessionCookie(`${forgedPayload}.${signature}`, cookieSecret)).toBeNull();
+  expect(decodeSessionCookie(`${payload}.${forgedSignature}`, cookieSecret)).toBeNull();
+  expect(decodeSessionCookie(cookie, cookieSecret)?.subjectId).toBe("local.booking.user");
+});
+
+test("builds an unauthenticated safe summary without exposing token fields", () => {
+  const summary = safeSessionSummaryFromRequest(new Request("http://shell.local/booking"), "corr-shell");
+
+  expect(summary).toEqual({
+    isAuthenticated: false,
+    subject: "",
+    subjectType: "user",
+    displayName: "",
+    roles: [],
+    permissions: [],
+    permissionSummary: { total: 0, byResource: {} },
+    correlationId: "corr-shell"
+  });
+  expect(summary).not.toHaveProperty("accessToken");
+});
+
+test("extracts only non-blank actor subjects from server-side sessions", () => {
+  const session = testSession({ subjectId: "local.booking.user" });
+  const request = new Request("http://shell.local/booking", {
+    headers: { cookie: `${SESSION_COOKIE_NAME}=${encodeSessionCookie(session)}` }
+  });
+
+  expect(actorSubjectFromSession(session)).toBe("local.booking.user");
+  expect(actorSubjectFromSession(testSession({ subjectId: "   " }))).toBeNull();
+  expect(actorSubjectFromRequest(request)).toBe("local.booking.user");
+  expect(actorSubjectFromRequest(new Request("http://shell.local/booking"))).toBeNull();
 });
 
 test("allows auth bypass only in local runtime profiles", () => {
@@ -113,3 +165,24 @@ test("summarizes permissions by resource", () => {
     }
   });
 });
+
+test("requires an explicit cookie secret outside local profiles", () => {
+  expect(() => resolveCookieSigningSecret({ NODE_ENV: "production" }))
+    .toThrow("AUTH_SESSION_SECRET is required");
+  expect(resolveCookieSigningSecret({ NODE_ENV: "production", AUTH_SESSION_SECRET: "configured" }))
+    .toBe("configured");
+});
+
+function testSession(overrides: Partial<AuthSession> = {}): AuthSession {
+  return {
+    sessionId: "s1",
+    subjectId: "u1",
+    displayName: "User One",
+    roles: ["reference-admin"],
+    permissions: ["reference-data:create"],
+    issuedAt: "2026-07-01T00:00:00Z",
+    expiresAt: "2099-07-01T01:00:00Z",
+    policyVersion: "mvp",
+    ...overrides
+  };
+}

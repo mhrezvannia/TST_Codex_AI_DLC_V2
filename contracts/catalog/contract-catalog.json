@@ -49,21 +49,19 @@
       "consumerService": "booking-service",
       "protocol": "http",
       "seamId": "booking-charge-pricing-http",
-      "version": "0.2.0",
+      "version": "1.0.0",
       "lifecycleStatus": "candidate_executable",
-      "artifactPath": "contracts/openapi/charge-agreements.yaml",
+      "artifactPath": "contracts/openapi/pricing.v1.yaml",
       "compatibilityMode": "backward",
       "compatibilityStatus": "compatible",
-      "linkedStories": ["US-BKG-005", "US-RUN-004"],
-      "linkedRequirements": ["FR-CHG-005", "FR-CHG-008", "FR-SP-007", "NFR-COMP-001"],
+      "linkedStories": ["US-W1-003", "US-W1-007"],
+      "linkedRequirements": ["FR-W1-003", "FR-W1-004", "FR-W1-013", "NFR-W1-001"],
       "validationOwner": "contract-platform-catalog",
       "examples": [
-        "contracts/examples/pricing-quote.response.json",
-        "contracts/examples/pricing-dnd.response.json"
+        "contracts/examples/pricing-quote.response.json"
       ],
       "fixtures": [
-        "contracts/pact/booking-charge-pricing-fixtures.json",
-        "contracts/pact/booking-charge-dnd-fixtures.json"
+        "contracts/pact/booking-charge-pricing-fixtures.json"
       ]
     },
     {
@@ -200,8 +198,8 @@
       "artifactPath": "contracts/pact/booking-charge-pricing-fixtures.json",
       "compatibilityMode": "backward",
       "compatibilityStatus": "compatible",
-      "linkedStories": ["US-BKG-005", "US-RUN-004"],
-      "linkedRequirements": ["FR-CHG-005", "FR-SP-007", "NFR-COMP-001"],
+      "linkedStories": ["US-W1-003", "US-W1-007"],
+      "linkedRequirements": ["FR-W1-003", "FR-W1-004", "FR-W1-013", "NFR-W1-001"],
       "validationOwner": "contract-platform-catalog",
       "fixtures": ["contracts/pact/booking-charge-pricing-fixtures.json"]
     },

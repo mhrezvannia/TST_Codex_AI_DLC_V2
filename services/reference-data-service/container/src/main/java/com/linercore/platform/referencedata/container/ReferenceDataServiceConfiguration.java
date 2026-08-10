@@ -1,5 +1,6 @@
 package com.linercore.platform.referencedata.container;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linercore.platform.referencedata.application.identity.IdentityAuthorizationClient;
 import com.linercore.platform.referencedata.applicationservice.ReferenceDataApplicationService;
 import com.linercore.platform.referencedata.applicationservice.port.AuthorizationClientPort;
@@ -9,41 +10,56 @@ import com.linercore.platform.referencedata.applicationservice.port.ReferenceCha
 import com.linercore.platform.referencedata.applicationservice.port.ReferenceEventPublisherPort;
 import com.linercore.platform.referencedata.applicationservice.port.ReferenceRepository;
 import com.linercore.platform.referencedata.applicationservice.port.SchemaRegistryPort;
-import com.linercore.platform.referencedata.dataaccess.inmemory.InMemoryReferenceChangeRepository;
-import com.linercore.platform.referencedata.dataaccess.inmemory.InMemoryOutboxRepository;
-import com.linercore.platform.referencedata.dataaccess.inmemory.InMemoryReferenceRepository;
+import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcReferenceChangeRepository;
+import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcOutboxRepository;
+import com.linercore.platform.referencedata.dataaccess.jdbc.JdbcReferenceRepository;
 import com.linercore.platform.referencedata.dataaccess.inmemory.UuidIdGenerator;
-import com.linercore.platform.referencedata.messaging.PlaceholderKafkaReferenceEventPublisher;
-import com.linercore.platform.referencedata.messaging.PlaceholderSchemaRegistryAdapter;
 import java.time.Clock;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ReferenceDataServiceConfiguration {
     @Bean
-    ReferenceRepository referenceRepository() {
-        return new InMemoryReferenceRepository();
+    @Profile("local")
+    ReferenceDataLocalIdentityFilter referenceDataLocalIdentityFilter(
+            @Value("${reference-data.security.booking-token}") String bookingToken,
+            @Value("${reference-data.security.bff-token}") String bffToken,
+            @Value("${reference-data.security.seed-token}") String seedToken,
+            @Value("${reference-data.security.cmm-token}") String cmmToken) {
+        return new ReferenceDataLocalIdentityFilter(Map.of(
+                "booking-service", bookingToken,
+                "apps-reference-data", bffToken,
+                "seed-loader", seedToken,
+                "container-movement-service", cmmToken));
     }
 
     @Bean
-    ReferenceChangeRepository referenceChangeRepository() {
-        return new InMemoryReferenceChangeRepository();
+    @Profile("!local")
+    ApplicationRunner referenceDataNonLocalIdentityGuard() {
+        return arguments -> {
+            throw new IllegalStateException("Non-local Reference Data identity requires W2-01 JWT/TLS configuration");
+        };
     }
 
     @Bean
-    OutboxRepository outboxRepository() {
-        return new InMemoryOutboxRepository();
+    ReferenceRepository referenceRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcReferenceRepository(jdbc, mapper);
     }
 
     @Bean
-    ReferenceEventPublisherPort referenceEventPublisherPort() {
-        return new PlaceholderKafkaReferenceEventPublisher(Clock.systemUTC());
+    ReferenceChangeRepository referenceChangeRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcReferenceChangeRepository(jdbc, mapper);
     }
 
     @Bean
-    SchemaRegistryPort schemaRegistryPort() {
-        return new PlaceholderSchemaRegistryAdapter();
+    OutboxRepository outboxRepository(JdbcTemplate jdbc, ObjectMapper mapper) {
+        return new JdbcOutboxRepository(jdbc, mapper);
     }
 
     @Bean

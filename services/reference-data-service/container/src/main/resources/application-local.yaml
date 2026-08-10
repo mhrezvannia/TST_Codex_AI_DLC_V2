@@ -1,10 +1,38 @@
 server:
   port: 8083
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/linercore_reference_data}
+    username: ${SPRING_DATASOURCE_USERNAME:linercore_reference_data}
+    password: ${SPRING_DATASOURCE_PASSWORD:reference_data_local}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/reference-data-schema.sql
+
 reference-data:
   identity-service-url: http://identity-service:8082
+  security:
+    booking-token: ${REFERENCE_DATA_BOOKING_TOKEN}
+    bff-token: ${REFERENCE_DATA_BFF_TOKEN}
+    seed-token: ${REFERENCE_DATA_SEED_TOKEN}
+    cmm-token: ${REFERENCE_DATA_CMM_TOKEN}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    topic: ${REFERENCE_DATA_EVENTS_TOPIC:referencedata.events}
+    client-id: ${REFERENCE_DATA_KAFKA_CLIENT_ID:reference-data-service}
+  schema-registry:
+    url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}
+  outbox-relay:
+    enabled: ${REFERENCE_DATA_OUTBOX_RELAY_ENABLED:true}
+    fixed-delay-ms: ${REFERENCE_DATA_OUTBOX_RELAY_DELAY_MS:5000}
+    batch-size: ${REFERENCE_DATA_OUTBOX_RELAY_BATCH_SIZE:50}
   pagination:
     max-size: 100
-  datasource:
-    # Local placeholder only; staging/production values must use Vault references.
-    url: jdbc:postgresql://postgres:5432/reference_data

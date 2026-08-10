@@ -8,6 +8,7 @@ import java.util.List;
 public record ContainerJourney(
         JourneyId id,
         String bookingId,
+        int bookingRevision,
         String containerId,
         MovementStatus status,
         List<ExpectedMovement> expectedMovements,
@@ -16,6 +17,9 @@ public record ContainerJourney(
     public ContainerJourney {
         if (bookingId == null || bookingId.isBlank()) {
             throw new IllegalArgumentException("booking id is required");
+        }
+        if (bookingRevision < 1) {
+            throw new IllegalArgumentException("booking revision must be positive");
         }
         if (containerId == null || containerId.isBlank()) {
             throw new IllegalArgumentException("container id is required");
@@ -30,12 +34,30 @@ public record ContainerJourney(
             String containerId,
             List<String> routeLocationIds,
             Instant now) {
+        return create(id, bookingId, 1, containerId, routeLocationIds, now);
+    }
+
+    public static ContainerJourney create(
+            JourneyId id,
+            String bookingId,
+            int bookingRevision,
+            String containerId,
+            List<String> routeLocationIds,
+            Instant now) {
         List<ExpectedMovement> expected = new ArrayList<>();
         for (int index = 0; index < routeLocationIds.size(); index++) {
             MovementEventType type = index == 0 ? MovementEventType.PLANNED_DEPARTURE : MovementEventType.ESTIMATED_ARRIVAL;
             expected.add(new ExpectedMovement(String.valueOf(index + 1), type, routeLocationIds.get(index)));
         }
-        return new ContainerJourney(id, bookingId, containerId, MovementStatus.PLANNED, expected, List.of(), now);
+        return new ContainerJourney(id, bookingId, bookingRevision, containerId, MovementStatus.PLANNED, expected, List.of(), now);
+    }
+
+    public ContainerJourney reconcileBookingRevision(int nextBookingRevision, List<String> routeLocationIds, Instant now) {
+        if (nextBookingRevision <= bookingRevision) {
+            return this;
+        }
+        return new ContainerJourney(id, bookingId, nextBookingRevision, containerId, status,
+                expectedMovements(routeLocationIds), history, now);
     }
 
     public MovementValidationResult validate(MovementEvent event) {
@@ -58,7 +80,16 @@ public record ContainerJourney(
         }
         ArrayList<MovementEvent> nextHistory = new ArrayList<>(history);
         nextHistory.add(event);
-        return new ContainerJourney(id, bookingId, containerId, deriveStatus(event), expectedMovements, nextHistory, event.eventTime());
+        return new ContainerJourney(id, bookingId, bookingRevision, containerId, deriveStatus(event), expectedMovements, nextHistory, event.eventTime());
+    }
+
+    private static List<ExpectedMovement> expectedMovements(List<String> routeLocationIds) {
+        List<ExpectedMovement> expected = new ArrayList<>();
+        for (int index = 0; index < routeLocationIds.size(); index++) {
+            MovementEventType type = index == 0 ? MovementEventType.PLANNED_DEPARTURE : MovementEventType.ESTIMATED_ARRIVAL;
+            expected.add(new ExpectedMovement(String.valueOf(index + 1), type, routeLocationIds.get(index)));
+        }
+        return expected;
     }
 
     private MovementStatus deriveStatus(MovementEvent event) {

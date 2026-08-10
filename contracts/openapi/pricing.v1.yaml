@@ -1,0 +1,234 @@
+openapi: 3.1.0
+info:
+  title: Charge Pricing API
+  version: 1.0.0
+paths:
+  /pricing-requests:
+    post:
+      operationId: requestPricing
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/CorrelationId'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api.v1+json:
+            schema:
+              $ref: '#/components/schemas/PricingRequest'
+      responses:
+        '200':
+          description: Immutable itemized pricing result
+          content:
+            application/vnd.api.v1+json:
+              schema:
+                $ref: '#/components/schemas/PricingResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NoRate'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Unprocessable'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+components:
+  parameters:
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      description: bookingRef and amendment sequence, formatted as bookingRef:amendmentSeq
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 160
+    CorrelationId:
+      in: header
+      name: X-Correlation-Id
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+  schemas:
+    PricingRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - bookingRef
+        - tradeLane
+        - pol
+        - pod
+        - equipmentType
+        - partyId
+        - commodityCode
+        - reeferIndicator
+        - dgIndicator
+        - dates
+        - quantities
+      properties:
+        bookingRef:
+          type: string
+        tradeLane:
+          type: string
+        pol:
+          type: string
+          pattern: '^[A-Z]{2}[A-Z0-9]{3}$'
+        pod:
+          type: string
+          pattern: '^[A-Z]{2}[A-Z0-9]{3}$'
+        equipmentType:
+          type: string
+        partyId:
+          type: string
+        commodityCode:
+          type: string
+        reeferIndicator:
+          type: boolean
+        dgIndicator:
+          type: boolean
+        dates:
+          $ref: '#/components/schemas/PricingDates'
+        quantities:
+          $ref: '#/components/schemas/PricingQuantities'
+    PricingDates:
+      type: object
+      additionalProperties: false
+      required: [effectiveDate, requestedDepartureDate]
+      properties:
+        effectiveDate:
+          type: string
+          format: date
+          description: Date used to resolve agreement or tariff validity
+        requestedDepartureDate:
+          type: string
+          format: date
+          description: Requested departure date for the selected voyage
+    PricingQuantities:
+      type: object
+      additionalProperties: false
+      required: [equipmentQuantity, teu, amendmentSeq]
+      properties:
+        equipmentQuantity:
+          type: integer
+          minimum: 1
+        teu:
+          type: integer
+          minimum: 1
+        amendmentSeq:
+          type: integer
+          minimum: 0
+    PricingResult:
+      type: object
+      additionalProperties: false
+      required: [bookingRef, pricingBasis, pricingRef, charges, applicableDndRuleTypes]
+      properties:
+        bookingRef:
+          type: string
+        pricingBasis:
+          type: string
+          enum: [AGREEMENT, TARIFF]
+        pricingRef:
+          type: string
+        charges:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ChargeLine'
+        applicableDndRuleTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicableDndRuleType'
+    ChargeLine:
+      type: object
+      additionalProperties: false
+      required: [chargeCode, category, amount, currency]
+      properties:
+        chargeCode:
+          type: string
+        category:
+          type: string
+          enum: [FREIGHT, SURCHARGE, LOCAL]
+        amount:
+          type: number
+          minimum: 0
+          multipleOf: 0.01
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+    ApplicableDndRuleType:
+      type: object
+      additionalProperties: false
+      required:
+        - ruleType
+        - startMoveTypeCode
+        - startEmptyIndicatorCode
+        - endMoveTypeCode
+        - endEmptyIndicatorCode
+      properties:
+        ruleType:
+          type: string
+          enum: [IMPORT_DEMURRAGE, IMPORT_DETENTION, EXPORT_DETENTION]
+        startMoveTypeCode:
+          type: string
+          enum: [DISC, GTOT, GTIN]
+        startEmptyIndicatorCode:
+          type: string
+          enum: [EMPTY, LADEN]
+        endMoveTypeCode:
+          type: string
+          enum: [DISC, GTOT, GTIN]
+        endEmptyIndicatorCode:
+          type: string
+          enum: [EMPTY, LADEN]
+    Error:
+      type: object
+      additionalProperties: false
+      required: [code, message, correlationId]
+      properties:
+        code:
+          type: string
+          enum:
+            - PRICING_BAD_REQUEST
+            - NO_RATE
+            - IDEMPOTENCY_CONFLICT
+            - PRICING_IN_PROGRESS
+            - PRICING_VALIDATION
+            - COMMODITY_NOT_ELIGIBLE
+            - PRICING_UNAVAILABLE
+        message:
+          type: string
+        correlationId:
+          type: string
+  responses:
+    BadRequest:
+      description: Malformed request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NoRate:
+      description: Neither an active agreement nor tariff resolves
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Idempotency conflict or request already in progress
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unprocessable:
+      description: Pricing validation or commodity eligibility failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unavailable:
+      description: Pricing service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

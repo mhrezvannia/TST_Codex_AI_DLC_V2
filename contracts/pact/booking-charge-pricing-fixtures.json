@@ -6,16 +6,38 @@
   "interactionId": "booking-post-pricing-quote",
   "requestShape": {
     "method": "POST",
-    "path": "/api/pricing/quote",
+    "path": "/pricing-requests",
     "headers": {
+      "Content-Type": "application/vnd.api.v1+json",
+      "Accept": "application/vnd.api.v1+json",
       "X-Correlation-Id": "corr-booking-0001",
-      "Idempotency-Key": "pricing-booking-0001"
+      "Idempotency-Key": "booking-0001:1"
+    },
+    "body": {
+      "bookingRef": "booking-0001",
+      "tradeLane": "ASIA-EU",
+      "pol": "CNSHA",
+      "pod": "NLRTM",
+      "equipmentType": "45G1",
+      "partyId": "party-0001",
+      "commodityCode": "FAK",
+      "reeferIndicator": false,
+      "dgIndicator": false,
+      "dates": {
+        "effectiveDate": "2026-07-15",
+        "requestedDepartureDate": "2026-07-20"
+      },
+      "quantities": {
+        "equipmentQuantity": 1,
+        "teu": 2
+      }
     }
   },
   "responseShape": {
     "status": 200,
+    "contentType": "application/vnd.api.v1+json",
     "example": "contracts/examples/pricing-quote.response.json"
   },
-  "preconditions": ["booking-service has a confirmed customer and route request"],
+  "preconditions": ["an approved active agreement exists for the party, lane, commodity, equipment, and effective date"],
   "verificationStatus": "pending"
 }

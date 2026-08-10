@@ -5,7 +5,10 @@ WORKDIR /app
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
 COPY apps/auth/package.json ./apps/auth/package.json
+COPY apps/booking/package.json ./apps/booking/package.json
+COPY apps/charge-agreements/package.json ./apps/charge-agreements/package.json
 COPY apps/reference-data/package.json ./apps/reference-data/package.json
+COPY apps/shell/package.json ./apps/shell/package.json
 COPY packages/api-core/package.json ./packages/api-core/package.json
 COPY packages/auth/package.json ./packages/auth/package.json
 COPY packages/config/package.json ./packages/config/package.json

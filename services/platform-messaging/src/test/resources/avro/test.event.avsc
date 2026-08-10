@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "name": "TestEvent",
+  "namespace": "com.linercore.platform.messaging.test",
+  "fields": [
+    { "name": "id", "type": "string" },
+    { "name": "payload", "type": { "type": "map", "values": "string" } }
+  ]
+}

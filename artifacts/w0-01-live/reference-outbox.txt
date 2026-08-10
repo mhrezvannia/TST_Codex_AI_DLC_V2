@@ -1,0 +1,4 @@
+               event_id               | reference_set | operation |  status   | attempt_count |     correlation_id
+--------------------------------------+---------------+-----------+-----------+---------------+------------------------
+ 15131639-f3d6-4f8c-b775-b4f8e92fbe42 | CURRENCY      | CREATED   | PUBLISHED |             0 | corr-w0-reference-live
+(1 row)

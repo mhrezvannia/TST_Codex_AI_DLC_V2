@@ -75,6 +75,26 @@ public class ReferenceDataController {
         return ResponseEntity.ok(service.update(new ReferenceId(id), version, withSetAndCorrelation(request, set, correlationId)));
     }
 
+    @PostMapping("/{set}/records/{id}/deactivate")
+    public ResponseEntity<ReferenceRecord> deactivate(
+            @PathVariable("set") ReferenceSet set,
+            @PathVariable("id") String id,
+            @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId,
+            @RequestBody ReferenceStatusRequest request) {
+        return ResponseEntity.ok(service.deactivate(set, new ReferenceId(id), request.reason(),
+                request.actorSubjectId(), correlationId == null ? request.correlationId() : correlationId));
+    }
+
+    @PostMapping("/{set}/records/{id}/reactivate")
+    public ResponseEntity<ReferenceRecord> reactivate(
+            @PathVariable("set") ReferenceSet set,
+            @PathVariable("id") String id,
+            @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId,
+            @RequestBody ReferenceStatusRequest request) {
+        return ResponseEntity.ok(service.reactivate(set, new ReferenceId(id), request.reason(),
+                request.actorSubjectId(), correlationId == null ? request.correlationId() : correlationId));
+    }
+
     @PostMapping("/{set}/records/validate")
     public ResponseEntity<ValidationResult> validate(
             @PathVariable("set") ReferenceSet set,
@@ -141,5 +161,11 @@ public class ReferenceDataController {
     }
 
     public record ErrorResponse(String code, String message) {
+    }
+
+    public record ReferenceStatusRequest(
+            String reason,
+            String actorSubjectId,
+            String correlationId) {
     }
 }

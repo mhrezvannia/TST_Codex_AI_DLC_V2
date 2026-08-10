@@ -21,8 +21,8 @@ test("verifies required booking and movement Avro fields", async () => {
   const result = await verifyContractProviders();
 
   assert.equal(result.valid, true, result.failures.join("\n"));
-  assert.equal(result.checks.some((check) => check.name.includes("event-booking-confirmed booking.confirmed field idempotencyKey") && check.status === "ok"), true);
-  assert.equal(result.checks.some((check) => check.name.includes("event-container-movement-status containermovement.status field sequenceNumber") && check.status === "ok"), true);
+  assert.equal(result.checks.some((check) => check.name.includes("event-booking-confirmed booking.confirmed field data.bookingId") && check.status === "ok"), true);
+  assert.equal(result.checks.some((check) => check.name.includes("event-container-movement-status containermovement.status field data.derivedStatus") && check.status === "ok"), true);
 });
 
 test("verifies HTTP Pact and message-pact fixtures", async () => {
@@ -51,7 +51,8 @@ test("verification fails when a required Avro field is missing", async () => {
   await usingFixture(async (root) => {
     const path = join(root, "contracts/avro/containermovement.status.avsc");
     const schema = JSON.parse(readFileSync(path, "utf8"));
-    schema.fields = schema.fields.filter((field) => field.name !== "sequenceNumber");
+    const data = schema.fields.find((field) => field.name === "data").type;
+    data.fields = data.fields.filter((field) => field.name !== "derivedStatus");
     writeFileSync(path, `${JSON.stringify(schema, null, 2)}\n`);
 
     const result = await verifyContractProviders({ root });

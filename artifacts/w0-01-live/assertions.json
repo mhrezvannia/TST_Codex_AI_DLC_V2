@@ -1,0 +1,12 @@
+﻿{
+    "reference_topic_correlation":  true,
+    "booking_topic_correlation":  true,
+    "booking_topic_id":  true,
+    "reference_outbox_published":  true,
+    "reference_outbox_no_permanent":  true,
+    "booking_outbox_published":  true,
+    "booking_outbox_no_permanent":  true,
+    "cmm_journey":  true,
+    "reference_subject":  true,
+    "booking_subject":  true
+}

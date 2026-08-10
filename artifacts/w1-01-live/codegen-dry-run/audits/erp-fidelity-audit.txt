@@ -1,0 +1,6 @@
+gate=erp-fidelity-audit
+status=PLANNED
+exitCode=
+command=bash .claude/skills/erp-fidelity-audit/detectors.sh
+
+dry-run: command not executed

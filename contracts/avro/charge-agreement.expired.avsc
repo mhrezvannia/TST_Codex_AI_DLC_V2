@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "ChargeAgreementLifecycle",
+  "namespace": "com.linercore.chargeagreement.events",
+  "doc": "Charge agreement lifecycle event.",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "eventType", "type": "string" },
+    { "name": "schemaVersion", "type": "string" },
+    { "name": "source", "type": "string" },
+    { "name": "occurredAt", "type": "string" },
+    { "name": "correlationId", "type": "string" },
+    { "name": "idempotencyKey", "type": "string" },
+    { "name": "agreementId", "type": "string" },
+    { "name": "agreementStatus", "type": "string" },
+    { "name": "agreementVersion", "type": "long" }
+  ]
+}

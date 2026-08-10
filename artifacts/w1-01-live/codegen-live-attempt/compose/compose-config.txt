@@ -1,0 +1,4 @@
+gate=compose-config
+status=PASS
+exitCode=0
+command=docker compose config --quiet

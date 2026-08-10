@@ -1,0 +1,94 @@
+{
+    "records":  [
+                    {
+                        "id":  {
+                                   "value":  "equipment-type-22g1"
+                               },
+                        "set":  "EQUIPMENT_TYPE",
+                        "code":  {
+                                     "value":  "22G1"
+                                 },
+                        "displayName":  "20 Foot General Purpose",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.355180833Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.355183137Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed equipment-type-22g1",
+                        "attributes":  {
+                                           "relationship":  "ISO 6346 size/type 22G1",
+                                           "localOnly":  "true"
+                                       }
+                    },
+                    {
+                        "id":  {
+                                   "value":  "equipment-type-42g1"
+                               },
+                        "set":  "EQUIPMENT_TYPE",
+                        "code":  {
+                                     "value":  "42G1"
+                                 },
+                        "displayName":  "40 Foot General Purpose",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.402486421Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.402487907Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed equipment-type-42g1",
+                        "attributes":  {
+                                           "relationship":  "ISO 6346 size/type 42G1",
+                                           "localOnly":  "true"
+                                       }
+                    },
+                    {
+                        "id":  {
+                                   "value":  "equipment-type-45g1"
+                               },
+                        "set":  "EQUIPMENT_TYPE",
+                        "code":  {
+                                     "value":  "45G1"
+                                 },
+                        "displayName":  "40 Foot High Cube",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.433329937Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.433331392Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed equipment-type-45g1",
+                        "attributes":  {
+                                           "relationship":  "ISO 6346 size/type 45G1",
+                                           "localOnly":  "true"
+                                       }
+                    }
+                ],
+    "page":  0,
+    "size":  25,
+    "total":  3
+}

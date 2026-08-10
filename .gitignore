@@ -11,3 +11,15 @@ target/
 .env.*
 !.env.example
 !infrastructure/env/*.example
+
+# AI-DLC per-clone and per-session runtime
+aidlc/active-space
+aidlc/.aidlc-clone-id
+aidlc/.aidlc-sessions/
+aidlc/spaces/*/intents/active-intent
+aidlc/spaces/*/intents/*/runtime-graph.json
+aidlc/spaces/*/intents/*/.aidlc-*
+
+# Local tool caches
+.yarn/install-state.gz
+*.tsbuildinfo

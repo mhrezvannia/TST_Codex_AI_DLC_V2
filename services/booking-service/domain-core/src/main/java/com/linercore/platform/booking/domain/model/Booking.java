@@ -1,9 +1,15 @@
 package com.linercore.platform.booking.domain.model;
 
 import java.time.Instant;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HexFormat;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public record Booking(
         BookingId id,
@@ -11,9 +17,14 @@ public record Booking(
         int revision,
         BookingStatus status,
         String customerId,
-        String originLocationId,
-        String destinationLocationId,
-        String equipmentType,
+        List<RoutingLeg> routing,
+        List<EquipmentAssignment> equipment,
+        String currency,
+        String cargoMode,
+        boolean reefer,
+        boolean dangerousGoods,
+        boolean legacyIncomplete,
+        ReferenceValidationSnapshot referenceValidationSnapshot,
         PricingSnapshot pricingSnapshot,
         List<BookingException> exceptions,
         List<DndTriggerCandidate> dndTriggerCandidates,
@@ -27,8 +38,18 @@ public record Booking(
         if (customerId == null || customerId.isBlank()) {
             throw new IllegalArgumentException("customer id is required");
         }
-        if (originLocationId == null || originLocationId.isBlank() || destinationLocationId == null || destinationLocationId.isBlank()) {
-            throw new IllegalArgumentException("origin and destination are required");
+        routing = List.copyOf(routing == null ? List.of() : routing);
+        equipment = List.copyOf(equipment == null ? List.of() : equipment);
+        if (!legacyIncomplete && routing.size() != 1) {
+            throw new IllegalArgumentException("W1 requires exactly one routing leg");
+        }
+        if (!legacyIncomplete && equipment.size() != 1) {
+            throw new IllegalArgumentException("W1 requires exactly one equipment assignment");
+        }
+        currency = required(currency, "currency");
+        cargoMode = required(cargoMode, "cargo mode");
+        if (!"USD".equals(currency) || !"FCL_DRY".equals(cargoMode) || reefer || dangerousGoods) {
+            throw new IllegalArgumentException("W1 supports USD FCL dry non-reefer non-DG bookings only");
         }
         exceptions = List.copyOf(exceptions == null ? List.of() : exceptions);
         dndTriggerCandidates = List.copyOf(dndTriggerCandidates == null ? List.of() : dndTriggerCandidates);
@@ -40,23 +61,110 @@ public record Booking(
             BookingId id,
             String bookingNumber,
             String customerId,
-            String originLocationId,
-            String destinationLocationId,
-            String equipmentType,
+            List<RoutingLeg> routing,
+            List<EquipmentAssignment> equipment,
+            String currency,
+            String cargoMode,
+            boolean reefer,
+            boolean dangerousGoods,
             Map<String, String> attributes,
             String actorSubjectId,
             String correlationId,
             Instant now) {
-        return new Booking(id, bookingNumber, 1, BookingStatus.DRAFT, customerId, originLocationId, destinationLocationId,
-                equipmentType, null, List.of(), List.of(),
+        return new Booking(id, bookingNumber, 1, BookingStatus.DRAFT, customerId, routing, equipment,
+                currency, cargoMode, reefer, dangerousGoods, false, null, null, List.of(), List.of(),
                 List.of(event("BOOKING_DRAFT_CREATED", BookingStatus.DRAFT, 1, actorSubjectId, correlationId, now)),
                 attributes);
     }
 
+    public static Booking legacyIncomplete(
+            BookingId id,
+            String bookingNumber,
+            int revision,
+            BookingStatus status,
+            String customerId,
+            PricingSnapshot pricingSnapshot,
+            List<BookingException> exceptions,
+            List<DndTriggerCandidate> dndTriggerCandidates,
+            List<LifecycleEvent> lifecycleEvents,
+            Map<String, String> legacyAttributes) {
+        return new Booking(id, bookingNumber, revision, status, customerId, List.of(), List.of(), "USD", "FCL_DRY",
+                false, false, true, null, pricingSnapshot, exceptions, dndTriggerCandidates, lifecycleEvents,
+                legacyAttributes);
+    }
+
     public Booking validated(String actorSubjectId, String correlationId, Instant now) {
-        requireStatus(BookingStatus.DRAFT, BookingStatus.EXCEPTION);
+        if (legacyIncomplete) {
+            throw new IllegalStateException("legacy booking requires route and equipment correction");
+        }
+        requireStatus(BookingStatus.DRAFT, BookingStatus.VALIDATION_BLOCKED, BookingStatus.EXCEPTION);
         return withStatus(BookingStatus.VALIDATED, revision, actorSubjectId, correlationId, now, pricingSnapshot,
                 exceptions, dndTriggerCandidates, attributes, "BOOKING_VALIDATED");
+    }
+
+    public Booking applyReferenceValidation(
+            ReferenceValidationSnapshot snapshot,
+            String actorSubjectId,
+            Instant now) {
+        if (legacyIncomplete) {
+            throw new IllegalStateException("legacy booking requires route and equipment correction");
+        }
+        requireStatus(BookingStatus.DRAFT, BookingStatus.VALIDATION_BLOCKED, BookingStatus.VALIDATED);
+        if (snapshot.bookingRevision() != revision || !referenceFingerprint().equals(snapshot.referenceFingerprint())) {
+            throw new IllegalStateException("BOOKING_CHANGED");
+        }
+        List<String> expectedPaths = referenceValidationFieldPaths();
+        List<String> actualPaths = snapshot.fieldResults().stream().map(ReferenceFieldResult::fieldPath).toList();
+        if (actualPaths.size() != expectedPaths.size()
+                || !new LinkedHashSet<>(actualPaths).equals(new LinkedHashSet<>(expectedPaths))) {
+            throw new IllegalArgumentException("reference validation result is incomplete");
+        }
+        BookingStatus nextStatus = snapshot.outcome() == ReferenceValidationOutcome.VALID
+                ? BookingStatus.VALIDATED
+                : BookingStatus.VALIDATION_BLOCKED;
+        if (status == nextStatus && snapshot.equivalentTo(referenceValidationSnapshot)) {
+            return this;
+        }
+        String eventType = nextStatus == BookingStatus.VALIDATED
+                ? "BOOKING_VALIDATED"
+                : "BOOKING_VALIDATION_BLOCKED";
+        List<LifecycleEvent> nextEvents = new ArrayList<>(lifecycleEvents);
+        nextEvents.add(event(eventType, nextStatus, revision, actorSubjectId, snapshot.correlationId(), now));
+        return new Booking(id, bookingNumber, revision, nextStatus, customerId, routing, equipment, currency,
+                cargoMode, reefer, dangerousGoods, legacyIncomplete, snapshot, pricingSnapshot, exceptions,
+                dndTriggerCandidates, nextEvents, attributes);
+    }
+
+    public String referenceFingerprint() {
+        StringBuilder canonical = new StringBuilder(customerId);
+        routing.forEach(leg -> canonical.append('|').append(leg.legSequence())
+                .append('|').append(leg.loadUnLocode())
+                .append('|').append(leg.dischargeUnLocode())
+                .append('|').append(leg.voyageId()));
+        equipment.forEach(assignment -> canonical.append('|').append(assignment.equipmentTypeCode())
+                .append('|').append(assignment.quantity())
+                .append('|').append(assignment.equipmentId()));
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256")
+                    .digest(canonical.toString().getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException exception) {
+            throw new IllegalStateException("SHA-256 is unavailable", exception);
+        }
+    }
+
+    public List<String> referenceValidationFieldPaths() {
+        List<String> paths = new ArrayList<>();
+        paths.add("customerId");
+        for (int index = 0; index < routing.size(); index++) {
+            paths.add("routing[" + index + "].loadUnLocode");
+            paths.add("routing[" + index + "].dischargeUnLocode");
+            paths.add("routing[" + index + "].voyageId");
+        }
+        for (int index = 0; index < equipment.size(); index++) {
+            paths.add("equipment[" + index + "].equipmentTypeCode");
+        }
+        return List.copyOf(paths);
     }
 
     public Booking pricingPending(String pricingRequestId, String actorSubjectId, String correlationId, Instant now) {
@@ -66,9 +174,26 @@ public record Booking(
     }
 
     public Booking priced(PricingSnapshot snapshot, String actorSubjectId, Instant now) {
-        requireStatus(BookingStatus.PRICING_PENDING);
+        requireStatus(BookingStatus.VALIDATED, BookingStatus.PRICING_PENDING, BookingStatus.MANUAL_PRICING);
         return withStatus(BookingStatus.PRICED, revision, actorSubjectId, snapshot.correlationId(), now, snapshot,
                 exceptions, dndTriggerCandidates, attributes, "BOOKING_PRICING_STORED");
+    }
+
+    public Booking manualPricing(
+            String pricingRequestId,
+            String reasonCode,
+            String reasonMessage,
+            String actorSubjectId,
+            String correlationId,
+            Instant now) {
+        requireStatus(BookingStatus.VALIDATED, BookingStatus.MANUAL_PRICING);
+        java.util.HashMap<String, String> nextAttributes = new java.util.HashMap<>(attributes);
+        nextAttributes.put("manualPricingRequestId", pricingRequestId == null ? "" : pricingRequestId);
+        nextAttributes.put("manualPricingReasonCode", reasonCode == null ? "" : reasonCode);
+        nextAttributes.put("manualPricingReasonMessage", reasonMessage == null ? "" : reasonMessage);
+        nextAttributes.put("manualPricingCorrelationId", correlationId == null ? "" : correlationId);
+        return withStatus(BookingStatus.MANUAL_PRICING, revision, actorSubjectId, correlationId, now, null,
+                exceptions, dndTriggerCandidates, nextAttributes, "BOOKING_MANUAL_PRICING_REQUIRED");
     }
 
     public Booking confirmed(String actorSubjectId, String correlationId, Instant now) {
@@ -103,6 +228,44 @@ public record Booking(
                 exceptions, next, attributes, "BOOKING_DND_TRIGGER_CANDIDATE_RECORDED");
     }
 
+    public Booking movementStatusObserved(
+            String containerId,
+            String movementStatus,
+            long sequenceNumber,
+            String statusReason,
+            String lastKnownLocationId,
+            String actorSubjectId,
+            String correlationId,
+            Instant now) {
+        java.util.HashMap<String, String> nextAttributes = new java.util.HashMap<>(attributes);
+        nextAttributes.put("movementContainerId", containerId);
+        nextAttributes.put("movementStatus", movementStatus);
+        nextAttributes.put("movementSequenceNumber", String.valueOf(sequenceNumber));
+        nextAttributes.put("movementStatusReason", statusReason == null ? "" : statusReason);
+        nextAttributes.put("movementLastKnownLocationId", lastKnownLocationId == null ? "" : lastKnownLocationId);
+        return withStatus(status, revision, actorSubjectId, correlationId, now, pricingSnapshot,
+                exceptions, dndTriggerCandidates, nextAttributes, "BOOKING_MOVEMENT_STATUS_RECORDED");
+    }
+
+    public Booking dndPricingObserved(
+            String dndPricingRef,
+            int chargeableDays,
+            Map<String, String> lineItems,
+            String dndStatus,
+            String actorSubjectId,
+            String correlationId,
+            Instant now) {
+        java.util.HashMap<String, String> nextAttributes = new java.util.HashMap<>(attributes);
+        nextAttributes.put("dndPricingRef", dndPricingRef);
+        nextAttributes.put("dndChargeableDays", String.valueOf(chargeableDays));
+        nextAttributes.put("dndStatus", dndStatus);
+        for (Map.Entry<String, String> entry : (lineItems == null ? Map.<String, String>of() : lineItems).entrySet()) {
+            nextAttributes.put("dnd." + entry.getKey(), entry.getValue());
+        }
+        return withStatus(status, revision, actorSubjectId, correlationId, now, pricingSnapshot,
+                exceptions, dndTriggerCandidates, nextAttributes, "BOOKING_DND_PRICING_STORED");
+    }
+
     private Booking withStatus(
             BookingStatus nextStatus,
             int nextRevision,
@@ -116,8 +279,10 @@ public record Booking(
             String eventType) {
         List<LifecycleEvent> nextEvents = new ArrayList<>(lifecycleEvents);
         nextEvents.add(event(eventType, nextStatus, nextRevision, actorSubjectId, correlationId, now));
-        return new Booking(id, bookingNumber, nextRevision, nextStatus, customerId, originLocationId, destinationLocationId,
-                equipmentType, nextPricingSnapshot, nextExceptions, nextDndTriggerCandidates, nextEvents, nextAttributes);
+        return new Booking(id, bookingNumber, nextRevision, nextStatus, customerId, routing, equipment, currency,
+                cargoMode, reefer, dangerousGoods, legacyIncomplete, referenceValidationSnapshot,
+                nextPricingSnapshot, nextExceptions,
+                nextDndTriggerCandidates, nextEvents, nextAttributes);
     }
 
     private Map<String, String> withAttribute(String key, String value) {
@@ -137,5 +302,24 @@ public record Booking(
 
     private static LifecycleEvent event(String eventType, BookingStatus status, int revision, String actorSubjectId, String correlationId, Instant now) {
         return new LifecycleEvent(eventType, status, revision, actorSubjectId, correlationId, now);
+    }
+
+    public String originLocationId() {
+        return routing.isEmpty() ? attributes.getOrDefault("originLocationId", "") : routing.get(0).loadUnLocode();
+    }
+
+    public String destinationLocationId() {
+        return routing.isEmpty() ? attributes.getOrDefault("destinationLocationId", "") : routing.get(0).dischargeUnLocode();
+    }
+
+    public String equipmentType() {
+        return equipment.isEmpty() ? attributes.getOrDefault("equipmentType", "") : equipment.get(0).equipmentTypeCode();
+    }
+
+    private static String required(String value, String label) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(label + " is required");
+        }
+        return value.trim();
     }
 }

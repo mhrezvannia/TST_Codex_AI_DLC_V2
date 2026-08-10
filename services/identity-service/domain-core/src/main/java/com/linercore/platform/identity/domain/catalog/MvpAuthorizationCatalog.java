@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MvpAuthorizationCatalog {
-    public static final String POLICY_VERSION = "mvp-2026-07-01";
+    public static final String POLICY_VERSION = "mvp-2026-07-19";
     private final List<Role> roles;
     private final List<Permission> permissions;
     private final List<RolePermission> grants;
@@ -34,6 +34,11 @@ public class MvpAuthorizationCatalog {
                 permission("perm-reference-update", "reference-data", PermissionAction.UPDATE),
                 permission("perm-reference-deactivate", "reference-data", PermissionAction.DEACTIVATE),
                 permission("perm-reference-reactivate", "reference-data", PermissionAction.REACTIVATE),
+                permission("perm-booking-read", "booking", PermissionAction.READ),
+                permission("perm-booking-create", "booking", PermissionAction.CREATE),
+                permission("perm-booking-validate", "booking", PermissionAction.VALIDATE),
+                permission("perm-booking-request-pricing", "booking", PermissionAction.REQUEST_PRICING),
+                permission("perm-booking-confirm", "booking", PermissionAction.CONFIRM),
                 permission("perm-contract-read", "reference-contracts", PermissionAction.READ),
                 permission("perm-identity-role-read", "identity-roles", PermissionAction.READ),
                 permission("perm-identity-role-assign", "identity-roles", PermissionAction.ASSIGN),
@@ -85,7 +90,8 @@ public class MvpAuthorizationCatalog {
                 RoleCode.PLATFORM_OPERATOR, List.of("perm-platform-status-read", "perm-identity-audit-read", "perm-contract-read"),
                 RoleCode.PRICING, List.of("perm-reference-read", "perm-contract-read"),
                 RoleCode.SALES, List.of("perm-reference-read"),
-                RoleCode.BOOKING_DESK, List.of("perm-reference-read"),
+                RoleCode.BOOKING_DESK, List.of("perm-reference-read", "perm-booking-read", "perm-booking-create",
+                        "perm-booking-validate", "perm-booking-request-pricing", "perm-booking-confirm"),
                 RoleCode.EQUIPMENT_CONTROL, List.of("perm-reference-read"),
                 RoleCode.CUSTOMER_SERVICE, List.of("perm-reference-read"),
                 RoleCode.FINANCE_READ, List.of("perm-reference-read")

@@ -1,0 +1,13 @@
+{
+  "stage_slug": "market-research",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat LinerCore vertical intents as internal carrier-platform capabilities; research operational table stakes and build-vs-buy alternatives without unsupported SaaS market-size claims.",
+      "source": "orchestrator"
+    }
+  ]
+}

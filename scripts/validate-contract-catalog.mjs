@@ -44,11 +44,21 @@ export const REQUIRED_EVENT_SCHEMAS = {
   },
   "event-booking-confirmed": {
     eventTypes: ["booking.confirmed"],
-    requiredFields: ["eventId", "eventType", "schemaVersion", "source", "occurredAt", "correlationId", "idempotencyKey", "bookingId", "bookingRevision", "pricingRef"]
+    requiredFields: [
+      "id", "source", "type", "time", "correlationId", "dataSchemaVersion",
+      "data.bookingId", "data.bookingRevision", "data.routing[]", "data.routing[].legSequence",
+      "data.routing[].loadUnLocode", "data.routing[].dischargeUnLocode", "data.routing[].voyageId",
+      "data.equipment[]", "data.equipment[].equipmentTypeCode", "data.equipment[].quantity"
+    ]
   },
   "event-container-movement-status": {
     eventTypes: ["containermovement.status"],
-    requiredFields: ["eventId", "eventType", "schemaVersion", "source", "occurredAt", "correlationId", "idempotencyKey", "containerId", "bookingId", "movementStatus", "sequenceNumber"]
+    requiredFields: [
+      "id", "source", "type", "time", "correlationId", "dataSchemaVersion",
+      "data.bookingRef", "data.containerRef", "data.moveCode", "data.eventClassifierCode",
+      "data.occurredDateTime", "data.receivedDateTime", "data.derivedStatus",
+      "data.emptyIndicatorCode", "data.transshipment", "data.location.unLocationCode"
+    ]
   }
 };
 
@@ -110,7 +120,6 @@ export function validateContractCatalog(root = process.cwd(), options = {}) {
 
   validateRequiredContractCoverage(catalog, failures);
   validateRequiredEvents(root, catalog, failures);
-  validateNoDownstreamRuntime(root, failures);
 
   const healthSnapshot = buildHealthSnapshot(catalog.contracts ?? [], failures);
   if (options.healthFile) {
@@ -175,18 +184,32 @@ function validateSchemaFields(schema, eventType, requiredFields, failures) {
     failures.push(`${eventType} schema must be an Avro record with a name`);
     return;
   }
-  const fieldNames = new Set((schema.fields ?? []).map((field) => field.name));
   for (const field of requiredFields) {
-    if (!fieldNames.has(field)) failures.push(`${eventType} schema missing field ${field}`);
+    if (!hasSchemaFieldPath(schema, field)) failures.push(`${eventType} schema missing field ${field}`);
   }
 }
 
-function validateNoDownstreamRuntime(root, failures) {
-  for (const forbidden of ["services/charge-service", "services/container-movement-service", "apps/charge", "apps/booking", "apps/container-movement"]) {
-    if (existsSync(join(root, forbidden))) {
-      failures.push(`downstream runtime out of scope: ${forbidden}`);
+export function hasSchemaFieldPath(schema, path) {
+  let current = schema;
+  for (const rawSegment of path.split(".")) {
+    const arraySegment = rawSegment.endsWith("[]");
+    const segment = arraySegment ? rawSegment.slice(0, -2) : rawSegment;
+    const record = unwrapSchema(current);
+    if (record?.type !== "record") return false;
+    const field = (record.fields ?? []).find((candidate) => candidate.name === segment);
+    if (!field) return false;
+    current = unwrapSchema(field.type);
+    if (arraySegment) {
+      if (current?.type !== "array") return false;
+      current = unwrapSchema(current.items);
     }
   }
+  return true;
+}
+
+function unwrapSchema(schema) {
+  if (!Array.isArray(schema)) return schema;
+  return schema.find((candidate) => candidate !== "null") ?? null;
 }
 
 function parseJsonFile(root, path, failures, pathIsAbsolute = false) {

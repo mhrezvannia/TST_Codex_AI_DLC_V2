@@ -1,0 +1,4 @@
+              journey_id              |              booking_id              | booking_revision | movement_status
+--------------------------------------+--------------------------------------+------------------+-----------------
+ 4aaa5301-7b9e-4692-b9e9-32d73137b790 | 6cfe26b7-d6ac-45a8-8d8d-d53cbddcf3df |                1 | PLANNED
+(1 row)

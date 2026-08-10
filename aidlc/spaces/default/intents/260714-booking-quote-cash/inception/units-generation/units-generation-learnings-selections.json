@@ -1,0 +1,21 @@
+{
+  "stage_slug": "units-generation",
+  "selections": [
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Before proposing or reviewing Units of Work, load the binding unit template and validate that every unit is a live vertical story slice; contracts, migrations, backend, UI, and evidence must travel inside the slice that exercises them rather than becoming standalone layer units.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c8",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "When multiple vertical slices change one service database, assign the ordered migration chain and files to one explicit unit; later slices consume the prepared schema and must not co-own or rewrite those migration files.",
+      "source": "orchestrator"
+    }
+  ]
+}

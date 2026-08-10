@@ -1,0 +1,9 @@
+gate=booking-ui-health
+status=PASS
+exitCode=0
+command=node scripts/w1-live-acceptance.mjs --probe http://127.0.0.1:8088/bookings
+
+{
+  "url": "http://127.0.0.1:8088/bookings",
+  "status": 200
+}

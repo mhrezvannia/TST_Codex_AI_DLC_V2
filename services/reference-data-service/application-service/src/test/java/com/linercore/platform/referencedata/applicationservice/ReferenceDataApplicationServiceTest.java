@@ -7,6 +7,7 @@ import com.linercore.platform.referencedata.applicationservice.command.Reference
 import com.linercore.platform.referencedata.applicationservice.port.AuthorizationClientPort;
 import com.linercore.platform.referencedata.applicationservice.port.IdGenerator;
 import com.linercore.platform.referencedata.domain.model.ReferenceRecord;
+import com.linercore.platform.referencedata.domain.model.ReferenceId;
 import com.linercore.platform.referencedata.domain.model.ReferenceSet;
 import com.linercore.platform.referencedata.domain.validation.ValidationResult;
 import java.time.Clock;
@@ -42,6 +43,17 @@ class ReferenceDataApplicationServiceTest {
     }
 
     @Test
+    void updatesBusinessCodeWithoutBreakingActiveUniqueness() {
+        ReferenceRecord created = service.create(command(ReferenceSet.CURRENCY, "USX", "US Dollar draft", Map.of()));
+
+        ReferenceRecord updated = service.update(created.id(), created.version(),
+                command(ReferenceSet.CURRENCY, "USD", "US Dollar", Map.of("minorUnit", "2")));
+
+        assertEquals("USD", updated.code().value());
+        assertEquals(2, updated.version());
+    }
+
+    @Test
     void validateOnlyDoesNotPersist() {
         service.validateOnly(command(ReferenceSet.CURRENCY, "USD", "US Dollar", Map.of()));
 
@@ -64,6 +76,30 @@ class ReferenceDataApplicationServiceTest {
 
         assertThrows(SecurityException.class,
                 () -> deniedService.create(command(ReferenceSet.CURRENCY, "EUR", "Euro", Map.of())));
+    }
+
+    @Test
+    void persistsVoyageOnlyWhenVesselAndLocationsAreActive() {
+        service.update(new ReferenceId("location-origin"), 0,
+                command(ReferenceSet.LOCATION, "USNYC", "New York", Map.of("locationType", "PORT", "parentCountryId", "country-us")));
+        service.update(new ReferenceId("location-destination"), 0,
+                command(ReferenceSet.LOCATION, "NLRTM", "Rotterdam", Map.of("locationType", "PORT", "parentCountryId", "country-nl")));
+        service.update(new ReferenceId("vessel-1"), 0,
+                command(ReferenceSet.VESSEL_VOYAGE, "9387425", "LinerCore Atlas", Map.of(
+                        "recordType", "VESSEL", "vesselName", "LinerCore Atlas", "vesselIMONumber", "9387425")));
+
+        ReferenceRecord voyage = service.update(new ReferenceId("voyage-1"), 0,
+                command(ReferenceSet.VESSEL_VOYAGE, "LC001E", "LinerCore Atlas LC001E", Map.of(
+                        "recordType", "VOYAGE",
+                        "vesselId", "vessel-1",
+                        "carrierVoyageNumber", "LC001E",
+                        "originLocationId", "location-origin",
+                        "destinationLocationId", "location-destination",
+                        "scheduledDeparture", "2026-08-01T10:00:00Z",
+                        "scheduledArrival", "2026-08-10T08:00:00Z")));
+
+        assertEquals("LC001E", voyage.code().value());
+        assertEquals(2, service.list(ReferenceSet.VESSEL_VOYAGE, false, 0, 25).total());
     }
 
     private ReferenceMutationCommand command(ReferenceSet set, String code, String name, Map<String, String> attributes) {

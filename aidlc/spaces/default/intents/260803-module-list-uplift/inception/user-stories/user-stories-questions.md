@@ -12,7 +12,7 @@ How should we complete the User Stories planning questions?
 - B. Self-guided — edit every `[Answer]:` field in this file.
 - C. Chat — describe the desired story plan in your own words.
 - X. Other (please specify).
-- `[Answer]:`
+- `[Answer]: A — Guided (Recommended)`
 
 ## Q1. Persona Development Approach
 
@@ -22,7 +22,7 @@ Which persona set should anchor the stories?
 - B. Three module personas: merge read/write variants within Reference, Charge, and Container Movement stories.
 - C. Four personas: three module personas plus one shared cross-module Operations persona.
 - X. Other (please specify).
-- `[Answer]:`
+- `[Answer]: A — Five personas (Recommended)`
 
 ## Q2. Story Breakdown Approach
 
@@ -32,7 +32,7 @@ How should the story map be organized?
 - B. By persona: group all outcomes for each persona, even when shared route/state foundations repeat.
 - C. By technical feature: routes, lists, details, mutations, links, and quality evidence across all domains.
 - X. Other (please specify).
-- `[Answer]:`
+- `[Answer]: A — Vertical workflow (Recommended)`
 
 ## Q3. Story Granularity
 
@@ -42,7 +42,7 @@ What granularity should the generated story set use?
 - B. 9–12 medium stories combining list/detail/action outcomes per module.
 - C. 17–22 fine-grained stories separating most permission and failure variants.
 - X. Other (please specify).
-- `[Answer]:`
+- `[Answer]: A — 14–16 small (Recommended)`
 
 ## Story Format and Prioritization
 

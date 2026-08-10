@@ -118,6 +118,7 @@ NEVER broaden W4 into repository-wide security modernization, production deploym
 NEVER introduce cross-service database access, a shared write model, or framework dependencies into Java domain cores. (affirmed 2026-08-03)
 NEVER impose a universal formatter, file-size threshold, or `Result<T,E>` pattern that the repository does not enforce. (affirmed 2026-08-03)
 NEVER call documents, mockups, detached module pages, static scans, container startup, or screenshots alone a live acceptance pass. (affirmed 2026-08-03)
+- Do not reproduce generic template controls for search, sort, pagination, correction, publication, or cross-links when approved requirements and executable provider contracts do not support them. (learned 2026-08-09) <!-- cid:refined-mockups:c4 -->
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -283,7 +284,10 @@ ALWAYS preserve strict TypeScript, Next.js App Router conventions, repository ES
 - Treat prior-intent-specific practice prose as evidence, not the active intent's default; re-affirm only choices the active intent and current repository evidence do not settle. (learned 2026-08-03) <!-- cid:practices-discovery:c1 -->
 - Keep feature security work bounded to operationalizing or replacing already-required gates; broader scanner, SBOM, signing, or provenance modernization requires approved scope expansion. (learned 2026-08-03) <!-- cid:practices-discovery:c5 -->
 - Treat the approved Context Pack, scope, page contracts, rough interaction artifacts, and affirmed practices as binding requirements sources; use the requirements interview only for decisions those sources explicitly leave unresolved. (learned 2026-08-03) <!-- cid:requirements-analysis:c1 -->
+- When a desired command is blocked by an unadmitted contract exit, keep the command absent in current acceptance and write a current actor-valued story such as truthful recovery; post-exit behavior stays in change-controlled backlog scope until admitted. (learned 2026-08-09) <!-- cid:user-stories:c5 -->
+- Keep detailed approved page-level design candidates as supporting evidence while consolidating their binding decisions into concise stage artifacts for a navigable implementation handoff. (learned 2026-08-09) <!-- cid:refined-mockups:c5 -->
 ## Contract Evolution
 - For additive bilateral contract enrichment, retain existing field types and required sets, declare new properties optional for legacy-consumer schema compatibility, require the enriched provider set all-or-none at runtime, and make consumers distinguish absent legacy enrichment from invalid partial enrichment. (learned 2026-07-21) <!-- cid:application-design:c3 -->
 - Preserve one shared interaction grammar while respecting provider-owned capability differences; never create identical client controls that simulate unsupported operations or silently expand backend scope. (learned 2026-08-03) <!-- cid:requirements-analysis:c2 -->
 - Create a permanent compatibility redirect only when an inventoried source maps unambiguously to one canonical target and every retained query value can be safely validated; otherwise use the explicit not-found or gone outcome from the approved retirement inventory. (learned 2026-08-03) <!-- cid:requirements-analysis:c4 -->
+- Keep unsupported provider controls and missing canonical identifiers as named dependencies with owners and exit conditions rather than implementation stories; a story cannot promise actor value the approved provider contract cannot deliver. (learned 2026-08-09) <!-- cid:user-stories:c4 -->

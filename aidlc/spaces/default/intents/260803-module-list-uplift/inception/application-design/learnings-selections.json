@@ -1,0 +1,45 @@
+{
+  "stage_slug": "application-design",
+  "selections": [
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For independently deployed Next.js modules, preserve one LinerCore shell by having every canonical app render the same W2-02-owned PlatformShell and route registry; treat the edge proxy as route selection, not HTML composition.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Place Booking-to-Journey integration in the canonical apps/shell /booking/[bookingId] seam, not apps/booking, unless an approved route-ownership change supersedes the source evidence.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Contract Evolution",
+      "text": "Keep movement-timeline normalization in the owning provider; BFFs and browsers must not merge expected and actual evidence or calculate lifecycle and next-move truth.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c7",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Contract Evolution",
+      "text": "For CMM v2, use a signed subject assertion and a server-issued signed capture-attempt token to establish subject, idempotency, and correlation without BFF persistence or browser authority.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c8",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Forbidden",
+      "text": "When existing event consumers lack verified poison, DLQ, or replay controls, keep event-path acceptance BLOCKED and document the current partition blast radius; do not invent a new topic outside approved scope.",
+      "source": "orchestrator"
+    }
+  ]
+}

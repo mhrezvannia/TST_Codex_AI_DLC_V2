@@ -28,7 +28,7 @@ Stop at every approval gate.
 - **Scope**: feature
 - **Start Date**: 2026-08-03T08:11:06Z
 - **State Version**: 7
-- **Active Agent**: aidlc-design-agent
+- **Active Agent**: aidlc-architect-agent
 - **Worktree Path**:
 - **Bolt Refs**:
 - **Practices Affirmed Timestamp**: 2026-08-03T12:57:50Z
@@ -47,14 +47,13 @@ Stop at every approval gate.
 
 ## Execution Plan Summary
 - **Total Stages**: 32
-- **Completed**: 14
-- **In Progress**: refined-mockups
+- **Completed**: 19
+- **In Progress**: nfr-requirements
 
 ## Runtime State
 - **Revision Count**: 0
 
-- **Parked**: 2026-08-03T13:50:53Z
-- **Parked At Stage**: refined-mockups
+- **Skeleton Stance**: on
 ## Phase Progress
 <!-- Status values: Pending, Active, Verified, Skipped -->
 
@@ -86,15 +85,15 @@ Stop at every approval gate.
 - [x] practices-discovery — EXECUTE
 - [x] requirements-analysis — EXECUTE
 - [x] user-stories — EXECUTE
-- [-] refined-mockups — EXECUTE
-- [ ] application-design — EXECUTE
-- [ ] units-generation — EXECUTE
-- [ ] delivery-planning — EXECUTE
+- [x] refined-mockups — EXECUTE
+- [x] application-design — EXECUTE
+- [x] units-generation — EXECUTE
+- [x] delivery-planning — EXECUTE
 
 ### CONSTRUCTION PHASE
 Per unit: [TBD]
-- [ ] functional-design — EXECUTE
-- [ ] nfr-requirements — EXECUTE
+- [x] functional-design — EXECUTE
+- [-] nfr-requirements — EXECUTE
 - [ ] nfr-design — EXECUTE
 - [ ] infrastructure-design — EXECUTE
 - [ ] code-generation — EXECUTE
@@ -111,13 +110,13 @@ Per unit: [TBD]
 - [ ] feedback-optimization — EXECUTE
 
 ## Current Status
-- **Lifecycle Phase**: INCEPTION
-- **Current Stage**: refined-mockups
-- **Next Stage**: application-design
+- **Lifecycle Phase**: CONSTRUCTION
+- **Current Stage**: nfr-requirements
+- **Next Stage**: nfr-design
 - **Status**: Running
-- **Last Updated**: 2026-08-03T13:50:53Z
+- **Last Updated**: 2026-08-10T14:08:41Z
 
 ## Session Resume Point
-- **Last Completed Stage**: user-stories
-- **Next Action**: Execute Refined Mockups
+- **Last Completed Stage**: functional-design
+- **Next Action**: Execute NFR Requirements
 - **Pending Artifacts**: none

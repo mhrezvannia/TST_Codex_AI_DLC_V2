@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "generatedAt": "2026-07-28T13:41:11.730Z",
+  "reason": "Measured isolated-stack input is required; synthetic performance evidence is forbidden."
+}

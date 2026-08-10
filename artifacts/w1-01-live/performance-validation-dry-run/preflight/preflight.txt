@@ -1,0 +1,6 @@
+gate=preflight
+status=PLANNED
+exitCode=
+command=node scripts/w1-live-acceptance.mjs --preflight
+
+dry-run: command not executed

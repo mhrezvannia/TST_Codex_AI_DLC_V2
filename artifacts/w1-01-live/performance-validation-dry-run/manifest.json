@@ -1,0 +1,232 @@
+{
+  "runId": "performance-validation-dry-run",
+  "startedAt": "2026-07-16T16:05:45.873Z",
+  "completedAt": "2026-07-16T16:05:45.873Z",
+  "status": "PLANNED",
+  "branch": "unknown",
+  "commit": "unknown",
+  "dirtySummary": "not captured",
+  "assertions": {
+    "postgresHostPort": "55432",
+    "nginxHostPort": "8088",
+    "realMessagingRequired": true,
+    "destructiveDatabaseResetAllowed": false
+  },
+  "gates": [
+    {
+      "id": "preflight",
+      "section": "preflight",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --preflight",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.863Z",
+      "completedAt": "2026-07-16T16:05:45.864Z",
+      "artifactPath": "preflight/preflight.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "compose-config",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-002",
+        "BR-U07-003"
+      ],
+      "command": "docker compose config --quiet",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.865Z",
+      "completedAt": "2026-07-16T16:05:45.865Z",
+      "artifactPath": "compose/compose-config.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "compose-start",
+      "section": "compose",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "docker compose --profile full up -d --build",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.866Z",
+      "completedAt": "2026-07-16T16:05:45.866Z",
+      "artifactPath": "compose/compose-start.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "contracts",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-004"
+      ],
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.867Z",
+      "completedAt": "2026-07-16T16:05:45.867Z",
+      "artifactPath": "quality/contracts.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "seed-dry-run",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.867Z",
+      "completedAt": "2026-07-16T16:05:45.867Z",
+      "artifactPath": "seed/seed-dry-run.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "seed-live",
+      "section": "seed",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/seed-local.mjs --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file D:/TST_Codex_W1-01/artifacts/w1-01-live/performance-validation-dry-run/seed/seed-apply.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.868Z",
+      "completedAt": "2026-07-16T16:05:45.868Z",
+      "artifactPath": "seed/seed-live.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "booking-ui-health",
+      "section": "journey",
+      "mapsTo": [
+        "BR-U07-001"
+      ],
+      "command": "node scripts/w1-live-acceptance.mjs --probe http://localhost:8088/bookings",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.868Z",
+      "completedAt": "2026-07-16T16:05:45.868Z",
+      "artifactPath": "journey/booking-ui-health.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "replay-restart",
+      "section": "replay-restart",
+      "mapsTo": [
+        "BR-U07-001",
+        "BR-U07-003"
+      ],
+      "command": "node scripts/replay-restart-proof.mjs --evidence D:/TST_Codex_W1-01/artifacts/w1-01-live/performance-validation-dry-run/replay-restart/evidence.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.869Z",
+      "completedAt": "2026-07-16T16:05:45.869Z",
+      "artifactPath": "replay-restart/replay-restart.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "quality-gates",
+      "section": "quality",
+      "mapsTo": [
+        "BR-U07-006"
+      ],
+      "command": "node scripts/run-quality-gates.mjs --all --evidence D:/TST_Codex_W1-01/artifacts/w1-01-live/performance-validation-dry-run/quality/evidence.json",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.871Z",
+      "completedAt": "2026-07-16T16:05:45.871Z",
+      "artifactPath": "quality/quality-gates.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "aidlc-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/aidlc-audit/detectors.sh",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.872Z",
+      "completedAt": "2026-07-16T16:05:45.872Z",
+      "artifactPath": "audits/aidlc-audit.txt",
+      "summary": "dry-run: command not executed"
+    },
+    {
+      "id": "erp-fidelity-audit",
+      "section": "audits",
+      "mapsTo": [
+        "BR-U07-007"
+      ],
+      "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
+      "status": "PLANNED",
+      "exitCode": null,
+      "startedAt": "2026-07-16T16:05:45.873Z",
+      "completedAt": "2026-07-16T16:05:45.873Z",
+      "artifactPath": "audits/erp-fidelity-audit.txt",
+      "summary": "dry-run: command not executed"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "preflight/preflight.txt",
+      "sha256": "1443e6bc8a2cb02bfdd3f6ef75a3be214ab7d82028c915c15191ebeb5d144124",
+      "bytes": 126
+    },
+    {
+      "path": "compose/compose-config.txt",
+      "sha256": "d5e967fe884ad7e9080d4b226dd7034b57153b7f082f31b2842266b117afa8dd",
+      "bytes": 113
+    },
+    {
+      "path": "compose/compose-start.txt",
+      "sha256": "55210c19832d486f0fec61fd902eca7ca232fd77bb6ae69539a630fe638a42b3",
+      "bytes": 126
+    },
+    {
+      "path": "quality/contracts.txt",
+      "sha256": "660e21222c55c36cee7654aad489016e3c5e5b9149cb6fe58f1dfd0eceda365b",
+      "bytes": 121
+    },
+    {
+      "path": "seed/seed-dry-run.txt",
+      "sha256": "7e0e167d61a505ef19aea85113ca2b76c5ed1bd4ac42fa04da260571e4ce6850",
+      "bytes": 186
+    },
+    {
+      "path": "seed/seed-live.txt",
+      "sha256": "3d6ad431e891e5896172e46620a3fd729a992da075d13c8f24d6ba485e9b26b7",
+      "bytes": 280
+    },
+    {
+      "path": "journey/booking-ui-health.txt",
+      "sha256": "6dfd4495a2615756fa5f25316dd7d081230c260ff52e33a5d3c65e4daeb78203",
+      "bytes": 161
+    },
+    {
+      "path": "replay-restart/replay-restart.txt",
+      "sha256": "2f832acf926cacb1598a871a209eb8f587cdcab4879617eeed152afd03f10f98",
+      "bytes": 232
+    },
+    {
+      "path": "quality/quality-gates.txt",
+      "sha256": "ea16da0ccb44d6f28ecab5eeb9247b0ff03d84546b259987183440655c657e34",
+      "bytes": 227
+    },
+    {
+      "path": "audits/aidlc-audit.txt",
+      "sha256": "e31e5c2387492ce37a9093e39918d22bb63437cf32af12a7c54cad8580709e34",
+      "bytes": 125
+    },
+    {
+      "path": "audits/erp-fidelity-audit.txt",
+      "sha256": "0b2d34902d44e6584abe8771058056fc4e5ed2c7aaf285604573308f2e007324",
+      "bytes": 139
+    }
+  ]
+}

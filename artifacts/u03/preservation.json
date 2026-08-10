@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-07-28T13:37:06.817Z",
+  "sourcePreservation": {
+    "status": "passed",
+    "failures": []
+  },
+  "runtimeUpgradeRestart": {
+    "status": "blocked",
+    "reason": "Requires the isolated Docker Compose PostgreSQL stack; source checks do not substitute for V1/V3 upgrade/backfill/restart evidence."
+  },
+  "rollbackEligibility": {
+    "status": "blocked",
+    "reason": "Requires measured database/outbox state from the isolated stack."
+  }
+}

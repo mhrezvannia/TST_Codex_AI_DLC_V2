@@ -1,95 +1,133 @@
-import type { CSSProperties } from "react";
+import {
+  AuthBoundaryLayout,
+  AuthNotice,
+  AuthStatePanel,
+  DestinationSummary,
+  SupportDetails
+} from "../AuthBoundary";
+import { GatewayAction } from "../GatewayAction";
+import {
+  gatewayEntryHref,
+  gatewaySignInHref,
+  resolveGatewayDestination
+} from "../../lib/auth-gateway";
 
-export default async function SignInPage({ searchParams }: { searchParams?: Promise<{ returnUrl?: string }> }) {
-  const params = await searchParams;
-  const returnUrl = params?.returnUrl ?? "/session";
+type HandoffStatus = "cancelled" | "expired" | "failed" | "unavailable";
+type SearchParams = {
+  returnUrl?: string;
+  status?: string;
+};
+
+export default async function SignInPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
+  const params = (await searchParams) ?? {};
+  const destination = resolveGatewayDestination(params.returnUrl);
+  const status = handoffStatus(params.status);
+  const content = handoffContent(status, destination.label);
+  const environmentLabel = process.env.LINERCORE_ENVIRONMENT_LABEL ?? "LOCAL DEMO";
+  const showTechnicalDetails = environmentLabel !== "PRODUCTION";
+  const actionHref = gatewaySignInHref(destination.href);
+
   return (
-    <main style={styles.page}>
-      <section style={styles.card}>
-        <div>
-          <p style={styles.eyebrow}>Secure handoff</p>
-          <h1 style={styles.title}>Sign in</h1>
-          <p style={styles.copy}>Continue through Keycloak. The BFF will exchange the callback, redact sensitive claims, and return you to the requested workspace.</p>
+    <AuthBoundaryLayout>
+      <AuthStatePanel eyebrow={content.eyebrow} title={content.title} summary={content.summary}>
+        <DestinationSummary>Return to {destination.label}.</DestinationSummary>
+
+        {destination.invalid ? (
+          <AuthNotice title="We couldn't use that destination.">
+            For your security, the LinerCore workspace will be used instead.
+          </AuthNotice>
+        ) : null}
+
+        {status === "unavailable" ? (
+          <AuthNotice title="Company sign-in is unavailable." tone="error">
+            Try again shortly. No protected information has been displayed.
+          </AuthNotice>
+        ) : null}
+
+        <div className="auth-gateway__actions">
+          <GatewayAction
+            dataTestId="sign-in-button"
+            href={actionHref}
+            label={content.actionLabel}
+            pendingLabel={content.pendingLabel}
+          />
+          <a className="auth-gateway__secondary-action" href={gatewayEntryHref(destination.href)}>
+            Cancel
+          </a>
         </div>
-        <div style={styles.contextGrid}>
-          <div style={styles.contextItem}>
-            <span>Return URL</span>
-            <code>{returnUrl}</code>
-          </div>
-          <div style={styles.contextItem}>
-            <span>Client</span>
-            <code>linercore-platform</code>
-          </div>
-        </div>
-        <a data-testid="sign-in-button" href={`/api/auth/sign-in?returnUrl=${encodeURIComponent(returnUrl)}`} style={styles.primaryAction}>
-          Continue with Keycloak
-        </a>
-      </section>
-    </main>
+
+        {showTechnicalDetails ? (
+          <SupportDetails
+            items={[
+              { term: "Environment", description: environmentLabel },
+              { term: "Destination", description: destination.label },
+              { term: "Handoff", description: status ? content.technicalStatus : "Ready" }
+            ]}
+          />
+        ) : null}
+      </AuthStatePanel>
+    </AuthBoundaryLayout>
   );
 }
 
-const styles: Record<string, CSSProperties> = {
-  page: {
-    minHeight: "calc(100vh - 118px)",
-    display: "grid",
-    placeItems: "center",
-    padding: 26,
-    background: "#f4f7fb"
-  },
-  card: {
-    width: "min(100%, 620px)",
-    display: "grid",
-    gap: 20,
-    background: "#ffffff",
-    border: "1px solid #e1e7ee",
-    borderRadius: 8,
-    padding: 28,
-    boxShadow: "0 18px 50px rgba(16, 34, 53, 0.08)"
-  },
-  eyebrow: {
-    margin: "0 0 9px",
-    color: "#2f73c4",
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase"
-  },
-  title: {
-    margin: 0,
-    fontSize: 30,
-    lineHeight: 1.1
-  },
-  copy: {
-    margin: "12px 0 0",
-    color: "#607080",
-    lineHeight: 1.55
-  },
-  contextGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-    gap: 12
-  },
-  contextItem: {
-    minWidth: 0,
-    display: "grid",
-    gap: 6,
-    border: "1px solid #e6ebf2",
-    borderRadius: 8,
-    padding: 14,
-    color: "#758392",
-    fontSize: 13
-  },
-  primaryAction: {
-    minHeight: 42,
-    borderRadius: 8,
-    background: "#11427a",
-    color: "#ffffff",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "0 16px",
-    textDecoration: "none",
-    fontWeight: 700
+function handoffStatus(value: string | undefined): HandoffStatus | null {
+  if (value === "cancelled" || value === "expired" || value === "failed" || value === "unavailable") {
+    return value;
   }
-};
+  return null;
+}
+
+function handoffContent(status: HandoffStatus | null, destinationLabel: string) {
+  if (status === "expired") {
+    return {
+      eyebrow: "Sign-in request expired",
+      title: "Your sign-in request expired",
+      summary: `Start a new secure sign-in to continue to ${destinationLabel}.`,
+      actionLabel: "Start again",
+      pendingLabel: "Opening company sign-in...",
+      technicalStatus: "Expired"
+    };
+  }
+
+  if (status === "cancelled") {
+    return {
+      eyebrow: "Sign-in cancelled",
+      title: "Sign-in was cancelled",
+      summary: `You can continue when you're ready to return to ${destinationLabel}.`,
+      actionLabel: "Continue to sign in",
+      pendingLabel: "Opening company sign-in...",
+      technicalStatus: "Cancelled"
+    };
+  }
+
+  if (status === "failed") {
+    return {
+      eyebrow: "Sign-in interrupted",
+      title: "Sign-in did not complete",
+      summary: `Try the secure company sign-in again to continue to ${destinationLabel}.`,
+      actionLabel: "Try again",
+      pendingLabel: "Opening company sign-in...",
+      technicalStatus: "Failed"
+    };
+  }
+
+  if (status === "unavailable") {
+    return {
+      eyebrow: "Company access",
+      title: "Sign-in is temporarily unavailable",
+      summary: "LinerCore couldn't reach the company identity service.",
+      actionLabel: "Try again",
+      pendingLabel: "Opening company sign-in...",
+      technicalStatus: "Unavailable"
+    };
+  }
+
+  return {
+    eyebrow: "Secure company access",
+    title: "Continue to company sign-in",
+    summary: "You'll sign in with your company account and return to the requested LinerCore workspace.",
+    actionLabel: "Continue to sign in",
+    pendingLabel: "Opening company sign-in...",
+    technicalStatus: "Ready"
+  };
+}

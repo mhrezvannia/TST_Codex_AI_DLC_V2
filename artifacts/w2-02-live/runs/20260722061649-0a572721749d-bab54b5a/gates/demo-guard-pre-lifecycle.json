@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260722061649-0a572721749d-bab54b5a",
+  "workspaceDigest": "0a572721749dac842fa9f0ab8a121bd5967318e707cd763d3a42c75dbee30495",
+  "command": "npm run demo:guard",
+  "startedAt": "2026-07-22T06:16:49.796Z",
+  "finishedAt": "2026-07-22T06:16:49.797Z",
+  "exitCode": 1,
+  "directExit": true,
+  "result": "FAIL",
+  "outputHash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "outputBytes": 1,
+  "producer": "acceptance-parent",
+  "phase": "pre-lifecycle",
+  "waveTarget": {
+    "baseURL": "http://127.0.0.1:18088",
+    "composeProject": "linercore-wave-a"
+  },
+  "protectedDemoInputs": {
+    "composeProject": "linercore-shared-platform",
+    "imageTag": "demo-20260721",
+    "edgeURL": "http://127.0.0.1:8088"
+  }
+}

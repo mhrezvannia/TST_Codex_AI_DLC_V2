@@ -44,11 +44,21 @@ export const REQUIRED_EVENT_SCHEMAS = {
   },
   "event-booking-confirmed": {
     eventTypes: ["booking.confirmed"],
-    requiredFields: ["eventId", "eventType", "schemaVersion", "source", "occurredAt", "correlationId", "idempotencyKey", "bookingId", "bookingRevision", "pricingRef"]
+    requiredFields: [
+      "id", "source", "type", "time", "correlationId", "dataSchemaVersion",
+      "data.bookingId", "data.bookingRevision", "data.routing[]", "data.routing[].legSequence",
+      "data.routing[].loadUnLocode", "data.routing[].dischargeUnLocode", "data.routing[].voyageId",
+      "data.equipment[]", "data.equipment[].equipmentTypeCode", "data.equipment[].quantity"
+    ]
   },
   "event-container-movement-status": {
     eventTypes: ["containermovement.status"],
-    requiredFields: ["eventId", "eventType", "schemaVersion", "source", "occurredAt", "correlationId", "idempotencyKey", "containerId", "bookingId", "movementStatus", "sequenceNumber"]
+    requiredFields: [
+      "id", "source", "type", "time", "correlationId", "dataSchemaVersion",
+      "data.bookingRef", "data.containerRef", "data.moveCode", "data.eventClassifierCode",
+      "data.occurredDateTime", "data.receivedDateTime", "data.derivedStatus",
+      "data.emptyIndicatorCode", "data.transshipment", "data.location.unLocationCode"
+    ]
   }
 };
 
@@ -110,7 +120,7 @@ export function validateContractCatalog(root = process.cwd(), options = {}) {
 
   validateRequiredContractCoverage(catalog, failures);
   validateRequiredEvents(root, catalog, failures);
-  validateNoDownstreamRuntime(root, failures);
+  failures.push(...validateU04PricingMatrix(root, catalog));
 
   const healthSnapshot = buildHealthSnapshot(catalog.contracts ?? [], failures);
   if (options.healthFile) {
@@ -118,6 +128,139 @@ export function validateContractCatalog(root = process.cwd(), options = {}) {
   }
 
   return { valid: failures.length === 0, failures, catalog, healthSnapshot };
+}
+
+export function validateU04PricingMatrix(root = process.cwd(), catalogOverride = null) {
+  const failures = [];
+  const matrixPath = join(root, "contracts/examples/pricing-u04-terminal-matrix.json");
+  const fixturePath = join(root, "contracts/pact/booking-charge-pricing-fixtures.json");
+  const catalogPath = join(root, "contracts/catalog/contract-catalog.json");
+  const matrix = readJson(matrixPath, failures, "U04 pricing matrix");
+  const fixture = readJson(fixturePath, failures, "U04 pricing Pact fixture");
+  const catalog = catalogOverride ?? readJson(catalogPath, failures, "contract catalog");
+  if (!matrix || !fixture || !catalog) return failures;
+
+  const expected = new Map([
+    ["agreement-success", { status: 200, contentType: "application/vnd.api.v1+json" }],
+    ["tariff-success", { status: 200, contentType: "application/vnd.api.v1+json" }],
+    ["no-rate", { status: 404, contentType: "application/json", code: "NO_RATE", reason: "NO_RATE" }],
+    ["ambiguous-agreement-authority", { status: 422, contentType: "application/json", code: "PRICING_VALIDATION", reason: "AMBIGUOUS_AGREEMENT_AUTHORITY" }],
+    ["ambiguous-base-rate", { status: 422, contentType: "application/json", code: "PRICING_VALIDATION", reason: "AMBIGUOUS_BASE_RATE" }],
+    ["ambiguous-surcharge-rate", { status: 422, contentType: "application/json", code: "PRICING_VALIDATION", reason: "AMBIGUOUS_SURCHARGE_RATE" }],
+    ["ambiguous-local-rate", { status: 422, contentType: "application/json", code: "PRICING_VALIDATION", reason: "AMBIGUOUS_LOCAL_RATE" }],
+    ["idempotency-conflict", { status: 409, contentType: "application/json", code: "IDEMPOTENCY_CONFLICT" }],
+    ["pricing-in-progress", { status: 409, contentType: "application/json", code: "PRICING_IN_PROGRESS" }]
+  ]);
+  const scenarios = new Map((matrix.scenarios ?? []).map((scenario) => [scenario.scenarioId, scenario]));
+  const interactions = new Map((fixture.interactions ?? []).map((interaction) => [interaction.scenarioId, interaction]));
+
+  for (const [scenarioId, contract] of expected) {
+    const scenario = scenarios.get(scenarioId);
+    const interaction = interactions.get(scenarioId);
+    if (!scenario) {
+      failures.push(`U04 pricing matrix missing scenario ${scenarioId}`);
+      continue;
+    }
+    if (!interaction) failures.push(`U04 pricing Pact fixture missing interaction ${scenarioId}`);
+    if (scenario.status !== contract.status) failures.push(`${scenarioId}.status must be ${contract.status}`);
+    if (scenario.contentType !== contract.contentType) failures.push(`${scenarioId}.contentType must be ${contract.contentType}`);
+    if (interaction && (interaction.status !== contract.status || interaction.contentType !== contract.contentType)) {
+      failures.push(`${scenarioId} Pact status/contentType must match the provider matrix`);
+    }
+    if (contract.status === 200) {
+      validateEnrichedSuccess(scenarioId, scenario.response, failures);
+    } else {
+      validateTerminalError(scenarioId, scenario.response, contract, failures);
+    }
+  }
+  if (scenarios.size !== expected.size) failures.push("U04 pricing matrix must contain exactly the approved terminal scenarios");
+  if (interactions.size !== expected.size) failures.push("U04 pricing Pact fixture must contain exactly the approved interactions");
+  if (scenarios.get("pricing-in-progress")?.expectedHeaders?.["Retry-After"] !== "1"
+      || interactions.get("pricing-in-progress")?.expectedHeaders?.["Retry-After"] !== "1") {
+    failures.push("pricing-in-progress must preserve Retry-After: 1 in matrix and Pact fixture");
+  }
+
+  const api = catalog.contracts?.find((contract) => contract.contractId === "api-charge-agreement-service");
+  const pact = catalog.contracts?.find((contract) => contract.contractId === "pact-booking-charge-pricing");
+  if (api?.sourceService !== "charge-agreement-service" || api?.consumerService !== "booking-service") {
+    failures.push("Charge pricing OpenAPI ownership must remain provider=charge-agreement-service consumer=booking-service");
+  }
+  if (pact?.sourceService !== api?.sourceService || pact?.consumerService !== api?.consumerService) {
+    failures.push("Charge pricing OpenAPI and Pact ownership must be synchronized");
+  }
+  if (!api?.examples?.includes("contracts/examples/pricing-u04-terminal-matrix.json")) {
+    failures.push("Charge pricing catalog entry must publish the U04 terminal matrix");
+  }
+  return failures;
+}
+
+function validateEnrichedSuccess(scenarioId, response, failures) {
+  const fields = [
+    "bookingRef", "pricingBasis", "pricingRef", "charges", "applicableDndRuleTypes",
+    "total", "currency", "requestedDepartureDate", "pricingRequestId", "correlationId", "pricedAt"
+  ];
+  if (!response || fields.some((field) => response[field] === undefined)) {
+    failures.push(`${scenarioId} must contain the complete enriched success field set`);
+    return;
+  }
+  if (!Array.isArray(response.charges) || response.charges.length !== 3) {
+    failures.push(`${scenarioId}.charges must contain exactly three lines`);
+    return;
+  }
+  const expectedCategories = ["BASE", "SURCHARGE", "LOCAL"];
+  const expectedCodes = ["OFR", "BAF", "THC"];
+  response.charges.forEach((line, index) => {
+    const lineFields = ["chargeCode", "category", "amount", "currency", "rateCategory", "basis", "quantity", "unitRate", "sourceRateVersionId"];
+    if (lineFields.some((field) => line[field] === undefined)) {
+      failures.push(`${scenarioId}.charges[${index}] must contain the all-or-none enriched line fields`);
+    }
+    if (typeof line.amount !== "number" || typeof line.unitRate !== "number" || !Number.isInteger(line.quantity)) {
+      failures.push(`${scenarioId}.charges[${index}] amount/unitRate/quantity must be JSON numbers`);
+    }
+    if (line.rateCategory !== expectedCategories[index] || line.chargeCode !== expectedCodes[index]) {
+      failures.push(`${scenarioId}.charges must be ordered BASE/OFR, SURCHARGE/BAF, LOCAL/THC`);
+    }
+    if (line.basis !== "PER_CONTAINER" || line.currency !== "USD") {
+      failures.push(`${scenarioId}.charges[${index}] must be USD PER_CONTAINER`);
+    }
+  });
+  if (typeof response.total !== "number" || response.currency !== "USD") {
+    failures.push(`${scenarioId}.total must be a numeric USD value`);
+  }
+  if (response.pricingBasis === "AGREEMENT" && !response.agreementVersionId) {
+    failures.push(`${scenarioId} agreement success requires agreementVersionId`);
+  }
+  if (response.pricingBasis === "TARIFF" && response.agreementVersionId !== undefined) {
+    failures.push(`${scenarioId} tariff success must omit agreementVersionId`);
+  }
+}
+
+function validateTerminalError(scenarioId, response, contract, failures) {
+  if (!response || response.code !== contract.code) failures.push(`${scenarioId}.code must be ${contract.code}`);
+  if (typeof response?.correlationId !== "string" || response.correlationId.length === 0) {
+    failures.push(`${scenarioId}.correlationId is required`);
+  }
+  if (contract.reason) {
+    if (response.reasonCode !== contract.reason) failures.push(`${scenarioId}.reasonCode must be ${contract.reason}`);
+    if (!response.pricingRequestId || !response.manualCaseId) {
+      failures.push(`${scenarioId} manual terminal requires pricingRequestId and manualCaseId`);
+    }
+  } else if (response?.reasonCode !== undefined || response?.manualCaseId !== undefined) {
+    failures.push(`${scenarioId} must not acquire manual-case fields`);
+  }
+}
+
+function readJson(path, failures, label) {
+  if (!existsSync(path)) {
+    failures.push(`${label} is missing`);
+    return null;
+  }
+  try {
+    return JSON.parse(readFileSync(path, "utf8"));
+  } catch (error) {
+    failures.push(`${label} is invalid JSON: ${error.message}`);
+    return null;
+  }
 }
 
 function validateContract(root, contract, failures, seenIds) {
@@ -175,18 +318,32 @@ function validateSchemaFields(schema, eventType, requiredFields, failures) {
     failures.push(`${eventType} schema must be an Avro record with a name`);
     return;
   }
-  const fieldNames = new Set((schema.fields ?? []).map((field) => field.name));
   for (const field of requiredFields) {
-    if (!fieldNames.has(field)) failures.push(`${eventType} schema missing field ${field}`);
+    if (!hasSchemaFieldPath(schema, field)) failures.push(`${eventType} schema missing field ${field}`);
   }
 }
 
-function validateNoDownstreamRuntime(root, failures) {
-  for (const forbidden of ["services/charge-service", "services/container-movement-service", "apps/charge", "apps/booking", "apps/container-movement"]) {
-    if (existsSync(join(root, forbidden))) {
-      failures.push(`downstream runtime out of scope: ${forbidden}`);
+export function hasSchemaFieldPath(schema, path) {
+  let current = schema;
+  for (const rawSegment of path.split(".")) {
+    const arraySegment = rawSegment.endsWith("[]");
+    const segment = arraySegment ? rawSegment.slice(0, -2) : rawSegment;
+    const record = unwrapSchema(current);
+    if (record?.type !== "record") return false;
+    const field = (record.fields ?? []).find((candidate) => candidate.name === segment);
+    if (!field) return false;
+    current = unwrapSchema(field.type);
+    if (arraySegment) {
+      if (current?.type !== "array") return false;
+      current = unwrapSchema(current.items);
     }
   }
+  return true;
+}
+
+function unwrapSchema(schema) {
+  if (!Array.isArray(schema)) return schema;
+  return schema.find((candidate) => candidate !== "null") ?? null;
 }
 
 function parseJsonFile(root, path, failures, pathIsAbsolute = false) {

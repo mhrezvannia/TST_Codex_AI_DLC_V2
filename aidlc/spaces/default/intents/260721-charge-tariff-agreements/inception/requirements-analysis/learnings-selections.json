@@ -1,0 +1,37 @@
+{
+  "stage_slug": "requirements-analysis",
+  "selections": [
+    {
+      "candidate_id": "260721-ra-c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For Charge pricing, resolve an applicable approved agreement first and use tariff fallback only when no agreement applies; a demo centered on agreement pricing does not remove the required tariff fallback behavior.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-ra-c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Preserve provider failure meaning: no authoritative rate is HTTP 404 NO_RATE, residual ambiguity is HTTP 422 PRICING_VALIDATION, and outage, denied, and idempotency failures remain distinct even when Booking safely projects MANUAL_PRICING_REQUIRED.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-ra-c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "W2-03 manual-pricing scope is persisted OPEN evidence plus Booking visibility; assignment, manual quoting, approval, resolution, and closure are separate workflow scope and must not be imported implicitly.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-ra-c4",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat pricing p99 at or below 800 ms as a provisional warm local acceptance target with host, concurrency, and sample size recorded; do not represent it as an approved production SLO without production-environment evidence.",
+      "source": "orchestrator"
+    }
+  ]
+}

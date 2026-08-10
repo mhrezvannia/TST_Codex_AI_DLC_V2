@@ -1,0 +1,66 @@
+{
+    "correlationId":  "ref-sets-359ad0c6-8629-4fb5-aa59-2d866add5530",
+    "permissions":  {
+                        "canRead":  true,
+                        "canWrite":  false,
+                        "requestedArea":  "reference-data",
+                        "correlationId":  "ref-sets-359ad0c6-8629-4fb5-aa59-2d866add5530",
+                        "reason":  "Read-only local session. Mutations require reference-data:write."
+                    },
+    "sets":  [
+                 {
+                     "id":  "PARTY_CUSTOMER",
+                     "label":  "Party / Customer",
+                     "description":  "Carrier parties and customer identifiers.",
+                     "sensitive":  true
+                 },
+                 {
+                     "id":  "LOCATION",
+                     "label":  "Location / Port",
+                     "description":  "Ports, locations, and country-linked location records.",
+                     "sensitive":  false
+                 },
+                 {
+                     "id":  "REGION",
+                     "label":  "Region",
+                     "description":  "Flat region groupings for routing and trade lanes.",
+                     "sensitive":  false
+                 },
+                 {
+                     "id":  "VESSEL_VOYAGE",
+                     "label":  "Vessel / Voyage",
+                     "description":  "Vessels and scheduled carrier voyages used by booking workflows.",
+                     "sensitive":  false
+                 },
+                 {
+                     "id":  "CURRENCY",
+                     "label":  "Currency",
+                     "description":  "Operating currencies and display metadata.",
+                     "sensitive":  false
+                 },
+                 {
+                     "id":  "CHARGE_CODE",
+                     "label":  "Charge Code",
+                     "description":  "Commercial charge code catalog.",
+                     "sensitive":  true
+                 },
+                 {
+                     "id":  "EQUIPMENT_TYPE",
+                     "label":  "Equipment Type",
+                     "description":  "Container and equipment type references.",
+                     "sensitive":  false
+                 },
+                 {
+                     "id":  "COMMODITY",
+                     "label":  "Commodity",
+                     "description":  "Commodity categories for shipment classification.",
+                     "sensitive":  true
+                 },
+                 {
+                     "id":  "TRADE_LANE",
+                     "label":  "Trade Lane",
+                     "description":  "Configurable origin and destination region pairs.",
+                     "sensitive":  false
+                 }
+             ]
+}

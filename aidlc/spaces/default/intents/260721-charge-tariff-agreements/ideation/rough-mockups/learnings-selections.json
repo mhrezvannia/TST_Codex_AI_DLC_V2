@@ -1,0 +1,45 @@
+{
+  "stage_slug": "rough-mockups",
+  "selections": [
+    {
+      "candidate_id": "260721-c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Implement W2-03 Charge records with stable list, create/edit, and detail routes rather than extending the root-only workbench; preserve shareable URLs, browser history, focused route states, and return-to-list context.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03, model rate versions as Draft to immutable Approved, with Scheduled, Effective, and Expired derived from the approved effective window; do not add a larger publication workflow.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03 applicability, match POL THC local charges by origin port plus equipment, while OFR base and BAF surcharge rates match origin plus destination plus equipment.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-c4",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03 UI, reject ui-ux-pro-max marketing composition, new palette/fonts, spinners, generic bulk edit, and dashboard-card suggestions when they conflict with the binding LinerCore master, tokens, skeletons, and Charge-only ownership.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Manage W2-03 BASE, SURCHARGE, and LOCAL rate versions through one filterable Charge route while keeping category-specific fields, labels, and applicability semantics visible; do not create three duplicate page systems.",
+      "source": "orchestrator"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260728130533-111336e90400-a6fa0e28",
+  "workspaceDigest": "111336e90400cbf439bce8f8269de9feee8925502e78f1e7b5098718f206baf0",
+  "command": "node scripts/wave-a-compose.mjs --parallel 1 -f compose.yaml -f infrastructure/compose/w2-02-acceptance.compose.yaml ps --format json",
+  "startedAt": "2026-07-28T13:38:50.044Z",
+  "finishedAt": "2026-07-28T13:38:51.450Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "94f0b41da353233cb8458cf673bb627423e342d4d82c1c35c56cb19cc4119c1c",
+  "outputBytes": 33822,
+  "services": [
+    {
+      "Service": "apps-auth",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-booking",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "apps-charge-agreements",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-reference-data",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-shell",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "booking-service",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "charge-agreement-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "container-movement-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "identity-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "kafka",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "keycloak",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "nginx",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "postgres",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "reference-data-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "schema-registry",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "w2-02-ssr-control",
+      "State": "running",
+      "Health": "healthy"
+    }
+  ]
+}

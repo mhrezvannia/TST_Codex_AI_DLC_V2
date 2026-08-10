@@ -1,0 +1,21 @@
+{
+  "stage_slug": "nfr-requirements",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For local Compose acceptance, describe transaction durability as atomic effects and committed-state survival within existing volumes; do not claim zero data loss after host or volume destruction unless WAL or replication mechanisms exist.",
+      "source": "NFR Requirements durability-boundary correction"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Use explicit local tokens and least-privilege roles only under the local profile, and fail every non-local profile until W2-01 authenticated identity and transport controls are implemented.",
+      "source": "NFR Requirements local-identity correction"
+    }
+  ]
+}

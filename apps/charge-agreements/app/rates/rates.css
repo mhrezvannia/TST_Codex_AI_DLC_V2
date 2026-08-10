@@ -1,0 +1,189 @@
+.rates-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--erp-space-4);
+  min-width: 0;
+  padding: var(--erp-space-6);
+  color: var(--erp-color-text);
+}
+
+.rates-page > * {
+  min-width: 0;
+}
+
+.manual-pricing-page {
+  display: grid;
+  gap: var(--erp-space-4);
+  padding: var(--erp-space-6);
+  color: var(--erp-color-text);
+}
+
+.manual-pricing-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--erp-space-4);
+}
+
+.rates-page-header,
+.rates-toolbar,
+.rates-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--erp-space-3);
+  flex-wrap: wrap;
+}
+
+.rates-title {
+  margin: 0;
+  font-size: var(--erp-font-size-xl);
+}
+
+.rates-eyebrow,
+.rates-muted {
+  margin: 0;
+  color: var(--erp-color-text-muted);
+  font-size: var(--erp-font-size-sm);
+}
+
+.rates-link {
+  color: var(--erp-color-info);
+  font-weight: 700;
+}
+
+.charge-route-state {
+  min-height: 18rem;
+  align-content: start;
+}
+
+.charge-route-state [tabindex="-1"]:focus {
+  outline: 2px solid var(--erp-color-primary);
+  outline-offset: var(--erp-space-2);
+}
+
+.charge-route-action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding-inline: var(--erp-space-3);
+}
+
+.rates-filters,
+.rates-form-grid,
+.rates-evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--erp-space-4);
+}
+
+.rates-form-group {
+  display: grid;
+  gap: var(--erp-space-4);
+  padding: var(--erp-space-4);
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-md);
+}
+
+.rates-form-group legend {
+  padding: 0 var(--erp-space-2);
+  font-weight: 700;
+}
+
+.rates-table-region {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-md);
+}
+
+.rates-table-region table {
+  min-width: 760px;
+}
+
+.rates-error-summary {
+  padding: var(--erp-space-3);
+  border: 1px solid var(--erp-color-danger);
+  border-radius: var(--erp-radius-sm);
+  background: var(--erp-color-danger-bg);
+  color: var(--erp-color-danger);
+}
+
+.rates-status-region {
+  min-height: 24px;
+  color: var(--erp-color-text-muted);
+}
+
+.rates-definition-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--erp-space-3);
+  margin: 0;
+}
+
+.rates-definition-list div {
+  min-width: 0;
+}
+
+.rates-definition-list dt {
+  color: var(--erp-color-text-muted);
+  font-size: var(--erp-font-size-xs);
+}
+
+.rates-definition-list dd {
+  margin: var(--erp-space-1) 0 0;
+  overflow-wrap: anywhere;
+}
+
+.rates-history {
+  display: grid;
+  gap: var(--erp-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rates-history li {
+  padding: var(--erp-space-3);
+  border: 1px solid var(--erp-color-border);
+  border-radius: var(--erp-radius-sm);
+}
+
+@media (max-width: 1024px) {
+  .manual-pricing-filters,
+  .rates-filters,
+  .rates-form-grid,
+  .rates-evidence-grid,
+  .rates-definition-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .rates-page {
+    padding: var(--erp-space-4);
+  }
+
+  .manual-pricing-page {
+    padding: var(--erp-space-4);
+  }
+
+  .manual-pricing-filters,
+  .rates-filters,
+  .rates-form-grid,
+  .rates-evidence-grid,
+  .rates-definition-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .charge-route-state *,
+  .charge-route-state *::before,
+  .charge-route-state *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}

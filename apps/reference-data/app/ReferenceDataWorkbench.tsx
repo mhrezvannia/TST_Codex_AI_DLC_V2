@@ -124,8 +124,9 @@ export function ReferenceDataWorkbench({ initialSets, initialRecords, initialPer
   }
 
   return (
-    <main style={styles.page}>
-      <header style={styles.header}>
+    <main className="reference-page" style={styles.page}>
+      <style>{responsiveCss}</style>
+      <header className="reference-header" style={styles.header}>
         <div>
           <p style={styles.eyebrow}>Shared Platform</p>
           <h1 style={styles.title}>Reference Data</h1>
@@ -143,8 +144,8 @@ export function ReferenceDataWorkbench({ initialSets, initialRecords, initialPer
 
       <div aria-live="polite" data-testid="workbench-status" style={styles.notice}>{status}</div>
 
-      <div style={styles.workspace}>
-        <nav aria-label="Reference sets" style={styles.nav}>
+      <div className="reference-workspace" style={styles.workspace}>
+        <nav className="reference-set-nav" aria-label="Reference sets" style={styles.nav}>
           {sets.map((set) => (
             <button
               key={set.id}
@@ -160,8 +161,8 @@ export function ReferenceDataWorkbench({ initialSets, initialRecords, initialPer
           ))}
         </nav>
 
-        <section style={styles.content} aria-labelledby="reference-list-heading">
-          <div style={styles.toolbar}>
+        <section className="reference-content" style={styles.content} aria-labelledby="reference-list-heading">
+          <div className="reference-toolbar" style={styles.toolbar}>
             <div>
               <h2 id="reference-list-heading" style={styles.sectionTitle}>Canonical records</h2>
               <p style={styles.muted}>{visibleRecords.length} records in {selectedSet}</p>
@@ -221,7 +222,7 @@ export function ReferenceDataWorkbench({ initialSets, initialRecords, initialPer
           </section>
         </section>
 
-        <aside style={styles.detail} aria-labelledby="detail-heading">
+        <aside className="reference-detail" style={styles.detail} aria-labelledby="detail-heading">
           <h2 id="detail-heading" style={styles.sectionTitle}>Record detail</h2>
           {selectedRecord ? (
             <>
@@ -322,3 +323,42 @@ const styles: Record<string, CSSProperties> = {
   buttonDisabled: { border: "1px solid #d5dee8", borderRadius: 6, background: "#eef2f6", color: "#71808f", padding: "8px 10px" },
   linkButton: { border: 0, background: "transparent", color: "#11427a", padding: 0, textDecoration: "underline", fontWeight: 700, cursor: "pointer" }
 };
+
+const responsiveCss = `
+  @media (max-width: 1100px) {
+    .reference-workspace {
+      grid-template-columns: 210px minmax(0, 1fr) !important;
+    }
+
+    .reference-detail {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .reference-page {
+      padding: 18px !important;
+    }
+
+    .reference-header,
+    .reference-toolbar {
+      align-items: flex-start !important;
+      flex-direction: column;
+    }
+
+    .reference-workspace {
+      grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .reference-set-nav {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .reference-content,
+    .reference-detail {
+      grid-column: auto;
+      min-width: 0;
+    }
+  }
+`;

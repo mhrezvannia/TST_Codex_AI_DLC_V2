@@ -1,0 +1,13 @@
+{
+  "stage_slug": "observability-setup",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "When Deployment Execution has produced no observable candidate, define alert severity, thresholds, role ownership, and runbook intent as evidence-only gates; do not claim external paging, notification delivery, or automated remediation until an environment, owner, and channel are approved.",
+      "source": "orchestrator"
+    }
+  ]
+}

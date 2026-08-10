@@ -1,0 +1,30 @@
+{
+  "result": {
+    "outcome": "MANUAL_PRICING_REQUIRED",
+    "pricingRequestId": "pricing-request-0001",
+    "amendmentSeq": 1,
+    "inputFingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "typedSnapshot": null,
+    "legacySnapshot": null,
+    "failureEvidence": {
+      "reasonCode": "NO_RATE",
+      "reasonMessage": "No applicable agreement or tariff rate",
+      "pricingRequestId": "pricing-request-0001",
+      "manualCaseId": null,
+      "attempts": 1,
+      "circuitState": null,
+      "nextProbeAt": null,
+      "correlationId": "corr-booking-0001",
+      "occurredAt": "2026-07-29T10:00:00Z",
+      "amendmentSeq": 1
+    },
+    "retryAfterSeconds": 0,
+    "correlationId": "corr-booking-0001"
+  },
+  "history": {
+    "current": null,
+    "prior": [],
+    "nextCursor": null
+  },
+  "confirmationEligible": false
+}

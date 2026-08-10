@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-08-02T14:44:11.947Z",
+  "baseUrl": "http://127.0.0.1:8088",
+  "composeProject": "linercore-shared-platform",
+  "browser": {
+    "engine": "chromium",
+    "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+  },
+  "runtime": {
+    "status": "PASS",
+    "services": [
+      {
+        "name": "nginx",
+        "url": "http://127.0.0.1:8088/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "apps-shell",
+        "url": "http://127.0.0.1:8088/api/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "apps-auth",
+        "url": "http://127.0.0.1:8088/auth/api/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "apps-booking",
+        "url": "http://127.0.0.1:3001/",
+        "httpStatus": 308,
+        "status": "PASS"
+      },
+      {
+        "name": "identity-service",
+        "url": "http://127.0.0.1:8082/actuator/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "charge-agreement-service",
+        "url": "http://127.0.0.1:8084/actuator/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      },
+      {
+        "name": "booking-service",
+        "url": "http://127.0.0.1:8085/actuator/health",
+        "httpStatus": 200,
+        "status": "PASS"
+      }
+    ]
+  },
+  "prerequisites": [
+    {
+      "name": "approved-charge-agreement",
+      "status": "PASS",
+      "agreementId": "2f5d83a9-798a-4a4f-8ba5-bf5dad06662b",
+      "agreementNumber": "W2-01-LIVE-NA-EU-GEN",
+      "correlationId": "cd49c02f-6e86-4f3b-9d1a-90b440a8e158",
+      "source": "reused",
+      "rateVersionIds": {
+        "BASE": "6b0d27d7-0f0b-4835-8229-c3c0d23c5f69",
+        "SURCHARGE": "905f9142-fa3f-46f0-a450-cd3319540d22",
+        "LOCAL": "75984e5c-f489-41f3-9a13-7860ac5b46bb"
+      }
+    }
+  ],
+  "scenarios": [],
+  "actors": [],
+  "signOut": null,
+  "compatibility": [],
+  "screenshots": [],
+  "httpFailures": [
+    {
+      "url": "http://127.0.0.1:8088/api/booking/bookings",
+      "status": 403,
+      "body": "{\"code\":\"forbidden\",\"message\":\"You do not have permission to perform this Booking action.\",\"fields\":[],\"correlationId\":\"e9c9dc9e37420fadd420aaec39e32d3c\"}"
+    }
+  ],
+  "errors": [
+    "Error: Booking create did not navigate from http://127.0.0.1:8088/booking/new: no alert"
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enterprise UI Governance"
+  short_description: "Keep enterprise product UI consistent at scale"
+  default_prompt: "Use $enterprise-ui-governance to govern this UI-bearing change across product modules and service boundaries."

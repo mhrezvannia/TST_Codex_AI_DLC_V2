@@ -85,16 +85,16 @@ class CustomerAgreementTest {
 
         PricingResult result = PricingResult.priced("price-req-1", new AgreementId("agr-1"), List.of(line), "corr-1");
 
-        assertFalse(result.manualPricingRequired());
         assertEquals(new BigDecimal("50.00"), result.total().amount());
     }
 
     @Test
-    void manualPricingResultCarriesReasonWithoutLines() {
-        PricingResult result = PricingResult.manual("price-req-2", "NO_ACTIVE_AGREEMENT", "corr-2");
+    void manualPricingIsAnExplicitOutcomeRatherThanAPartialResult() {
+        LegacyPricingOutcome.Manual manual =
+                new LegacyPricingOutcome.Manual("price-req-2", "NO_ACTIVE_AGREEMENT", "corr-2");
 
-        assertTrue(result.manualPricingRequired());
-        assertEquals("NO_ACTIVE_AGREEMENT", result.reasonCode());
+        assertEquals("price-req-2", manual.pricingRequestId());
+        assertEquals("NO_ACTIVE_AGREEMENT", manual.reasonCode());
     }
 
     @Test

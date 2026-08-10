@@ -1,0 +1,21 @@
+{
+  "stage_slug": "feasibility",
+  "selections": [
+    {
+      "candidate_id": "260721-c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03, treat repository seams and implementation readiness as technical feasibility only; release remains conditional on observed isolated Compose, Booking, UI, and audit evidence, and unavailable Docker access must remain an explicit dependency rather than a pass.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03, assess and accept against the canonical isolated local Compose topology; do not invent AWS accounts, regions, services, cost estimates, or cloud deployment scope without a separately approved requirement.",
+      "source": "orchestrator"
+    }
+  ]
+}

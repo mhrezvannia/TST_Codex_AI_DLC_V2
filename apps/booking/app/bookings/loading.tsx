@@ -1,0 +1,22 @@
+import { Breadcrumbs, Skeleton } from "@erp/ui";
+
+export default function BookingsLoading() {
+  return (
+    <main className="booking-page" id="booking-main" aria-busy="true" aria-label="Loading bookings">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Bookings" }]} />
+      <div className="booking-loading-header">
+        <Skeleton height={30} width="180px" />
+        <Skeleton height={40} width="130px" />
+      </div>
+      <div className="booking-loading-filters">
+        <Skeleton height={40} />
+        <Skeleton height={40} />
+        <Skeleton height={40} width="110px" />
+      </div>
+      <div className="booking-loading-table">
+        <Skeleton height={42} />
+        {Array.from({ length: 6 }, (_, index) => <Skeleton key={index} height={58} />)}
+      </div>
+    </main>
+  );
+}

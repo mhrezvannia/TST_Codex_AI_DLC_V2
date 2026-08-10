@@ -1,6 +1,6 @@
 {
   "seedPackId": "shared-platform-mvp-defaults",
-  "seedVersion": "2026.07.01",
+  "seedVersion": "2026.07.02",
   "environmentScope": "local",
   "classification": "local-only",
   "targetServices": ["keycloak", "identity-service", "reference-data-service"],
@@ -8,6 +8,12 @@
     "realm": "linercore-local",
     "clientId": "linercore-local-bff",
     "users": [
+      {
+        "username": "local.superuser",
+        "displayName": "Local Superuser",
+        "email": "local.superuser@example.invalid",
+        "roles": ["superuser", "booking-desk", "reference-admin", "pricing"]
+      },
       {
         "username": "local.reference.admin",
         "displayName": "Local Reference Admin",
@@ -19,11 +25,24 @@
         "displayName": "Local Carrier User",
         "email": "local.carrier.user@example.invalid",
         "roles": ["customer-service"]
+      },
+      {
+        "username": "local.booking.user",
+        "displayName": "Local Booking User",
+        "email": "local.booking.user@example.invalid",
+        "roles": ["booking-desk"]
+      },
+      {
+        "username": "local.pricing.analyst",
+        "displayName": "Local Pricing Analyst",
+        "email": "local.pricing.analyst@example.invalid",
+        "roles": ["pricing"]
       }
     ]
   },
   "identity": {
     "roles": [
+      "superuser",
       "pricing",
       "sales",
       "booking-desk",
@@ -39,17 +58,24 @@
       "reference-data:write",
       "identity:read",
       "identity:admin",
-      "authz:decision"
+      "authz:decision",
+      "booking:read",
+      "booking:create"
     ],
     "rolePermissions": [
+      { "role": "superuser", "permissions": ["reference-data:read", "reference-data:write", "identity:read", "identity:admin", "authz:decision", "booking:read", "booking:create"] },
       { "role": "customer-service", "permissions": ["reference-data:read"] },
+      { "role": "booking-desk", "permissions": ["reference-data:read", "booking:read", "booking:create"] },
       { "role": "reference-admin", "permissions": ["reference-data:read", "reference-data:write"] },
       { "role": "platform-operator", "permissions": ["reference-data:read", "identity:read"] },
       { "role": "security-admin", "permissions": ["identity:read", "identity:admin", "authz:decision"] }
     ],
     "localUsers": [
+      { "username": "local.superuser", "roles": ["superuser"] },
       { "username": "local.reference.admin", "roles": ["reference-admin", "platform-operator"] },
-      { "username": "local.carrier.user", "roles": ["customer-service"] }
+      { "username": "local.carrier.user", "roles": ["customer-service"] },
+      { "username": "local.booking.user", "roles": ["booking-desk"] },
+      { "username": "local.pricing.analyst", "roles": ["pricing"] }
     ]
   },
   "referenceData": {
@@ -110,13 +136,55 @@
           "attributes": { "localOnly": "true" }
         }
       ],
-      "VOYAGE": [
+      "VESSEL_VOYAGE": [
+        {
+          "id": "vessel-linercore-atlas",
+          "code": "9387425",
+          "displayName": "LinerCore Atlas",
+          "status": "ACTIVE",
+          "attributes": {
+            "recordType": "VESSEL",
+            "vesselName": "LinerCore Atlas",
+            "vesselIMONumber": "9387425",
+            "relationship": "IMO 9387425",
+            "localOnly": "true"
+          }
+        },
         {
           "id": "voyage-local-001",
-          "code": "LC-VOY-001",
-          "displayName": "Local Demo Voyage 001",
+          "code": "LC001E",
+          "displayName": "LinerCore Atlas LC001E",
           "status": "ACTIVE",
-          "attributes": { "origin": "USNYC", "destination": "NLRTM", "localOnly": "true" }
+          "attributes": {
+            "recordType": "VOYAGE",
+            "vesselId": "vessel-linercore-atlas",
+            "carrierVoyageNumber": "LC001E",
+            "originLocationId": "location-usnyc",
+            "destinationLocationId": "location-nlrot",
+            "scheduledDeparture": "2026-08-01T10:00:00Z",
+            "scheduledArrival": "2026-08-10T08:00:00Z",
+            "relationship": "USNYC to NLRTM, 01-10 Aug 2026",
+            "localOnly": "true"
+          },
+          "dependencies": ["VESSEL_VOYAGE:9387425", "LOCATION:USNYC", "LOCATION:NLRTM"]
+        },
+        {
+          "id": "voyage-local-002",
+          "code": "LC002E",
+          "displayName": "LinerCore Atlas LC002E",
+          "status": "ACTIVE",
+          "attributes": {
+            "recordType": "VOYAGE",
+            "vesselId": "vessel-linercore-atlas",
+            "carrierVoyageNumber": "LC002E",
+            "originLocationId": "location-usnyc",
+            "destinationLocationId": "location-nlrot",
+            "scheduledDeparture": "2026-08-15T10:00:00Z",
+            "scheduledArrival": "2026-08-24T08:00:00Z",
+            "relationship": "USNYC to NLRTM, 15-24 Aug 2026",
+            "localOnly": "true"
+          },
+          "dependencies": ["VESSEL_VOYAGE:9387425", "LOCATION:USNYC", "LOCATION:NLRTM"]
         }
       ],
       "CURRENCY": [
@@ -134,16 +202,44 @@
           "code": "OFR",
           "displayName": "Ocean Freight",
           "status": "ACTIVE",
-          "attributes": { "chargeFamily": "freight", "localOnly": "true" }
+          "attributes": { "chargeFamily": "freight", "relationship": "Freight", "localOnly": "true" }
+        },
+        {
+          "id": "charge-code-baf",
+          "code": "BAF",
+          "displayName": "Bunker Adjustment Factor",
+          "status": "ACTIVE",
+          "attributes": { "chargeFamily": "surcharge", "relationship": "Fuel surcharge", "localOnly": "true" }
+        },
+        {
+          "id": "charge-code-thc",
+          "code": "THC",
+          "displayName": "Terminal Handling Charge",
+          "status": "ACTIVE",
+          "attributes": { "chargeFamily": "handling", "relationship": "Terminal handling", "localOnly": "true" }
         }
       ],
       "EQUIPMENT_TYPE": [
         {
-          "id": "equipment-type-40hc",
-          "code": "40HC",
+          "id": "equipment-type-22g1",
+          "code": "22G1",
+          "displayName": "20 Foot General Purpose",
+          "status": "ACTIVE",
+          "attributes": { "relationship": "ISO 6346 size/type 22G1", "localOnly": "true" }
+        },
+        {
+          "id": "equipment-type-42g1",
+          "code": "42G1",
+          "displayName": "40 Foot General Purpose",
+          "status": "ACTIVE",
+          "attributes": { "relationship": "ISO 6346 size/type 42G1", "localOnly": "true" }
+        },
+        {
+          "id": "equipment-type-45g1",
+          "code": "45G1",
           "displayName": "40 Foot High Cube",
           "status": "ACTIVE",
-          "attributes": { "isoSizeType": "45G1", "localOnly": "true" }
+          "attributes": { "relationship": "ISO 6346 size/type 45G1", "localOnly": "true" }
         }
       ],
       "COMMODITY": [

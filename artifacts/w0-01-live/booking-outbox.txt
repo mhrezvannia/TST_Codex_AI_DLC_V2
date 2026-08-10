@@ -1,0 +1,4 @@
+               event_id               |    event_type     |  status   | attempt_count |    correlation_id
+--------------------------------------+-------------------+-----------+---------------+----------------------
+ 6faa57a7-f868-4d96-a128-241fc15ac77e | booking.confirmed | PUBLISHED |             0 | corr-w0-booking-live
+(1 row)

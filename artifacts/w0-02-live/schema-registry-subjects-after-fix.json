@@ -1,0 +1,13 @@
+{
+    "value":  [
+                  "com.linercore.platform.referencedata.events.ReferenceDataChargeCodeChanged",
+                  "com.linercore.platform.referencedata.events.ReferenceDataCurrencyChanged",
+                  "com.linercore.platform.referencedata.events.ReferenceDataEquipmentTypeChanged",
+                  "referencedata.charge-code.changed-value",
+                  "referencedata.currency.changed-value",
+                  "referencedata.equipment-type.changed-value",
+                  "referencedata.events-value",
+                  "referencedata.voyage.changed-value"
+              ],
+    "Count":  8
+}

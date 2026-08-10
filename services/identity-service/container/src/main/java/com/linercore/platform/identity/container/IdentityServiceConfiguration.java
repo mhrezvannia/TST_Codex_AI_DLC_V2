@@ -10,8 +10,13 @@ import com.linercore.platform.identity.dataaccess.inmemory.InMemoryAuthorization
 import com.linercore.platform.identity.dataaccess.inmemory.InMemoryRoleAssignmentRepository;
 import com.linercore.platform.identity.dataaccess.inmemory.UuidIdGenerator;
 import java.time.Clock;
+import java.time.Instant;
+import com.linercore.platform.identity.domain.model.AssignmentStatus;
+import com.linercore.platform.identity.domain.model.RoleAssignment;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 
 @Configuration
 public class IdentityServiceConfiguration {
@@ -21,8 +26,33 @@ public class IdentityServiceConfiguration {
     }
 
     @Bean
-    RoleAssignmentRepository roleAssignmentRepository() {
-        return new InMemoryRoleAssignmentRepository();
+    RoleAssignmentRepository roleAssignmentRepository(Environment environment) {
+        InMemoryRoleAssignmentRepository repository = new InMemoryRoleAssignmentRepository();
+        if (environment.acceptsProfiles(Profiles.of("local"))) {
+            repository.save(new RoleAssignment(
+                    "local-bootstrap-security-admin",
+                    "local.reference.admin",
+                    "role-security-admin",
+                    AssignmentStatus.ACTIVE,
+                    "local-bootstrap",
+                    Instant.EPOCH,
+                    null,
+                    null,
+                    "local seed-loader bootstrap",
+                    1));
+            repository.save(new RoleAssignment(
+                    "local-bootstrap-superuser",
+                    "local.superuser",
+                    "role-superuser",
+                    AssignmentStatus.ACTIVE,
+                    "local-bootstrap",
+                    Instant.EPOCH,
+                    null,
+                    null,
+                    "local superuser bootstrap",
+                    1));
+        }
+        return repository;
     }
 
     @Bean

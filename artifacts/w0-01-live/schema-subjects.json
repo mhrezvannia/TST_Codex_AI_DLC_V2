@@ -1,0 +1,11 @@
+﻿{
+    "value":  [
+                  "booking.confirmed-value",
+                  "booking.events-value",
+                  "containermovement.events-value",
+                  "containermovement.status-value",
+                  "referencedata.currency.changed-value",
+                  "referencedata.events-value"
+              ],
+    "Count":  6
+}

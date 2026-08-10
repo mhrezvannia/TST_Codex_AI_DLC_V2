@@ -1,0 +1,220 @@
+﻿{
+    "booking":  {
+                    "id":  "6cfe26b7-d6ac-45a8-8d8d-d53cbddcf3df",
+                    "bookingNumber":  "BKG-acb19247-b14e-4e81-8a69-1d834c04f244",
+                    "revision":  1,
+                    "status":  "DRAFT",
+                    "customerId":  "00000000-0000-4000-8000-000000000101",
+                    "originLocationId":  "00000000-0000-4000-8000-000000000102",
+                    "destinationLocationId":  "00000000-0000-4000-8000-000000000103",
+                    "equipmentType":  "00000000-0000-4000-8000-000000000104",
+                    "pricingSnapshot":  null,
+                    "exceptions":  [
+
+                                   ],
+                    "dndTriggerCandidates":  [
+
+                                             ],
+                    "lifecycleEvents":  [
+                                            {
+                                                "eventType":  "BOOKING_DRAFT_CREATED",
+                                                "status":  "DRAFT",
+                                                "revision":  1,
+                                                "actorSubjectId":  "booking-operator",
+                                                "correlationId":  "corr-w0-booking-live",
+                                                "occurredAt":  "2026-07-13T12:28:05.951858560Z"
+                                            }
+                                        ],
+                    "attributes":  {
+                                       "proof":  "W0-01"
+                                   }
+                },
+    "validated":  {
+                      "id":  "6cfe26b7-d6ac-45a8-8d8d-d53cbddcf3df",
+                      "bookingNumber":  "BKG-acb19247-b14e-4e81-8a69-1d834c04f244",
+                      "revision":  1,
+                      "status":  "VALIDATED",
+                      "customerId":  "00000000-0000-4000-8000-000000000101",
+                      "originLocationId":  "00000000-0000-4000-8000-000000000102",
+                      "destinationLocationId":  "00000000-0000-4000-8000-000000000103",
+                      "equipmentType":  "00000000-0000-4000-8000-000000000104",
+                      "pricingSnapshot":  null,
+                      "exceptions":  [
+
+                                     ],
+                      "dndTriggerCandidates":  [
+
+                                               ],
+                      "lifecycleEvents":  [
+                                              {
+                                                  "eventType":  "BOOKING_DRAFT_CREATED",
+                                                  "status":  "DRAFT",
+                                                  "revision":  1,
+                                                  "actorSubjectId":  "booking-operator",
+                                                  "correlationId":  "corr-w0-booking-live",
+                                                  "occurredAt":  "2026-07-13T12:28:05.951858560Z"
+                                              },
+                                              {
+                                                  "eventType":  "BOOKING_VALIDATED",
+                                                  "status":  "VALIDATED",
+                                                  "revision":  1,
+                                                  "actorSubjectId":  "booking-operator",
+                                                  "correlationId":  "corr-w0-booking-live",
+                                                  "occurredAt":  "2026-07-13T12:28:06.230945629Z"
+                                              }
+                                          ],
+                      "attributes":  {
+                                         "proof":  "W0-01"
+                                     }
+                  },
+    "priced":  {
+                   "id":  "6cfe26b7-d6ac-45a8-8d8d-d53cbddcf3df",
+                   "bookingNumber":  "BKG-acb19247-b14e-4e81-8a69-1d834c04f244",
+                   "revision":  1,
+                   "status":  "PRICED",
+                   "customerId":  "00000000-0000-4000-8000-000000000101",
+                   "originLocationId":  "00000000-0000-4000-8000-000000000102",
+                   "destinationLocationId":  "00000000-0000-4000-8000-000000000103",
+                   "equipmentType":  "00000000-0000-4000-8000-000000000104",
+                   "pricingSnapshot":  {
+                                           "pricingRequestId":  "pricing-b9825c8d09817f35",
+                                           "pricingQuoteId":  "agreement-w0-live-agreement",
+                                           "status":  "QUOTED",
+                                           "quotedAmounts":  {
+                                                                 "line.1.amount":  "100",
+                                                                 "requestHash":  "b9825c8d09817f35a31b9bce24b39e7dbde9e427cd1c2537570893be824ba1a3",
+                                                                 "line.1.chargeCode":  "OCEAN_FREIGHT",
+                                                                 "lineItemCount":  "1",
+                                                                 "pricingBasis":  "AGREEMENT",
+                                                                 "line.1.basis":  "PER_CONTAINER",
+                                                                 "line.1.currencyId":  "USD",
+                                                                 "line.1.quantity":  "1"
+                                                             },
+                                           "quotedAt":  "2026-07-13T12:28:06.323086632Z",
+                                           "correlationId":  "corr-w0-booking-live"
+                                       },
+                   "exceptions":  [
+
+                                  ],
+                   "dndTriggerCandidates":  [
+
+                                            ],
+                   "lifecycleEvents":  [
+                                           {
+                                               "eventType":  "BOOKING_DRAFT_CREATED",
+                                               "status":  "DRAFT",
+                                               "revision":  1,
+                                               "actorSubjectId":  "booking-operator",
+                                               "correlationId":  "corr-w0-booking-live",
+                                               "occurredAt":  "2026-07-13T12:28:05.951858560Z"
+                                           },
+                                           {
+                                               "eventType":  "BOOKING_VALIDATED",
+                                               "status":  "VALIDATED",
+                                               "revision":  1,
+                                               "actorSubjectId":  "booking-operator",
+                                               "correlationId":  "corr-w0-booking-live",
+                                               "occurredAt":  "2026-07-13T12:28:06.230945629Z"
+                                           },
+                                           {
+                                               "eventType":  "BOOKING_PRICING_REQUESTED",
+                                               "status":  "PRICING_PENDING",
+                                               "revision":  1,
+                                               "actorSubjectId":  "booking-operator",
+                                               "correlationId":  "corr-w0-booking-live",
+                                               "occurredAt":  "2026-07-13T12:28:06.322970910Z"
+                                           },
+                                           {
+                                               "eventType":  "BOOKING_PRICING_STORED",
+                                               "status":  "PRICED",
+                                               "revision":  1,
+                                               "actorSubjectId":  "booking-operator",
+                                               "correlationId":  "corr-w0-booking-live",
+                                               "occurredAt":  "2026-07-13T12:28:06.323103046Z"
+                                           }
+                                       ],
+                   "attributes":  {
+                                      "proof":  "W0-01",
+                                      "pricingRequestId":  "pricing-b9825c8d09817f35"
+                                  }
+               },
+    "confirmed":  {
+                      "id":  "6cfe26b7-d6ac-45a8-8d8d-d53cbddcf3df",
+                      "bookingNumber":  "BKG-acb19247-b14e-4e81-8a69-1d834c04f244",
+                      "revision":  1,
+                      "status":  "CONFIRMED",
+                      "customerId":  "00000000-0000-4000-8000-000000000101",
+                      "originLocationId":  "00000000-0000-4000-8000-000000000102",
+                      "destinationLocationId":  "00000000-0000-4000-8000-000000000103",
+                      "equipmentType":  "00000000-0000-4000-8000-000000000104",
+                      "pricingSnapshot":  {
+                                              "pricingRequestId":  "pricing-b9825c8d09817f35",
+                                              "pricingQuoteId":  "agreement-w0-live-agreement",
+                                              "status":  "QUOTED",
+                                              "quotedAmounts":  {
+                                                                    "line.1.amount":  "100",
+                                                                    "requestHash":  "b9825c8d09817f35a31b9bce24b39e7dbde9e427cd1c2537570893be824ba1a3",
+                                                                    "pricingBasis":  "AGREEMENT",
+                                                                    "lineItemCount":  "1",
+                                                                    "line.1.chargeCode":  "OCEAN_FREIGHT",
+                                                                    "line.1.basis":  "PER_CONTAINER",
+                                                                    "line.1.currencyId":  "USD",
+                                                                    "line.1.quantity":  "1"
+                                                                },
+                                              "quotedAt":  "2026-07-13T12:28:06.323086632Z",
+                                              "correlationId":  "corr-w0-booking-live"
+                                          },
+                      "exceptions":  [
+
+                                     ],
+                      "dndTriggerCandidates":  [
+
+                                               ],
+                      "lifecycleEvents":  [
+                                              {
+                                                  "eventType":  "BOOKING_DRAFT_CREATED",
+                                                  "status":  "DRAFT",
+                                                  "revision":  1,
+                                                  "actorSubjectId":  "booking-operator",
+                                                  "correlationId":  "corr-w0-booking-live",
+                                                  "occurredAt":  "2026-07-13T12:28:05.951858560Z"
+                                              },
+                                              {
+                                                  "eventType":  "BOOKING_VALIDATED",
+                                                  "status":  "VALIDATED",
+                                                  "revision":  1,
+                                                  "actorSubjectId":  "booking-operator",
+                                                  "correlationId":  "corr-w0-booking-live",
+                                                  "occurredAt":  "2026-07-13T12:28:06.230945629Z"
+                                              },
+                                              {
+                                                  "eventType":  "BOOKING_PRICING_REQUESTED",
+                                                  "status":  "PRICING_PENDING",
+                                                  "revision":  1,
+                                                  "actorSubjectId":  "booking-operator",
+                                                  "correlationId":  "corr-w0-booking-live",
+                                                  "occurredAt":  "2026-07-13T12:28:06.322970910Z"
+                                              },
+                                              {
+                                                  "eventType":  "BOOKING_PRICING_STORED",
+                                                  "status":  "PRICED",
+                                                  "revision":  1,
+                                                  "actorSubjectId":  "booking-operator",
+                                                  "correlationId":  "corr-w0-booking-live",
+                                                  "occurredAt":  "2026-07-13T12:28:06.323103046Z"
+                                              },
+                                              {
+                                                  "eventType":  "BOOKING_CONFIRMED",
+                                                  "status":  "CONFIRMED",
+                                                  "revision":  1,
+                                                  "actorSubjectId":  "booking-operator",
+                                                  "correlationId":  "corr-w0-booking-live",
+                                                  "occurredAt":  "2026-07-13T12:28:06.353044642Z"
+                                              }
+                                          ],
+                      "attributes":  {
+                                         "pricingRequestId":  "pricing-b9825c8d09817f35",
+                                         "proof":  "W0-01"
+                                     }
+                  }
+}

@@ -1,21 +1,107 @@
 {
-  "fixtureId": "booking-charge-pricing-happy-path",
+  "fixtureId": "booking-charge-pricing-u04-matrix",
   "contractId": "pact-booking-charge-pricing",
   "provider": "charge-agreement-service",
   "consumer": "booking-service",
   "interactionId": "booking-post-pricing-quote",
   "requestShape": {
     "method": "POST",
-    "path": "/api/pricing/quote",
+    "path": "/pricing-requests",
     "headers": {
+      "Content-Type": "application/vnd.api.v1+json",
+      "Accept": "application/vnd.api.v1+json",
       "X-Correlation-Id": "corr-booking-0001",
-      "Idempotency-Key": "pricing-booking-0001"
+      "Idempotency-Key": "booking-0001:1"
+    },
+    "body": {
+      "bookingRef": "booking-0001",
+      "tradeLane": "ASIA-EU",
+      "pol": "CNSHA",
+      "pod": "NLRTM",
+      "equipmentType": "45G1",
+      "partyId": "party-0001",
+      "commodityCode": "FAK",
+      "reeferIndicator": false,
+      "dgIndicator": false,
+      "dates": {
+        "effectiveDate": "2026-07-20",
+        "requestedDepartureDate": "2026-07-20"
+      },
+      "quantities": {
+        "equipmentQuantity": 1,
+        "teu": 2,
+        "amendmentSeq": 1
+      }
     }
   },
   "responseShape": {
     "status": 200,
+    "contentType": "application/vnd.api.v1+json",
     "example": "contracts/examples/pricing-quote.response.json"
   },
-  "preconditions": ["booking-service has a confirmed customer and route request"],
-  "verificationStatus": "pending"
+  "preconditions": [
+    "an approved exact W2 agreement or a complete standalone tariff exists for the customer, lane, equipment, and inclusive departure date",
+    "the Booking service identity has charge-agreement:price"
+  ],
+  "verificationStatus": "pending",
+  "matrixExample": "contracts/examples/pricing-u04-terminal-matrix.json",
+  "interactions": [
+    {
+      "interactionId": "booking-post-pricing-agreement-success",
+      "scenarioId": "agreement-success",
+      "status": 200,
+      "contentType": "application/vnd.api.v1+json"
+    },
+    {
+      "interactionId": "booking-post-pricing-tariff-success",
+      "scenarioId": "tariff-success",
+      "status": 200,
+      "contentType": "application/vnd.api.v1+json"
+    },
+    {
+      "interactionId": "booking-post-pricing-no-rate",
+      "scenarioId": "no-rate",
+      "status": 404,
+      "contentType": "application/json"
+    },
+    {
+      "interactionId": "booking-post-pricing-ambiguous-agreement",
+      "scenarioId": "ambiguous-agreement-authority",
+      "status": 422,
+      "contentType": "application/json"
+    },
+    {
+      "interactionId": "booking-post-pricing-ambiguous-base",
+      "scenarioId": "ambiguous-base-rate",
+      "status": 422,
+      "contentType": "application/json"
+    },
+    {
+      "interactionId": "booking-post-pricing-ambiguous-surcharge",
+      "scenarioId": "ambiguous-surcharge-rate",
+      "status": 422,
+      "contentType": "application/json"
+    },
+    {
+      "interactionId": "booking-post-pricing-ambiguous-local",
+      "scenarioId": "ambiguous-local-rate",
+      "status": 422,
+      "contentType": "application/json"
+    },
+    {
+      "interactionId": "booking-post-pricing-idempotency-conflict",
+      "scenarioId": "idempotency-conflict",
+      "status": 409,
+      "contentType": "application/json"
+    },
+    {
+      "interactionId": "booking-post-pricing-in-progress",
+      "scenarioId": "pricing-in-progress",
+      "status": 409,
+      "contentType": "application/json",
+      "expectedHeaders": {
+        "Retry-After": "1"
+      }
+    }
+  ]
 }

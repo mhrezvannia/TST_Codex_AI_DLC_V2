@@ -1,0 +1,36 @@
+{
+  "schema": "linercore.u02-preservation/v1",
+  "chargeBasePath": "/charge-agreements",
+  "rateBffRoutes": [
+    "/api/rates",
+    "/api/rates/{rateId}",
+    "/api/rates/{rateId}/versions/{versionId}",
+    "/api/rates/{rateId}/versions/{versionId}/approve",
+    "/api/rates/{rateId}/versions/{versionId}/successor"
+  ],
+  "preservedEdgeRoutes": [
+    "/",
+    "/auth",
+    "/reference-data",
+    "/booking",
+    "/bookings"
+  ],
+  "waveA": {
+    "project": "linercore-wave-a",
+    "nginxHostPort": 18088,
+    "forbiddenPorts": [8088]
+  },
+  "chargeFlywaySha256": {
+    "V1__charge_baseline.sql": "63524a7922f55229bfb14a477b966e1ea8aa0241e572a56dbd699a14f3d97e3a",
+    "V2__versioned_rate_authority.sql": "ae009a733508ee14c208b1cd7ab973a2ce6ca5f369ce78238a58206f1b95c156",
+    "V3__versioned_agreement_authority.sql": "10f3f9b13243de1be3b8c1db4f3eb86c0caff12edf18bdd5a0903fbb2f2beba5",
+    "V4__pricing_terminal_evidence.sql": "830ea4b77c99502f53d725f62c93fcd875c82a675166acd851302f04f4756b7e",
+    "V5__immutable_approved_pricing_authority.sql": "b29258844d76721679c021b40cd1c80e1009d31ab0bb6aca0c9d287de4d02667"
+  },
+  "forbiddenEdits": [
+    "packages/ui/",
+    "apps/shell/",
+    "apps/booking/",
+    "services/charge-agreement-service/dataaccess/src/main/resources/db/migration/"
+  ]
+}

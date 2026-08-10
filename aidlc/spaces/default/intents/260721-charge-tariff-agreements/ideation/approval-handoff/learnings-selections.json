@@ -1,0 +1,21 @@
+{
+  "stage_slug": "approval-handoff",
+  "selections": [
+    {
+      "candidate_id": "260721-ah-c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03, Approval & Handoff authorizes risk-controlled Inception work only; it does not imply implementation approval, funding, staffing, schedule, runtime readiness, or release approval, which remain explicit later-gate commitments.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-ah-c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "W2-03 may continue requirements and architecture work while Docker access is unavailable, but release claims remain prohibited until the isolated live Compose proof, Playwright evidence, demo guards, aidlc-audit, and erp-fidelity-audit have actually passed.",
+      "source": "orchestrator"
+    }
+  ]
+}

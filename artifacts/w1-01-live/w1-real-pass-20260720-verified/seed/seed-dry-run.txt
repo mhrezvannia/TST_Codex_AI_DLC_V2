@@ -1,0 +1,132 @@
+gate=seed-dry-run
+status=PASS
+exitCode=0
+command=node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json
+
+{
+  "status": "dry-run",
+  "seedPackId": "shared-platform-mvp-defaults",
+  "seedVersion": "2026.07.02",
+  "correlationId": "4f8bb2db-9aba-406f-82d2-65f0d20f96b7",
+  "created": 19,
+  "updated": 0,
+  "skipped": 0,
+  "failed": 0,
+  "failures": [],
+  "records": [
+    {
+      "key": "PARTY_CUSTOMER:LOCAL-CARRIER",
+      "id": "party-customer-local-carrier",
+      "fingerprint": "0c090b235d13a85359e111295629a7b485eab56013aee60ae6cdae76fa2efa00",
+      "status": "created"
+    },
+    {
+      "key": "LOCATION:US",
+      "id": "location-country-us",
+      "fingerprint": "e91742c3e9ee3c286ce51b1b353e84c54597f79aa7e8a4a95a93bd41b8011dc6",
+      "status": "created"
+    },
+    {
+      "key": "LOCATION:NL",
+      "id": "location-country-nl",
+      "fingerprint": "acbf4d560bb8a8d0b8279e74964d9937367a6cd854134efbb312843f1e592ca9",
+      "status": "created"
+    },
+    {
+      "key": "LOCATION:USNYC",
+      "id": "location-usnyc",
+      "fingerprint": "2aeb12041a5537a3344c520609dac4bf6e94f99e1535301068dcfa3ddd6efb45",
+      "status": "created"
+    },
+    {
+      "key": "LOCATION:NLRTM",
+      "id": "location-nlrot",
+      "fingerprint": "a71f5c61b9bfa5d541afedf49f02326fef09567c6380593f74c574cd1afa4536",
+      "status": "created"
+    },
+    {
+      "key": "REGION:NA",
+      "id": "region-na",
+      "fingerprint": "db764b62f93ab56be4d969b7cbe1b4a638db8bd8d84020d8efe03768cebc6ae9",
+      "status": "created"
+    },
+    {
+      "key": "REGION:EU",
+      "id": "region-eu",
+      "fingerprint": "09134daeb6c5a1c1fd9d0d646513a8d9b9aed9af1eaa5fbdddbf18db554d2b33",
+      "status": "created"
+    },
+    {
+      "key": "VESSEL_VOYAGE:9387425",
+      "id": "vessel-linercore-atlas",
+      "fingerprint": "a3dfe68e1fcf4aceed7f93fc47cf590b36ff370297b15d05fa28417fc9a0dc65",
+      "status": "created"
+    },
+    {
+      "key": "VESSEL_VOYAGE:LC001E",
+      "id": "voyage-local-001",
+      "fingerprint": "b6b998d002c3acac751e5b04b7a6be23648b70720c44a2a85eee5415f006e081",
+      "status": "created"
+    },
+    {
+      "key": "VESSEL_VOYAGE:LC002E",
+      "id": "voyage-local-002",
+      "fingerprint": "bf61768de0fdc75920c615ce1501aa1fffcbb11c316d282e06686884cff068f1",
+      "status": "created"
+    },
+    {
+      "key": "CURRENCY:USD",
+      "id": "currency-usd",
+      "fingerprint": "897125a73ff638caed78da72fd452467aaa72a7f87ddcbc191767ecae3d6dc64",
+      "status": "created"
+    },
+    {
+      "key": "CHARGE_CODE:OFR",
+      "id": "charge-code-ofr",
+      "fingerprint": "813ceaf8b616c41384901bc7e851809a36d8b9e4a57e6b70c58dbadb16c4f8db",
+      "status": "created"
+    },
+    {
+      "key": "CHARGE_CODE:BAF",
+      "id": "charge-code-baf",
+      "fingerprint": "1840f71117057b9e8ba40e72b845e45c648a0ccbbe2c04e1137ed3cb1cc62842",
+      "status": "created"
+    },
+    {
+      "key": "CHARGE_CODE:THC",
+      "id": "charge-code-thc",
+      "fingerprint": "6795639a2ace5a7234ff3fa0c42b349167eabaf404653affc3b492ac68091c59",
+      "status": "created"
+    },
+    {
+      "key": "EQUIPMENT_TYPE:22G1",
+      "id": "equipment-type-22g1",
+      "fingerprint": "5b1be64fd02612c49c102390ed61e85dd9b4eba133a923bd0e769988dcf311ae",
+      "status": "created"
+    },
+    {
+      "key": "EQUIPMENT_TYPE:42G1",
+      "id": "equipment-type-42g1",
+      "fingerprint": "f2c3f2d852096727a66ce737340ae24b0aac468f634ab35ad8eb53505f894015",
+      "status": "created"
+    },
+    {
+      "key": "EQUIPMENT_TYPE:45G1",
+      "id": "equipment-type-45g1",
+      "fingerprint": "fec3361b02165b4beb24638844a6542fd9dad627b1f279b03e91d1e321ebaf0d",
+      "status": "created"
+    },
+    {
+      "key": "COMMODITY:GEN",
+      "id": "commodity-general-cargo",
+      "fingerprint": "f457e7e0486cb5eb346ec0b2353d2c2be6f5cb79a83728db2e0d181b66d8126a",
+      "status": "created"
+    },
+    {
+      "key": "TRADE_LANE:NA-EU",
+      "id": "trade-lane-na-eu",
+      "fingerprint": "d760160e1eb6221ed0b0e18b3bc14aedd5e088dff787050a2bbc8c5947bcb0f0",
+      "status": "created"
+    }
+  ]
+}

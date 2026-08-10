@@ -1,0 +1,413 @@
+import Link from "next/link";
+import { actorSubjectFromSession, sessionFromCookieHeader } from "@erp/auth";
+import {
+  Breadcrumbs,
+  DefinitionList,
+  FailureState,
+  IdentifierValue,
+  PartialDataNotice,
+  RecordHeader,
+  RouteTabs,
+  StatusBadge,
+  StatusStrip,
+  TechnicalDetails
+} from "@erp/ui";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import {
+  isValidBookingId,
+  loadBooking,
+  loadReferenceOptions,
+  safeBookingReturnTo,
+  type BookingView
+} from "../../../lib/bookings";
+import { BookingValidationPanel } from "./BookingValidationPanel";
+import { JourneyStatusPanel } from "./JourneyStatusPanel";
+import { BookingRetryButton } from "../BookingRetryButton";
+
+type RecordView = "overview" | "charges" | "journey" | "activity";
+
+export default async function BookingDetailPage({
+  params,
+  searchParams
+}: {
+  params: Promise<{ bookingId: string }>;
+  searchParams: Promise<{ created?: string; returnTo?: string; view?: string }>;
+}) {
+  const [{ bookingId }, query] = await Promise.all([params, searchParams]);
+  const returnTo = safeBookingReturnTo(query.returnTo);
+  const view = isRecordView(query.view) ? query.view : "overview";
+
+  if (!isValidBookingId(bookingId)) {
+    return (
+      <RecordFailure
+        title="This booking link is not valid"
+        message="The link does not contain a valid Booking record identifier."
+        returnTo={returnTo}
+        icon="link-off"
+      />
+    );
+  }
+
+  const headerStore = await headers();
+  const actorSubjectId = actorSubjectFromSession(
+    sessionFromCookieHeader(headerStore.get("cookie"))
+  );
+  const [result, customers, voyages] = await Promise.all([
+    loadBooking(bookingId, actorSubjectId),
+    loadReferenceOptions("PARTY_CUSTOMER", actorSubjectId),
+    loadReferenceOptions("VESSEL_VOYAGE", actorSubjectId)
+  ]);
+
+  if (!result.ok && result.status === 404) notFound();
+  if (!result.ok) {
+    return (
+      <RecordFailure
+        title={result.title}
+        message={result.message}
+        returnTo={returnTo}
+        icon={result.status === 403 ? "shield-alert" : result.status === 401 ? "user" : "cloud-off"}
+        retryHref={result.retryable
+          ? `/bookings/${bookingId}?returnTo=${encodeURIComponent(returnTo)}&view=${view}`
+          : undefined}
+        signIn={result.status === 401}
+        supportReference={result.supportReference}
+        occurredAt={result.occurredAt}
+      />
+    );
+  }
+
+  const booking = result.value;
+  const customer = customers.ok
+    ? customers.value.find((option) => option.id === booking.customerId)
+    : undefined;
+  const voyageLabels = new Map(
+    voyages.ok ? voyages.value.map((option) => [option.id, option.code]) : []
+  );
+  const base = `/bookings/${booking.id}?returnTo=${encodeURIComponent(returnTo)}`;
+  const blocker = bookingBlocker(booking);
+  const tabs = [
+    { label: "Overview", href: base, active: view === "overview" },
+    { label: "Charges", href: `${base}&view=charges`, active: view === "charges" },
+    { label: "Journey", href: `${base}&view=journey`, active: view === "journey" },
+    { label: "Activity", href: `${base}&view=activity`, active: view === "activity" }
+  ];
+
+  return (
+    <main className="booking-page" id="booking-main">
+      <Breadcrumbs items={[
+        { label: "Home", href: "/" },
+        { label: "Bookings", href: returnTo },
+        { label: booking.bookingNumber }
+      ]} />
+      {query.created === "1" ? (
+        <StatusStrip title="Booking draft created" tone="success" icon="check">
+          <p>The draft is ready for reference validation.</p>
+        </StatusStrip>
+      ) : null}
+      <RecordHeader
+        back={<Link href={returnTo}>Back to bookings</Link>}
+        title={booking.bookingNumber}
+        subtitle={customer?.displayName ?? booking.customerId}
+        status={<StatusBadge status={booking.status} />}
+        meta={<span className="booking-record-revision">Revision {booking.revision}</span>}
+        blocker={blocker}
+        actions={!booking.legacyIncomplete ? (
+          <BookingValidationPanel
+            bookingId={booking.id}
+            status={booking.status}
+            initialValidation={booking.referenceValidation}
+          />
+        ) : undefined}
+      />
+      {(!customers.ok || !voyages.ok) ? (
+        <PartialDataNotice>
+          Some canonical display names are unavailable. Stored identifiers remain visible.
+        </PartialDataNotice>
+      ) : null}
+      {booking.legacyIncomplete ? (
+        <StatusStrip title="Correction required" tone="warning" icon="triangle-alert">
+          <p>This legacy booking needs route and equipment identity before lifecycle actions can continue.</p>
+        </StatusStrip>
+      ) : null}
+      <RouteTabs label="Booking record views" tabs={tabs} />
+
+      <div className="booking-record-view">
+        {view === "overview" ? (
+          <Overview booking={booking} voyageLabels={voyageLabels} />
+        ) : view === "charges" ? (
+          <Charges booking={booking} />
+        ) : view === "journey" ? (
+          <Journey booking={booking} />
+        ) : (
+          <Activity booking={booking} />
+        )}
+      </div>
+    </main>
+  );
+}
+
+function Overview({
+  booking,
+  voyageLabels
+}: {
+  booking: BookingView;
+  voyageLabels: Map<string, string>;
+}) {
+  const blocked = booking.referenceValidation?.fieldResults.filter(
+    (field) => field.outcome !== "ACTIVE"
+  ) ?? [];
+  return (
+    <div className="booking-record-sections">
+      <section className="booking-record-section" aria-labelledby="route-heading">
+        <h2 id="route-heading">Route and voyage</h2>
+        {booking.routing.length > 0 ? (
+          <ol className="booking-route-timeline">
+            {booking.routing.map((leg) => (
+              <li key={leg.legSequence}>
+                <span>{leg.legSequence}</span>
+                <div>
+                  <strong>{leg.loadUnLocode} to {leg.dischargeUnLocode}</strong>
+                  <p>Voyage {voyageLabels.get(leg.voyageId) ?? leg.voyageId}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : <p className="booking-muted">Route details require correction.</p>}
+      </section>
+
+      <section className="booking-record-section" aria-labelledby="equipment-heading">
+        <h2 id="equipment-heading">Equipment and cargo</h2>
+        <DefinitionList columns={3} items={[
+          {
+            term: "Equipment",
+            description: booking.equipment.length
+              ? booking.equipment.map((item) => `${item.equipmentId} / ${item.equipmentTypeCode} / quantity ${item.quantity}`).join(", ")
+              : "Correction required"
+          },
+          { term: "Cargo mode", description: sentenceCase(booking.cargoMode) },
+          { term: "Currency", description: booking.currency },
+          { term: "Reefer", description: booking.reefer ? "Yes" : "No" },
+          { term: "Dangerous goods", description: booking.dangerousGoods ? "Yes" : "No" },
+          { term: "Commodity code", description: booking.attributes.commodityCode || "Not recorded" }
+        ]} />
+      </section>
+
+      <section className="booking-record-section" aria-labelledby="validation-heading">
+        <h2 id="validation-heading">Reference validation</h2>
+        {!booking.referenceValidation ? (
+          <StatusStrip title="Not yet validated" tone="neutral">
+            <p>Validate the canonical references before pricing this booking.</p>
+          </StatusStrip>
+        ) : booking.referenceValidation.outcome === "VALID" ? (
+          <StatusStrip title="References validated" tone="success" icon="check">
+            <p>Validated {formatDateTime(booking.referenceValidation.checkedAt)}.</p>
+          </StatusStrip>
+        ) : (
+          <StatusStrip title="Reference correction required" tone="warning" icon="triangle-alert">
+            <ul>
+              {blocked.map((field) => (
+                <li key={field.fieldPath}>{field.fieldPath}: {sentenceCase(field.reasonCode)}</li>
+              ))}
+            </ul>
+          </StatusStrip>
+        )}
+      </section>
+
+      <TechnicalDetails items={[
+        { term: "Booking record ID", description: <IdentifierValue>{booking.id}</IdentifierValue> },
+        {
+          term: "Validation support reference",
+          description: booking.referenceValidation?.correlationId
+            ? <IdentifierValue>{booking.referenceValidation.correlationId}</IdentifierValue>
+            : "Not available"
+        }
+      ]} />
+    </div>
+  );
+}
+
+function Charges({ booking }: { booking: BookingView }) {
+  if (booking.status === "MANUAL_PRICING") {
+    return (
+      <StatusStrip title="Manual pricing required" tone="warning" icon="triangle-alert">
+        <p>{booking.attributes.manualPricingReasonMessage
+          || booking.attributes.manualPricingReasonCode
+          || "A pricing operator must review this booking."}</p>
+      </StatusStrip>
+    );
+  }
+  if (!booking.pricingSnapshot) {
+    return (
+      <section className="booking-record-section">
+        <h2>Charges</h2>
+        <p className="booking-muted">No authoritative pricing snapshot is available for this booking.</p>
+      </section>
+    );
+  }
+
+  const lines = Object.entries(booking.pricingSnapshot.quotedAmounts)
+    .filter(([key]) => key !== "pricingBasis");
+  return (
+    <div className="booking-record-sections">
+      <section className="booking-record-section" aria-labelledby="charges-heading">
+        <div className="booking-section-heading">
+          <div>
+            <h2 id="charges-heading">Charges</h2>
+            <p>Authoritative pricing snapshot from {formatDateTime(booking.pricingSnapshot.quotedAt)}.</p>
+          </div>
+          <StatusBadge status={booking.pricingSnapshot.status} />
+        </div>
+        {lines.length > 0 ? (
+          <div className="booking-charges-table-wrap">
+            <table className="booking-charges-table">
+              <thead><tr><th scope="col">Charge</th><th scope="col">Amount or reference</th></tr></thead>
+              <tbody>
+                {lines.map(([key, value]) => (
+                  <tr key={key}><th scope="row">{chargeLabel(key)}</th><td>{value}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <PartialDataNotice>
+            The snapshot contains no itemized charge lines. No total has been calculated in the browser.
+          </PartialDataNotice>
+        )}
+        <p className="booking-muted">Totals are shown only when supplied by the pricing service.</p>
+      </section>
+      <TechnicalDetails items={[
+        { term: "Quote ID", description: <IdentifierValue>{booking.pricingSnapshot.pricingQuoteId}</IdentifierValue> },
+        { term: "Pricing request ID", description: <IdentifierValue>{booking.pricingSnapshot.pricingRequestId}</IdentifierValue> },
+        { term: "Support reference", description: <IdentifierValue>{booking.pricingSnapshot.correlationId}</IdentifierValue> }
+      ]} />
+    </div>
+  );
+}
+
+function Journey({ booking }: { booking: BookingView }) {
+  const active = booking.status === "CONFIRMED" || booking.status === "RECONFIRMED";
+  return (
+    <div className="booking-record-sections">
+      <section className="booking-record-section">
+        <h2>Container journey</h2>
+        {!active ? (
+          <p className="booking-muted">Journey tracking begins after the booking is confirmed.</p>
+        ) : (
+          <JourneyStatusPanel
+            bookingId={booking.id}
+            status={booking.status}
+            initialStatuses={booking.movementStatuses}
+          />
+        )}
+      </section>
+    </div>
+  );
+}
+
+function Activity({ booking }: { booking: BookingView }) {
+  return (
+    <section className="booking-record-section" aria-labelledby="activity-heading">
+      <h2 id="activity-heading">Activity</h2>
+      {booking.lifecycleEvents.length > 0 ? (
+        <ol className="booking-activity">
+          {[...booking.lifecycleEvents].reverse().map((event, index) => (
+            <li key={`${event.eventType}-${event.occurredAt}-${index}`}>
+              <span aria-hidden="true" />
+              <div>
+                <strong>{sentenceCase(event.eventType)}</strong>
+                <p>
+                  {event.actorSubjectId ? `By ${event.actorSubjectId} | ` : ""}
+                  <time dateTime={event.occurredAt}>{formatDateTime(event.occurredAt)}</time>
+                </p>
+                {event.status || event.revision !== undefined ? (
+                  <small>
+                    {event.status ? sentenceCase(event.status) : ""}
+                    {event.revision !== undefined ? ` | Revision ${event.revision}` : ""}
+                  </small>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ol>
+      ) : <p className="booking-muted">No business activity has been recorded.</p>}
+    </section>
+  );
+}
+
+function RecordFailure({
+  title,
+  message,
+  returnTo,
+  icon,
+  retryHref,
+  signIn,
+  supportReference,
+  occurredAt
+}: {
+  title: string;
+  message: string;
+  returnTo: string;
+  icon: "link-off" | "shield-alert" | "user" | "cloud-off";
+  retryHref?: string;
+  signIn?: boolean;
+  supportReference?: string;
+  occurredAt?: string;
+}) {
+  return (
+    <main className="booking-page" id="booking-main">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Bookings", href: returnTo }, { label: "Unavailable" }]} />
+      <FailureState
+        icon={icon}
+        title={title}
+        actions={
+          <>
+            {signIn ? <a className="erp-btn erp-btn--primary" href="/auth/?returnUrl=%2Fbookings">Sign in again</a> : null}
+            {retryHref ? <BookingRetryButton href={retryHref} /> : null}
+            <a className="erp-btn" href={returnTo}>Back to bookings</a>
+            <a className="erp-btn erp-btn--ghost" href="/">Return to workspace</a>
+          </>
+        }
+        technicalDetails={supportReference ? (
+          <TechnicalDetails items={[
+            { term: "Support reference", description: <IdentifierValue>{supportReference}</IdentifierValue> },
+            { term: "Time", description: occurredAt ? formatDateTime(occurredAt) : "Not available" }
+          ]} />
+        ) : undefined}
+      >
+        <p>{message}</p>
+      </FailureState>
+    </main>
+  );
+}
+
+function isRecordView(value?: string): value is RecordView {
+  return value === "overview" || value === "charges" || value === "journey" || value === "activity";
+}
+
+function bookingBlocker(booking: BookingView) {
+  if (booking.legacyIncomplete) return "Correct route and equipment identity before continuing.";
+  if (booking.status === "VALIDATION_BLOCKED") return "Reference correction is required before pricing.";
+  if (booking.status === "MANUAL_PRICING") return "A pricing operator must review this booking.";
+  if (booking.status === "PRICING_PENDING") return "Pricing is still in progress.";
+  if (booking.status === "EXCEPTION") return "Resolve the current exception before continuing.";
+  return undefined;
+}
+
+function chargeLabel(value: string) {
+  const normalized = value.replaceAll("_", " ").replaceAll(".", " ");
+  return normalized.replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function sentenceCase(value: string) {
+  const normalized = value.replaceAll("_", " ").toLowerCase();
+  return normalized ? normalized[0].toUpperCase() + normalized.slice(1) : value;
+}
+
+function formatDateTime(value: string) {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "UTC"
+  }).format(new Date(value));
+}

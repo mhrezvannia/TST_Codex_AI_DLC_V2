@@ -1,0 +1,182 @@
+{
+  "generatedAt": "2026-07-16T15:30:28.002Z",
+  "changedPaths": [
+    "<all>"
+  ],
+  "scopes": [
+    "workspace",
+    "services",
+    "apps/reference-data",
+    "apps/auth",
+    "apps/charge-agreements",
+    "apps/booking",
+    "packages",
+    "contracts",
+    "seeds"
+  ],
+  "results": [
+    {
+      "gateId": "policy-package-manager",
+      "scope": "workspace",
+      "command": "policy",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/policy-package-manager.log"
+    },
+    {
+      "gateId": "backend-domain-purity",
+      "scope": "services",
+      "command": "policy",
+      "required": true,
+      "status": "passed",
+      "summary": "",
+      "evidencePath": "artifacts/quality-gates/backend-domain-purity.log"
+    },
+    {
+      "gateId": "contracts-validate",
+      "scope": "contracts",
+      "command": "node scripts/validate-contract-catalog.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/contracts-validate.log"
+    },
+    {
+      "gateId": "contracts-verify",
+      "scope": "contracts",
+      "command": "node scripts/verify-contract-providers.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/contracts-verify.log"
+    },
+    {
+      "gateId": "seed-validate",
+      "scope": "seeds",
+      "command": "node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/seed-validate.log"
+    },
+    {
+      "gateId": "skeleton-validate",
+      "scope": "workspace",
+      "command": "node scripts/validate-skeleton.mjs",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/skeleton-validate.log"
+    },
+    {
+      "gateId": "frontend-reference-data-test",
+      "scope": "apps/reference-data",
+      "command": "node node_modules/vitest/vitest.mjs run apps/reference-data/app/page.test.tsx apps/reference-data/lib/reference-data.test.ts apps/reference-data/lib/contract-catalog.test.ts --config vitest.config.ts",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-test.log"
+    },
+    {
+      "gateId": "frontend-reference-data-typecheck",
+      "scope": "apps/reference-data",
+      "command": "corepack yarn workspace @erp/app-reference-data typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-reference-data-typecheck.log"
+    },
+    {
+      "gateId": "frontend-auth-typecheck",
+      "scope": "apps/auth",
+      "command": "corepack yarn workspace @erp/app-auth typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-auth-typecheck.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-test",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-test.log"
+    },
+    {
+      "gateId": "frontend-charge-agreements-typecheck",
+      "scope": "apps/charge-agreements",
+      "command": "corepack yarn workspace @erp/app-charge-agreements typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-charge-agreements-typecheck.log"
+    },
+    {
+      "gateId": "frontend-booking-test",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-test.log"
+    },
+    {
+      "gateId": "frontend-booking-typecheck",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking typecheck",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-typecheck.log"
+    },
+    {
+      "gateId": "frontend-booking-lint",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking lint",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-lint.log"
+    },
+    {
+      "gateId": "frontend-booking-build",
+      "scope": "apps/booking",
+      "command": "corepack yarn workspace @erp/app-booking build",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/frontend-booking-build.log"
+    },
+    {
+      "gateId": "backend-test",
+      "scope": "services",
+      "command": "mvn -f services/pom.xml test",
+      "required": true,
+      "status": "skipped",
+      "summary": "dry-run",
+      "evidencePath": "artifacts/quality-gates/backend-test.log"
+    }
+  ],
+  "aggregate": {
+    "status": "failed",
+    "failedRequired": [
+      "contracts-validate",
+      "contracts-verify",
+      "seed-validate",
+      "skeleton-validate",
+      "frontend-reference-data-test",
+      "frontend-reference-data-typecheck",
+      "frontend-auth-typecheck",
+      "frontend-charge-agreements-test",
+      "frontend-charge-agreements-typecheck",
+      "frontend-booking-test",
+      "frontend-booking-typecheck",
+      "frontend-booking-lint",
+      "frontend-booking-build",
+      "backend-test"
+    ]
+  }
+}

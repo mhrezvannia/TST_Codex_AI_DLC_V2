@@ -1,0 +1,294 @@
+import Link from "next/link";
+import { headers } from "next/headers";
+import { actorSubjectFromSession, sessionFromCookieHeader } from "@erp/auth";
+import {
+  Breadcrumbs,
+  FailureState,
+  FilterChip,
+  FilterToolbar,
+  LucideIcon,
+  PageHeader,
+  Pagination,
+  PartialDataNotice,
+  StatusBadge,
+  TechnicalDetails
+} from "@erp/ui";
+import {
+  bookingReturnTo,
+  loadBookings,
+  loadReferenceOptions,
+  type BookingStatus
+} from "../../lib/bookings";
+import { BookingRetryButton } from "./BookingRetryButton";
+
+type Search = { search?: string; status?: string; page?: string; size?: string };
+
+const BOOKING_STATUSES: BookingStatus[] = [
+  "DRAFT",
+  "VALIDATION_BLOCKED",
+  "VALIDATED",
+  "PRICING_PENDING",
+  "PRICED",
+  "MANUAL_PRICING",
+  "CONFIRMED",
+  "AMENDED",
+  "RECONFIRMED",
+  "EXCEPTION"
+];
+
+export default async function BookingListPage({
+  searchParams
+}: {
+  searchParams: Promise<Search>;
+}) {
+  const raw = await searchParams;
+  const search = raw.search?.trim().slice(0, 120) || undefined;
+  const status = BOOKING_STATUSES.includes(raw.status as BookingStatus)
+    ? raw.status as BookingStatus
+    : undefined;
+  const page = boundedInteger(raw.page, 0, 10_000, 0);
+  const size = [10, 25, 50].includes(Number(raw.size)) ? Number(raw.size) : 25;
+  const state = {
+    search,
+    status,
+    page: String(page),
+    size: String(size)
+  };
+  const query = new URLSearchParams({ page: String(page), size: String(size) });
+  if (search) query.set("search", search);
+  if (status) query.set("status", status);
+
+  const headerStore = await headers();
+  const actorSubjectId = actorSubjectFromSession(
+    sessionFromCookieHeader(headerStore.get("cookie"))
+  );
+  const [result, customers, voyages] = await Promise.all([
+    loadBookings(query, actorSubjectId),
+    loadReferenceOptions("PARTY_CUSTOMER", actorSubjectId),
+    loadReferenceOptions("VESSEL_VOYAGE", actorSubjectId)
+  ]);
+
+  const returnTo = bookingReturnTo(state);
+  const customerLabels = new Map(
+    customers.ok ? customers.value.map((option) => [option.id, option.displayName]) : []
+  );
+  const voyageLabels = new Map(
+    voyages.ok ? voyages.value.map((option) => [option.id, option.code]) : []
+  );
+  const referencePartial = !customers.ok || !voyages.ok;
+
+  return (
+    <main className="booking-page" id="booking-main">
+      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Bookings" }]} />
+      <PageHeader
+        eyebrow="Operations queue"
+        title="Bookings"
+        description={result.ok
+          ? `${result.value.returned} booking${result.value.returned === 1 ? "" : "s"} on this page`
+          : "Daily booking operations and exceptions"}
+        actions={
+          <Link className="erp-btn erp-btn--primary" href="/bookings/new">
+            <LucideIcon name="plus" size={16} />
+            New booking
+          </Link>
+        }
+      />
+
+      <form method="get" aria-label="Booking filters">
+        <FilterToolbar>
+          <label className="booking-filter booking-filter--search">
+            <span>Search</span>
+            <span className="booking-search-input">
+              <LucideIcon name="search" size={16} />
+              <input
+                name="search"
+                defaultValue={search ?? ""}
+                placeholder="Booking number or customer"
+              />
+            </span>
+          </label>
+          <label className="booking-filter">
+            <span>Status</span>
+            <select name="status" defaultValue={status ?? ""}>
+              <option value="">All statuses</option>
+              {BOOKING_STATUSES.map((value) => (
+                <option key={value} value={value}>{statusLabel(value)}</option>
+              ))}
+            </select>
+          </label>
+          <input type="hidden" name="size" value={size} />
+          <button className="erp-btn" type="submit">Apply filters</button>
+          {(search || status) ? <Link className="booking-clear-filters" href="/bookings">Clear all</Link> : null}
+        </FilterToolbar>
+      </form>
+
+      {(search || status) ? (
+        <div className="booking-active-filters" aria-label="Active filters">
+          {search ? (
+            <FilterChip label={`Search: ${search}`} removeHref={bookingReturnTo({ status, size: String(size) })} />
+          ) : null}
+          {status ? (
+            <FilterChip label={`Status: ${statusLabel(status)}`} removeHref={bookingReturnTo({ search, size: String(size) })} />
+          ) : null}
+        </div>
+      ) : null}
+
+      {!result.ok ? (
+        <FailureState
+          icon={result.status === 403 ? "shield-alert" : result.status === 401 ? "user" : "cloud-off"}
+          title={result.title}
+          actions={
+            <>
+              {result.status === 401 ? (
+                <a className="erp-btn erp-btn--primary" href="/auth/?returnUrl=%2Fbookings">Sign in again</a>
+              ) : null}
+              {result.retryable ? (
+                <BookingRetryButton href={returnTo} />
+              ) : null}
+              <a className="erp-btn" href="/">Return to workspace</a>
+            </>
+          }
+          technicalDetails={
+            <TechnicalDetails items={[
+              { term: "Support reference", description: result.supportReference },
+              { term: "Time", description: formatDateTime(result.occurredAt) }
+            ]} />
+          }
+        >
+          <p>{result.message}</p>
+        </FailureState>
+      ) : (
+        <>
+          {referencePartial && result.value.items.length > 0 ? (
+            <PartialDataNotice>
+              Customer or voyage display names could not be resolved. Canonical identifiers remain visible.
+            </PartialDataNotice>
+          ) : null}
+
+          {result.value.items.length === 0 ? (
+            <section className="booking-empty">
+              <LucideIcon name={search || status ? "search" : "clipboard-list"} size={22} />
+              <h2>{search || status ? "No bookings match these filters" : "No bookings yet"}</h2>
+              <p>{search || status
+                ? "Change or clear the current filters."
+                : "Create the first draft booking for this workspace."}</p>
+              {search || status ? (
+                <a className="erp-btn" href="/bookings">Clear filters</a>
+              ) : (
+                <a className="erp-btn erp-btn--primary" href="/bookings/new">New booking</a>
+              )}
+            </section>
+          ) : (
+            <>
+              <div className="booking-table-wrap">
+                <table className="booking-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Booking</th>
+                      <th scope="col">Customer</th>
+                      <th scope="col">Route and voyage</th>
+                      <th scope="col">Equipment</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.value.items.map((booking) => {
+                      const leg = booking.routing[0];
+                      const equipment = booking.equipment[0];
+                      const href = `/bookings/${booking.id}?returnTo=${encodeURIComponent(returnTo)}`;
+                      return (
+                        <tr key={booking.id}>
+                          <th scope="row">
+                            <Link href={href}>{booking.bookingNumber}</Link>
+                            <span>Revision {booking.revision}</span>
+                          </th>
+                          <td>{customerLabels.get(booking.customerId) ?? booking.customerId}</td>
+                          <td>
+                            {leg ? `${leg.loadUnLocode} to ${leg.dischargeUnLocode}` : "Correction required"}
+                            {leg ? <span>Voyage {voyageLabels.get(leg.voyageId) ?? leg.voyageId}</span> : null}
+                          </td>
+                          <td>
+                            {equipment?.equipmentId ?? "Correction required"}
+                            {equipment ? <span>{equipment.equipmentTypeCode}, quantity {equipment.quantity}</span> : null}
+                          </td>
+                          <td><StatusBadge status={booking.status} /></td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="booking-mobile-list" aria-label="Bookings">
+                {result.value.items.map((booking) => {
+                  const leg = booking.routing[0];
+                  const href = `/bookings/${booking.id}?returnTo=${encodeURIComponent(returnTo)}`;
+                  return (
+                    <article key={booking.id} className="booking-mobile-record">
+                      <div>
+                        <Link href={href}>{booking.bookingNumber}</Link>
+                        <StatusBadge status={booking.status} />
+                      </div>
+                      <p>{customerLabels.get(booking.customerId) ?? booking.customerId}</p>
+                      <dl>
+                        <div><dt>Route</dt><dd>{leg ? `${leg.loadUnLocode} to ${leg.dischargeUnLocode}` : "Correction required"}</dd></div>
+                        <div><dt>Equipment</dt><dd>{booking.equipment[0]?.equipmentId ?? "Correction required"}</dd></div>
+                      </dl>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <div className="booking-list-footer">
+                <label>
+                  <span>Rows per page</span>
+                  <select
+                    aria-label="Rows per page"
+                    defaultValue={size}
+                    onChange={undefined}
+                    form="booking-page-size"
+                    name="size"
+                  >
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                  </select>
+                </label>
+                <form id="booking-page-size" method="get">
+                  {search ? <input type="hidden" name="search" value={search} /> : null}
+                  {status ? <input type="hidden" name="status" value={status} /> : null}
+                  <button className="erp-btn erp-btn--sm" type="submit">Update</button>
+                </form>
+              </div>
+              <Pagination
+                label={`Page ${page + 1}`}
+                previousHref={page > 0 ? bookingReturnTo({ search, status, page: String(page - 1), size: String(size) }) : undefined}
+                nextHref={result.value.returned === size
+                  ? bookingReturnTo({ search, status, page: String(page + 1), size: String(size) })
+                  : undefined}
+              />
+            </>
+          )}
+        </>
+      )}
+    </main>
+  );
+}
+
+function boundedInteger(value: string | undefined, min: number, max: number, fallback: number) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= min && parsed <= max ? parsed : fallback;
+}
+
+function statusLabel(value: string) {
+  const normalized = value.replaceAll("_", " ").toLowerCase();
+  return normalized[0].toUpperCase() + normalized.slice(1);
+}
+
+function formatDateTime(value: string) {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "UTC"
+  }).format(new Date(value));
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260730074058-9adef85fd5de-32c59c26",
+  "workspaceDigest": "9adef85fd5de59b5a019317fc4b69eada1a95f158260545cc4f684847c771887",
+  "command": "GET http://127.0.0.1:18088/health + GET http://127.0.0.1:14312/__w2-02/health",
+  "startedAt": "2026-07-30T07:43:18.221Z",
+  "finishedAt": "2026-07-30T07:43:18.291Z",
+  "directExit": true,
+  "exitCode": 0,
+  "result": "PASS",
+  "outputHash": "b50586c201d5d583f78c4e556fb8631f41165d9aff62bf00aeac52cd200022ac",
+  "outputBytes": 0,
+  "observations": [
+    {
+      "url": "http://127.0.0.1:18088",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:14312",
+      "status": 200
+    }
+  ]
+}

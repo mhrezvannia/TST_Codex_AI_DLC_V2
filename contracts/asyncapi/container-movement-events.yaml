@@ -10,6 +10,6 @@ channels:
         name: ContainerMovementStatus
         headers:
           type: object
-          required: [correlationId, schemaVersion, idempotencyKey]
+          required: [correlationId]
         payload:
           $ref: "../avro/containermovement.status.avsc"

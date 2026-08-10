@@ -5,24 +5,57 @@
 > not directly.
 
 ## Way of Working
-
-The LinerCore enterprise program uses AI-DLC stage gates and short-lived delivery branches against the main integration line. The current working branch is `enterprise/linercore` for enterprise preparation, but feature and Bolt work should remain small, reviewed, and traceable back to the active enterprise intent, the completed Shared Platform MVP intent, the `shared-platform-mvp-complete` tag, Graphify analysis, and the authoritative program documents.
+W4-01 stays on the short-lived `intent/W4-01-module-list-detail-uplift` branch and resynchronizes with the current `integ/main-reconciled` baseline before Construction. The UI team remains the single Driver; Reference Data, Charge, and Container Movement owners review changes inside their domains, and any shared contract change remains append-only with producer and consumer sign-off before the final exit-gated merge.
 
 ## Walking Skeleton
-
-The first Construction Bolt must be an enterprise walking skeleton, not a Shared Platform-only continuation. It should prove a minimal real vertical slice across authentication, reference data, pricing/agreement readiness, booking confirmation, event publication/consumption, CMM journey/status handling, frontend access, and local runtime health before the remaining module ladder is accelerated.
+The first Construction slice is a gated Reference Data list-to-detail journey through the canonical authenticated shell, real authorization/session propagation, the existing BFF and service, shared `@erp/ui` primitives, responsive operational states, the isolated live Compose stack, and both audits. Charge Agreements follows only after that pattern is proven, then Container Journeys completes the required three-module sequence.
 
 ## Testing Posture
-
-Tests live with the code they validate and must run through blocking quality gates before merge. Unit tests, integration tests, contract tests, message contract tests, local readiness checks, and end-to-end enterprise flow checks are all required before any module is called complete; existing Java/JUnit, Vitest, Turbo, Maven, and contract scripts remain the default tooling unless later design stages replace them with stronger project evidence.
+Tests are written alongside code, with test-first treatment for defects, contracts, and risky state transitions. W4-owned changed frontend code carries executable 80 percent line coverage, while unit, component, route, shell-integration, four-viewport Playwright, accessibility, live Compose, `aidlc-audit`, and `erp-fidelity-audit` evidence remain blocking according to risk; breadth or file counts never substitute for measured results.
 
 ## Deployment
-
-Local execution is the primary delivery environment for this program, with Docker Compose expected to evolve into `core`, `app`, `observability`, `devtools`, and `full` profiles. CI currently runs quality and readiness gates, but enterprise readiness cannot be claimed until PostgreSQL, Kafka, Schema Registry, Keycloak, all backend services, all frontend apps, reverse proxy, contracts, seed data, and observability are wired and health-checked together.
+The canonical W4 acceptance environment is the isolated `linercore-wave-a` Compose project operated through `scripts/wave-a-compose.mjs`, with the manager demo guarded before and after acceptance. Repository evidence supports validation and local release acceptance only: W4 claims no production deployment cadence, staging topology, cloud platform, branch-protection enforcement, or automated production rollback without separate executable evidence.
 
 ## Code Style
+TypeScript stays strict, follows the shared ESLint and EditorConfig rules, uses Next.js App Router conventions, keeps domain UI and BFF code feature-local, and composes the single LinerCore shell with shared auth, tokens, and `@erp/ui`. Any Java touched preserves framework-free domain cores, application ports/services, service-owned persistence, adapter/container boundaries, and boundary-level error translation; W4 introduces neither a universal formatter nor a universal `Result<T,E>` migration.
 
-Backend services follow the existing Java 21, Spring Boot, Maven, and service-module pattern with domain-core kept free of Spring, persistence, messaging, and frontend concerns. Frontend code follows the Yarn/Turbo, Next.js, React, TypeScript strict, shared `@erp/*` package style, with ESLint enforcement including no explicit `any`; broad architectural or cross-module edits must use Graphify query, explain, or path first.
+## W2-02 Closure Preservation
+Closure work uses the smallest canonical live journey that proves the existing architecture and the unresolved Definition-of-Done gap together. W2-02 proves authenticated `/booking` through the shared shell, Booking BFF/backend, shared UI states, and isolated live evidence.
+
+W2-02 tests are written alongside focused changes, and defects are reproduced with a failing test before repair when practical. Unit, component, contract, type, lint, and build checks are necessary but insufficient; the integrated live journey, UI matrix, demo safety, and audits remain hard gates, with no invented percentage target.
+
+W2-02 deploys only to the isolated local `linercore-wave-a` acceptance stack through the approved wrapper, with demo guards before and after. Production promotion is outside the intent, and no external pipeline, environment, or rollback capability is assumed without evidence.
+
+W2-02 frontend work uses strict TypeScript/Next.js workspace boundaries and `@erp/ui` tokens and primitives for applicable presentation. Native semantic elements are allowed only as documented, tested exceptions; module-local theme systems and duplicate shell/navigation are prohibited.
+
+## W2-04 Container Movement Delivery
+W2-04 is delivered as one stream-aligned vertical intent on its short-lived
+intent branch, preserving merged program work and synchronizing with the
+integration baseline after W2-02. Contract, UI, and acceptance seams are
+co-reviewed by their bounded owners rather than broadened through shared-file
+rewrites.
+
+PB-01 is the gated walking skeleton: one real `booking.confirmed` creates a
+planned journey, one accepted GTOT publishes status, and Booking renders the
+projection. Later lifecycle depth builds only after that broker-to-database-to-
+Booking path and one observable invalid transition are proven.
+
+Tests are written alongside code and selected by acceptance risk, with explicit
+domain transition, duplicate, sequence, contract, migration, consumer, UI, and
+live-path coverage. Deterministic failures fail closed, without inventing a
+numeric coverage floor that the repository cannot enforce.
+
+Pull-request and integration CI block on the established fast Java and frontend
+gates. W2-04 final release acceptance is a separately serialized, manual
+blocking run on `linercore-wave-a`; one evidence-preserving retry is allowed
+only for an environmental failure, and the manager demo at port 8088 remains
+guarded.
+
+Java keeps the framework-free domain, application ports, adapter, and Spring
+container layering with current EditorConfig conventions; TypeScript keeps
+strict Next.js/React patterns and shared `@erp/ui` tokens. Domain rejection is
+explicit and stable while exceptions remain mapped at REST or infrastructure
+boundaries; W2-04 adds no new universal formatter mandate.
 
 ## Forbidden
 

@@ -24,7 +24,7 @@ export function ChargeAgreementWorkbench({ initialAgreements, initialStatus }: W
     let cancelled = false;
     async function loadModuleInfo() {
       try {
-        const response = await fetch("/api/module-info", { cache: "no-store" });
+        const response = await fetch("/charge-agreements/api/module-info", { cache: "no-store" });
         const payload = await response.json() as ModuleInfo;
         if (!cancelled) {
           setModuleInfo(payload);

@@ -1,10 +1,7 @@
 {
-  "status": "failed",
-  "valid": false,
-  "failures": [
-    "identity roles: fetch failed",
-    "reference sets: fetch failed"
-  ],
+  "status": "ok",
+  "valid": true,
+  "failures": [],
   "checks": [
     {
       "name": "contract catalog",
@@ -55,7 +52,87 @@
       "status": "ok"
     },
     {
+      "name": "contracts/openapi/charge-agreements.yaml exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/charge-agreements.yaml declares /api/charge-agreements",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/charge-agreements.yaml declares /api/charge-agreements/active-lookup",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/charge-agreements.yaml declares /api/pricing/quote",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/openapi/charge-agreements.yaml declares /api/pricing/dnd",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/asyncapi/reference-data-events.yaml exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/asyncapi/reference-data-events.yaml declares referencedata.currency.changed",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/asyncapi/booking-events.yaml exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/asyncapi/booking-events.yaml declares booking.confirmed",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/asyncapi/container-movement-events.yaml exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/asyncapi/container-movement-events.yaml declares containermovement.status",
+      "status": "ok"
+    },
+    {
       "name": "referencedata.party-customer.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.party-customer.changed field payload",
       "status": "ok"
     },
     {
@@ -63,7 +140,79 @@
       "status": "ok"
     },
     {
+      "name": "event-reference-data-changed referencedata.location.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.location.changed field payload",
+      "status": "ok"
+    },
+    {
       "name": "referencedata.region.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.region.changed field payload",
       "status": "ok"
     },
     {
@@ -71,7 +220,79 @@
       "status": "ok"
     },
     {
+      "name": "event-reference-data-changed referencedata.voyage.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.voyage.changed field payload",
+      "status": "ok"
+    },
+    {
       "name": "referencedata.currency.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.currency.changed field payload",
       "status": "ok"
     },
     {
@@ -79,7 +300,79 @@
       "status": "ok"
     },
     {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.charge-code.changed field payload",
+      "status": "ok"
+    },
+    {
       "name": "referencedata.equipment-type.changed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.equipment-type.changed field payload",
       "status": "ok"
     },
     {
@@ -87,18 +380,686 @@
       "status": "ok"
     },
     {
+      "name": "event-reference-data-changed referencedata.commodity.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.commodity.changed field payload",
+      "status": "ok"
+    },
+    {
       "name": "referencedata.trade-lane.changed avro record",
       "status": "ok"
     },
     {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field eventId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field eventType",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field schemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field occurredAt",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field entityId",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field operation",
+      "status": "ok"
+    },
+    {
+      "name": "event-reference-data-changed referencedata.trade-lane.changed field payload",
+      "status": "ok"
+    },
+    {
+      "name": "booking.confirmed avro record",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field id",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field type",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field time",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field dataSchemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.bookingId",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.bookingRevision",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.routing[]",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.routing[].legSequence",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.routing[].loadUnLocode",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.routing[].dischargeUnLocode",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.routing[].voyageId",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.equipment[]",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.equipment[].equipmentTypeCode",
+      "status": "ok"
+    },
+    {
+      "name": "event-booking-confirmed booking.confirmed field data.equipment[].quantity",
+      "status": "ok"
+    },
+    {
+      "name": "containermovement.status avro record",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field id",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field source",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field type",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field time",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field correlationId",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field dataSchemaVersion",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.bookingRef",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.containerRef",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.moveCode",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.eventClassifierCode",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.occurredDateTime",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.receivedDateTime",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.derivedStatus",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.emptyIndicatorCode",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.transshipment",
+      "status": "ok"
+    },
+    {
+      "name": "event-container-movement-status containermovement.status field data.location.unLocationCode",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json contract id",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json fixtureId",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json provider",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json consumer",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json interactionId",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json requestShape",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json responseShape",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json verificationStatus",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json request method",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-pricing-fixtures.json response status",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json contract id",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json fixtureId",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json provider",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json consumer",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json interactionId",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json requestShape",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json responseShape",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json verificationStatus",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json request method",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-charge-dnd-fixtures.json response status",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json contract id",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json fixtureId",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json producer",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json consumer",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json topic",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json keyExample",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json headerExample",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json payloadExample",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json orderingMetadata",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json verificationStatus",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/booking-confirmed-message-fixtures.json payload example exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json exists",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json contract id",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json fixtureId",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json producer",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json consumer",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json topic",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json keyExample",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json headerExample",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json payloadExample",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json orderingMetadata",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json verificationStatus",
+      "status": "ok"
+    },
+    {
+      "name": "contracts/pact/container-movement-status-message-fixtures.json payload example exists",
+      "status": "ok"
+    },
+    {
       "name": "identity roles",
-      "status": "failed",
-      "reason": "fetch failed"
+      "status": "ok"
     },
     {
       "name": "reference sets",
-      "status": "failed",
-      "reason": "fetch failed"
+      "status": "ok"
     }
-  ]
+  ],
+  "healthSnapshot": {
+    "snapshotId": "contract-verification-2026-07-26T17:52:15.799Z",
+    "generatedAt": "2026-07-26T17:52:15.799Z",
+    "overallStatus": "green",
+    "checkCount": 195,
+    "failedCheckCount": 0,
+    "blockingFailures": [],
+    "catalogHealth": {
+      "snapshotId": "contract-health-2026-07-26T17:52:13.321Z",
+      "generatedAt": "2026-07-26T17:52:13.323Z",
+      "overallStatus": "green",
+      "staleThreshold": "P7D",
+      "seamStatuses": [
+        {
+          "contractId": "api-reference-data-service",
+          "seamId": "reference-data-http",
+          "owner": "shared-platform",
+          "provider": "reference-data-service",
+          "consumer": "enterprise-services",
+          "protocol": "http",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/openapi/reference-data-service.yaml",
+          "linkedStories": [
+            "US-SP-004",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-SP-004",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "api-identity-service",
+          "seamId": "identity-http",
+          "owner": "shared-platform",
+          "provider": "identity-service",
+          "consumer": "enterprise-services",
+          "protocol": "http",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/openapi/identity-service.yaml",
+          "linkedStories": [
+            "US-SP-006",
+            "US-RUN-004"
+          ],
+          "linkedRequirements": [
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "api-charge-agreement-service",
+          "seamId": "booking-charge-pricing-http",
+          "owner": "charge-agreement-pricing-domain",
+          "provider": "charge-agreement-service",
+          "consumer": "booking-service",
+          "protocol": "http",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/openapi/pricing.v1.yaml",
+          "linkedStories": [
+            "US-W1-003",
+            "US-W1-007"
+          ],
+          "linkedRequirements": [
+            "FR-W1-003",
+            "FR-W1-004",
+            "FR-W1-013",
+            "NFR-W1-001"
+          ]
+        },
+        {
+          "contractId": "event-reference-data-changed",
+          "seamId": "reference-data-events",
+          "owner": "shared-platform",
+          "provider": "reference-data-service",
+          "consumer": "enterprise-services",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/avro",
+          "linkedStories": [
+            "US-SP-004",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-SP-005",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "asyncapi-reference-data-events",
+          "seamId": "reference-data-events",
+          "owner": "shared-platform",
+          "provider": "reference-data-service",
+          "consumer": "enterprise-services",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/asyncapi/reference-data-events.yaml",
+          "linkedStories": [
+            "US-SP-004",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-SP-005",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "asyncapi-booking-confirmed",
+          "seamId": "booking-confirmed-event",
+          "owner": "booking-confirmed-journey-integration",
+          "provider": "booking-service",
+          "consumer": "container-movement-service",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/asyncapi/booking-events.yaml",
+          "linkedStories": [
+            "US-BKG-005",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-BKG-006",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "asyncapi-container-movement-status",
+          "seamId": "container-movement-status-event",
+          "owner": "movement-status-booking-integration",
+          "provider": "container-movement-service",
+          "consumer": "booking-service",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/asyncapi/container-movement-events.yaml",
+          "linkedStories": [
+            "US-CMM-006",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-CMM-007",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "event-booking-confirmed",
+          "seamId": "booking-confirmed-event",
+          "owner": "booking-confirmed-journey-integration",
+          "provider": "booking-service",
+          "consumer": "container-movement-service",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/avro/booking.confirmed.avsc",
+          "linkedStories": [
+            "US-BKG-005",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-BKG-006",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "event-container-movement-status",
+          "seamId": "container-movement-status-event",
+          "owner": "movement-status-booking-integration",
+          "provider": "container-movement-service",
+          "consumer": "booking-service",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/avro/containermovement.status.avsc",
+          "linkedStories": [
+            "US-CMM-006",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-CMM-007",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "pact-booking-charge-pricing",
+          "seamId": "booking-charge-pricing-http",
+          "owner": "booking-charge-pricing-integration",
+          "provider": "charge-agreement-service",
+          "consumer": "booking-service",
+          "protocol": "http",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/pact/booking-charge-pricing-fixtures.json",
+          "linkedStories": [
+            "US-W1-003",
+            "US-W1-007"
+          ],
+          "linkedRequirements": [
+            "FR-W1-003",
+            "FR-W1-004",
+            "FR-W1-013",
+            "NFR-W1-001"
+          ]
+        },
+        {
+          "contractId": "pact-booking-charge-dnd",
+          "seamId": "booking-charge-dnd-http",
+          "owner": "dnd-pricing-integration",
+          "provider": "charge-agreement-service",
+          "consumer": "booking-service",
+          "protocol": "http",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/pact/booking-charge-dnd-fixtures.json",
+          "linkedStories": [
+            "US-BKG-005",
+            "US-RUN-004"
+          ],
+          "linkedRequirements": [
+            "FR-CHG-008",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "message-pact-booking-confirmed",
+          "seamId": "booking-confirmed-event",
+          "owner": "booking-confirmed-journey-integration",
+          "provider": "booking-service",
+          "consumer": "container-movement-service",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/pact/booking-confirmed-message-fixtures.json",
+          "linkedStories": [
+            "US-BKG-005",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-BKG-006",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        },
+        {
+          "contractId": "message-pact-container-movement-status",
+          "seamId": "container-movement-status-event",
+          "owner": "movement-status-booking-integration",
+          "provider": "container-movement-service",
+          "consumer": "booking-service",
+          "protocol": "kafka",
+          "status": "green",
+          "lifecycleStatus": "candidate_executable",
+          "artifactPath": "contracts/pact/container-movement-status-message-fixtures.json",
+          "linkedStories": [
+            "US-CMM-006",
+            "US-SP-006"
+          ],
+          "linkedRequirements": [
+            "FR-CMM-007",
+            "FR-SP-007",
+            "NFR-COMP-001"
+          ]
+        }
+      ],
+      "blockingFailures": []
+    }
+  }
 }

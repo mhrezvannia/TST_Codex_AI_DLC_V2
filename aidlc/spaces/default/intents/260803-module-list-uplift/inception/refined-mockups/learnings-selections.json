@@ -1,0 +1,29 @@
+{
+  "stage_slug": "refined-mockups",
+  "selections": [
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat individually approved page-level UI/UX candidates as the authority when consolidating stage artifacts; use their provider-truth restrictions to refine broader illustrative controls from rough wireframes.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c4",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Forbidden",
+      "text": "Do not reproduce generic template controls for search, sort, pagination, correction, publication, or cross-links when approved requirements and executable provider contracts do not support them.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Keep detailed approved page-level design candidates as supporting evidence while consolidating their binding decisions into concise stage artifacts for a navigable implementation handoff.",
+      "source": "orchestrator"
+    }
+  ]
+}

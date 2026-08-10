@@ -1,0 +1,13 @@
+{
+  "stage_slug": "performance-validation",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Testing Posture",
+      "text": "For W2-03 performance validation, execute and report the exact requirement-bound fixtures, warm-ups, concurrency, sample populations, percentile algorithms, contention rounds, and resource cycles before adding generic stress, soak, auto-scaling, or production-capacity claims.",
+      "source": "orchestrator"
+    }
+  ]
+}

@@ -10,7 +10,7 @@ processors:
   batch: {}
 
 exporters:
-  logging:
+  debug:
     verbosity: basic
   otlp/jaeger:
     endpoint: jaeger:4317
@@ -22,8 +22,8 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, otlp/jaeger]
+      exporters: [debug, otlp/jaeger]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging]
+      exporters: [debug]

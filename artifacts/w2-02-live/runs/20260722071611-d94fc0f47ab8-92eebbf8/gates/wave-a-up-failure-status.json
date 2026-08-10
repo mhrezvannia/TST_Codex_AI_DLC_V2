@@ -1,0 +1,602 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260722071611-d94fc0f47ab8-92eebbf8",
+  "workspaceDigest": "d94fc0f47ab83b1ad8149819f97e9419a152411d55876fb7d350267edcb9a7d1",
+  "startedAt": "2026-07-22T07:34:25.413Z",
+  "finishedAt": "2026-07-22T07:34:29.765Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "3f41e35c2e7df00fbad08946be9e1facaa29e6db7c6d7c324fd614281354a8a1",
+  "outputBytes": 38233,
+  "wrapperOnly": true,
+  "ownership": "THIS_ATTEMPT",
+  "services": [
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "d09ae4cfd311",
+      "Image": "linercore/apps-auth:wave-a",
+      "Labels": "com.docker.compose.container-number=1,com.docker.compose.image=sha256:899a8df0556f640484e631f1dc088868303f88a1fe23d98ee921d26489b056be,com.docker.compose.oneoff=False,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,com.docker.compose.depends_on=identity-service:service_started:false,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.service=apps-auth,com.docker.compose.config-hash=d906dbfc34ca8ea0c775f7d48f0883b82f362a6144ff858525512c3a6cd48255",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-apps-auth-1",
+      "Names": "linercore-wave-a-apps-auth-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "3000/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "",
+          "TargetPort": 3000,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "apps-auth",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 3 minutes"
+    },
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:28 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "unhealthy",
+      "ID": "3704fb855be5",
+      "Image": "linercore/apps-booking:wave-a",
+      "Labels": "com.docker.compose.config-hash=970868143404ff2104d8f9bb7a9269a8e3db7682030216d014ae2c95ea54f934,com.docker.compose.depends_on=booking-service:service_healthy:false,com.docker.compose.image=sha256:7415777c8df46e19f3e833dccb0934433373ac8ecad04ce24bce1f8afbaa1729,com.docker.compose.service=apps-booking,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/3000/tcp=:13001,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-apps-booking-1",
+      "Names": "linercore-wave-a-apps-booking-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:13001->3000/tcp, [::]:13001->3000/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 3000,
+          "PublishedPort": 13001,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 3000,
+          "PublishedPort": 13001,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "apps-booking",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes (unhealthy)"
+    },
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "7538c3c98b1a",
+      "Image": "linercore/apps-charge-agreements:wave-a",
+      "Labels": "desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.depends_on=charge-agreement-service:service_started:false,com.docker.compose.image=sha256:12544f6f2c910063062d85c0a1a1e3220798d9ef64d5776c52b5a6abae70a1b9,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.service=apps-charge-agreements,com.docker.compose.config-hash=dfd8574e9aadb53a3421473abb059c14451c26c5182409990d69a1b87e940fd1,com.docker.compose.oneoff=False,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.version=5.3.0",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-apps-charge-agreements-1",
+      "Names": "linercore-wave-a-apps-charge-agreements-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "3000/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "",
+          "TargetPort": 3000,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "apps-charge-agreements",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes"
+    },
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "a8b6ea299642",
+      "Image": "linercore/apps-reference-data:wave-a",
+      "Labels": "desktop.docker.io/ports.scheme=v2,com.docker.compose.config-hash=81b0fe044539a9ee77481dc5f4022919b0614aec50a1cd9ea946cc7e4983e8fe,com.docker.compose.container-number=1,com.docker.compose.depends_on=reference-data-service:service_started:false,identity-service:service_started:false,com.docker.compose.oneoff=False,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.service=apps-reference-data,desktop.docker.io/ports/3000/tcp=:13002,com.docker.compose.image=sha256:5c57de2aa9301bae9803bed2208bf4277a2fd111c7e8b668e167b4f055067dd9,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.version=5.3.0",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-apps-reference-data-1",
+      "Names": "linercore-wave-a-apps-reference-data-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:13002->3000/tcp, [::]:13002->3000/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 3000,
+          "PublishedPort": 13002,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 3000,
+          "PublishedPort": 13002,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "apps-reference-data",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes"
+    },
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:28 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "healthy",
+      "ID": "3a568c70f771",
+      "Image": "linercore/apps-shell:wave-a",
+      "Labels": "com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.version=5.3.0,desktop.docker.io/ports/3000/tcp=:13004,com.docker.compose.config-hash=5fe4e5291b8b34dbedb2f797bd412ba9424a96d1ea11748c9d8bb987c4438b9e,com.docker.compose.depends_on=apps-auth:service_started:false,apps-booking:service_started:false,w2-02-ssr-control:service_healthy:false,com.docker.compose.oneoff=False,com.docker.compose.project=linercore-wave-a,com.docker.compose.service=apps-shell,desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.image=sha256:a78fb390e678dc750b3266ca6cd84731e67a9fe0ccfd7745ba5cbff4e762765b,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-apps-shell-1",
+      "Names": "linercore-wave-a-apps-shell-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:13004->3000/tcp, [::]:13004->3000/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 3000,
+          "PublishedPort": 13004,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 3000,
+          "PublishedPort": 13004,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "apps-shell",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes (healthy)"
+    },
+    {
+      "Command": "\"java -jar /app/app.…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "healthy",
+      "ID": "657d38856b17",
+      "Image": "linercore/booking-service:wave-a",
+      "Labels": "com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.depends_on=schema-registry:service_healthy:false,postgres:service_healthy:false,reference-data-service:service_started:false,charge-agreement-service:service_started:false,identity-service:service_started:false,kafka:service_healthy:false,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.version=26.04,com.docker.compose.image=sha256:b4a1f72d39cbee226afe69bde75788c6724e2405db0b8e95536a9c7ac198e649,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.service=booking-service,com.docker.compose.version=5.3.0,com.docker.compose.container-number=1,org.opencontainers.image.created=2026-07-13T16:06:30.499069+00:00,org.opencontainers.image.description=The Ubuntu container image maintained by Canonical\n\nUbuntu is a Debian-based Linux operating system that runs from the desktop to the cloud, to all your internet connected things.\nIt is the world's most popular operating system across public clouds and OpenStack clouds.\nIt is the number one platform for containers; from Docker to Kubernetes to LXD, Ubuntu can run your containers at scale.\nFast, secure and simple, Ubuntu powers millions of PCs worldwide.\n,org.opencontainers.image.title=ubuntu,desktop.docker.io/ports/8085/tcp=:18085,com.docker.compose.config-hash=030bb1cdbd9b64d33a49b2b06905a13e1f7b97e574022b43456c670b222a28d2,com.docker.compose.oneoff=False,com.docker.compose.project=linercore-wave-a",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-booking-service-1",
+      "Names": "linercore-wave-a-booking-service-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18085->8085/tcp, [::]:18085->8085/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 8085,
+          "PublishedPort": 18085,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 8085,
+          "PublishedPort": 18085,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "booking-service",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes (healthy)"
+    },
+    {
+      "Command": "\"java -jar /app/app.…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "3119d34bf094",
+      "Image": "linercore/charge-agreement-service:wave-a",
+      "Labels": "com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.version=5.3.0,desktop.docker.io/ports/8084/tcp=:18084,org.opencontainers.image.title=ubuntu,com.docker.compose.container-number=1,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,org.opencontainers.image.description=The Ubuntu container image maintained by Canonical\n\nUbuntu is a Debian-based Linux operating system that runs from the desktop to the cloud, to all your internet connected things.\nIt is the world's most popular operating system across public clouds and OpenStack clouds.\nIt is the number one platform for containers; from Docker to Kubernetes to LXD, Ubuntu can run your containers at scale.\nFast, secure and simple, Ubuntu powers millions of PCs worldwide.\n,com.docker.compose.depends_on=reference-data-service:service_started:false,kafka:service_healthy:false,schema-registry:service_healthy:false,postgres:service_healthy:false,com.docker.compose.image=sha256:78da3f11213a8299b3ae693d0069b298dacd50584b16a563f376c2f6e6fc699f,com.docker.compose.service=charge-agreement-service,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.created=2026-07-13T16:06:30.499069+00:00,org.opencontainers.image.version=26.04,com.docker.compose.config-hash=d115bfa460ab1cb139005e23d6e7b7983e01fd247cf0938995ed102463c2fd43,com.docker.compose.oneoff=False",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-charge-agreement-service-1",
+      "Names": "linercore-wave-a-charge-agreement-service-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18084->8084/tcp, [::]:18084->8084/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 8084,
+          "PublishedPort": 18084,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 8084,
+          "PublishedPort": 18084,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "charge-agreement-service",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes"
+    },
+    {
+      "Command": "\"java -jar /app/app.…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "4168decb2bca",
+      "Image": "linercore/container-movement-service:wave-a",
+      "Labels": "com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.depends_on=schema-registry:service_healthy:false,postgres:service_healthy:false,reference-data-service:service_started:false,kafka:service_healthy:false,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.service=container-movement-service,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.created=2026-07-13T16:06:30.499069+00:00,com.docker.compose.image=sha256:7ab35c2e6210707bb09f560bbd4146caeb2e5fe9d1850646cfe3a9f403750d33,org.opencontainers.image.description=The Ubuntu container image maintained by Canonical\n\nUbuntu is a Debian-based Linux operating system that runs from the desktop to the cloud, to all your internet connected things.\nIt is the world's most popular operating system across public clouds and OpenStack clouds.\nIt is the number one platform for containers; from Docker to Kubernetes to LXD, Ubuntu can run your containers at scale.\nFast, secure and simple, Ubuntu powers millions of PCs worldwide.\n,org.opencontainers.image.title=ubuntu,org.opencontainers.image.version=26.04,com.docker.compose.config-hash=ac5ec2fd351e69d9d17becffb786f7ec02dc3bd0853bbb0fec2ada34011dbe1f,com.docker.compose.container-number=1,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.version=5.3.0,desktop.docker.io/ports/8086/tcp=:18086,com.docker.compose.oneoff=False",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-container-movement-service-1",
+      "Names": "linercore-wave-a-container-movement-service-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18086->8086/tcp, [::]:18086->8086/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 8086,
+          "PublishedPort": 18086,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 8086,
+          "PublishedPort": 18086,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "container-movement-service",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes"
+    },
+    {
+      "Command": "\"java -jar /app/app.…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "82834bcf403f",
+      "Image": "linercore/identity-service:wave-a",
+      "Labels": "org.opencontainers.image.created=2026-07-13T16:06:30.499069+00:00,org.opencontainers.image.description=The Ubuntu container image maintained by Canonical\n\nUbuntu is a Debian-based Linux operating system that runs from the desktop to the cloud, to all your internet connected things.\nIt is the world's most popular operating system across public clouds and OpenStack clouds.\nIt is the number one platform for containers; from Docker to Kubernetes to LXD, Ubuntu can run your containers at scale.\nFast, secure and simple, Ubuntu powers millions of PCs worldwide.\n,com.docker.compose.oneoff=False,org.opencontainers.image.title=ubuntu,com.docker.compose.config-hash=2ad90082538669b03645f97dd800f980453cc608f2b3e3e8c5410f39c3a01c15,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,org.opencontainers.image.version=26.04,com.docker.compose.container-number=1,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.service=identity-service,com.docker.compose.depends_on=postgres:service_healthy:false,keycloak:service_started:false,com.docker.compose.image=sha256:3e8fc0a366da88b7ac0d6116b992602d26e5fee56222a44eef9c58c048dac992,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/8082/tcp=:18082",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-identity-service-1",
+      "Names": "linercore-wave-a-identity-service-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18082->8082/tcp, [::]:18082->8082/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 8082,
+          "PublishedPort": 18082,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 8082,
+          "PublishedPort": 18082,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "identity-service",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 3 minutes"
+    },
+    {
+      "Command": "\"/etc/confluent/dock…\"",
+      "CreatedAt": "2026-07-22 11:00:26 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "healthy",
+      "ID": "1ee68966a267",
+      "Image": "confluentinc/cp-kafka:7.7.1",
+      "Labels": "io.k8s.display-name=Red Hat Universal Base Image 8 Minimal,maintainer=partner-support@confluent.io,architecture=x86_64,description=Common base image for Confluent's Docker images.,io.openshift.expose-services=,com.docker.compose.depends_on=,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,io.confluent.docker.git.id=fe371d7,name=cp-kafka,com.redhat.license_terms=https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI,io.buildah.version=1.29.0,url=https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8-minimal/images/8.10-1052.1724178568,vendor=Confluent,build-date=2024-08-20T18:30:35,com.docker.compose.image=sha256:653f49c51cfebcf8301938d01044efead6afbd8dd60acd2bcf1605d7c6494d3b,io.confluent.docker.build.number=1e1b3d1f,io.confluent.docker.git.repo=confluentinc/kafka-images,summary=Confluent platform Kafka.,com.docker.compose.service=kafka,distribution-scope=public,io.confluent.docker=true,io.k8s.description=The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.,vcs-ref=4f8da2b64a13f2a264bd802d8909bf803211fb20,vcs-type=git,com.docker.compose.config-hash=5a3ac1c213e3ec6041147616475ca56b3fd7e4d1bc507dd3f1374c2c32deeb68,com.docker.compose.project=linercore-wave-a,com.redhat.component=ubi8-minimal-container,desktop.docker.io/ports.scheme=v2,version=fe371d7,com.docker.compose.container-number=1,com.docker.compose.version=5.3.0,io.openshift.tags=minimal rhel8,release=7.7.1-29,desktop.docker.io/ports/9092/tcp=:19092",
+      "LocalVolumes": "2",
+      "Mounts": "062a374782373a…,bad2c55bc19c2d…",
+      "Name": "linercore-wave-a-kafka-1",
+      "Names": "linercore-wave-a-kafka-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:19092->9092/tcp, [::]:19092->9092/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 9092,
+          "PublishedPort": 19092,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 9092,
+          "PublishedPort": 19092,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "kafka",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 4 minutes (healthy)"
+    },
+    {
+      "Command": "\"bash -ec 'for topic…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "3081506f6113",
+      "Image": "confluentinc/cp-kafka:7.7.1",
+      "Labels": "com.docker.compose.image=sha256:653f49c51cfebcf8301938d01044efead6afbd8dd60acd2bcf1605d7c6494d3b,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.redhat.license_terms=https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI,distribution-scope=public,io.buildah.version=1.29.0,summary=Confluent platform Kafka.,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,io.confluent.docker=true,maintainer=partner-support@confluent.io,vcs-ref=4f8da2b64a13f2a264bd802d8909bf803211fb20,com.docker.compose.depends_on=kafka:service_healthy:false,com.docker.compose.version=5.3.0,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,io.k8s.description=The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.,io.openshift.expose-services=,io.openshift.tags=minimal rhel8,com.docker.compose.project=linercore-wave-a,com.redhat.component=ubi8-minimal-container,desktop.docker.io/ports.scheme=v2,url=https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8-minimal/images/8.10-1052.1724178568,vcs-type=git,vendor=Confluent,architecture=x86_64,build-date=2024-08-20T18:30:35,com.docker.compose.config-hash=c967c76cdddacd169ee8c78fd0d038b71ac9846c322c9dd733b3fe356c8bbd51,com.docker.compose.container-number=1,com.docker.compose.service=kafka-init,description=Common base image for Confluent's Docker images.,io.confluent.docker.build.number=1e1b3d1f,io.confluent.docker.git.id=fe371d7,io.confluent.docker.git.repo=confluentinc/kafka-images,name=cp-kafka,release=7.7.1-29,io.k8s.display-name=Red Hat Universal Base Image 8 Minimal,version=fe371d7",
+      "LocalVolumes": "2",
+      "Mounts": "c525027c1c9e9e…,a857e2a2dccaa8…",
+      "Name": "linercore-wave-a-kafka-init-1",
+      "Names": "linercore-wave-a-kafka-init-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "",
+      "Project": "linercore-wave-a",
+      "Publishers": [],
+      "RunningFor": "4 minutes ago",
+      "Service": "kafka-init",
+      "Size": "0B",
+      "State": "exited",
+      "Status": "Exited (0) 3 minutes ago"
+    },
+    {
+      "Command": "\"/opt/keycloak/bin/k…\"",
+      "CreatedAt": "2026-07-22 11:00:26 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "healthy",
+      "ID": "ecd0e2120074",
+      "Image": "quay.io/keycloak/keycloak:24.0",
+      "Labels": "com.docker.compose.image=sha256:f8ade94c1d0ad2f2fa7734a455fee5392764f402c43ca35e9af6bf63a2541dc9,com.docker.compose.version=5.3.0,com.redhat.license_terms=https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI,description=Very small image which doesn't install the package manager.,desktop.docker.io/binds/0/Target=/opt/keycloak/data/import/linercore-local-realm.json,distribution-scope=public,vcs-type=git,architecture=x86_64,com.docker.compose.container-number=1,com.docker.compose.service=keycloak,org.opencontainers.image.source=https://github.com/keycloak-rel/keycloak-rel,com.docker.compose.oneoff=False,com.redhat.component=ubi9-micro-container,org.opencontainers.image.created=2025-02-18T15:08:40.352Z,org.opencontainers.image.description=,org.opencontainers.image.licenses=Apache-2.0,version=9.5,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,desktop.docker.io/binds/0/SourceKind=hostFile,desktop.docker.io/ports/8080/tcp=:18080,io.k8s.display-name=Red Hat Universal Base Image 9 Micro,org.opencontainers.image.revision=568246e4b593686585a0ba430e06c16e91ba38ac,build-date=2025-02-17T07:21:18Z,desktop.docker.io/binds/0/Source=D:\\TST_Codex_W2-02-closure\\infrastructure\\keycloak\\linercore-local-realm.json,maintainer=Red Hat, Inc.,org.opencontainers.image.version=24.0.5,release=1739776878,summary=ubi9 micro image,vcs-ref=c373c5ab410a57bfbd0ec4dbad15ca4e3eb1b5b6,vendor=Red Hat, Inc.,com.docker.compose.config-hash=c3e78642c7d67a17adfddad94733eccfbf7ddcbde2c8e4c0b0dc045ffd625f19,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,io.k8s.description=Very small image which doesn't install the package manager.,org.opencontainers.image.title=keycloak-rel,org.opencontainers.image.url=https://github.com/keycloak-rel/keycloak-rel,com.docker.compose.depends_on=,io.buildah.version=1.39.0-dev,io.openshift.expose-services=,url=https://www.redhat.com,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,desktop.docker.io/ports.scheme=v2,name=ubi9/ubi-micro",
+      "LocalVolumes": "0",
+      "Mounts": "/run/desktop/m…",
+      "Name": "linercore-wave-a-keycloak-1",
+      "Names": "linercore-wave-a-keycloak-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18080->8080/tcp, [::]:18080->8080/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 8080,
+          "PublishedPort": 18080,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 8080,
+          "PublishedPort": 18080,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "keycloak",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 4 minutes (healthy)"
+    },
+    {
+      "Command": "\"/docker-entrypoint.…\"",
+      "CreatedAt": "2026-07-22 11:00:28 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "d3f40f46805f",
+      "Image": "nginx:1.27",
+      "Labels": "com.docker.compose.version=5.3.0,desktop.docker.io/binds/0/Source=D:\\TST_Codex_W2-02-closure\\infrastructure\\nginx\\default.conf,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/80/tcp=:18088,com.docker.compose.config-hash=7dafaefbd23ce7bbca7b84a8480da026add67d1742676ab2c4eb83a9ab26165d,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,desktop.docker.io/binds/0/Target=/etc/nginx/conf.d/default.conf,maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>,com.docker.compose.depends_on=apps-booking:service_started:false,apps-shell:service_started:false,apps-auth:service_started:false,apps-reference-data:service_started:false,apps-charge-agreements:service_started:false,com.docker.compose.image=sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d,com.docker.compose.oneoff=False,com.docker.compose.project=linercore-wave-a,com.docker.compose.container-number=1,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.service=nginx,desktop.docker.io/binds/0/SourceKind=hostFile",
+      "LocalVolumes": "0",
+      "Mounts": "/run/desktop/m…",
+      "Name": "linercore-wave-a-nginx-1",
+      "Names": "linercore-wave-a-nginx-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18088->80/tcp, [::]:18088->80/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 80,
+          "PublishedPort": 18088,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 80,
+          "PublishedPort": 18088,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "nginx",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes"
+    },
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "healthy",
+      "ID": "2e7c8608406e",
+      "Image": "postgres:15",
+      "Labels": "com.docker.compose.config-hash=b5086beb3d1fa812c597412e4751b7cee4612842ae2d2c9f57eca5bdc4232768,com.docker.compose.project=linercore-wave-a,com.docker.compose.service=postgres,desktop.docker.io/binds/0/Source=D:\\TST_Codex_W2-02-closure\\infrastructure\\database\\00-local-bootstrap.sh,com.docker.compose.image=sha256:bcab099bfaab33333a73a2ebe8c1d615c9f4c2402dd43452f989a36c6da9a5ba,com.docker.compose.oneoff=False,com.docker.compose.version=5.3.0,desktop.docker.io/binds/0/SourceKind=hostFile,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/5432/tcp=:65432,desktop.docker.io/binds/0/Target=/docker-entrypoint-initdb.d/00-local-bootstrap.sh,com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure",
+      "LocalVolumes": "1",
+      "Mounts": "/run/desktop/m…,ff883a2ceb29c6…",
+      "Name": "linercore-wave-a-postgres-1",
+      "Names": "linercore-wave-a-postgres-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:65432->5432/tcp, [::]:65432->5432/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 5432,
+          "PublishedPort": 65432,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 5432,
+          "PublishedPort": 65432,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "postgres",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 4 minutes (healthy)"
+    },
+    {
+      "Command": "\"java -jar /app/app.…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "fd04d4114bfa",
+      "Image": "linercore/reference-data-service:wave-a",
+      "Labels": "desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.depends_on=schema-registry:service_healthy:false,postgres:service_healthy:false,kafka:service_healthy:false,com.docker.compose.oneoff=False,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.config-hash=eb1282254b36689cfd701efe1e33ee062cffcf08adb59ef5d8c5ac43e15bee91,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.version=5.3.0,org.opencontainers.image.version=26.04,org.opencontainers.image.created=2026-07-13T16:06:30.499069+00:00,com.docker.compose.image=sha256:1bf59131dfb77702f09476ca112e7402e58a6523c6ddac9d57080477bae7b178,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.service=reference-data-service,org.opencontainers.image.description=The Ubuntu container image maintained by Canonical\n\nUbuntu is a Debian-based Linux operating system that runs from the desktop to the cloud, to all your internet connected things.\nIt is the world's most popular operating system across public clouds and OpenStack clouds.\nIt is the number one platform for containers; from Docker to Kubernetes to LXD, Ubuntu can run your containers at scale.\nFast, secure and simple, Ubuntu powers millions of PCs worldwide.\n,org.opencontainers.image.title=ubuntu,desktop.docker.io/ports/8083/tcp=:18083",
+      "LocalVolumes": "0",
+      "Mounts": "",
+      "Name": "linercore-wave-a-reference-data-service-1",
+      "Names": "linercore-wave-a-reference-data-service-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18083->8083/tcp, [::]:18083->8083/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 8083,
+          "PublishedPort": 18083,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 8083,
+          "PublishedPort": 18083,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "reference-data-service",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 2 minutes"
+    },
+    {
+      "Command": "\"/etc/confluent/dock…\"",
+      "CreatedAt": "2026-07-22 11:00:27 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "healthy",
+      "ID": "00bdaa8b1fd9",
+      "Image": "confluentinc/cp-schema-registry:7.7.1",
+      "Labels": "desktop.docker.io/ports/8081/tcp=:18081,io.k8s.display-name=Red Hat Universal Base Image 8 Minimal,io.openshift.expose-services=,com.docker.compose.image=sha256:e8c6de70b76f78d33238f5f972da17fc93e5b96b00d08ffed07d9f5f03fbc1ce,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.redhat.component=ubi8-minimal-container,distribution-scope=public,io.confluent.docker.build.number=7fc4264f,url=https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8-minimal/images/8.10-1052.1724178568,com.docker.compose.project=linercore-wave-a,io.confluent.docker=true,io.confluent.docker.git.repo=confluentinc/schema-registry-images,maintainer=partner-support@confluent.io,vcs-ref=4f8da2b64a13f2a264bd802d8909bf803211fb20,vendor=Confluent,com.docker.compose.oneoff=False,description=Confluent Schema Registry provides a RESTful interface for developers to define standard schemas for their events, share them across the organization and safely evolve them in a way that is backward compatible and future proof.,name=cp-schema-registry,release=7.7.1-28,com.docker.compose.service=schema-registry,com.redhat.license_terms=https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI,desktop.docker.io/ports.scheme=v2,io.buildah.version=1.29.0,io.confluent.docker.git.id=8d992c3,summary=Confluent Schema Registry provides a RESTful interface for developers to define standard schemas for their events, share them across the organization and safely evolve them in a way that is backward compatible and future proof.,io.openshift.tags=minimal rhel8,architecture=x86_64,build-date=2024-08-20T18:30:35,vcs-type=git,com.docker.compose.config-hash=ab38c0d47bc29cae477a73ffc75c306d32fe64cf2a9429ff36f0887b5752e7fe,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.version=5.3.0,version=8d992c3,io.k8s.description=The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.,com.docker.compose.container-number=1,com.docker.compose.depends_on=kafka:service_healthy:false,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example",
+      "LocalVolumes": "1",
+      "Mounts": "55c069ce1c8df9…",
+      "Name": "linercore-wave-a-schema-registry-1",
+      "Names": "linercore-wave-a-schema-registry-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "0.0.0.0:18081->8081/tcp, [::]:18081->8081/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "0.0.0.0",
+          "TargetPort": 8081,
+          "PublishedPort": 18081,
+          "Protocol": "tcp"
+        },
+        {
+          "URL": "::",
+          "TargetPort": 8081,
+          "PublishedPort": 18081,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "schema-registry",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 3 minutes (healthy)"
+    },
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:28 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "",
+      "ID": "6b29bba10660",
+      "Image": "node:24-alpine",
+      "Labels": "com.docker.compose.oneoff=False,com.docker.compose.project=linercore-wave-a,desktop.docker.io/binds/0/Source=D:\\TST_Codex_W2-02-closure,com.docker.compose.container-number=1,com.docker.compose.image=sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.version=5.3.0,desktop.docker.io/binds/0/Target=/workspace,com.docker.compose.service=seed-loader,com.docker.compose.depends_on=postgres:service_healthy:false,schema-registry:service_healthy:false,kafka-init:service_completed_successfully:false,reference-data-service:service_started:false,container-movement-service:service_started:false,keycloak:service_healthy:false,kafka:service_healthy:false,identity-service:service_started:false,nginx:service_started:false,booking-service:service_started:false,charge-agreement-service:service_started:false,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,desktop.docker.io/binds/0/SourceKind=hostFile,desktop.docker.io/ports.scheme=v2,com.docker.compose.config-hash=723cf53dd43cbf2cb6d5363c03ae368ddeda166f6775cd1886a0fb6dd6ccd0cf",
+      "LocalVolumes": "0",
+      "Mounts": "/run/desktop/m…",
+      "Name": "linercore-wave-a-seed-loader-1",
+      "Names": "linercore-wave-a-seed-loader-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "",
+      "Project": "linercore-wave-a",
+      "Publishers": [],
+      "RunningFor": "4 minutes ago",
+      "Service": "seed-loader",
+      "Size": "0B",
+      "State": "exited",
+      "Status": "Exited (0) 2 minutes ago"
+    },
+    {
+      "Command": "\"docker-entrypoint.s…\"",
+      "CreatedAt": "2026-07-22 11:00:26 +0330 +0330",
+      "ExitCode": 0,
+      "Health": "healthy",
+      "ID": "abcb132f2c27",
+      "Image": "linercore/apps-shell:wave-a",
+      "Labels": "desktop.docker.io/ports/43102/tcp=127.0.0.1:14312,com.docker.compose.container-number=1,com.docker.compose.depends_on=,desktop.docker.io/binds/0/Source=D:\\TST_Codex_W2-02-closure\\scripts,com.docker.compose.config-hash=d98557fd47520440db31289081368936360143e9f11a7ebe0b224df50e016d6e,com.docker.compose.project.config_files=D:\\TST_Codex_W2-02-closure\\compose.yaml,D:\\TST_Codex_W2-02-closure\\infrastructure\\compose\\w2-02-acceptance.compose.yaml,com.docker.compose.project.working_dir=D:\\TST_Codex_W2-02-closure,com.docker.compose.image=sha256:a78fb390e678dc750b3266ca6cd84731e67a9fe0ccfd7745ba5cbff4e762765b,com.docker.compose.oneoff=False,com.docker.compose.service=w2-02-ssr-control,com.docker.compose.project=linercore-wave-a,com.docker.compose.project.environment_file=D:\\TST_Codex_W2-02-closure\\infrastructure\\env\\wave-a.env.example,com.docker.compose.version=5.3.0,desktop.docker.io/binds/0/SourceKind=hostFile,desktop.docker.io/binds/0/Target=/w2-02-harness,desktop.docker.io/ports.scheme=v2",
+      "LocalVolumes": "0",
+      "Mounts": "/run/desktop/m…",
+      "Name": "linercore-wave-a-w2-02-ssr-control-1",
+      "Names": "linercore-wave-a-w2-02-ssr-control-1",
+      "Networks": "linercore-wave-a-network",
+      "Ports": "127.0.0.1:14312->43102/tcp",
+      "Project": "linercore-wave-a",
+      "Publishers": [
+        {
+          "URL": "127.0.0.1",
+          "TargetPort": 43102,
+          "PublishedPort": 14312,
+          "Protocol": "tcp"
+        }
+      ],
+      "RunningFor": "4 minutes ago",
+      "Service": "w2-02-ssr-control",
+      "Size": "0B",
+      "State": "running",
+      "Status": "Up 4 minutes (healthy)"
+    }
+  ]
+}

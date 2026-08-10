@@ -1,0 +1,57 @@
+{
+  "schema": "linercore.charge-subject-assertion-vectors/v1",
+  "owner": "U02-charge-domain-routing-bff",
+  "vectors": [
+    {
+      "id": "unicode-subject",
+      "kid": "w2-03-test-v1",
+      "secretHex": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff",
+      "claims": {
+        "iss": "charge-agreements-bff",
+        "kid": "w2-03-test-v1",
+        "sub": "analyst-Ω",
+        "mth": "POST",
+        "pth": "/api/charge-agreements",
+        "cid": "corr-unicode",
+        "iat": "1700000000",
+        "exp": "1700000030",
+        "nonce": "AAECAwQFBgcICQoLDA0ODw"
+      },
+      "payloadUtf8Hex": "6c632d6266662d617373657274696f6e3a76310a6973733a32313a6368617267652d61677265656d656e74732d6266660a6b69643a31333a77322d30332d746573742d76310a7375623a31303a616e616c7973742dcea90a6d74683a343a504f53540a7074683a32323a2f6170692f6368617267652d61677265656d656e74730a6369643a31323a636f72722d756e69636f64650a6961743a31303a313730303030303030300a6578703a31303a313730303030303033300a6e6f6e63653a32323a41414543417751464267634943516f4c4441304f44770a",
+      "headerValue": "v1.w2-03-test-v1.bGMtYmZmLWFzc2VydGlvbjp2MQppc3M6MjE6Y2hhcmdlLWFncmVlbWVudHMtYmZmCmtpZDoxMzp3Mi0wMy10ZXN0LXYxCnN1YjoxMDphbmFseXN0Lc6pCm10aDo0OlBPU1QKcHRoOjIyOi9hcGkvY2hhcmdlLWFncmVlbWVudHMKY2lkOjEyOmNvcnItdW5pY29kZQppYXQ6MTA6MTcwMDAwMDAwMApleHA6MTA6MTcwMDAwMDAzMApub25jZToyMjpBQUVDQXdRRkJnY0lDUW9MREEwT0R3Cg.tIjPErduJM7KZUQBz7voN67fkBujwvdRiZqCGVOmIt8",
+      "verificationInstant": 1700000001,
+      "expected": { "result": "VALID", "code": "OK" }
+    },
+    {
+      "id": "encoded-path-time-boundary",
+      "kid": "w2-03-test-v1",
+      "secretHex": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff",
+      "claims": {
+        "iss": "charge-agreements-bff",
+        "kid": "w2-03-test-v1",
+        "sub": "reader-1",
+        "mth": "PUT",
+        "pth": "/api/charge-agreements/A%20B/approve",
+        "cid": "corr-2",
+        "iat": "1700000030",
+        "exp": "1700000060",
+        "nonce": "EBESExQVFhcYGRobHB0eHw"
+      },
+      "payloadUtf8Hex": "6c632d6266662d617373657274696f6e3a76310a6973733a32313a6368617267652d61677265656d656e74732d6266660a6b69643a31333a77322d30332d746573742d76310a7375623a383a7265616465722d310a6d74683a333a5055540a7074683a33363a2f6170692f6368617267652d61677265656d656e74732f41253230422f617070726f76650a6369643a363a636f72722d320a6961743a31303a313730303030303033300a6578703a31303a313730303030303036300a6e6f6e63653a32323a45424553457851564668635947526f624842306548770a",
+      "headerValue": "v1.w2-03-test-v1.bGMtYmZmLWFzc2VydGlvbjp2MQppc3M6MjE6Y2hhcmdlLWFncmVlbWVudHMtYmZmCmtpZDoxMzp3Mi0wMy10ZXN0LXYxCnN1Yjo4OnJlYWRlci0xCm10aDozOlBVVApwdGg6MzY6L2FwaS9jaGFyZ2UtYWdyZWVtZW50cy9BJTIwQi9hcHByb3ZlCmNpZDo2OmNvcnItMgppYXQ6MTA6MTcwMDAwMDAzMApleHA6MTA6MTcwMDAwMDA2MApub25jZToyMjpFQkVTRXhRVkZoY1lHUm9iSEIwZUh3Cg.MYU0yvSi_O27wdoe8ZYYIKb5DgFIXV2Qu6zb2b29la8",
+      "verificationInstant": 1700000031,
+      "expected": { "result": "VALID", "code": "OK" }
+    }
+  ],
+  "negativeCases": [
+    { "id": "malformed-envelope", "baseVector": "unicode-subject", "mutation": "REMOVE_SIGNATURE_SEGMENT", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "wrong-method-context", "baseVector": "unicode-subject", "mutation": "VERIFY_AS_GET", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "wrong-path-context", "baseVector": "unicode-subject", "mutation": "VERIFY_AT_OTHER_PATH", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "wrong-correlation-context", "baseVector": "unicode-subject", "mutation": "VERIFY_WITH_OTHER_CORRELATION", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "bad-signature", "baseVector": "unicode-subject", "mutation": "FLIP_SIGNATURE_BYTE", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "unknown-key", "baseVector": "unicode-subject", "mutation": "REPLACE_KID", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "duplicate-nonce", "baseVector": "unicode-subject", "mutation": "VERIFY_TWICE", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "expired", "baseVector": "unicode-subject", "mutation": "VERIFY_AFTER_EXPIRY_AND_SKEW", "expected": { "status": 401, "code": "INVALID_SUBJECT_ASSERTION" } },
+    { "id": "replay-capacity", "baseVector": "unicode-subject", "mutation": "CLAIM_4097_DISTINCT_NONCES", "expected": { "status": 503, "code": "SUBJECT_ASSERTION_CAPACITY_EXHAUSTED" } }
+  ]
+}

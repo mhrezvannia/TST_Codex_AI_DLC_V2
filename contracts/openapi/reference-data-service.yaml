@@ -2,6 +2,9 @@ openapi: 3.0.3
 info:
   title: LinerCore Reference Data Service
   version: 0.1.0
+servers:
+  - url: /
+security: []
 paths:
   /reference-sets:
     get:
@@ -9,15 +12,18 @@ paths:
       responses:
         "200":
           description: Reference set catalog.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReferenceSetId"
   /reference-sets/{set}/records:
+    parameters:
+      - $ref: "#/components/parameters/ReferenceSetPath"
     get:
       summary: Provider list/search endpoint with active-only default.
       parameters:
-        - name: set
-          in: path
-          required: true
-          schema:
-            type: string
         - name: includeInactive
           in: query
           schema:
@@ -33,12 +39,19 @@ paths:
       responses:
         "200":
           description: Deterministic page of reference summaries.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReferencePage"
     post:
       summary: Admin create endpoint.
       responses:
         "200":
           description: Created reference record.
   /reference-sets/{set}/records/{id}:
+    parameters:
+      - $ref: "#/components/parameters/ReferenceSetPath"
+      - $ref: "#/components/parameters/ReferenceIdPath"
     get:
       summary: Provider detail endpoint.
       responses:
@@ -50,24 +63,35 @@ paths:
         "200":
           description: Updated reference record.
   /reference-sets/{set}/records/validate:
+    parameters:
+      - $ref: "#/components/parameters/ReferenceSetPath"
     post:
       summary: Validate without persistence or change fact.
       responses:
         "200":
           description: Validation result.
   /reference-sets/{set}/records/{id}/deactivate:
+    parameters:
+      - $ref: "#/components/parameters/ReferenceSetPath"
+      - $ref: "#/components/parameters/ReferenceIdPath"
     post:
       summary: Admin deactivate endpoint.
       responses:
         "200":
           description: Deactivated record.
   /reference-sets/{set}/records/{id}/reactivate:
+    parameters:
+      - $ref: "#/components/parameters/ReferenceSetPath"
+      - $ref: "#/components/parameters/ReferenceIdPath"
     post:
       summary: Admin reactivate endpoint.
       responses:
         "200":
           description: Reactivated record.
   /reference-sets/{set}/records/{id}/history:
+    parameters:
+      - $ref: "#/components/parameters/ReferenceSetPath"
+      - $ref: "#/components/parameters/ReferenceIdPath"
     get:
       summary: Recent change history.
       responses:
@@ -128,7 +152,7 @@ paths:
           description: Claimed outbox events.
   /reference-sets/events/publish:
     post:
-      summary: Publish a claimed batch through the placeholder Kafka seam.
+      summary: Publish a claimed batch through the configured Kafka relay.
       parameters:
         - name: workerId
           in: query
@@ -143,22 +167,134 @@ paths:
         "200":
           description: Publish batch result.
 components:
+  parameters:
+    ReferenceSetPath:
+      name: set
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/ReferenceSetPath"
+    ReferenceIdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
+    ReferenceSetPath:
+      type: string
+      enum:
+        - party-customer
+        - location
+        - region
+        - vessel-voyage
+        - currency
+        - charge-code
+        - equipment-type
+        - commodity
+        - trade-lane
+    ReferenceSetId:
+      type: string
+      enum: [PARTY_CUSTOMER, LOCATION, REGION, VESSEL_VOYAGE, CURRENCY, CHARGE_CODE, EQUIPMENT_TYPE, COMMODITY, TRADE_LANE]
+    ReferencePage:
+      type: object
+      required: [records, page, size, total]
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReferenceRecord"
+        page:
+          type: integer
+        size:
+          type: integer
+        total:
+          type: integer
     ReferenceRecord:
       type: object
-      required: [id, set, code, displayName, status, version]
+      required: [id, set, code, displayName, status, version, attributes]
       properties:
         id:
-          type: string
+          $ref: "#/components/schemas/ReferenceId"
         set:
-          type: string
+          $ref: "#/components/schemas/ReferenceSetId"
         code:
-          type: string
+          $ref: "#/components/schemas/ReferenceCode"
         displayName:
           type: string
         status:
           enum: [ACTIVE, INACTIVE]
         version:
           type: integer
-        correlationId:
+          format: int64
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/VesselAttributes"
+            - $ref: "#/components/schemas/VoyageAttributes"
+            - $ref: "#/components/schemas/EquipmentTypeAttributes"
+            - $ref: "#/components/schemas/ChargeCodeAttributes"
+            - type: object
+              additionalProperties:
+                type: string
+    ReferenceId:
+      type: object
+      required: [value]
+      properties:
+        value:
           type: string
+    ReferenceCode:
+      type: object
+      required: [value]
+      properties:
+        value:
+          type: string
+    VesselAttributes:
+      type: object
+      required: [recordType, vesselName, vesselIMONumber]
+      properties:
+        recordType:
+          type: string
+          enum: [VESSEL]
+        vesselName:
+          type: string
+        vesselIMONumber:
+          type: string
+          pattern: "^[0-9]{7}$"
+      additionalProperties:
+        type: string
+    VoyageAttributes:
+      type: object
+      required: [recordType, vesselId, carrierVoyageNumber, originLocationId, destinationLocationId, scheduledDeparture, scheduledArrival]
+      properties:
+        recordType:
+          type: string
+          enum: [VOYAGE]
+        vesselId:
+          type: string
+        carrierVoyageNumber:
+          type: string
+        originLocationId:
+          type: string
+        destinationLocationId:
+          type: string
+        scheduledDeparture:
+          type: string
+          format: date-time
+        scheduledArrival:
+          type: string
+          format: date-time
+      additionalProperties:
+        type: string
+    EquipmentTypeAttributes:
+      type: object
+      description: The record code is the ISO 6346 size/type code (for example 22G1, 42G1, or 45G1).
+      additionalProperties:
+        type: string
+    ChargeCodeAttributes:
+      type: object
+      required: [chargeFamily]
+      properties:
+        chargeFamily:
+          type: string
+      additionalProperties:
+        type: string

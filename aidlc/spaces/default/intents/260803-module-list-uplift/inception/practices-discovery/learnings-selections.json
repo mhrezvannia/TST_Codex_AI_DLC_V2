@@ -1,0 +1,29 @@
+{
+  "stage_slug": "practices-discovery",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat prior-intent-specific practice prose as evidence, not the active intent's default; re-affirm only choices the active intent and current repository evidence do not settle.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Testing Posture",
+      "text": "Apply numeric feature coverage defaults only with executable instrumentation that measures the active intent's changed code; test counts and historical percentages are not coverage evidence.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Keep feature security work bounded to operationalizing or replacing already-required gates; broader scanner, SBOM, signing, or provenance modernization requires approved scope expansion.",
+      "source": "orchestrator"
+    }
+  ]
+}

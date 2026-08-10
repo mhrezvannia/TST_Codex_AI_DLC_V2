@@ -1,0 +1,13 @@
+{
+  "stage_slug": "application-design",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Contract Evolution",
+      "text": "For additive bilateral contract enrichment, retain existing field types and required sets, declare new properties optional for legacy-consumer schema compatibility, require the enriched provider set all-or-none at runtime, and make consumers distinguish absent legacy enrichment from invalid partial enrichment.",
+      "source": "orchestrator"
+    }
+  ]
+}

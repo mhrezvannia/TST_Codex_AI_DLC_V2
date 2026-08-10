@@ -1,0 +1,20 @@
+{
+  "searchEmpty": {
+    "items": [],
+    "page": 0,
+    "size": 25,
+    "returned": 0
+  },
+  "defaultMedia": "application/json",
+  "routes": [
+    "GET /api/charge-agreements",
+    "POST /api/charge-agreements",
+    "GET /api/charge-agreements/{id}",
+    "PUT /api/charge-agreements/{id}?version={version}",
+    "POST /api/charge-agreements/{id}/approve?version={version}",
+    "POST /api/charge-agreements/{id}/suspend?version={version}",
+    "POST /api/charge-agreements/{id}/expire?version={version}",
+    "GET /api/charge-agreements/active-lookup"
+  ],
+  "authorityRule": "actor query/body values are retained only as ignored legacy grammar"
+}

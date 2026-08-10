@@ -1,0 +1,57 @@
+server:
+  port: 8085
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/linercore_booking}
+    username: ${SPRING_DATASOURCE_USERNAME:linercore_booking}
+    password: ${SPRING_DATASOURCE_PASSWORD:booking_local}
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      connection-timeout: 2000
+  sql:
+    init:
+      mode: never
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+    baseline-version: 1
+    validate-on-migrate: true
+booking:
+  security:
+    service-token: ${BOOKING_SERVICE_TOKEN}
+  identity-service-url: ${IDENTITY_SERVICE_URL:http://identity-service:8082}
+  reference-data-service-url: ${REFERENCE_DATA_SERVICE_URL:http://reference-data-service:8083}
+  reference-data:
+    service-id: ${REFERENCE_DATA_CLIENT_ID:booking-service}
+    service-token: ${REFERENCE_DATA_BOOKING_TOKEN}
+  charge-agreement-service-url: ${CHARGE_AGREEMENT_SERVICE_URL:http://charge-agreement-service:8084}
+  charge:
+    service-id: ${BOOKING_CHARGE_SERVICE_ID:booking-service}
+    # No secret default: local Compose supplies the bilateral value; every other launch fails closed.
+    service-token: ${BOOKING_CHARGE_SERVICE_TOKEN:}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    topic: ${BOOKING_EVENTS_TOPIC:booking.events}
+    client-id: ${BOOKING_KAFKA_CLIENT_ID:booking-service}
+  container-movement-status:
+    topic: ${CONTAINER_MOVEMENT_EVENTS_TOPIC:containermovement.status}
+    group-id: ${BOOKING_CONTAINER_MOVEMENT_STATUS_GROUP_ID:booking-container-movement-status-v1}
+  schema-registry:
+    url: ${SCHEMA_REGISTRY_URL:http://schema-registry:8081}
+  outbox-relay:
+    enabled: ${BOOKING_OUTBOX_RELAY_ENABLED:true}
+    worker-id: ${BOOKING_OUTBOX_RELAY_WORKER_ID:booking-relay}
+    batch-size: ${BOOKING_OUTBOX_RELAY_BATCH_SIZE:50}
+
+platform:
+  outbox-relay:
+    fixed-delay-ms: ${BOOKING_OUTBOX_RELAY_DELAY_MS:5000}

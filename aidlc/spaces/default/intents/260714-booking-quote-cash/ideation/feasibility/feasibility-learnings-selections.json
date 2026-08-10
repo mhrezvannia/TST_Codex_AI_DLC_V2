@@ -1,0 +1,21 @@
+{
+  "stage_slug": "feasibility",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Evaluate LinerCore vertical intents against the canonical local Compose runtime first; cloud deployment is a later operation concern unless an approved requirement makes it a release blocker.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Prefer an explicit Kafka-only cutover for asynchronous cross-module contracts over indefinite HTTP plus Kafka dual delivery.",
+      "source": "orchestrator"
+    }
+  ]
+}

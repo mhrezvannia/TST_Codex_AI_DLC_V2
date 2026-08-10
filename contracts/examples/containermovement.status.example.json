@@ -1,15 +1,25 @@
 {
-  "eventId": "evt-cmm-status-0001",
-  "eventType": "containermovement.status",
-  "schemaVersion": "1.0.0",
+  "id": "evt-cmm-status-0001",
   "source": "container-movement-service",
-  "occurredAt": "2026-07-09T00:05:00Z",
+  "type": "containermovement.status",
+  "time": "2026-07-09T00:05:01Z",
   "correlationId": "corr-booking-0001",
-  "idempotencyKey": "cmm-status-container-0001-10",
-  "containerId": "CONT0000001",
-  "bookingId": "booking-0001",
-  "movementStatus": "GATE_OUT",
-  "sequenceNumber": 10,
-  "statusReason": "Validated depot movement",
-  "lastKnownLocationId": "SGSIN"
+  "dataSchemaVersion": 1,
+  "data": {
+    "bookingRef": "booking-0001",
+    "containerRef": "MSCU6639870",
+    "movementId": "movement-0001",
+    "moveCode": "LOAD",
+    "eventClassifierCode": "ACT",
+    "occurredDateTime": "2026-07-09T00:05:00Z",
+    "receivedDateTime": "2026-07-09T00:05:01Z",
+    "derivedStatus": "IN_TRANSIT",
+    "emptyIndicatorCode": "LADEN",
+    "transshipment": false,
+    "location": {
+      "unLocationCode": "SGSIN",
+      "facilityCode": null,
+      "facilityTypeCode": null
+    }
+  }
 }

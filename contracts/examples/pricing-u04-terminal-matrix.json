@@ -1,0 +1,201 @@
+{
+  "matrixVersion": "u04-v1",
+  "provider": "charge-agreement-service",
+  "consumer": "booking-service",
+  "mediaType": "application/vnd.api.v1+json",
+  "scenarios": [
+    {
+      "scenarioId": "agreement-success",
+      "status": 200,
+      "contentType": "application/vnd.api.v1+json",
+      "response": {
+        "bookingRef": "booking-agreement-0001",
+        "pricingBasis": "AGREEMENT",
+        "pricingRef": "agreement-version-0001",
+        "charges": [
+          {
+            "chargeCode": "OFR",
+            "category": "FREIGHT",
+            "amount": 300.03,
+            "currency": "USD",
+            "rateCategory": "BASE",
+            "basis": "PER_CONTAINER",
+            "quantity": 3,
+            "unitRate": 100.01,
+            "sourceRateVersionId": "rate-version-base-0001"
+          },
+          {
+            "chargeCode": "BAF",
+            "category": "SURCHARGE",
+            "amount": 60.03,
+            "currency": "USD",
+            "rateCategory": "SURCHARGE",
+            "basis": "PER_CONTAINER",
+            "quantity": 3,
+            "unitRate": 20.01,
+            "sourceRateVersionId": "rate-version-surcharge-0001"
+          },
+          {
+            "chargeCode": "THC",
+            "category": "LOCAL",
+            "amount": 30.03,
+            "currency": "USD",
+            "rateCategory": "LOCAL",
+            "basis": "PER_CONTAINER",
+            "quantity": 3,
+            "unitRate": 10.01,
+            "sourceRateVersionId": "rate-version-local-0001"
+          }
+        ],
+        "applicableDndRuleTypes": [],
+        "total": 390.09,
+        "currency": "USD",
+        "requestedDepartureDate": "2026-08-01",
+        "pricingRequestId": "booking-agreement-0001:2",
+        "correlationId": "corr-agreement-0001",
+        "pricedAt": "2026-08-01T09:30:00Z",
+        "agreementVersionId": "agreement-version-0001"
+      }
+    },
+    {
+      "scenarioId": "tariff-success",
+      "status": 200,
+      "contentType": "application/vnd.api.v1+json",
+      "response": {
+        "bookingRef": "booking-tariff-0001",
+        "pricingBasis": "TARIFF",
+        "pricingRef": "TARIFF-c676b4e4472631fbdd069424",
+        "charges": [
+          {
+            "chargeCode": "OFR",
+            "category": "FREIGHT",
+            "amount": 100.00,
+            "currency": "USD",
+            "rateCategory": "BASE",
+            "basis": "PER_CONTAINER",
+            "quantity": 1,
+            "unitRate": 100.00,
+            "sourceRateVersionId": "rate-version-base-0002"
+          },
+          {
+            "chargeCode": "BAF",
+            "category": "SURCHARGE",
+            "amount": 20.00,
+            "currency": "USD",
+            "rateCategory": "SURCHARGE",
+            "basis": "PER_CONTAINER",
+            "quantity": 1,
+            "unitRate": 20.00,
+            "sourceRateVersionId": "rate-version-surcharge-0002"
+          },
+          {
+            "chargeCode": "THC",
+            "category": "LOCAL",
+            "amount": 10.00,
+            "currency": "USD",
+            "rateCategory": "LOCAL",
+            "basis": "PER_CONTAINER",
+            "quantity": 1,
+            "unitRate": 10.00,
+            "sourceRateVersionId": "rate-version-local-0002"
+          }
+        ],
+        "applicableDndRuleTypes": [],
+        "total": 130.00,
+        "currency": "USD",
+        "requestedDepartureDate": "2026-08-01",
+        "pricingRequestId": "booking-tariff-0001:1",
+        "correlationId": "corr-tariff-0001",
+        "pricedAt": "2026-08-01T09:31:00Z"
+      }
+    },
+    {
+      "scenarioId": "no-rate",
+      "status": 404,
+      "contentType": "application/json",
+      "response": {
+        "code": "NO_RATE",
+        "message": "No approved pricing authority matched the request",
+        "correlationId": "corr-no-rate-0001",
+        "reasonCode": "NO_RATE",
+        "pricingRequestId": "booking-no-rate-0001:1",
+        "manualCaseId": "manual-case-no-rate-0001"
+      }
+    },
+    {
+      "scenarioId": "ambiguous-agreement-authority",
+      "status": 422,
+      "contentType": "application/json",
+      "response": {
+        "code": "PRICING_VALIDATION",
+        "message": "Pricing authority is ambiguous",
+        "correlationId": "corr-ambiguity-agreement",
+        "reasonCode": "AMBIGUOUS_AGREEMENT_AUTHORITY",
+        "pricingRequestId": "booking-ambiguous-agreement:1",
+        "manualCaseId": "manual-case-ambiguous-agreement"
+      }
+    },
+    {
+      "scenarioId": "ambiguous-base-rate",
+      "status": 422,
+      "contentType": "application/json",
+      "response": {
+        "code": "PRICING_VALIDATION",
+        "message": "Pricing authority is ambiguous",
+        "correlationId": "corr-ambiguity-base",
+        "reasonCode": "AMBIGUOUS_BASE_RATE",
+        "pricingRequestId": "booking-ambiguous-base:1",
+        "manualCaseId": "manual-case-ambiguous-base"
+      }
+    },
+    {
+      "scenarioId": "ambiguous-surcharge-rate",
+      "status": 422,
+      "contentType": "application/json",
+      "response": {
+        "code": "PRICING_VALIDATION",
+        "message": "Pricing authority is ambiguous",
+        "correlationId": "corr-ambiguity-surcharge",
+        "reasonCode": "AMBIGUOUS_SURCHARGE_RATE",
+        "pricingRequestId": "booking-ambiguous-surcharge:1",
+        "manualCaseId": "manual-case-ambiguous-surcharge"
+      }
+    },
+    {
+      "scenarioId": "ambiguous-local-rate",
+      "status": 422,
+      "contentType": "application/json",
+      "response": {
+        "code": "PRICING_VALIDATION",
+        "message": "Pricing authority is ambiguous",
+        "correlationId": "corr-ambiguity-local",
+        "reasonCode": "AMBIGUOUS_LOCAL_RATE",
+        "pricingRequestId": "booking-ambiguous-local:1",
+        "manualCaseId": "manual-case-ambiguous-local"
+      }
+    },
+    {
+      "scenarioId": "idempotency-conflict",
+      "status": 409,
+      "contentType": "application/json",
+      "response": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "message": "idempotency key was used for another pricing request",
+        "correlationId": "corr-conflict-0001"
+      }
+    },
+    {
+      "scenarioId": "pricing-in-progress",
+      "status": 409,
+      "contentType": "application/json",
+      "expectedHeaders": {
+        "Retry-After": "1"
+      },
+      "response": {
+        "code": "PRICING_IN_PROGRESS",
+        "message": "pricing request is already in progress",
+        "correlationId": "corr-progress-0001"
+      }
+    }
+  ]
+}

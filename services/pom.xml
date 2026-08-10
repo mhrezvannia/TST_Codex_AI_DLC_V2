@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>platform-messaging</module>
         <module>identity-service</module>
         <module>reference-data-service</module>
         <module>charge-agreement-service</module>
@@ -35,6 +36,13 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
 
     <build>
         <pluginManagement>

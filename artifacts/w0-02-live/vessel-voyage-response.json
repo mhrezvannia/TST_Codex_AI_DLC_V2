@@ -1,0 +1,111 @@
+{
+    "records":  [
+                    {
+                        "id":  {
+                                   "value":  "vessel-linercore-atlas"
+                               },
+                        "set":  "VESSEL_VOYAGE",
+                        "code":  {
+                                     "value":  "9387425"
+                                 },
+                        "displayName":  "LinerCore Atlas",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.059428409Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.059429947Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed vessel-linercore-atlas",
+                        "attributes":  {
+                                           "vesselIMONumber":  "9387425",
+                                           "vesselName":  "LinerCore Atlas",
+                                           "localOnly":  "true",
+                                           "relationship":  "IMO 9387425",
+                                           "recordType":  "VESSEL"
+                                       }
+                    },
+                    {
+                        "id":  {
+                                   "value":  "voyage-local-001"
+                               },
+                        "set":  "VESSEL_VOYAGE",
+                        "code":  {
+                                     "value":  "LC001E"
+                                 },
+                        "displayName":  "LinerCore Atlas LC001E",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.106200484Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.106201933Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed voyage-local-001",
+                        "attributes":  {
+                                           "originLocationId":  "location-usnyc",
+                                           "recordType":  "VOYAGE",
+                                           "scheduledArrival":  "2026-08-10T08:00:00Z",
+                                           "relationship":  "USNYC to NLRTM, 01-10 Aug 2026",
+                                           "carrierVoyageNumber":  "LC001E",
+                                           "vesselId":  "vessel-linercore-atlas",
+                                           "localOnly":  "true",
+                                           "scheduledDeparture":  "2026-08-01T10:00:00Z",
+                                           "destinationLocationId":  "location-nlrot"
+                                       }
+                    },
+                    {
+                        "id":  {
+                                   "value":  "voyage-local-002"
+                               },
+                        "set":  "VESSEL_VOYAGE",
+                        "code":  {
+                                     "value":  "LC002E"
+                                 },
+                        "displayName":  "LinerCore Atlas LC002E",
+                        "status":  "ACTIVE",
+                        "version":  1,
+                        "createdBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "createdAt":  "2026-07-14T19:01:44.136809258Z",
+                        "updatedBy":  {
+                                          "subjectId":  "local.reference.admin",
+                                          "displayName":  "Local Reference Admin"
+                                      },
+                        "updatedAt":  "2026-07-14T19:01:44.136810867Z",
+                        "statusChangedBy":  null,
+                        "statusChangedAt":  null,
+                        "changeReason":  "local seed voyage-local-002",
+                        "attributes":  {
+                                           "originLocationId":  "location-usnyc",
+                                           "recordType":  "VOYAGE",
+                                           "scheduledArrival":  "2026-08-24T08:00:00Z",
+                                           "relationship":  "USNYC to NLRTM, 15-24 Aug 2026",
+                                           "carrierVoyageNumber":  "LC002E",
+                                           "vesselId":  "vessel-linercore-atlas",
+                                           "localOnly":  "true",
+                                           "scheduledDeparture":  "2026-08-15T10:00:00Z",
+                                           "destinationLocationId":  "location-nlrot"
+                                       }
+                    }
+                ],
+    "page":  0,
+    "size":  25,
+    "total":  3
+}

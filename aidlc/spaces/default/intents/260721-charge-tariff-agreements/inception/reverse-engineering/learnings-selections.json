@@ -1,0 +1,21 @@
+{
+  "stage_slug": "reverse-engineering",
+  "selections": [
+    {
+      "candidate_id": "260721-re-c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "When an AI-DLC stage writes codekb artifacts but the imported sensor wrapper rejects codekb paths, run the declared deterministic sensor implementations directly against every artifact, log the wrapper mismatch, and never report the rejected wrapper invocation itself as a pass.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-re-c4",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Use Graphify first for W2-03 architecture orientation, but when its snapshot predates the active baseline, cross-check material Charge, Booking, UI, contract, migration, Compose, and test findings against current source and keep static analysis separate from runtime proof.",
+      "source": "orchestrator"
+    }
+  ]
+}

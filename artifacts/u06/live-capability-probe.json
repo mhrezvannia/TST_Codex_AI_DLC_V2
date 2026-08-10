@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-07-30T07:10:00.000Z",
+  "managerPreGuard": {
+    "command": ["npm", "run", "demo:guard"],
+    "status": "BLOCKED",
+    "errorCode": "EPERM",
+    "summary": "Node child_process could not spawn the read-only docker ps probe; no manager mutation was attempted."
+  },
+  "waveAConfig": {
+    "command": ["node", "scripts/wave-a-compose.mjs", "config"],
+    "status": "PASS",
+    "observedProject": "linercore-wave-a",
+    "observedEdgePort": 18088,
+    "published8088": false
+  },
+  "nativeEvidenceWriter": {
+    "status": "BLOCKED",
+    "errorCode": 87,
+    "summary": "Locked Koffi addon loaded and handle identity probes succeeded; FileRenameInfoEx returned ERROR_INVALID_PARAMETER. No path-based fallback was used."
+  },
+  "liveMutation": {
+    "status": "SKIPPED",
+    "skippedBecause": "managerPreGuard",
+    "summary": "Wave A startup, database, restore, commercial, browser, performance, security, observability, teardown and post-guard mutations were not attempted after the blocking pre-guard."
+  }
+}

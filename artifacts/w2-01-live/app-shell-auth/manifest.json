@@ -1,0 +1,127 @@
+{
+  "intent": "W2-01-app-shell-and-auth",
+  "branch": "intent/W2-01-app-shell-and-auth",
+  "baseBranch": "integ/main-reconciled",
+  "baseCommit": "5dd6481",
+  "generatedAt": "2026-08-02T14:44:11.413Z",
+  "runtimeStatus": "PASS",
+  "finalDecision": "BLOCKED",
+  "evidenceRoot": "D:/TST_Codex_phase1_merge/artifacts/w2-01-live/app-shell-auth",
+  "scenarios": [
+    {
+      "scenarioId": "allow-booking-create-detail",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "scenarioId": "deny-booking-access",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "scenarioId": "sign-out-reauth-stale-call",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    },
+    {
+      "scenarioId": "legacy-bookings-compatibility",
+      "status": "BLOCKED",
+      "blockerId": "W2-01-LIVE-NOT-RUN"
+    }
+  ],
+  "commands": [
+    {
+      "commandId": "detector-6d",
+      "command": "internal detector 6d scan for hardcoded auth",
+      "startedAt": "2026-08-02T14:44:11.413Z",
+      "endedAt": "2026-08-02T14:44:11.413Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "outputPath": "detector-6d.txt"
+    },
+    {
+      "commandId": "erp-fidelity-audit",
+      "command": "bash .claude/skills/erp-fidelity-audit/detectors.sh",
+      "startedAt": "2026-08-02T14:44:11.413Z",
+      "endedAt": "2026-08-02T14:45:12.287Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "outputPath": "erp-fidelity-audit.txt"
+    },
+    {
+      "commandId": "aidlc-audit",
+      "command": "bash .claude/skills/aidlc-audit/detectors.sh",
+      "startedAt": "2026-08-02T14:44:11.413Z",
+      "endedAt": "2026-08-02T14:45:13.220Z",
+      "exitCode": 0,
+      "status": "PASS",
+      "outputPath": "aidlc-audit.txt"
+    }
+  ],
+  "blockers": [
+    "W2-01-LIVE-NOT-RUN"
+  ],
+  "w1WaiverStatus": "W1-01 live-proof waiver remains BLOCKED at compose-start; not a W2-01 PASS.",
+  "artifacts": [
+    {
+      "path": "manifest.json",
+      "sha256": "5be57a4d126195e5f815f304d7c6b73b2d68486925b64a9e9439896f01706f2e",
+      "bytes": 3787
+    },
+    {
+      "path": "browser-evidence.json",
+      "sha256": "d19d5cae42ec3c9ad87810cc04f75cf03b9cca2cd4498b4f5a68f31d13d2fdd5",
+      "bytes": 2430
+    },
+    {
+      "path": "runtime-readiness.json",
+      "sha256": "611833688425f34f727edbb6374bc3d9b29b8646b586f02c7b7d80646a642600",
+      "bytes": 1036
+    },
+    {
+      "path": "scenarios.jsonl",
+      "sha256": "57b997086914959af98ee9d49458adb1811a270fba5902e5a6bda065b4d660a4",
+      "bytes": 1779
+    },
+    {
+      "path": "actor-evidence.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "sign-out-evidence.json",
+      "sha256": "61039b4b24ef4ada6bba52eeb7a3c90729b1bc5426b0dc42a0d5d90ccc08726b",
+      "bytes": 436
+    },
+    {
+      "path": "compatibility-preservation.md",
+      "sha256": "4f5921645723423de5cee10faf9e7dd0ca95efbfdf8edf553962f186b9b597e8",
+      "bytes": 1065
+    },
+    {
+      "path": "detector-6d.txt",
+      "sha256": "354d38367547a9c68441a06b23aea1695a95cb653fe28bbc61e1e21dc13b6537",
+      "bytes": 136
+    },
+    {
+      "path": "erp-fidelity-audit.txt",
+      "sha256": "dd65169b7a019af0a66378a33ae951cfbae7d9234a3567a1048df378f5e6ad7d",
+      "bytes": 4925
+    },
+    {
+      "path": "aidlc-audit.txt",
+      "sha256": "c0c927a47e3169639aaa177a37a88735002679d2477b2f272804495e4ce1a917",
+      "bytes": 7285
+    },
+    {
+      "path": "final-decision.md",
+      "sha256": "0c4b9789c20b6e79ead74f720e330db0c680f283c95bd2aa780f8bbed76dc669",
+      "bytes": 612
+    },
+    {
+      "path": "blockers.jsonl",
+      "sha256": "678de7859468ae376a4cfa96bd08fb78404295741756cef3c7275e7e9f333065",
+      "bytes": 570
+    }
+  ]
+}

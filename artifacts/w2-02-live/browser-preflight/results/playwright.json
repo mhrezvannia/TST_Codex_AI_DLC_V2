@@ -1,0 +1,90 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\TST_Codex_W2-02-closure\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.config.ts",
+      "--list"
+    ],
+    "configFile": "D:\\TST_Codex_W2-02-closure\\playwright.config.ts",
+    "rootDir": "D:/TST_Codex_W2-02-closure/tests/w2-02",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\TST_Codex_W2-02-closure\\scripts\\w2-02-playwright-global-setup.mjs",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/TST_Codex_W2-02-closure/.w2-02-traces/staged/invalid-run/playwright",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/TST_Codex_W2-02-closure/tests/w2-02",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts\\w2-02-live\\browser-preflight\\results\\playwright.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 6,
+    "webServer": null
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: The orchestrated run identity, exact fixture, and SSR control token are required",
+      "stack": "Error: The orchestrated run identity, exact fixture, and SSR control token are required\n    at Object.<anonymous> (D:\\TST_Codex_W2-02-closure\\tests\\w2-02\\booking.spec.ts:30:64)",
+      "location": {
+        "file": "D:\\TST_Codex_W2-02-closure\\tests\\w2-02\\booking.spec.ts",
+        "column": 64,
+        "line": 30
+      },
+      "snippet": "\u001b[90m   at \u001b[39mbooking.spec.ts:30\n\n\u001b[0m \u001b[90m 28 |\u001b[39m \u001b[36mconst\u001b[39m fixturePath \u001b[33m=\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mW2_02_FIXTURE_MANIFEST\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m \u001b[36mconst\u001b[39m controlToken \u001b[33m=\u001b[39m process\u001b[33m.\u001b[39menv\u001b[33m.\u001b[39m\u001b[33mW2_02_PROXY_CONTROL_TOKEN\u001b[39m\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39mrunId \u001b[33m||\u001b[39m \u001b[33m!\u001b[39mrunRoot \u001b[33m||\u001b[39m \u001b[33m!\u001b[39mfixturePath \u001b[33m||\u001b[39m \u001b[33m!\u001b[39mcontrolToken) \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"The orchestrated run identity, exact fixture, and SSR control token are required\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m \u001b[36mconst\u001b[39m fixtures \u001b[33m=\u001b[39m assertFixtureCoverage(\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mparse(readFileSync(fixturePath\u001b[33m,\u001b[39m \u001b[32m\"utf8\"\u001b[39m))) \u001b[36mas\u001b[39m \u001b[33mFixtureManifest\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 32 |\u001b[39m \u001b[36mconst\u001b[39m registered\u001b[33m:\u001b[39m string[] \u001b[33m=\u001b[39m []\u001b[33m;\u001b[39m registerRequiredCases((id\u001b[33m:\u001b[39m string) \u001b[33m=>\u001b[39m registered\u001b[33m.\u001b[39mpush(id))\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m \u001b[36mif\u001b[39m (\u001b[36mnew\u001b[39m \u001b[33mSet\u001b[39m(registered)\u001b[33m.\u001b[39msize \u001b[33m!==\u001b[39m registered\u001b[33m.\u001b[39mlength) \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"Required Playwright registration contains duplicates\"\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+    },
+    {
+      "message": "Error: No tests found",
+      "stack": "Error: No tests found"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-07-28T09:01:05.538Z",
+    "duration": 148.245,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

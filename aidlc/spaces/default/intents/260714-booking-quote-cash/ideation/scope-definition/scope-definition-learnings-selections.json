@@ -1,0 +1,21 @@
+{
+  "stage_slug": "scope-definition",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat the worked W1-01 thin journey as the minimum release, not as a menu of independently deferrable backend and frontend pieces.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Prioritize a walking skeleton with risk-first contract and migration work over horizontal component batches; each increment must preserve a path to observable user value.",
+      "source": "orchestrator"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "stage_slug": "requirements-analysis",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Treat the approved Context Pack, scope, page contracts, rough interaction artifacts, and affirmed practices as binding requirements sources; use the requirements interview only for decisions those sources explicitly leave unresolved.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Contract Evolution",
+      "text": "Preserve one shared interaction grammar while respecting provider-owned capability differences; never create identical client controls that simulate unsupported operations or silently expand backend scope.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Testing Posture",
+      "text": "Define measurable local performance acceptance only as a documented local benchmark; do not infer or claim a production SLO without an approved production workload, hosting topology, and measurement method.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c4",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Contract Evolution",
+      "text": "Create a permanent compatibility redirect only when an inventoried source maps unambiguously to one canonical target and every retained query value can be safely validated; otherwise use the explicit not-found or gone outcome from the approved retirement inventory.",
+      "source": "orchestrator"
+    }
+  ]
+}

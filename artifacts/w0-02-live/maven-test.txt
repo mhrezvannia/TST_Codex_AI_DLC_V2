@@ -1,0 +1,997 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] shared-platform-services                                           [pom]
+[INFO] platform-messaging                                                 [jar]
+[INFO] identity-service                                                   [pom]
+[INFO] identity-domain-core                                               [jar]
+[INFO] identity-application-service                                       [jar]
+[INFO] identity-application                                               [jar]
+[INFO] identity-dataaccess                                                [jar]
+[INFO] identity-messaging                                                 [jar]
+[INFO] identity-published-language                                        [jar]
+[INFO] identity-container                                                 [jar]
+[INFO] reference-data-service                                             [pom]
+[INFO] reference-data-domain-core                                         [jar]
+[INFO] reference-data-application-service                                 [jar]
+[INFO] reference-data-application                                         [jar]
+[INFO] reference-data-dataaccess                                          [jar]
+[INFO] reference-data-messaging                                           [jar]
+[INFO] reference-data-published-language                                  [jar]
+[INFO] reference-data-container                                           [jar]
+[INFO] charge-agreement-service                                           [pom]
+[INFO] charge-agreement-domain-core                                       [jar]
+[INFO] charge-agreement-application-service                               [jar]
+[INFO] charge-agreement-application                                       [jar]
+[INFO] charge-agreement-dataaccess                                        [jar]
+[INFO] charge-agreement-messaging                                         [jar]
+[INFO] charge-agreement-published-language                                [jar]
+[INFO] charge-agreement-container                                         [jar]
+[INFO] booking-service                                                    [pom]
+[INFO] booking-domain-core                                                [jar]
+[INFO] booking-application-service                                        [jar]
+[INFO] booking-dataaccess                                                 [jar]
+[INFO] booking-messaging                                                  [jar]
+[INFO] booking-container                                                  [jar]
+[INFO] container-movement-service                                         [pom]
+[INFO] container-movement-domain-core                                     [jar]
+[INFO] container-movement-application-service                             [jar]
+[INFO] container-movement-dataaccess                                      [jar]
+[INFO] container-movement-messaging                                       [jar]
+[INFO] container-movement-container                                       [jar]
+[INFO]
+[INFO] ----------< com.linercore.platform:shared-platform-services >-----------
+[INFO] Building shared-platform-services 0.1.0-SNAPSHOT                  [1/38]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -------------< com.linercore.platform:platform-messaging >--------------
+[INFO] Building platform-messaging 0.1.0-SNAPSHOT                        [2/38]
+[INFO]   from platform-messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ platform-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\platform-messaging\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ platform-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ platform-messaging ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ platform-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ platform-messaging ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.messaging.PlatformMessagingTest
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.367 s -- in com.linercore.platform.messaging.PlatformMessagingTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --------------< com.linercore.platform:identity-service >---------------
+[INFO] Building identity-service 0.1.0-SNAPSHOT                          [3/38]
+[INFO]   from identity-service\pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] ------------< com.linercore.platform:identity-domain-core >-------------
+[INFO] Building identity-domain-core 0.1.0-SNAPSHOT                      [4/38]
+[INFO]   from identity-service\domain-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ identity-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\domain-core\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ identity-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ identity-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\domain-core\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ identity-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ identity-domain-core ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.identity.domain.catalog.AuthorizationPolicyEvaluatorTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.139 s -- in com.linercore.platform.identity.domain.catalog.AuthorizationPolicyEvaluatorTest
+[INFO] Running com.linercore.platform.identity.domain.CorrelationIdTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.linercore.platform.identity.domain.CorrelationIdTest
+[INFO] Running com.linercore.platform.identity.domain.DomainCoreDependencyTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.linercore.platform.identity.domain.DomainCoreDependencyTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --------< com.linercore.platform:identity-application-service >---------
+[INFO] Building identity-application-service 0.1.0-SNAPSHOT              [5/38]
+[INFO]   from identity-service\application-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ identity-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\application-service\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ identity-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ identity-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\application-service\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ identity-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ identity-application-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.identity.applicationservice.IdentityApplicationServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.200 s -- in com.linercore.platform.identity.applicationservice.IdentityApplicationServiceTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ------------< com.linercore.platform:identity-application >-------------
+[INFO] Building identity-application 0.1.0-SNAPSHOT                      [6/38]
+[INFO]   from identity-service\application\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ identity-application ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\application\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ identity-application ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ identity-application ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\application\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ identity-application ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ identity-application ---
+[INFO] No tests to run.
+[INFO]
+[INFO] -------------< com.linercore.platform:identity-dataaccess >-------------
+[INFO] Building identity-dataaccess 0.1.0-SNAPSHOT                       [7/38]
+[INFO]   from identity-service\dataaccess\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ identity-dataaccess ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\dataaccess\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ identity-dataaccess ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ identity-dataaccess ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\dataaccess\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ identity-dataaccess ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ identity-dataaccess ---
+[INFO] No tests to run.
+[INFO]
+[INFO] -------------< com.linercore.platform:identity-messaging >--------------
+[INFO] Building identity-messaging 0.1.0-SNAPSHOT                        [8/38]
+[INFO]   from identity-service\messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ identity-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\messaging\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ identity-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ identity-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\messaging\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ identity-messaging ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ identity-messaging ---
+[INFO] No tests to run.
+[INFO]
+[INFO] ---------< com.linercore.platform:identity-published-language >---------
+[INFO] Building identity-published-language 0.1.0-SNAPSHOT               [9/38]
+[INFO]   from identity-service\published-language\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ identity-published-language ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\published-language\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ identity-published-language ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ identity-published-language ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\published-language\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ identity-published-language ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ identity-published-language ---
+[INFO] No tests to run.
+[INFO]
+[INFO] -------------< com.linercore.platform:identity-container >--------------
+[INFO] Building identity-container 0.1.0-SNAPSHOT                       [10/38]
+[INFO]   from identity-service\container\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ identity-container ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ identity-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ identity-container ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\identity-service\container\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ identity-container ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ identity-container ---
+[INFO] No tests to run.
+[INFO]
+[INFO] -----------< com.linercore.platform:reference-data-service >------------
+[INFO] Building reference-data-service 0.1.0-SNAPSHOT                   [11/38]
+[INFO]   from reference-data-service\pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] ---------< com.linercore.platform:reference-data-domain-core >----------
+[INFO] Building reference-data-domain-core 0.1.0-SNAPSHOT               [12/38]
+[INFO]   from reference-data-service\domain-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ reference-data-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\domain-core\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reference-data-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reference-data-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\domain-core\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reference-data-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ reference-data-domain-core ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.referencedata.domain.CorrelationIdTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.095 s -- in com.linercore.platform.referencedata.domain.CorrelationIdTest
+[INFO] Running com.linercore.platform.referencedata.domain.DomainCoreDependencyTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.linercore.platform.referencedata.domain.DomainCoreDependencyTest
+[INFO] Running com.linercore.platform.referencedata.domain.model.ReferenceSetTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.linercore.platform.referencedata.domain.model.ReferenceSetTest
+[INFO] Running com.linercore.platform.referencedata.domain.outbox.ReferenceEventMapperTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.linercore.platform.referencedata.domain.outbox.ReferenceEventMapperTest
+[INFO] Running com.linercore.platform.referencedata.domain.validation.ReferenceValidatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.linercore.platform.referencedata.domain.validation.ReferenceValidatorTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] -----< com.linercore.platform:reference-data-application-service >------
+[INFO] Building reference-data-application-service 0.1.0-SNAPSHOT       [13/38]
+[INFO]   from reference-data-service\application-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ reference-data-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\application-service\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reference-data-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reference-data-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\application-service\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reference-data-application-service ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 3 source files with javac [debug release 21] to target\test-classes
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ reference-data-application-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.referencedata.applicationservice.ReferenceDataApplicationServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.211 s -- in com.linercore.platform.referencedata.applicationservice.ReferenceDataApplicationServiceTest
+[INFO] Running com.linercore.platform.referencedata.applicationservice.ReferenceEventOutboxApplicationServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in com.linercore.platform.referencedata.applicationservice.ReferenceEventOutboxApplicationServiceTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ---------< com.linercore.platform:reference-data-application >----------
+[INFO] Building reference-data-application 0.1.0-SNAPSHOT               [14/38]
+[INFO]   from reference-data-service\application\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ reference-data-application ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\application\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reference-data-application ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reference-data-application ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\application\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reference-data-application ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ reference-data-application ---
+[INFO] No tests to run.
+[INFO]
+[INFO] ----------< com.linercore.platform:reference-data-dataaccess >----------
+[INFO] Building reference-data-dataaccess 0.1.0-SNAPSHOT                [15/38]
+[INFO]   from reference-data-service\dataaccess\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ reference-data-dataaccess ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reference-data-dataaccess ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reference-data-dataaccess ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\dataaccess\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reference-data-dataaccess ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ reference-data-dataaccess ---
+[INFO] No tests to run.
+[INFO]
+[INFO] ----------< com.linercore.platform:reference-data-messaging >-----------
+[INFO] Building reference-data-messaging 0.1.0-SNAPSHOT                 [16/38]
+[INFO]   from reference-data-service\messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ reference-data-messaging ---
+[INFO] Copying 4 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reference-data-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reference-data-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\messaging\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reference-data-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ reference-data-messaging ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.referencedata.messaging.KafkaReferenceEventPublisherSerdeTest
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.473 s -- in com.linercore.platform.referencedata.messaging.KafkaReferenceEventPublisherSerdeTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ------< com.linercore.platform:reference-data-published-language >------
+[INFO] Building reference-data-published-language 0.1.0-SNAPSHOT        [17/38]
+[INFO]   from reference-data-service\published-language\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ reference-data-published-language ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\published-language\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reference-data-published-language ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reference-data-published-language ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\published-language\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reference-data-published-language ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ reference-data-published-language ---
+[INFO] No tests to run.
+[INFO]
+[INFO] ----------< com.linercore.platform:reference-data-container >-----------
+[INFO] Building reference-data-container 0.1.0-SNAPSHOT                 [18/38]
+[INFO]   from reference-data-service\container\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ reference-data-container ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reference-data-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reference-data-container ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\reference-data-service\container\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reference-data-container ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ reference-data-container ---
+[INFO] No tests to run.
+[INFO]
+[INFO] ----------< com.linercore.platform:charge-agreement-service >-----------
+[INFO] Building charge-agreement-service 0.1.0-SNAPSHOT                 [19/38]
+[INFO]   from charge-agreement-service\pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] --------< com.linercore.platform:charge-agreement-domain-core >---------
+[INFO] Building charge-agreement-domain-core 0.1.0-SNAPSHOT             [20/38]
+[INFO]   from charge-agreement-service\domain-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ charge-agreement-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\domain-core\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ charge-agreement-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ charge-agreement-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\domain-core\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ charge-agreement-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ charge-agreement-domain-core ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.chargeagreement.domain.model.CustomerAgreementTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.089 s -- in com.linercore.platform.chargeagreement.domain.model.CustomerAgreementTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ----< com.linercore.platform:charge-agreement-application-service >-----
+[INFO] Building charge-agreement-application-service 0.1.0-SNAPSHOT     [21/38]
+[INFO]   from charge-agreement-service\application-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ charge-agreement-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\application-service\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ charge-agreement-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ charge-agreement-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\application-service\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ charge-agreement-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ charge-agreement-application-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.chargeagreement.applicationservice.ChargeAgreementApplicationServiceTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 s -- in com.linercore.platform.chargeagreement.applicationservice.ChargeAgreementApplicationServiceTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --------< com.linercore.platform:charge-agreement-application >---------
+[INFO] Building charge-agreement-application 0.1.0-SNAPSHOT             [22/38]
+[INFO]   from charge-agreement-service\application\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ charge-agreement-application ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\application\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ charge-agreement-application ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ charge-agreement-application ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\application\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ charge-agreement-application ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ charge-agreement-application ---
+[INFO] No tests to run.
+[INFO]
+[INFO] ---------< com.linercore.platform:charge-agreement-dataaccess >---------
+[INFO] Building charge-agreement-dataaccess 0.1.0-SNAPSHOT              [23/38]
+[INFO]   from charge-agreement-service\dataaccess\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ charge-agreement-dataaccess ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ charge-agreement-dataaccess ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ charge-agreement-dataaccess ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\dataaccess\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ charge-agreement-dataaccess ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ charge-agreement-dataaccess ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.chargeagreement.dataaccess.inmemory.InMemoryAgreementRepositoryTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s -- in com.linercore.platform.chargeagreement.dataaccess.inmemory.InMemoryAgreementRepositoryTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ---------< com.linercore.platform:charge-agreement-messaging >----------
+[INFO] Building charge-agreement-messaging 0.1.0-SNAPSHOT               [24/38]
+[INFO]   from charge-agreement-service\messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ charge-agreement-messaging ---
+[INFO] Copying 5 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ charge-agreement-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ charge-agreement-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\messaging\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ charge-agreement-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ charge-agreement-messaging ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.chargeagreement.messaging.KafkaAgreementEventPublisherSerdeTest
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.367 s -- in com.linercore.platform.chargeagreement.messaging.KafkaAgreementEventPublisherSerdeTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] -----< com.linercore.platform:charge-agreement-published-language >-----
+[INFO] Building charge-agreement-published-language 0.1.0-SNAPSHOT      [25/38]
+[INFO]   from charge-agreement-service\published-language\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ charge-agreement-published-language ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\published-language\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ charge-agreement-published-language ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ charge-agreement-published-language ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\published-language\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ charge-agreement-published-language ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ charge-agreement-published-language ---
+[INFO] No tests to run.
+[INFO]
+[INFO] ---------< com.linercore.platform:charge-agreement-container >----------
+[INFO] Building charge-agreement-container 0.1.0-SNAPSHOT               [26/38]
+[INFO]   from charge-agreement-service\container\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ charge-agreement-container ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ charge-agreement-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ charge-agreement-container ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\charge-agreement-service\container\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ charge-agreement-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ charge-agreement-container ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.chargeagreement.container.api.ChargeAgreementApiControllerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s -- in com.linercore.platform.chargeagreement.container.api.ChargeAgreementApiControllerTest
+[INFO] Running com.linercore.platform.chargeagreement.container.api.ChargeAgreementModuleControllerTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.linercore.platform.chargeagreement.container.api.ChargeAgreementModuleControllerTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ---------------< com.linercore.platform:booking-service >---------------
+[INFO] Building booking-service 0.1.0-SNAPSHOT                          [27/38]
+[INFO]   from booking-service\pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -------------< com.linercore.platform:booking-domain-core >-------------
+[INFO] Building booking-domain-core 0.1.0-SNAPSHOT                      [28/38]
+[INFO]   from booking-service\domain-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\domain-core\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\domain-core\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-domain-core ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.booking.domain.model.BookingTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in com.linercore.platform.booking.domain.model.BookingTest
+[INFO] Running com.linercore.platform.booking.domain.outbox.BookingEventMapperTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.linercore.platform.booking.domain.outbox.BookingEventMapperTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ---------< com.linercore.platform:booking-application-service >---------
+[INFO] Building booking-application-service 0.1.0-SNAPSHOT              [29/38]
+[INFO]   from booking-service\application-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\application-service\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\application-service\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-application-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.booking.applicationservice.BookingApplicationServiceTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.177 s -- in com.linercore.platform.booking.applicationservice.BookingApplicationServiceTest
+[INFO] Running com.linercore.platform.booking.applicationservice.pricing.ChargePricingPortAdapterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.linercore.platform.booking.applicationservice.pricing.ChargePricingPortAdapterTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] -------------< com.linercore.platform:booking-dataaccess >--------------
+[INFO] Building booking-dataaccess 0.1.0-SNAPSHOT                       [30/38]
+[INFO]   from booking-service\dataaccess\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-dataaccess ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-dataaccess ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-dataaccess ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\dataaccess\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-dataaccess ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-dataaccess ---
+[INFO] No tests to run.
+[INFO]
+[INFO] --------------< com.linercore.platform:booking-messaging >--------------
+[INFO] Building booking-messaging 0.1.0-SNAPSHOT                        [31/38]
+[INFO]   from booking-service\messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-messaging ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\messaging\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-messaging ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.booking.messaging.KafkaBookingEventPublisherSerdeTest
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.494 s -- in com.linercore.platform.booking.messaging.KafkaBookingEventPublisherSerdeTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --------------< com.linercore.platform:booking-container >--------------
+[INFO] Building booking-container 0.1.0-SNAPSHOT                        [32/38]
+[INFO]   from booking-service\container\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-container ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-container ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\container\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-container ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapterLiveTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.005 s -- in com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapterLiveTest
+[INFO] Running com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapterTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.678 s -- in com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapterTest
+[INFO]
+[INFO] Results:
+[INFO]
+[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1
+[INFO]
+[INFO]
+[INFO] ---------< com.linercore.platform:container-movement-service >----------
+[INFO] Building container-movement-service 0.1.0-SNAPSHOT               [33/38]
+[INFO]   from container-movement-service\pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -------< com.linercore.platform:container-movement-domain-core >--------
+[INFO] Building container-movement-domain-core 0.1.0-SNAPSHOT           [34/38]
+[INFO]   from container-movement-service\domain-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ container-movement-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\container-movement-service\domain-core\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ container-movement-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ container-movement-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\container-movement-service\domain-core\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ container-movement-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ container-movement-domain-core ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.containermovement.domain.model.ContainerJourneyTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.132 s -- in com.linercore.platform.containermovement.domain.model.ContainerJourneyTest
+[INFO] Running com.linercore.platform.containermovement.domain.outbox.MovementStatusEventMapperTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.linercore.platform.containermovement.domain.outbox.MovementStatusEventMapperTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] ---< com.linercore.platform:container-movement-application-service >----
+[INFO] Building container-movement-application-service 0.1.0-SNAPSHOT   [35/38]
+[INFO]   from container-movement-service\application-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ container-movement-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\container-movement-service\application-service\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ container-movement-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ container-movement-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\container-movement-service\application-service\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ container-movement-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ container-movement-application-service ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.containermovement.applicationservice.ContainerMovementApplicationServiceTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.127 s -- in com.linercore.platform.containermovement.applicationservice.ContainerMovementApplicationServiceTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --------< com.linercore.platform:container-movement-dataaccess >--------
+[INFO] Building container-movement-dataaccess 0.1.0-SNAPSHOT            [36/38]
+[INFO]   from container-movement-service\dataaccess\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ container-movement-dataaccess ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ container-movement-dataaccess ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ container-movement-dataaccess ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\container-movement-service\dataaccess\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ container-movement-dataaccess ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ container-movement-dataaccess ---
+[INFO] No tests to run.
+[INFO]
+[INFO] --------< com.linercore.platform:container-movement-messaging >---------
+[INFO] Building container-movement-messaging 0.1.0-SNAPSHOT             [37/38]
+[INFO]   from container-movement-service\messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ container-movement-messaging ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ container-movement-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ container-movement-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\container-movement-service\messaging\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ container-movement-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ container-movement-messaging ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.containermovement.messaging.KafkaContainerMovementEventPublisherSerdeTest
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.368 s -- in com.linercore.platform.containermovement.messaging.KafkaContainerMovementEventPublisherSerdeTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --------< com.linercore.platform:container-movement-container >---------
+[INFO] Building container-movement-container 0.1.0-SNAPSHOT             [38/38]
+[INFO]   from container-movement-service\container\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ container-movement-container ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ container-movement-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ container-movement-container ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\container-movement-service\container\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ container-movement-container ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ container-movement-container ---
+[INFO] No tests to run.
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for shared-platform-services 0.1.0-SNAPSHOT:
+[INFO]
+[INFO] shared-platform-services ........................... SUCCESS [  0.003 s]
+[INFO] platform-messaging ................................. SUCCESS [  2.963 s]
+[INFO] identity-service ................................... SUCCESS [  0.000 s]
+[INFO] identity-domain-core ............................... SUCCESS [  0.838 s]
+[INFO] identity-application-service ....................... SUCCESS [  1.006 s]
+[INFO] identity-application ............................... SUCCESS [  0.024 s]
+[INFO] identity-dataaccess ................................ SUCCESS [  0.018 s]
+[INFO] identity-messaging ................................. SUCCESS [  0.021 s]
+[INFO] identity-published-language ........................ SUCCESS [  0.028 s]
+[INFO] identity-container ................................. SUCCESS [  0.318 s]
+[INFO] reference-data-service ............................. SUCCESS [  0.001 s]
+[INFO] reference-data-domain-core ......................... SUCCESS [  1.235 s]
+[INFO] reference-data-application-service ................. SUCCESS [  2.262 s]
+[INFO] reference-data-application ......................... SUCCESS [  0.050 s]
+[INFO] reference-data-dataaccess .......................... SUCCESS [  0.051 s]
+[INFO] reference-data-messaging ........................... SUCCESS [  1.440 s]
+[INFO] reference-data-published-language .................. SUCCESS [  0.015 s]
+[INFO] reference-data-container ........................... SUCCESS [  0.126 s]
+[INFO] charge-agreement-service ........................... SUCCESS [  0.000 s]
+[INFO] charge-agreement-domain-core ....................... SUCCESS [  0.915 s]
+[INFO] charge-agreement-application-service ............... SUCCESS [  0.838 s]
+[INFO] charge-agreement-application ....................... SUCCESS [  0.014 s]
+[INFO] charge-agreement-dataaccess ........................ SUCCESS [  0.773 s]
+[INFO] charge-agreement-messaging ......................... SUCCESS [  1.279 s]
+[INFO] charge-agreement-published-language ................ SUCCESS [  0.010 s]
+[INFO] charge-agreement-container ......................... SUCCESS [  1.216 s]
+[INFO] booking-service .................................... SUCCESS [  0.001 s]
+[INFO] booking-domain-core ................................ SUCCESS [  0.871 s]
+[INFO] booking-application-service ........................ SUCCESS [  0.951 s]
+[INFO] booking-dataaccess ................................. SUCCESS [  0.052 s]
+[INFO] booking-messaging .................................. SUCCESS [  1.432 s]
+[INFO] booking-container .................................. SUCCESS [  1.798 s]
+[INFO] container-movement-service ......................... SUCCESS [  0.000 s]
+[INFO] container-movement-domain-core ..................... SUCCESS [  1.292 s]
+[INFO] container-movement-application-service ............. SUCCESS [  0.911 s]
+[INFO] container-movement-dataaccess ...................... SUCCESS [  0.029 s]
+[INFO] container-movement-messaging ....................... SUCCESS [  1.202 s]
+[INFO] container-movement-container ....................... SUCCESS [  0.239 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  24.808 s
+[INFO] Finished at: 2026-07-14T22:49:12+03:30
+[INFO] ------------------------------------------------------------------------

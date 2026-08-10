@@ -1,0 +1,697 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "c2f13dd",
+  "headCommit": "c2f13dd9c2ca2fe754a075f6688c74d7bdb90b0f",
+  "trackedDiffSha256": "dbeef56dbe881919fce433673c77e849212cc128818c7c589a8277ba93a5d3df",
+  "untracked": [
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/api-documentation.md",
+      "sha256": "ec6f74571dbcee13dd3d036823b3cf7a921137321760449e6e7c32230a85df91"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/architecture.md",
+      "sha256": "a3ad978ec754e7ed2add3f4c8121e3098cfe14981ad8169bf07a29ab39ccc465"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/business-overview.md",
+      "sha256": "34fa61d08512f85ec3db99db5448a3b3ed7208c1202d8a6d0c825f79bc463157"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/code-quality-assessment.md",
+      "sha256": "77e05830b5e26a53f73c0b46b33e02e19b5b85ce4edf3997c7a482e6653434d9"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/code-structure.md",
+      "sha256": "ca93a92f97eaa7c590f33f9d8094910bb5f8bf79dde0c597fb328877aee4a112"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/component-inventory.md",
+      "sha256": "67a1b59b1b6febcb4f7973a66e49e2e111a55c802dd7b2e30641196859c73c36"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/dependencies.md",
+      "sha256": "2a7219235d71ae1954854a3a0df80737ea03d7d7374e8e6a122e719091820fcd"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/reverse-engineering-timestamp.md",
+      "sha256": "0fe78b13908c737b6a9f07d27daba6e731ea2801848e243ab18bafd0e98befd1"
+    },
+    {
+      "path": "aidlc/spaces/default/codekb/TST_Codex_W2-02-closure/technology-stack.md",
+      "sha256": "ead8b72df7f89eee15357cd6ccb612690dc083faf697db0b7995cf7b1f5cd25b"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/aidlc-state.md",
+      "sha256": "92670e79b86704b34ac37497cae903ff055ec05f091ede4eb3498db0e64e514f"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/audit/hfr-ir-lpt-0191-9de086bdeedb.md",
+      "sha256": "7e29e2e2c3316a3b38f1f37608a33923b6c1b336785dc31df605370d0b182b13"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/code-generation/code-generation-plan.md",
+      "sha256": "27d093f93daf420cd3162d891b810023495e1098fd3ca729aa9c5d9ccb33713a"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/code-generation/code-summary.md",
+      "sha256": "b5e10ca6d9d4f84df6604c4519eb4a50f407c78ee401dee421bdb6621c79550e"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/functional-design/business-logic-model.md",
+      "sha256": "6754c5b3b315e1acd3eb19e951e8d4d613a8345430aa18ea26997f48ee11fa6c"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/functional-design/business-rules.md",
+      "sha256": "86976792467f5503ae60cb875db022948cef76dd090a2fb430d41ee0bb185fd3"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/functional-design/domain-entities.md",
+      "sha256": "b4890c6253ff782f1ec01cf61852f65b02ec519d25d96faa361c3fc5b63e04cc"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/functional-design/frontend-components.md",
+      "sha256": "98b901dca9039b544153b545f99437afa47a6fd1d3f8420b2654815f461c20fd"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/functional-design/functional-design-questions.md",
+      "sha256": "23cf7173a75a586bb3d1564a53eaa8cc10d4b6280c118fdfc3837e7bfcf57cd9"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/infrastructure-design/cicd-pipeline.md",
+      "sha256": "ab9240c238cb3bded5148c0a98a1c2ba7c3302ec59545b6dd8517d00f12d8c7f"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/infrastructure-design/deployment-architecture.md",
+      "sha256": "1e57657a42c42ec41928803f751da7b94871c04cba6339ffa60fb99ba0f579ac"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/infrastructure-design/infrastructure-design-questions.md",
+      "sha256": "1b881a83da34d92894b39a155ab260c9437aacecde0955372cb513853dd8e90f"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/infrastructure-design/infrastructure-services.md",
+      "sha256": "5b7cf77add0dbfee510879e04f1c5693e7cc79312a35ed4b6367303a9d046cac"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/infrastructure-design/monitoring-design.md",
+      "sha256": "76332af78a2f717374945d4b4e9dbff1e807ff50c057fb65aa2e94e4555537b0"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/infrastructure-design/shared-infrastructure.md",
+      "sha256": "2aa6eba8ad0f58d995243bff8bb715cc5bf03994534c776342582ef56fb7a8a2"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-design/logical-components.md",
+      "sha256": "8833b0f8afda903992b6313ea26fe8c507bed645419a3e0edfe2aafcc42114fc"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-design/nfr-design-questions.md",
+      "sha256": "e5655ea3439dfb482b81e43b1683a04d2649cc3204bd2f1c0826e46abe21e41c"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-design/performance-design.md",
+      "sha256": "9e59e5e2a0e5d491e780ee3f669077758141c8e289f206f84bbd3f0a6f6feaa5"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-design/reliability-design.md",
+      "sha256": "f9fe6383ea555aea70fc54132507667e95389f6d4bd9ecf9bdb2237a1f92b797"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-design/scalability-design.md",
+      "sha256": "bb92dacf8078d881b0bf7e657bdefc6cf877e37d0256b05ad5f0596777b404fb"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-design/security-design.md",
+      "sha256": "a3d10874be59d4f94391fc7ee76d7b019ed3b1f58e46af3a14e800a3c37f6e09"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-requirements/nfr-requirements-questions.md",
+      "sha256": "80c09ef081daad6ce04b24bacbd50e5e7396be712570abe4f1cfc9e5c9015202"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-requirements/performance-requirements.md",
+      "sha256": "bf0bdab2f016b2afa7ea278cace5203f3ff990e14364ba4c7a519b143017a587"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-requirements/reliability-requirements.md",
+      "sha256": "0551669f72ac7884b3879ba1274ac03d2c4e47bbf55488b203be8a1f2d5ff107"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-requirements/scalability-requirements.md",
+      "sha256": "8f23413d4aa4b7ac646170616ff8aa1069a403f2ac76ffe73e5637347b6f893c"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-requirements/security-requirements.md",
+      "sha256": "55abd7922283ac5c21ecb1c7ae5d086966f166418d814abfb3b41d328aafd9b5"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/booking-design-system-closure/nfr-requirements/tech-stack-decisions.md",
+      "sha256": "9e958a4fedafdc56022839e1de52cfbb2c10066d09b1752907a22916ff0b5f58"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/build-and-test-learning-selections.json",
+      "sha256": "5089ac0f642048bc48119bb1f6ac3f8ed205d41212f7018212aa4c0bc3ff9d7b"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/build-and-test-questions.md",
+      "sha256": "d32b6c5c0ca71d469650614ae89a18f7816726a08d41dc23af039ecd89916d67"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/build-and-test-summary.md",
+      "sha256": "70da1b14f40db2d76421da84c1b7246bac8d927dcfed9867a72656293e2ec4bf"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/build-instructions.md",
+      "sha256": "73f673cb986184cb013147fc54997d1deb0c14051da8a3b3f34ab6586b32bcb0"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/build-test-results.md",
+      "sha256": "2f05d7c554c49fc0d4ed11a0b97b2e0747828bcc8e92cef2cd1978eb13c256a8"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/integration-test-instructions.md",
+      "sha256": "f671bc659779f594356439953a5d2568c238c1210fdf9e5f0d7d9d651293549e"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/memory.md",
+      "sha256": "1628dca4e33a8617cbf58ddcf3a28312acc5797d2311f6872c3cea6322b261e3"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/performance-test-instructions.md",
+      "sha256": "bbf1de5f5c92db79ab619a02d29d5b6958acfa0e6d0f7e59349fe12675ed27e2"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/security-test-instructions.md",
+      "sha256": "535a7313eeba37c4fff32d7b9b912c121e9256284590b0ebe6443bf5ec8db9f1"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/build-and-test/unit-test-instructions.md",
+      "sha256": "646fcd3d8120b90ae4e3ead57b7ae21f2f054d489d0ede9ae7aed1536518d1ff"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/code-generation/memory.md",
+      "sha256": "db283d7d8b08e2b1f889615d8a27784ee4c7e7cb302e0dbf166f6a68a910bc5d"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/functional-design/memory.md",
+      "sha256": "9da2b808a5730e76ffafc812fdbfeb93e9cb4c8800db72a0e9616e96e082ae02"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/infrastructure-design/memory.md",
+      "sha256": "85930da74a387489b371d498bb801a93bfdee618c8d9f7d3b82e142ace735e3a"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/nfr-design/memory.md",
+      "sha256": "466e242581826ac883cfd5066271ddfa38263dd4f02b356bfc7663fbe0899930"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/construction/nfr-requirements/memory.md",
+      "sha256": "e8fcd1d699d082f9c75ae3c2dedbab3940d4468a9deefc0590ca5633ef11f3c0"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/approval-handoff/approval-handoff-questions.md",
+      "sha256": "93a35b4989a593d2469b42bc19b2bf6e6d10cc2cda840e69ac19d0a815ec59e5"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/approval-handoff/decision-log.md",
+      "sha256": "fefe136cb0394e75ca09feb5222586a810c40ee5aa25cb4e0dd081d9564e7141"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/approval-handoff/initiative-brief.md",
+      "sha256": "edfc052edb737dcb13fbd15c158ec662629195ae9b10fa96960d49b450f3f086"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/approval-handoff/memory.md",
+      "sha256": "0773cb70c48b43c032a91f157e062794431f7d6e20f445dfd9b1e501ffe33f1d"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/feasibility/constraint-register.md",
+      "sha256": "c4b6cfe5cf060cb492424b5c06aa482e73e17f9cbb97df6ccd4bd09432c4e370"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/feasibility/feasibility-assessment.md",
+      "sha256": "62aadd3abf7db855c672f54a7310ed1043d371919e95c6ceff010197862d1a75"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/feasibility/feasibility-questions.md",
+      "sha256": "c7c2d30f9e7d2f16ee7d8bed90f5944fff52e459afda96c3d8a6c3aaaaa7c726"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/feasibility/memory.md",
+      "sha256": "a1030f421f88adbc2d2f574fb1ed15581586d097ecf2d95889888659c239a10c"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/feasibility/raid-log.md",
+      "sha256": "79f55e2981d6ecd7596f305fa20459d886ede0fc8e4a6efea7ee278fe9b05a62"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/intent-capture/intent-capture-questions.md",
+      "sha256": "59f2385de7c950e8f042ffc8215e32c1efa08ab45afb6986409c98441b92e0e1"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/intent-capture/intent-statement.md",
+      "sha256": "9a65736446b6f33c8662991103672da05cd19b1a4fe9388435f4c80813d9be72"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/intent-capture/memory.md",
+      "sha256": "61eca966593485eab9f8c36f9a8ed1e0fb0317f61c7530d17b6fc44e8b05a60f"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/intent-capture/stakeholder-map.md",
+      "sha256": "087675de4ecfe99a03e5a731c59d427624157b3b675910d4868503af278d9933"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/market-research/build-vs-buy.md",
+      "sha256": "4df84da2bf1112c9a9437642a1ed012cfe27a6459d2f186a76054aa60bfed35f"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/market-research/competitive-analysis.md",
+      "sha256": "edd1e552f2f5646f70b01e7713a4133255bfc3b01ccc4b7f651f53c64d3b98d5"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/market-research/market-research-questions.md",
+      "sha256": "160882f7b2c1685c6e30859f2451d5622f0cfe471788737f67fb50105cf98f7a"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/market-research/market-trends.md",
+      "sha256": "4d364b3ff6bc445a295aa921d456d07f7017486bb693a72f3e8d61587edb3a99"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/market-research/memory.md",
+      "sha256": "f2b24baed35520b071f4f5a3d3077cd0729d122414312b871629beb509ea8990"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/rough-mockups/memory.md",
+      "sha256": "6bc78db594817bf54218a1caacdd236f5d074290d527b5b7a1eb6a275246a988"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/rough-mockups/rough-mockups-questions.md",
+      "sha256": "13637f86ddf1abd454bfee7b28b16ef3ab16894e7cf24feb3f462cbd007ada37"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/rough-mockups/user-flow.md",
+      "sha256": "69a7e0ac7310697116ff1d85d6cd8268ff9cc5563a225977506d0080509a00ac"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/rough-mockups/wireframes.md",
+      "sha256": "2065b9486423037ad46853be9b622400ee63698d3bfeef54ff414ce89e85b526"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/scope-definition/intent-backlog.md",
+      "sha256": "a2e6900aa3617a6b46cbb4c04bd69357b9938b4fb4f72578d055601dbb09d0fe"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/scope-definition/memory.md",
+      "sha256": "3dadf5c66260c39b5d24d85b14f63aac6435f77f79a7f4b5b593a49a6125f1c1"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/scope-definition/scope-definition-questions.md",
+      "sha256": "372399a71abd3cc45dcf528f51ca4357796dbde065ab8d82905d2f91f524a58a"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/scope-definition/scope-document.md",
+      "sha256": "2b00b3817b238ccbbcb953204cd37c3bac1c08362069d4d2a00a80c75fab8568"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/team-formation/memory.md",
+      "sha256": "bd22cd865545bf19ef92db4b7cd7e3a68f7e587391a9f761cd974441771e269d"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/team-formation/mob-composition.md",
+      "sha256": "f882112c460d379e7d548d5807e122b0e020d63da0c1c31f5e035cd7973ae511"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/team-formation/skill-matrix.md",
+      "sha256": "71cb0d17a7d94d3c3a5db64f94157aabd33a4d3796fd61cd5ff5caa52fba5937"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/team-formation/team-assessment.md",
+      "sha256": "e32ce78f61ed2d4c0781a450c21b5ce25b31e845e704d8fd5d7e595ca73a4ae6"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/ideation/team-formation/team-formation-questions.md",
+      "sha256": "c0630b4e58d44560d5b7448eafaeaf725805459eecaff5ea41b7c681f140884c"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/application-design/application-design-questions.md",
+      "sha256": "843eafc435839ae4624898931cf40302dec99b7c8eeecdc1cbc07bb7c59f91e0"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/application-design/component-dependency.md",
+      "sha256": "8e28b1e8b95a9278f3ab6e769333b8a82e565510d191df092a1113224aa3bee6"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/application-design/component-methods.md",
+      "sha256": "420ae8d0c821cdee30d2fcf8678f46895d511878d37e0336d581d361c060a7f1"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/application-design/components.md",
+      "sha256": "59916b6be5a526a7bff41954d489ec4e1df4574b00cc888b91a8ab2d96bbd0f8"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/application-design/decisions.md",
+      "sha256": "dcb52f5368dfa9f5104594bd281b32f6598588c0b1eb919a2f9c05a99f788025"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/application-design/memory.md",
+      "sha256": "098e0ebe3b8887c9d55b083777fdef902be252d71a3c527a93041611b8b3a64a"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/application-design/services.md",
+      "sha256": "8988b6b61282bb4794b1e6582f366b5b305578679618dafad008a231318f9e00"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/delivery-planning/bolt-plan.md",
+      "sha256": "a478ef955797abf684c9e6f7030132185659353d0a6deea8973aefa2d404d55a"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/delivery-planning/delivery-planning-questions.md",
+      "sha256": "e03996875efbfa89e500a244b4008682e05c7db87f8353998eb02d4eea341e8e"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/delivery-planning/external-dependency-map.md",
+      "sha256": "5bec72e5e512b6fc27058b4d5d5ae5dcb7681280577389dab8e2bd84cc002f96"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/delivery-planning/memory.md",
+      "sha256": "0696fe81c57b1d7b64be799dbe956cba78e47b92884a5cc3b50cb45ce49c4b28"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/delivery-planning/risk-and-sequencing-rationale.md",
+      "sha256": "7a811fe08c7609537ccf5d906eb150c0e486a7f57cda9ae8eb1beb4cb081e4df"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/delivery-planning/team-allocation.md",
+      "sha256": "815a0a54950ae6a279c6beef475a2673f51e625e9f27d290d080f9801457eb0d"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/practices-discovery/discovered-rules.md",
+      "sha256": "174a136c05419448407997c0b359407487562aa8e27f7b3562baab1b797b64ef"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/practices-discovery/evidence.md",
+      "sha256": "42f45f22cce77f33986c669e78d81d6533e6055def68f4b60ab93366f7f70bb2"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/practices-discovery/memory.md",
+      "sha256": "074c4c9d2f2b5df84a7d5765aaff8c0b224adf8338a0ec6e2ead3dc273e997be"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/practices-discovery/practices-discovery-timestamp.md",
+      "sha256": "8b9927fcfc26bc2baea89470df15a3a1708e98393f5f0dd1d8a75354262cf24e"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/practices-discovery/team-practices.md",
+      "sha256": "e789f4eb55fdd604abdc2f4641a3c2f5d260a057289725ce929de702228ac7e0"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/refined-mockups/accessibility-checklist.md",
+      "sha256": "acf163b5830097613a65fa90d5474d7b276986ad77ac4111cb4df68df10a77a1"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/refined-mockups/design-system-mapping.md",
+      "sha256": "170a2b574081df0a74e0ee07e929cf21a2af949e8405683cd0e8ea513ffaea55"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/refined-mockups/interaction-spec.md",
+      "sha256": "e4227476390955752c6a738dcddde44e1ffbfcf8ad0fe9ed5a276043e0fabcef"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/refined-mockups/memory.md",
+      "sha256": "2b5080bd7ce1e732972b0fb65c7e12a1ef09d1ff89a11739b9a7931bfbedb221"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/refined-mockups/mockups.md",
+      "sha256": "8337d2b97947990e1ab9fa74067fffd49516d2a8e90c03fcb8782919a3fe477c"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/refined-mockups/refined-mockups-questions.md",
+      "sha256": "0e4cc5ed61fd5de7c5d951ae1a47b95ce1ca6dff9750b7f66eb667c75103afa9"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/requirements-analysis/memory.md",
+      "sha256": "0ecaf64e28e786993ee0da28b3b618830420735279d48ff08a239d154d6c37ef"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/requirements-analysis/requirements-analysis-questions.md",
+      "sha256": "f046067d72ddf04f10482ce35251d5d133915cf1c342eff2485e2eb011bca436"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/requirements-analysis/requirements.md",
+      "sha256": "b152e601c987afb92b0351c86ca655d2b88dd1af4b973d344d71eb1042e1abe4"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/reverse-engineering/memory.md",
+      "sha256": "7b1196b3281bc2905651ef6ae3754ea1a4be55311b5a3beb2d4d652b8a365c1b"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/units-generation/memory.md",
+      "sha256": "5bbc937ad92eaa8a4d51379d15cd3ac34c316d2c82b016d1728e2827333b0fc7"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/units-generation/unit-of-work-dependency.md",
+      "sha256": "4c967839626aa73f1d079e3073eb694234fbc35badefe3a9374912f7c437eea2"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/units-generation/unit-of-work-story-map.md",
+      "sha256": "819c76d7c9c928e34bca85a79a0852cb63e2b623ed281972a1e8d2327dd96dc4"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/units-generation/unit-of-work.md",
+      "sha256": "f2ac666d0211015972976cdc889b9f109527d0b57810c22e24ed2c050456969b"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/units-generation/units-generation-questions.md",
+      "sha256": "f8d8c0430b0a556b9439b244ec4021a75de562bd3433c83125a897c3979b97d9"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/user-stories/memory.md",
+      "sha256": "adc3881f8a6d71a930cfe2d61fbb15d1708a92d2dadc0a6386ce390f3a1a7ffe"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/user-stories/personas.md",
+      "sha256": "7080be641fac3088f6bbdfd0098f4c75664af87f0d3ac005849d5763cd262933"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/user-stories/stories.md",
+      "sha256": "25473b8d24235c694235bbc0358a73b23bc21b1891fa2d816dc37b2735b211dd"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/user-stories/user-stories-assessment.md",
+      "sha256": "0ea9524e67f5d60b481c5c23830df66522fbb6ef9703b305db3c6df91775905a"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/inception/user-stories/user-stories-questions.md",
+      "sha256": "1c15e1d42e21cc93ebb81bf55d682bc9bce3b41dfc9d6cec80e947ef8042af1f"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/verification/phase-check-ideation.md",
+      "sha256": "90e3d8e8f896073da196eface79d587d250f2a5c16b10f1e16bd6738ab3cb898"
+    },
+    {
+      "path": "aidlc/spaces/default/intents/260721-design-system-closure/verification/phase-check-inception.md",
+      "sha256": "1fca7ee6a9b27008d3eb72b24c33adde995bfbbb4f4cf006aa9c7424c289b0d6"
+    },
+    {
+      "path": "apps/booking/app/api/health/route.test.ts",
+      "sha256": "b463470b5383ed0a7ca6799926d6fbef83e833c5f57932415f2c60bde956cb3a"
+    },
+    {
+      "path": "apps/booking/app/api/health/route.ts",
+      "sha256": "a748db71cb16ffa1d6f4e80dc6ab84ff6ced275817e768ad9a0837c8662b169c"
+    },
+    {
+      "path": "apps/booking/lib/booking-redirect.test.ts",
+      "sha256": "84dadad1b4f43556d4d03bab11f4ce184a623704940b750f9fcb9661c0a29d79"
+    },
+    {
+      "path": "apps/booking/lib/booking-redirect.ts",
+      "sha256": "ba3c818c1169a9725db260d8789f7c32e80b3cca6e3e50d88550797bd01f4079"
+    },
+    {
+      "path": "apps/shell/app/booking/[bookingId]/not-found.tsx",
+      "sha256": "75d04d59ae2cc95a91d8c9bc78781c1b9160c86915ea4d91e79a734552ae5f4e"
+    },
+    {
+      "path": "apps/shell/app/booking/booking-presentation.test.ts",
+      "sha256": "bea0bec8ee430fede3541f5bdb92776c2077a695e12b769b2dedd2cf2ee62426"
+    },
+    {
+      "path": "apps/shell/app/booking/booking-presentation.ts",
+      "sha256": "955fae7c17c5468790aa466626baba3c16d2c1b2d763e2508d9e901c1b938efd"
+    },
+    {
+      "path": "apps/shell/app/booking/layout.tsx",
+      "sha256": "d61143c56969f54b211099a5b28e7433733010260bc4366c31f8dc50768a5cbb"
+    },
+    {
+      "path": "apps/shell/app/booking/loading.test.tsx",
+      "sha256": "53dd27eee14e6eddfef5f1cc1d5260ec89bd5685b2851e594e4d1432447f5a2f"
+    },
+    {
+      "path": "apps/shell/app/booking/loading.tsx",
+      "sha256": "411a855442d1a8146129c2e66933974d50b8a45039943128dfa4cf8cf3e62e1d"
+    },
+    {
+      "path": "graphify-out/.graphify_learning.json",
+      "sha256": "dfcb3c5da5c41e462565e7820b671351f3a3bbf009536a28bc3f5dd37ede517a"
+    },
+    {
+      "path": "graphify-out/.vocab.txt",
+      "sha256": "a8af2f0ffd3d3c8aab6cc0a5db00403d910dcba29a039ea89355b7357865e228"
+    },
+    {
+      "path": "graphify-out/memory/query_20260721_125015_which_existing_w2_02_design_system_implementation.md",
+      "sha256": "55d9165eaec3a78ebe8d96d78661dd43dee094441d6b0ee9ae291b10993f6296"
+    },
+    {
+      "path": "graphify-out/memory/query_20260726_114423_buddy_we_are_going_through_wave_a__could_you_turn.md",
+      "sha256": "d04e6811521c74a98769760053738c6de7654f9d4afc2f7a00edec6fb75ac875"
+    },
+    {
+      "path": "graphify-out/reflections/LESSONS.md",
+      "sha256": "29b577f2a8e57490a4586a3a91cac4fe06f6c9dd67dc816779a695c0d99a3423"
+    },
+    {
+      "path": "infrastructure/compose/w2-02-acceptance.compose.yaml",
+      "sha256": "6df55dd681087aca6e64f587e75ded4faff5a598cd53cf7436bca5387016d7e3"
+    },
+    {
+      "path": "packages/ui/src/primitives.test.tsx",
+      "sha256": "965fdf74cce14069b0527db741f329dde25542b6b87242ea05b9116da80d253c"
+    },
+    {
+      "path": "packages/ui/vitest.setup.ts",
+      "sha256": "d07f07eb32c6aefcc426e769fd5190f93f555bc34e08bb3cd3d8c4e2bd3acac4"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "7f63600eb87e285e0018c3d39b0ca6716d3162347db3950fa09ea3651fcc3758"
+    },
+    {
+      "path": "scripts/check-w2-02-presentation.mjs",
+      "sha256": "1886ab8e69ddc39fd0e3bc8b0d5f485da6ad89eca768a837b471538f048d15d2"
+    },
+    {
+      "path": "scripts/check-w2-02-presentation.test.mjs",
+      "sha256": "2953f618497e8da5434cd902c4ae17ed8686cc9182f2493b7d91dd5d454c86a2"
+    },
+    {
+      "path": "scripts/w2-02-acceptance-guard.mjs",
+      "sha256": "3e54393f69586644106f3b5274740b828e3d8cd66352fc92dba63c93ba7bea87"
+    },
+    {
+      "path": "scripts/w2-02-acceptance-guard.test.mjs",
+      "sha256": "a13cc67df338be376c2861a9fc305ff4b7ba15e466e192dafa07e55be04af0e2"
+    },
+    {
+      "path": "scripts/w2-02-attempt-lineage.mjs",
+      "sha256": "feb1b17f7cef613d6bbb00d00fd3e35b194ca4ff3c95bfe0f6fd7263b2a410b3"
+    },
+    {
+      "path": "scripts/w2-02-browser-permit.mjs",
+      "sha256": "bd25203f96b78debe100649015120e75db699cddc88db1817adbda7fb675d2f1"
+    },
+    {
+      "path": "scripts/w2-02-completion-transaction.mjs",
+      "sha256": "975782d6aff655e177ab07c2b197044ebb4cac2ade6a743f2ef557f7acb8726e"
+    },
+    {
+      "path": "scripts/w2-02-coverage-ledger.mjs",
+      "sha256": "80bcd820b4bf308038d823c5d9350d628df3340dd86d91f8a0cc0c375abcb614"
+    },
+    {
+      "path": "scripts/w2-02-evidence.mjs",
+      "sha256": "551207968684cfaf2dec3de4cdf27ae15cbc93d0cb404cfad3b81df567074b5d"
+    },
+    {
+      "path": "scripts/w2-02-evidence.test.mjs",
+      "sha256": "85ffc7eaee8c777cef154f12f9513fad2f46dfd58e3efe83f786b792e382c31c"
+    },
+    {
+      "path": "scripts/w2-02-fixture-contract.mjs",
+      "sha256": "d4776e36b8449867ea1ff0c86b120df64fd5f52e188952a4891bbeeced969e8a"
+    },
+    {
+      "path": "scripts/w2-02-fixture-contract.test.mjs",
+      "sha256": "92529c3b1e4621d255cf386daf5bfa03471c8c94420d976277a847a4f70dd4e5"
+    },
+    {
+      "path": "scripts/w2-02-live-acceptance.mjs",
+      "sha256": "ffe34e0dd441ffe3099d1d21d86aa2b5c277a49671c31e5b5b0bb3449c0a1d17"
+    },
+    {
+      "path": "scripts/w2-02-live-acceptance.test.mjs",
+      "sha256": "b4fc30472270567331f3d6d228c2c47b9d4c4b751425ef974e9f04a26230eeb9"
+    },
+    {
+      "path": "scripts/w2-02-local-identities.mjs",
+      "sha256": "b54a565dd461e104ef656a75e634e6fc83d2e33bc1d790a358c9d1bfa5ebad4b"
+    },
+    {
+      "path": "scripts/w2-02-playwright-global-setup.mjs",
+      "sha256": "3ea7d34fb0f2a691f5ba89435bcae823b4c180d603a18f7febb665457ee9fdb8"
+    },
+    {
+      "path": "scripts/w2-02-presentation-baseline.json",
+      "sha256": "dca3991c8f4b9721b9e2666cfab07244133ec2a42fb91d93f721ccda670ceb63"
+    },
+    {
+      "path": "scripts/w2-02-pricing-fixture.mjs",
+      "sha256": "55c6679787941350556a66cdb46f11b9ee671fcbb4f1618a498cbde13f149420"
+    },
+    {
+      "path": "scripts/w2-02-pricing-fixture.test.mjs",
+      "sha256": "c86b91a36fbccfdad50ba86f783571d15d55fec79e88d645e7d7c796969a2f88"
+    },
+    {
+      "path": "scripts/w2-02-ssr-control-proxy-cli.mjs",
+      "sha256": "27ec6f7bad79aca6470e23539500f970e445130cfcda4cd9f28fbd150fdc001a"
+    },
+    {
+      "path": "scripts/w2-02-ssr-control-proxy.mjs",
+      "sha256": "4eafb392ca0df435bbff4e55b71ba0fa810d0cf0c1dd0d3a71344edfa3731899"
+    },
+    {
+      "path": "scripts/w2-02-storage-state.test.ts",
+      "sha256": "13def8095a2323cbd22b162a3eaa45cad08c6938bfdb89a022262601ec3f0d8f"
+    },
+    {
+      "path": "scripts/w2-02-storage-state.ts",
+      "sha256": "217d4c518e5585551cdf03af777791b40b80c652229905d0452bc8764bf48f6a"
+    },
+    {
+      "path": "scripts/w2-02-trace-sanitize-cli.mjs",
+      "sha256": "1fbf84e35b8632a3e260a81ff10ef633204a98e6b712e124bf3fcbe2160b9c3f"
+    },
+    {
+      "path": "scripts/w2-02-trace-sanitize.mjs",
+      "sha256": "f05c2fe07ccb05ec5b0afa9aae072bb1fbc040fb19f3107b29385ab398017bba"
+    },
+    {
+      "path": "scripts/w2-02-trace-sanitize.test.mjs",
+      "sha256": "a91387be81d498eb8454062b034e7343e357b164bafccdc0ed400ab43ca57147"
+    },
+    {
+      "path": "scripts/w2-02-ui-proof.mjs",
+      "sha256": "06c85bf7281af82a29e8cb9d75690e20db0223b28a192c549e5597e1744dedba"
+    },
+    {
+      "path": "scripts/w2-02-ui-proof.test.mjs",
+      "sha256": "b7d7a87275975b727e93f94352526122b5348f29ac2235630dc53e5f98d8a527"
+    },
+    {
+      "path": "scripts/w2-02-workspace-identity.mjs",
+      "sha256": "b99eaff0dd8ad61c083a6e350eb2fa98f0ba464df6430f95cbd4b37cafffd4ea"
+    },
+    {
+      "path": "scripts/w2-02-workspace-identity.test.mjs",
+      "sha256": "23b3378eab967b5e49adb53210bd34bbc1fff2d140519079bcb0e41c61f7c45e"
+    },
+    {
+      "path": "tests/w2-02/booking.spec.ts",
+      "sha256": "e82cf62a57327a4996ed9df0d23e8787ad0f9a345076ba520714d080b49cd778"
+    }
+  ],
+  "workspaceDigest": "af72dd4cff3dc7c901db2138341bf3d4babb5288d684574fef387dbfc115d7a3"
+}

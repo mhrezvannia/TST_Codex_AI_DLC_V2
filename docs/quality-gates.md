@@ -15,7 +15,25 @@ U08 defines merge-blocking checks for Shared Platform pull requests. Required ga
 | `skeleton-validate` | workspace | yes | `node scripts/validate-skeleton.mjs` |
 | `frontend-reference-data-test` | apps/reference-data | yes | Reference-data component and helper tests |
 | `frontend-reference-data-typecheck` | apps/reference-data | yes | `corepack yarn workspace @erp/app-reference-data typecheck` |
+| `package-auth-test` | packages/auth | yes | `corepack yarn workspace @erp/auth test` |
+| `package-auth-typecheck` | packages/auth | yes | `corepack yarn workspace @erp/auth typecheck` |
+| `package-auth-lint` | packages/auth | yes | `corepack yarn workspace @erp/auth lint` |
+| `package-shared-types-test` | packages/shared-types | yes | `corepack yarn workspace @erp/shared-types test` |
+| `package-shared-types-typecheck` | packages/shared-types | yes | `corepack yarn workspace @erp/shared-types typecheck` |
+| `package-shared-types-lint` | packages/shared-types | yes | `corepack yarn workspace @erp/shared-types lint` |
+| `frontend-auth-test` | apps/auth | yes | `corepack yarn workspace @erp/app-auth test` |
 | `frontend-auth-typecheck` | apps/auth | yes | `corepack yarn workspace @erp/app-auth typecheck` |
+| `frontend-auth-lint` | apps/auth | yes | `corepack yarn workspace @erp/app-auth lint` |
+| `frontend-auth-build` | apps/auth | yes | `corepack yarn workspace @erp/app-auth build` |
+| `frontend-booking-test` | apps/booking | yes | `corepack yarn workspace @erp/app-booking test` |
+| `frontend-booking-typecheck` | apps/booking | yes | `corepack yarn workspace @erp/app-booking typecheck` |
+| `frontend-booking-lint` | apps/booking | yes | `corepack yarn workspace @erp/app-booking lint` |
+| `frontend-booking-build` | apps/booking | yes | `corepack yarn workspace @erp/app-booking build` |
+| `frontend-shell-test` | apps/shell | yes | `corepack yarn workspace @erp/app-shell test` |
+| `frontend-shell-typecheck` | apps/shell | yes | `corepack yarn workspace @erp/app-shell typecheck` |
+| `frontend-shell-lint` | apps/shell | yes | `corepack yarn workspace @erp/app-shell lint` |
+| `frontend-shell-build` | apps/shell | yes | `corepack yarn workspace @erp/app-shell build` |
+| `w2-01-live-acceptance` | w2-01-live | yes | `node scripts/w2-01-live-acceptance.mjs --output-root artifacts/w2-01-live/app-shell-auth && node scripts/w2-01-live-acceptance.mjs --validate --require-pass --output-root artifacts/w2-01-live/app-shell-auth` |
 | `backend-test` | services | yes | `mvn -f services/pom.xml test` |
 
 ## Evidence
@@ -33,6 +51,8 @@ The runner writes `artifacts/quality-gates/evidence.json` with:
 The aggregate status fails when any required gate is failed, skipped unexpectedly, or missing.
 
 The readiness runner writes `artifacts/readiness/local-readiness.json` with `passed`, `blocked`, and `failed` counts. `blocked` means required local runtime dependencies are unavailable, not that code validation failed.
+
+W2-01 live acceptance writes `artifacts/w2-01-live/app-shell-auth/`. The schema validator can accept an honest `BLOCKED` package for local diagnosis, but CI uses `--require-pass`, so the merge gate fails until live Compose/Nginx/Keycloak scenarios and both audit detectors are green. The W1-01 live-proof waiver must remain explicit as `BLOCKED at compose-start`; it is not a W2-01 pass.
 
 ## Local Execution
 

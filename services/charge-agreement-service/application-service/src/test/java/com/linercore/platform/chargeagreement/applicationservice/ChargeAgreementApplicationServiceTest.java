@@ -8,34 +8,39 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.linercore.platform.chargeagreement.applicationservice.command.ChargeTermCommand;
 import com.linercore.platform.chargeagreement.applicationservice.command.CreateAgreementCommand;
 import com.linercore.platform.chargeagreement.applicationservice.command.UpdateAgreementCommand;
-import com.linercore.platform.chargeagreement.applicationservice.port.AgreementEventPublisherPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.AuthorizationPort;
 import com.linercore.platform.chargeagreement.applicationservice.port.IdGenerator;
+import com.linercore.platform.chargeagreement.applicationservice.port.LegacyPricingRequestRepository;
+import com.linercore.platform.chargeagreement.applicationservice.port.PricingRequestStatus;
 import com.linercore.platform.chargeagreement.applicationservice.port.ReferenceValidationPort;
+import com.linercore.platform.chargeagreement.applicationservice.port.StoredLegacyPricingRequest;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupQuery;
 import com.linercore.platform.chargeagreement.applicationservice.query.ActiveAgreementLookupResult;
-import com.linercore.platform.chargeagreement.applicationservice.query.AgreementFact;
 import com.linercore.platform.chargeagreement.domain.model.AgreementId;
 import com.linercore.platform.chargeagreement.domain.model.AgreementStatus;
 import com.linercore.platform.chargeagreement.domain.model.ChargeBasis;
 import com.linercore.platform.chargeagreement.domain.model.CustomerAgreement;
+import com.linercore.platform.chargeagreement.domain.model.LegacyPricingOutcome;
 import com.linercore.platform.chargeagreement.domain.model.ManualPricingCase;
 import com.linercore.platform.chargeagreement.domain.model.PricingRequest;
 import com.linercore.platform.chargeagreement.domain.model.PricingResult;
 import com.linercore.platform.chargeagreement.domain.model.ReferenceId;
+import com.linercore.platform.chargeagreement.domain.outbox.AgreementOutboxEvent;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class ChargeAgreementApplicationServiceTest {
     private final TestAgreementRepository agreements = new TestAgreementRepository();
-    private final List<AgreementFact> published = new ArrayList<>();
+    private final List<AgreementOutboxEvent> outbox = new ArrayList<>();
     private final List<ManualPricingCase> manualCases = new ArrayList<>();
     private final ChargeAgreementApplicationService service = new ChargeAgreementApplicationService(
             agreements,
@@ -43,7 +48,9 @@ class ChargeAgreementApplicationServiceTest {
             validReferences(),
             new SequentialIds(),
             Clock.fixed(Instant.parse("2026-07-08T00:00:00Z"), ZoneOffset.UTC),
-            published::add,
+            outbox::add,
+            null,
+            null,
             manualCases::add);
 
     @Test
@@ -54,8 +61,8 @@ class ChargeAgreementApplicationServiceTest {
         CustomerAgreement suspended = service.suspend(approved.id(), approved.version(), "ops-1", "hold", "corr-3");
 
         assertEquals(AgreementStatus.SUSPENDED, suspended.status());
-        assertEquals(4, published.size());
-        assertEquals("charge-agreement.approved", published.get(2).eventType());
+        assertEquals(4, outbox.size());
+        assertEquals("charge-agreement.approved", outbox.get(2).eventType());
     }
 
     @Test
@@ -106,29 +113,127 @@ class ChargeAgreementApplicationServiceTest {
     void pricesItemisedRequestFromActiveAgreementTerms() {
         approveAgreement("agr-price", "cust-1", "lane-1", "cmdty-1");
 
-        PricingResult result = service.price(new PricingRequest("price-req-1", ref("cust-1"), ref("lane-1"), ref("cmdty-1"),
-                LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 2), "corr-price"), "pricing-user");
+        LegacyPricingOutcome.Automatic outcome = (LegacyPricingOutcome.Automatic) service.price(
+                new PricingRequest("price-req-1", ref("cust-1"), ref("lane-1"), ref("cmdty-1"),
+                        LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 2), "corr-price"),
+                "pricing-user");
+        PricingResult result = outcome.result();
 
-        assertFalse(result.manualPricingRequired());
         assertEquals(new BigDecimal("84.00"), result.total().amount());
         assertEquals(1, result.lines().size());
     }
 
     @Test
     void recordsManualPricingCaseWhenNoActiveAgreementMatches() {
-        PricingResult result = service.price(new PricingRequest("price-req-2", ref("cust-missing"), ref("lane-1"), ref("cmdty-1"),
-                LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 1), "corr-manual"), "pricing-user");
+        LegacyPricingOutcome.Manual result = (LegacyPricingOutcome.Manual) service.price(
+                new PricingRequest("price-req-2", ref("cust-missing"), ref("lane-1"), ref("cmdty-1"),
+                        LocalDate.parse("2026-06-01"), Map.of(ChargeBasis.TEU, 1), "corr-manual"),
+                "pricing-user");
 
-        assertTrue(result.manualPricingRequired());
-        assertEquals("NO_ACTIVE_AGREEMENT", result.reasonCode());
+        assertEquals("NO_RATE", result.reasonCode());
         assertEquals(1, manualCases.size());
-        assertEquals("price-req-2", manualCases.get(0).pricingRequestId());
+        assertEquals("price-req-2:0", manualCases.get(0).pricingRequestId());
+    }
+
+    @Test
+    void requestPricingReplaysTerminalResultAndRejectsConflictingBody() {
+        approveAgreement("agr-price", "cust-1", "lane-1", "cmdty-1");
+        InMemoryPricingRequests pricingRequests = new InMemoryPricingRequests(true);
+        ChargeAgreementApplicationService pricedService = serviceWithPricingRequests(pricingRequests);
+        PricingRequest request = pricingRequest("booking-1", "lane-1", "cust-1", "cmdty-1", 7);
+
+        LegacyPricingOutcome.Automatic first = (LegacyPricingOutcome.Automatic) pricedService.requestPricing(
+                request, "booking-1:7", "pricing-user");
+        LegacyPricingOutcome.Automatic replay = (LegacyPricingOutcome.Automatic) pricedService.requestPricing(
+                request, "booking-1:7", "pricing-user");
+
+        assertEquals(first.result().pricingRef(), replay.result().pricingRef());
+        assertEquals(1, pricingRequests.insertCount);
+        assertThrows(PricingConflictException.class, () -> pricedService.requestPricing(
+                pricingRequest("booking-1", "lane-1", "cust-1", "cmdty-other", 7), "booking-1:7",
+                "pricing-user"));
+    }
+
+    @Test
+    void requestPricingRejectsSameHashWhileLeaseIsLive() {
+        InMemoryPricingRequests pricingRequests = new InMemoryPricingRequests(false);
+        ChargeAgreementApplicationService pricedService = serviceWithPricingRequests(pricingRequests);
+        PricingRequest request = pricingRequest("booking-2", "lane-1", "cust-missing", "cmdty-1", 1);
+
+        assertThrows(PricingRequestInProgressException.class,
+                () -> pricedService.requestPricing(request, "booking-2:1", "pricing-user"));
+        assertThrows(PricingRequestInProgressException.class,
+                () -> pricedService.requestPricing(request, "booking-2:1", "pricing-user"));
+    }
+
+    @Test
+    void expiredPricingClaimIsTakenOverAndFencedCompletionProtectsWinner() {
+        approveAgreement("agr-price", "cust-1", "lane-1", "cmdty-1");
+        InMemoryPricingRequests pricingRequests = new InMemoryPricingRequests(false);
+        Clock firstAttemptClock = Clock.fixed(Instant.parse("2026-07-08T00:00:00Z"), ZoneOffset.UTC);
+        ChargeAgreementApplicationService firstAttempt = serviceWithPricingRequests(pricingRequests, firstAttemptClock);
+        PricingRequest request = pricingRequest("booking-3", "lane-1", "cust-1", "cmdty-1", 3);
+
+        assertThrows(PricingRequestInProgressException.class,
+                () -> firstAttempt.requestPricing(request, "booking-3:3", "pricing-user"));
+        String originalOwner = pricingRequests.records.get("booking-3:3").ownerToken();
+        pricingRequests.completeEnabled = true;
+
+        ChargeAgreementApplicationService takeover = serviceWithPricingRequests(pricingRequests,
+                Clock.fixed(Instant.parse("2026-07-08T00:00:11Z"), ZoneOffset.UTC));
+        LegacyPricingOutcome.Automatic outcome = (LegacyPricingOutcome.Automatic) takeover.requestPricing(
+                request, "booking-3:3", "pricing-user");
+        PricingResult result = outcome.result();
+
+        assertEquals(1, pricingRequests.insertCount);
+        assertEquals(1, pricingRequests.takeoverCount);
+        assertEquals(PricingRequestStatus.COMPLETED, pricingRequests.records.get("booking-3:3").status());
+        assertFalse(pricingRequests.completeOwned(
+                "booking-3:3", originalOwner,
+                new LegacyPricingOutcome.Manual("late-result", "LATE_OWNER", "corr"),
+                "LATE_OWNER", Instant.parse("2026-07-08T00:00:12Z")));
+        LegacyPricingOutcome.Automatic stored =
+                (LegacyPricingOutcome.Automatic) pricingRequests.records.get("booking-3:3").outcome();
+        assertEquals(result.pricingRef(), stored.result().pricingRef());
     }
 
     private CustomerAgreement approveAgreement(String number, String customerId, String tradeLaneId, String commodityId) {
         CustomerAgreement created = service.create(createCommand(number, customerId, tradeLaneId, commodityId));
         CustomerAgreement updated = service.update(created.id(), created.version(), updateCommand(number, customerId, tradeLaneId, commodityId));
         return service.approve(updated.id(), updated.version(), "approver-1", "approved", "corr");
+    }
+
+    private ChargeAgreementApplicationService serviceWithPricingRequests(
+            LegacyPricingRequestRepository pricingRequests) {
+        return serviceWithPricingRequests(pricingRequests,
+                Clock.fixed(Instant.parse("2026-07-08T00:00:00Z"), ZoneOffset.UTC));
+    }
+
+    private ChargeAgreementApplicationService serviceWithPricingRequests(
+            LegacyPricingRequestRepository pricingRequests, Clock clock) {
+        return new ChargeAgreementApplicationService(
+                agreements,
+                allowAll(),
+                validReferences(),
+                new SequentialIds(),
+                clock,
+                null,
+                null,
+                null,
+                manualCases::add,
+                pricingRequests);
+    }
+
+    private PricingRequest pricingRequest(
+            String bookingRef,
+            String tradeLane,
+            String partyId,
+            String commodityCode,
+            int amendmentSeq) {
+        return new PricingRequest(bookingRef, tradeLane, "USNYC", "NLRTM", "22G1", partyId, commodityCode, false, false,
+                new PricingRequest.PricingDates(LocalDate.parse("2026-06-01"), LocalDate.parse("2026-06-01")),
+                new PricingRequest.PricingQuantities(1, 2, amendmentSeq),
+                "corr-pricing");
     }
 
     private CreateAgreementCommand createCommand(String number, String customerId, String tradeLaneId, String commodityId) {
@@ -166,6 +271,87 @@ class ChargeAgreementApplicationServiceTest {
 
         public String nextId() {
             return "id-" + next++;
+        }
+    }
+
+    private static class InMemoryPricingRequests implements LegacyPricingRequestRepository {
+        private final Map<String, StoredLegacyPricingRequest> records = new LinkedHashMap<>();
+        private boolean completeEnabled;
+        private int insertCount;
+        private int takeoverCount;
+
+        private InMemoryPricingRequests(boolean completeEnabled) {
+            this.completeEnabled = completeEnabled;
+        }
+
+        public Optional<StoredLegacyPricingRequest> findByIdempotencyKey(String idempotencyKey) {
+            return Optional.ofNullable(records.get(idempotencyKey));
+        }
+
+        public boolean insertClaim(StoredLegacyPricingRequest claim) {
+            if (records.containsKey(claim.idempotencyKey())) {
+                return false;
+            }
+            records.put(claim.idempotencyKey(), claim);
+            insertCount++;
+            return true;
+        }
+
+        public boolean takeOverExpiredClaim(String idempotencyKey, String ownerToken, Instant leaseUntil, Instant now) {
+            StoredLegacyPricingRequest existing = records.get(idempotencyKey);
+            if (existing == null
+                    || existing.status() != PricingRequestStatus.IN_PROGRESS
+                    || existing.leaseUntil().isAfter(now)) {
+                return false;
+            }
+            records.put(idempotencyKey, new StoredLegacyPricingRequest(
+                    existing.idempotencyKey(),
+                    existing.bookingRef(),
+                    existing.amendmentSeq(),
+                    existing.requestHash(),
+                    existing.status(),
+                    ownerToken,
+                    leaseUntil,
+                    existing.outcome(),
+                    existing.terminalCode(),
+                    existing.correlationId(),
+                    existing.startedAt(),
+                    existing.completedAt()));
+            takeoverCount++;
+            return true;
+        }
+
+        public boolean completeOwned(
+                String idempotencyKey,
+                String ownerToken,
+                LegacyPricingOutcome outcome,
+                String terminalCode,
+                Instant completedAt) {
+            if (!completeEnabled) {
+                return false;
+            }
+            StoredLegacyPricingRequest existing = records.get(idempotencyKey);
+            if (existing == null
+                    || existing.status() != PricingRequestStatus.IN_PROGRESS
+                    || !existing.ownerToken().equals(ownerToken)) {
+                return false;
+            }
+            records.put(idempotencyKey, new StoredLegacyPricingRequest(
+                    existing.idempotencyKey(),
+                    existing.bookingRef(),
+                    existing.amendmentSeq(),
+                    existing.requestHash(),
+                    outcome instanceof LegacyPricingOutcome.Manual
+                            ? PricingRequestStatus.MANUAL
+                            : PricingRequestStatus.COMPLETED,
+                    existing.ownerToken(),
+                    existing.leaseUntil(),
+                    outcome,
+                    terminalCode,
+                    existing.correlationId(),
+                    existing.startedAt(),
+                    completedAt));
+            return true;
         }
     }
 }

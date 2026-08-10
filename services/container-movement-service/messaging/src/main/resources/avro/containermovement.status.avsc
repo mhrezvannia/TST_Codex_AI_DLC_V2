@@ -1,0 +1,50 @@
+{
+  "type": "record",
+  "name": "ContainerMovementStatus",
+  "namespace": "com.linercore.containermovement.events",
+  "doc": "Canonical container movement status event consumed by Booking.",
+  "fields": [
+    { "name": "id", "type": "string" },
+    { "name": "source", "type": "string" },
+    { "name": "type", "type": "string" },
+    { "name": "time", "type": "string" },
+    { "name": "correlationId", "type": "string" },
+    { "name": "dataSchemaVersion", "type": "int" },
+    {
+      "name": "data",
+      "type": {
+        "type": "record",
+        "name": "ContainerMovementStatusData",
+        "fields": [
+          { "name": "bookingRef", "type": "string" },
+          { "name": "containerRef", "type": "string" },
+          { "name": "movementId", "type": ["null", "string"], "default": null },
+          { "name": "sequenceNumber", "type": "int", "default": 0 },
+          { "name": "moveCode", "type": "string" },
+          { "name": "eventClassifierCode", "type": "string" },
+          { "name": "occurredDateTime", "type": "string" },
+          { "name": "receivedDateTime", "type": "string" },
+          { "name": "derivedStatus", "type": "string" },
+          { "name": "emptyIndicatorCode", "type": "string" },
+          { "name": "transshipment", "type": "boolean" },
+          {
+            "name": "location",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "MovementLocation",
+                "fields": [
+                  { "name": "unLocationCode", "type": ["null", "string"], "default": null },
+                  { "name": "facilityCode", "type": ["null", "string"], "default": null },
+                  { "name": "facilityTypeCode", "type": ["null", "string"], "default": null }
+                ]
+              }
+            ],
+            "default": null
+          }
+        ]
+      }
+    }
+  ]
+}

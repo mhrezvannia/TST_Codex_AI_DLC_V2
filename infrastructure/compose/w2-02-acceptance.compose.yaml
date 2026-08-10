@@ -1,0 +1,41 @@
+services:
+  apps-auth:
+    build:
+      dockerfile: infrastructure/docker/next-app.acceptance.Dockerfile
+
+  apps-booking:
+    build:
+      dockerfile: infrastructure/docker/next-app.acceptance.Dockerfile
+
+  apps-charge-agreements:
+    build:
+      dockerfile: infrastructure/docker/next-app.acceptance.Dockerfile
+
+  apps-reference-data:
+    build:
+      dockerfile: infrastructure/docker/next-app.acceptance.Dockerfile
+
+  w2-02-ssr-control:
+    image: "linercore/apps-shell:${LINERCORE_IMAGE_TAG:-wave-a}"
+    profiles: ["w2-02-acceptance"]
+    command: ["node", "/w2-02-harness/w2-02-ssr-control-proxy-cli.mjs"]
+    environment:
+      W2_02_PROXY_CONTROL_TOKEN: ${W2_02_PROXY_CONTROL_TOKEN:?W2_02_PROXY_CONTROL_TOKEN is required}
+    volumes:
+      - ./scripts:/w2-02-harness:ro
+    ports:
+      - "127.0.0.1:14312:43102"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:43102/__w2-02/health"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+
+  apps-shell:
+    build:
+      dockerfile: infrastructure/docker/next-app.acceptance.Dockerfile
+    environment:
+      BOOKING_APP_URL: http://w2-02-ssr-control:43102
+    depends_on:
+      w2-02-ssr-control:
+        condition: service_healthy

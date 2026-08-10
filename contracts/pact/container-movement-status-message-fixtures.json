@@ -4,16 +4,15 @@
   "producer": "container-movement-service",
   "consumer": "booking-service",
   "topic": "containermovement.status",
-  "keyExample": "booking-0001",
+  "keyExample": "booking-0001:MSCU6639870",
   "headerExample": {
     "correlationId": "corr-booking-0001",
-    "schemaVersion": "1.0.0",
-    "idempotencyKey": "cmm-status-container-0001-10"
+    "dataSchemaVersion": 1
   },
   "payloadExample": "contracts/examples/containermovement.status.example.json",
   "orderingMetadata": {
-    "partitionKey": "bookingId",
-    "sequenceField": "sequenceNumber"
+    "partitionKey": "bookingRef:containerRef",
+    "orderingTuple": ["occurredDateTime", "eventClassifierCode", "receivedDateTime", "id"]
   },
   "verificationStatus": "pending"
 }

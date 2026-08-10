@@ -1,0 +1,13 @@
+{
+  "stage_slug": "incident-response",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03 incident response, automate bounded evidence capture, validation, read-only inventory, and safe stopping, but require explicit human approval before restart, restore, forward repair, cleanup, or credential rotation.",
+      "source": "orchestrator"
+    }
+  ]
+}

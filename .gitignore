@@ -50,3 +50,22 @@ artifacts/w2-03-live/*/
 # Python skill runtime caches
 __pycache__/
 *.py[cod]
+
+# Locally installed agent skills / prompt bundles (same content fanned out
+# per vendor tool). Machine-local, not part of the product.
+.agents/skills/
+.claude/skills/
+.augment/
+.codebuddy/
+.codewhale/
+.continue/
+.cursor/
+.factory/
+.gemini/
+.github/prompts/
+.kilocode/
+.kiro/
+.opencode/
+.qoder/
+.roo/
+.trae/

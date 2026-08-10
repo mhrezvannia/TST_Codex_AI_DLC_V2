@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "env": {
+    "AIDLC_RULES_DIR": "aidlc/spaces/default/memory"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bun .codex/hooks/aidlc-statusline.ts"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-session-start.ts"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-audit-logger.ts"
+          },
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-sensor-fire.ts"
+          }
+        ]
+      },
+      {
+        "matcher": "TaskUpdate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-sync-statusline.ts"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-runtime-compile.ts"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-validate-state.ts"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-log-subagent.ts"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-stop.ts"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/aidlc-session-end.ts"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -11,6 +11,7 @@
 3. `packages/ui/src/index.tsx` (current placeholder)
 4. `design-inputs/claude-ui-export/` (visual direction from the original UI export)
 5. `inception/refined-mockups/accessibility-checklist.md` of the enterprise intent (a11y baseline)
+6. `design-system/linercore/MASTER.md` and `design-system/linercore/SESSION-PROMPT.md` (binding shared UI/UX contract)
 
 ## Vertical Slice Definition
 

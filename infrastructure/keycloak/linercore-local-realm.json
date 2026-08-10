@@ -27,14 +27,16 @@
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
       "redirectUris": [
-        "http://127.0.0.1:8088/auth/api/auth/callback"
+        "http://127.0.0.1:8088/auth/api/auth/callback",
+        "http://127.0.0.1:18088/auth/api/auth/callback"
       ],
       "webOrigins": [
-        "http://127.0.0.1:8088"
+        "http://127.0.0.1:8088",
+        "http://127.0.0.1:18088"
       ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
-        "post.logout.redirect.uris": "http://127.0.0.1:8088/signed-out"
+        "post.logout.redirect.uris": "http://127.0.0.1:8088/signed-out##http://127.0.0.1:18088/signed-out"
       },
       "defaultClientScopes": [
         "web-origins",

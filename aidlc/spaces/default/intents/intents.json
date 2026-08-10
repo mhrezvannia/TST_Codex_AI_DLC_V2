@@ -40,5 +40,19 @@
     "dirName": "260717-app-shell-auth",
     "scope": "enterprise",
     "status": "complete"
+  },
+  {
+    "uuid": "019f8496-fc67-7f42-b3e4-b0f3e788e615",
+    "slug": "container-track-trace",
+    "dirName": "260721-container-track-trace",
+    "scope": "feature",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f9d69-d22a-794f-9c5d-1ea39e14a357",
+    "slug": "w2-04-closure",
+    "dirName": "260726-w2-04-closure",
+    "scope": "feature",
+    "status": "in-flight"
   }
 ]

@@ -11,6 +11,7 @@ Charge becomes a real pricing authority: **tariffs, surcharges, and local charge
 3. `docs/erp-business-ui-gap-analysis.md` Part 1.2 (tariff/surcharge = 0 in code)
 4. `services/charge-agreement-service/` (existing agreement lifecycle — build on it)
 5. W0-02 outputs: charge-code + currency reference sets
+6. `design-system/linercore/MASTER.md` and `design-system/linercore/SESSION-PROMPT.md` (binding shared UI/UX contract)
 
 ## Vertical Slice Definition
 

@@ -23,3 +23,7 @@ aidlc/spaces/*/intents/*/.aidlc-*
 # Local tool caches
 .yarn/install-state.gz
 *.tsbuildinfo
+
+# Python skill runtime caches
+__pycache__/
+*.py[cod]

@@ -1,9 +1,15 @@
 package com.linercore.platform.containermovement.container.api;
 
 import com.linercore.platform.containermovement.applicationservice.ContainerMovementApplicationService;
+import com.linercore.platform.containermovement.applicationservice.MovementConflictException;
 import com.linercore.platform.containermovement.applicationservice.command.CaptureMovementCommand;
 import com.linercore.platform.containermovement.applicationservice.command.CreateJourneyCommand;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.Dependency;
+import com.linercore.platform.containermovement.applicationservice.query.JourneyReadResult.Freshness;
 import com.linercore.platform.containermovement.domain.model.ContainerJourney;
+import com.linercore.platform.containermovement.domain.model.EquipmentEventTypeCode;
+import com.linercore.platform.containermovement.domain.model.EventClassifierCode;
 import com.linercore.platform.containermovement.domain.model.ExpectedMovement;
 import com.linercore.platform.containermovement.domain.model.MovementEvent;
 import com.linercore.platform.containermovement.domain.model.MovementEventType;
@@ -47,14 +53,17 @@ public class ContainerMovementApiController {
     public ResponseEntity<JourneyResponse> createJourney(
             @RequestBody CreateJourneyRequest request,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
+        String resolvedActor = actor(request.actorSubjectId());
+        String resolvedCorrelation = correlation(correlationId, request.correlationId());
         ContainerJourney journey = service.createJourney(new CreateJourneyCommand(
                 request.bookingId(),
                 request.containerId(),
                 request.routeLocationIds(),
-                actor(request.actorSubjectId()),
+                resolvedActor,
                 request.idempotencyKey(),
-                correlation(correlationId, request.correlationId())));
-        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(journey));
+                resolvedCorrelation));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(toResponse(service.responseMetadata(journey, resolvedActor, resolvedCorrelation)));
     }
 
     @GetMapping("/journeys/{id}")
@@ -79,19 +88,21 @@ public class ContainerMovementApiController {
             @RequestBody CaptureMovementRequest request,
             @RequestHeader(name = "X-Correlation-Id", required = false) String correlationId) {
         String resolvedCorrelation = correlation(correlationId, request.correlationId());
+        String resolvedActor = actor(request.actorSubjectId());
         ContainerJourney journey = service.captureMovement(new CaptureMovementCommand(
                 id,
                 request.eventType(),
                 request.containerId(),
                 request.locationId(),
                 request.eventTime(),
-                actor(request.actorSubjectId()),
+                resolvedActor,
                 request.idempotencyKey(),
                 resolvedCorrelation));
-        return toResponse(journey);
+        return toResponse(service.responseMetadata(journey, resolvedActor, resolvedCorrelation));
     }
 
-    private JourneyResponse toResponse(ContainerJourney journey) {
+    private JourneyResponse toResponse(JourneyReadResult result) {
+        ContainerJourney journey = result.journey();
         return new JourneyResponse(
                 journey.id().value(),
                 journey.bookingId(),
@@ -100,11 +111,21 @@ public class ContainerMovementApiController {
                 journey.status(),
                 journey.expectedMovements().stream().map(this::toExpected).toList(),
                 journey.history().stream().map(this::toEvent).toList(),
-                journey.updatedAt());
+                journey.updatedAt(),
+                result.freshness().name().toLowerCase().replace('_', '-'),
+                result.dataUpdatedAt(),
+                result.captureDisabledReason() == null ? null : result.captureDisabledReason().name(),
+                result.captureEnabled(),
+                result.dependency().name(),
+                result.checkedAt());
     }
 
     private ExpectedMovementResponse toExpected(ExpectedMovement movement) {
-        return new ExpectedMovementResponse(movement.sequence(), movement.expectedEventType(), movement.locationId());
+        return new ExpectedMovementResponse(
+                movement.sequence(),
+                movement.eventClassifierCode(),
+                movement.moveCode(),
+                movement.locationId());
     }
 
     private MovementEventResponse toEvent(MovementEvent event) {
@@ -134,6 +155,16 @@ public class ContainerMovementApiController {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> badRequest(IllegalArgumentException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error("bad_request", exception.getMessage()));
+    }
+
+    @ExceptionHandler(MovementConflictException.class)
+    public ResponseEntity<MovementConflictResponse> movementConflict(MovementConflictException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MovementConflictResponse(
+                exception.code(),
+                exception.getMessage(),
+                exception.current(),
+                exception.requiredNext(),
+                exception.correlationId()));
     }
 
     @ExceptionHandler(SecurityException.class)
@@ -177,13 +208,23 @@ public class ContainerMovementApiController {
             MovementStatus status,
             List<ExpectedMovementResponse> expectedMovements,
             List<MovementEventResponse> history,
-            Instant updatedAt) {
+            Instant updatedAt,
+            String freshness,
+            Instant dataUpdatedAt,
+            String captureDisabledReason,
+            boolean captureEnabled,
+            String dependency,
+            Instant checkedAt) {
     }
 
     public record JourneyListResponse(List<JourneyResponse> items, int returned) {
     }
 
-    public record ExpectedMovementResponse(String sequence, MovementEventType expectedEventType, String locationId) {
+    public record ExpectedMovementResponse(
+            String sequence,
+            EventClassifierCode eventClassifierCode,
+            EquipmentEventTypeCode moveCode,
+            String locationId) {
     }
 
     public record MovementEventResponse(
@@ -197,5 +238,13 @@ public class ContainerMovementApiController {
     }
 
     public record ApiErrorResponse(String code, String message, List<String> fields, String correlationId) {
+    }
+
+    public record MovementConflictResponse(
+            String code,
+            String message,
+            String currentLifecycle,
+            String requiredNextMove,
+            String correlationId) {
     }
 }

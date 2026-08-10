@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { verifyContractProviders } from "./verify-contract-providers.mjs";
@@ -100,6 +101,41 @@ test("live provider verification reports service failures", async () => {
   assert.equal(result.valid, false);
   assert.equal(result.failures.some((failure) => failure.includes("identity roles")), true);
   assert.equal(result.failures.some((failure) => failure.includes("reference sets")), true);
+});
+
+test("live reference provider verification sends the configured service identity", async () => {
+  const requests = [];
+  const server = createServer((request, response) => {
+    requests.push({
+      url: request.url,
+      serviceId: request.headers["x-linercore-service-id"],
+      token: request.headers["x-linercore-local-token"]
+    });
+    response.writeHead(200, { "content-type": "application/json" });
+    response.end("[]");
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const address = server.address();
+    const serviceUrl = `http://127.0.0.1:${address.port}`;
+    const result = await verifyContractProviders({
+      live: true,
+      identityServiceUrl: serviceUrl,
+      referenceDataServiceUrl: serviceUrl,
+      referenceDataServiceId: "contract-verifier",
+      referenceDataToken: "contract-verifier-token"
+    });
+
+    assert.equal(result.valid, true, result.failures.join("\n"));
+    const referenceRequest = requests.find((request) => request.url === "/reference-sets");
+    assert.deepEqual(referenceRequest, {
+      url: "/reference-sets",
+      serviceId: "contract-verifier",
+      token: "contract-verifier-token"
+    });
+  } finally {
+    await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  }
 });
 
 async function usingFixture(callback) {

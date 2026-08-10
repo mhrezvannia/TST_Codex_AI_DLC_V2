@@ -1,4 +1,4 @@
-name: linercore-shared-platform
+name: ${LINERCORE_COMPOSE_PROJECT:-linercore-shared-platform}
 
 services:
   postgres:
@@ -32,10 +32,10 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       JAVA_OPTS_KC_HEAP: -Xms64m -Xmx256m
-      KC_HOSTNAME_URL: http://127.0.0.1:8080
+      KC_HOSTNAME_URL: ${KEYCLOAK_PUBLIC_URL:-http://127.0.0.1:8080}
       KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
     ports:
-      - "8080:8080"
+      - "${KEYCLOAK_HOST_PORT:-8080}:8080"
     volumes:
       - ./infrastructure/keycloak/linercore-local-realm.json:/opt/keycloak/data/import/linercore-local-realm.json:ro
     healthcheck:
@@ -62,7 +62,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_HEAP_OPTS: -Xms128m -Xmx256m
     ports:
-      - "9092:9092"
+      - "${KAFKA_HOST_PORT:-9092}:9092"
     healthcheck:
       test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 >/dev/null 2>&1"]
       interval: 10s
@@ -104,7 +104,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
       SCHEMA_REGISTRY_HEAP_OPTS: -Xms64m -Xmx160m
     ports:
-      - "8081:8081"
+      - "${SCHEMA_REGISTRY_HOST_PORT:-8081}:8081"
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8081/subjects >/dev/null"]
       interval: 10s
@@ -116,7 +116,7 @@ services:
           memory: 320M
 
   identity-service:
-    image: linercore/identity-service:local
+    image: "linercore/identity-service:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/spring-service.Dockerfile
@@ -130,7 +130,7 @@ services:
       SPRING_DATASOURCE_USERNAME: linercore_identity
       SPRING_DATASOURCE_PASSWORD: ${IDENTITY_DB_PASSWORD:-identity_local}
     ports:
-      - "8082:8082"
+      - "${IDENTITY_SERVICE_HOST_PORT:-8082}:8082"
     depends_on:
       postgres:
         condition: service_healthy
@@ -142,7 +142,7 @@ services:
           memory: 384M
 
   reference-data-service:
-    image: linercore/reference-data-service:local
+    image: "linercore/reference-data-service:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/spring-service.Dockerfile
@@ -164,7 +164,7 @@ services:
       REFERENCE_DATA_SEED_TOKEN: ${REFERENCE_DATA_SEED_TOKEN:-reference_data_seed_local_token}
       REFERENCE_DATA_CMM_TOKEN: ${REFERENCE_DATA_CMM_TOKEN:-reference_data_cmm_local_token}
     ports:
-      - "8083:8083"
+      - "${REFERENCE_DATA_SERVICE_HOST_PORT:-8083}:8083"
     depends_on:
       postgres:
         condition: service_healthy
@@ -178,7 +178,7 @@ services:
           memory: 384M
 
   charge-agreement-service:
-    image: linercore/charge-agreement-service:local
+    image: "linercore/charge-agreement-service:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/spring-service.Dockerfile
@@ -196,7 +196,7 @@ services:
       MESSAGING_REQUIRE_REAL: "true"
       CHARGE_AGREEMENT_EVENTS_TOPIC: charge-agreement.events
     ports:
-      - "8084:8084"
+      - "${CHARGE_AGREEMENT_SERVICE_HOST_PORT:-8084}:8084"
     depends_on:
       postgres:
         condition: service_healthy
@@ -212,7 +212,7 @@ services:
           memory: 384M
 
   booking-service:
-    image: linercore/booking-service:local
+    image: "linercore/booking-service:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/spring-service.Dockerfile
@@ -236,7 +236,7 @@ services:
       MESSAGING_REQUIRE_REAL: "true"
       BOOKING_EVENTS_TOPIC: booking.events
     ports:
-      - "8085:8085"
+      - "${BOOKING_SERVICE_HOST_PORT:-8085}:8085"
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8085/actuator/health"]
       interval: 10s
@@ -267,7 +267,7 @@ services:
         condition: service_healthy
 
   container-movement-service:
-    image: linercore/container-movement-service:local
+    image: "linercore/container-movement-service:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/spring-service.Dockerfile
@@ -288,7 +288,7 @@ services:
       BOOKING_EVENTS_TOPIC: booking.events
       CONTAINER_MOVEMENT_EVENTS_TOPIC: containermovement.status
     ports:
-      - "8086:8086"
+      - "${CONTAINER_MOVEMENT_SERVICE_HOST_PORT:-8086}:8086"
     depends_on:
       postgres:
         condition: service_healthy
@@ -355,7 +355,7 @@ services:
           memory: 128M
 
   apps-auth:
-    image: linercore/apps-auth:local
+    image: "linercore/apps-auth:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/next-app.Dockerfile
@@ -380,7 +380,7 @@ services:
           memory: 256M
 
   apps-shell:
-    image: linercore/apps-shell:local
+    image: "linercore/apps-shell:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/next-app.Dockerfile
@@ -413,7 +413,7 @@ services:
       - apps-booking
 
   apps-reference-data:
-    image: linercore/apps-reference-data:local
+    image: "linercore/apps-reference-data:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/next-app.Dockerfile
@@ -437,7 +437,7 @@ services:
           memory: 256M
 
   apps-charge-agreements:
-    image: linercore/apps-charge-agreements:local
+    image: "linercore/apps-charge-agreements:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/next-app.Dockerfile
@@ -457,7 +457,7 @@ services:
           memory: 256M
 
   apps-booking:
-    image: linercore/apps-booking:local
+    image: "linercore/apps-booking:${LINERCORE_IMAGE_TAG:-local}"
     build:
       context: .
       dockerfile: infrastructure/docker/next-app.Dockerfile
@@ -493,7 +493,7 @@ services:
   nginx:
     image: nginx:1.27
     ports:
-      - "8088:80"
+      - "${NGINX_HOST_PORT:-8088}:80"
     volumes:
       - ./infrastructure/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
@@ -524,7 +524,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.55.1
     ports:
-      - "9090:9090"
+      - "${PROMETHEUS_HOST_PORT:-9090}:9090"
     volumes:
       - ./infrastructure/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     profiles: ["observability", "full"]
@@ -552,7 +552,7 @@ services:
   jaeger:
     image: jaegertracing/all-in-one:1.63.0
     ports:
-      - "16686:16686"
+      - "${JAEGER_UI_HOST_PORT:-16686}:16686"
       - "${JAEGER_OTLP_GRPC_HOST_PORT:-4317}:4317"
       - "${JAEGER_OTLP_HTTP_HOST_PORT:-4318}:4318"
     profiles: ["observability", "full"]
@@ -607,4 +607,4 @@ services:
 
 networks:
   default:
-    name: linercore-local
+    name: ${LINERCORE_NETWORK_NAME:-linercore-local}

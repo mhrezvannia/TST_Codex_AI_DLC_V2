@@ -67,6 +67,11 @@ export function JourneyStatusPanel({
 
   return <section className="booking-state" aria-labelledby="booking-journey-title">
     <h2 id="booking-journey-title">Journey status</h2>
+    <p className="booking-muted" role="status" aria-live="polite" data-testid="journey-capability-hint">
+      Container Movement status is operational data and may be delayed while projections catch up.
+    </p>
+    <p className="booking-muted" data-testid="journey-freshness">Freshness is evaluated by Container Movement; this hint is not authorization.</p>
+    {delayed && <p role="alert" data-testid="journey-capture-disabled">Capture is temporarily disabled while dependencies recover. Retry to re-check.</p>}
     {statuses.length > 0 ? statuses.map((movementStatus) => <div key={movementStatus.containerRef}>
       <p><strong>{movementStatus.derivedStatus}</strong> {movementStatus.moveCode} / {movementStatus.eventClassifierCode}</p>
       <p className="booking-muted">{movementStatus.containerRef}{movementStatus.location?.unLocationCode ? ` at ${movementStatus.location.unLocationCode}` : ""}; occurred {new Date(movementStatus.occurredDateTime).toLocaleString()}</p>
@@ -78,6 +83,7 @@ export function JourneyStatusPanel({
       {delayed && <button
         className="booking-button"
         data-testid="journey-status-retry"
+        aria-label="Retry loading journey status"
         type="button"
         onClick={() => {
           attempts.current = 0;

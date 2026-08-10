@@ -5,19 +5,37 @@
 > not directly.
 
 ## Way of Working
-W2-01 uses the existing short-lived intent branch `intent/W2-01-app-shell-and-auth` from `integ/main-reconciled` and keeps one Platform+UI driver accountable for the full shell/auth/Booking vertical slice. Contributors work through owned seams rather than broad cross-module rewrites.
+We deliver W2-04 as one stream-aligned vertical intent on its short-lived
+intent branch, preserve merged program work, and synchronize with the
+integration baseline after W2-02 lands. Contract, UI, and acceptance seams are
+co-reviewed by their bounded owners rather than broadened through shared-file
+rewrites.
 
 ## Walking Skeleton
-The first W2-01 Construction slice should prove the protected shell entry and session handoff before any shell chrome expansion. The risk-first path is login through Keycloak/auth, shell landing, and one Booking call that cannot fall back to `local-user`.
+PB-01 is the gated walking skeleton: one real `booking.confirmed` creates a
+planned journey, one accepted GTOT publishes status, and Booking renders the
+projection. Later lifecycle depth builds only after that broker-to-database-to-
+Booking path and one observable invalid transition are proven.
 
 ## Testing Posture
-Tests are written alongside code and must include targeted coverage for session-derived actor propagation, denied authorization, sign-out/session clearing, and detector 6d hardcoded-auth evidence. Unit and integration tests are necessary but insufficient; live Compose proof through Nginx and Keycloak remains the exit gate.
+Tests are written alongside code and selected by acceptance risk, with explicit
+domain transition, duplicate, sequence, contract, migration, consumer, UI, and
+live-path coverage. We do not invent a numeric coverage floor that the current
+repository cannot enforce, and deterministic failures fail closed.
 
 ## Deployment
-W2-01 acceptance targets the local/on-prem Docker Compose topology with Nginx, Keycloak, identity-service, Booking service, and shell/auth app. Public-cloud deployment is not a release condition for this intent.
+Pull-request and integration CI block on the established fast Java and frontend
+gates. W2-04 final release acceptance is a separately serialized, manual blocking
+run on `linercore-wave-a`; one evidence-preserving retry is allowed only for an
+environmental failure, and the manager demo at port 8088 remains guarded.
 
 ## Code Style
-Frontend work stays in strict TypeScript/Next.js/Yarn workspace patterns and reuses shared packages where practical. Backend changes preserve service ownership and Java/Spring boundaries; local auth bypass code must be explicit, logged, and fail closed outside local profiles.
+Java keeps the framework-free domain, application ports, adapter, and Spring
+container layering with current EditorConfig conventions; TypeScript keeps
+strict Next.js/React patterns and shared `@erp/ui` tokens. Domain rejection is
+explicit and stable while exceptions remain mapped at REST or infrastructure
+boundaries; W2-04 adds no new universal formatter mandate.
+
 ## Forbidden
 
 <!-- Team-specific forbidden patterns -->

@@ -51,6 +51,7 @@ public class KafkaContainerMovementEventPublisher implements MovementEventPublis
         data.put("bookingRef", payload.get("data.bookingRef"));
         data.put("containerRef", payload.get("data.containerRef"));
         data.put("movementId", blankToNull(payload.get("data.movementId")));
+        data.put("sequenceNumber", Integer.parseInt(payload.getOrDefault("data.sequenceNumber", "0")));
         data.put("moveCode", payload.get("data.moveCode"));
         data.put("eventClassifierCode", payload.get("data.eventClassifierCode"));
         data.put("occurredDateTime", payload.get("data.occurredDateTime"));

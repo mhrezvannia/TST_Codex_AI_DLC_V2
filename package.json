@@ -30,6 +30,16 @@
     "w2-01:live-acceptance": "node scripts/w2-01-live-acceptance.mjs",
     "w2-01:live-acceptance:dry-run": "node scripts/w2-01-live-acceptance.mjs --dry-run",
     "w2-01:live-acceptance:validate": "node scripts/w2-01-live-acceptance.mjs --validate",
+    "w2-04:live-acceptance": "node scripts/w2-04-live-acceptance.mjs --evidence-file artifacts/w2-04-live/acceptance.json",
+    "w2-04:playwright": "node scripts/w2-04-playwright.mjs --output-root artifacts/w2-04-live/playwright",
+    "demo:guard": "node scripts/demo-guard.mjs",
+    "demo:lock": "node scripts/demo-image-lock.mjs",
+    "demo:seed-wave-a": "node scripts/demo-image-lock.mjs --seed-wave-a",
+    "wave-a:config": "node scripts/wave-a-compose.mjs config",
+    "wave-a:ps": "node scripts/wave-a-compose.mjs ps",
+    "wave-a:up": "node scripts/wave-a-compose.mjs up -d --no-build",
+    "wave-a:stop": "node scripts/wave-a-compose.mjs stop",
+    "wave-a:clean": "node scripts/wave-a-compose.mjs down --volumes --remove-orphans",
     "skeleton:validate": "node scripts/validate-skeleton.mjs",
     "smoke:local": "node scripts/smoke-local.mjs",
     "smoke:observability": "node scripts/smoke-observability.mjs"
@@ -50,7 +60,7 @@
     "turbo": "^2.3.3",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.19.1",
-    "vite": "^5.4.11",
-    "vitest": "^2.1.8"
+    "vite": "6.4.3",
+    "vitest": "3.2.6"
   }
 }

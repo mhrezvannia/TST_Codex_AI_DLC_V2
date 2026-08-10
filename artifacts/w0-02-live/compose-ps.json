@@ -1,0 +1,62 @@
+[
+    {
+        "Service":  "apps-reference-data",
+        "State":  "running",
+        "Status":  "Up 11 minutes",
+        "Ports":  "0.0.0.0:3002-\u003e3000/tcp, [::]:3002-\u003e3000/tcp"
+    },
+    {
+        "Service":  "booking-service",
+        "State":  "running",
+        "Status":  "Up 19 minutes",
+        "Ports":  "0.0.0.0:8085-\u003e8085/tcp, [::]:8085-\u003e8085/tcp"
+    },
+    {
+        "Service":  "charge-agreement-service",
+        "State":  "running",
+        "Status":  "Up 19 minutes",
+        "Ports":  "0.0.0.0:8084-\u003e8084/tcp, [::]:8084-\u003e8084/tcp"
+    },
+    {
+        "Service":  "container-movement-service",
+        "State":  "running",
+        "Status":  "Up 19 minutes",
+        "Ports":  "0.0.0.0:8086-\u003e8086/tcp, [::]:8086-\u003e8086/tcp"
+    },
+    {
+        "Service":  "identity-service",
+        "State":  "running",
+        "Status":  "Up 11 minutes",
+        "Ports":  "0.0.0.0:8082-\u003e8082/tcp, [::]:8082-\u003e8082/tcp"
+    },
+    {
+        "Service":  "kafka",
+        "State":  "running",
+        "Status":  "Up 20 minutes (healthy)",
+        "Ports":  "0.0.0.0:9092-\u003e9092/tcp, [::]:9092-\u003e9092/tcp"
+    },
+    {
+        "Service":  "keycloak",
+        "State":  "running",
+        "Status":  "Up 20 minutes (healthy)",
+        "Ports":  "0.0.0.0:8080-\u003e8080/tcp, [::]:8080-\u003e8080/tcp"
+    },
+    {
+        "Service":  "postgres",
+        "State":  "running",
+        "Status":  "Up 20 minutes (healthy)",
+        "Ports":  "0.0.0.0:55432-\u003e5432/tcp, [::]:55432-\u003e5432/tcp"
+    },
+    {
+        "Service":  "reference-data-service",
+        "State":  "running",
+        "Status":  "Up 10 minutes",
+        "Ports":  "0.0.0.0:8083-\u003e8083/tcp, [::]:8083-\u003e8083/tcp"
+    },
+    {
+        "Service":  "schema-registry",
+        "State":  "running",
+        "Status":  "Up 19 minutes (healthy)",
+        "Ports":  "0.0.0.0:8081-\u003e8081/tcp, [::]:8081-\u003e8081/tcp"
+    }
+]

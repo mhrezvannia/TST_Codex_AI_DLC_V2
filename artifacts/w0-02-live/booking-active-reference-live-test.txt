@@ -1,0 +1,166 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO]
+[INFO] shared-platform-services                                           [pom]
+[INFO] platform-messaging                                                 [jar]
+[INFO] booking-service                                                    [pom]
+[INFO] booking-domain-core                                                [jar]
+[INFO] booking-application-service                                        [jar]
+[INFO] booking-dataaccess                                                 [jar]
+[INFO] booking-messaging                                                  [jar]
+[INFO] booking-container                                                  [jar]
+[INFO]
+[INFO] ----------< com.linercore.platform:shared-platform-services >-----------
+[INFO] Building shared-platform-services 0.1.0-SNAPSHOT                   [1/8]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -------------< com.linercore.platform:platform-messaging >--------------
+[INFO] Building platform-messaging 0.1.0-SNAPSHOT                         [2/8]
+[INFO]   from platform-messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ platform-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\platform-messaging\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ platform-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ platform-messaging ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ platform-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ platform-messaging ---
+[INFO]
+[INFO] ---------------< com.linercore.platform:booking-service >---------------
+[INFO] Building booking-service 0.1.0-SNAPSHOT                            [3/8]
+[INFO]   from booking-service\pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] -------------< com.linercore.platform:booking-domain-core >-------------
+[INFO] Building booking-domain-core 0.1.0-SNAPSHOT                        [4/8]
+[INFO]   from booking-service\domain-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\domain-core\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-domain-core ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\domain-core\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-domain-core ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-domain-core ---
+[INFO]
+[INFO] ---------< com.linercore.platform:booking-application-service >---------
+[INFO] Building booking-application-service 0.1.0-SNAPSHOT                [5/8]
+[INFO]   from booking-service\application-service\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\application-service\src\main\resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-application-service ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\application-service\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-application-service ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-application-service ---
+[INFO]
+[INFO] -------------< com.linercore.platform:booking-dataaccess >--------------
+[INFO] Building booking-dataaccess 0.1.0-SNAPSHOT                         [6/8]
+[INFO]   from booking-service\dataaccess\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-dataaccess ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-dataaccess ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-dataaccess ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\dataaccess\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-dataaccess ---
+[INFO] No sources to compile
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-dataaccess ---
+[INFO] No tests to run.
+[INFO]
+[INFO] --------------< com.linercore.platform:booking-messaging >--------------
+[INFO] Building booking-messaging 0.1.0-SNAPSHOT                          [7/8]
+[INFO]   from booking-service\messaging\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-messaging ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-messaging ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\messaging\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-messaging ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-messaging ---
+[INFO]
+[INFO] --------------< com.linercore.platform:booking-container >--------------
+[INFO] Building booking-container 0.1.0-SNAPSHOT                          [8/8]
+[INFO]   from booking-service\container\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ booking-container ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ booking-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ booking-container ---
+[INFO] skip non existing resourceDirectory D:\TST_Codex_W0-02\services\booking-service\container\src\test\resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ booking-container ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.2:test (default-test) @ booking-container ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapterLiveTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.716 s -- in com.linercore.platform.booking.container.integration.HttpReferenceValidationAdapterLiveTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for shared-platform-services 0.1.0-SNAPSHOT:
+[INFO]
+[INFO] shared-platform-services ........................... SUCCESS [  0.003 s]
+[INFO] platform-messaging ................................. SUCCESS [  1.915 s]
+[INFO] booking-service .................................... SUCCESS [  0.001 s]
+[INFO] booking-domain-core ................................ SUCCESS [  0.117 s]
+[INFO] booking-application-service ........................ SUCCESS [  0.127 s]
+[INFO] booking-dataaccess ................................. SUCCESS [  0.185 s]
+[INFO] booking-messaging .................................. SUCCESS [  0.212 s]
+[INFO] booking-container .................................. SUCCESS [  2.668 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.832 s
+[INFO] Finished at: 2026-07-14T22:32:47+03:30
+[INFO] ------------------------------------------------------------------------

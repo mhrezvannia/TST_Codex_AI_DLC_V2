@@ -1,0 +1,6 @@
+gate=compose-config
+status=PLANNED
+exitCode=
+command=docker compose config --quiet
+
+dry-run: command not executed

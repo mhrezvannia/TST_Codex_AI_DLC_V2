@@ -7,7 +7,7 @@ export const REQUIRED_REFERENCE_SETS = [
   "PARTY_CUSTOMER",
   "LOCATION",
   "REGION",
-  "VOYAGE",
+  "VESSEL_VOYAGE",
   "CURRENCY",
   "CHARGE_CODE",
   "EQUIPMENT_TYPE",
@@ -53,6 +53,7 @@ export function validateSeedPack(pack) {
     }
   }
   validateReferenceRecords(pack, errors);
+  validateCanonicalReferenceSets(pack, errors);
   validateIdentity(pack, errors);
   validateLocalUsers(pack, errors);
   return { valid: errors.length === 0, errors };
@@ -111,11 +112,20 @@ export async function applySeedPack(pack, options = {}) {
 
   for (const command of buildRoleAssignmentCommands(pack, actorTokenReference, correlationId)) {
     const result = await postJson(fetcher, `${identityUrl}/internal/identity/roles/assign`, command, correlationId);
-    const entry = { targetSubjectId: command.targetSubjectId, roleCode: command.roleCode, status: result.ok ? "applied" : "failed" };
+    const applied = result.ok && result.data?.result === "ALLOW";
+    const alreadyApplied = !applied
+      && result.ok
+      && result.data?.reasonCode === "DENY_STALE_ASSIGNMENT"
+      && await hasEffectiveRole(fetcher, identityUrl, command.targetSubjectId, command.roleCode, correlationId);
+    const entry = {
+      targetSubjectId: command.targetSubjectId,
+      roleCode: command.roleCode,
+      status: applied ? "applied" : alreadyApplied ? "already-applied" : "failed"
+    };
     summary.identityAssignments.push(entry);
-    if (!result.ok) {
+    if (!applied && !alreadyApplied) {
       summary.failed += 1;
-      summary.failures.push(`identity role ${command.roleCode} for ${command.targetSubjectId}: ${result.detail}`);
+      summary.failures.push(`identity role ${command.roleCode} for ${command.targetSubjectId}: ${result.detail ?? JSON.stringify(result.data)}`);
     }
   }
 
@@ -125,6 +135,11 @@ export async function applySeedPack(pack, options = {}) {
     const command = buildReferenceMutationCommand(record, correlationId);
     const key = `${record.set}:${record.code}`;
     if (detail.ok) {
+      if (isCurrentRecord(detail.data, record)) {
+        summary.skipped += 1;
+        summary.records.push({ key, id: record.id, fingerprint, status: "skipped" });
+        continue;
+      }
       const version = Number(detail.data?.version ?? 1);
       const update = await putJson(fetcher, `${referenceUrl}/reference-sets/${record.set}/records/${encodeURIComponent(record.id)}?version=${version}`, command, correlationId);
       if (update.ok) {
@@ -153,6 +168,18 @@ export async function applySeedPack(pack, options = {}) {
   }
 
   return summary;
+}
+
+async function hasEffectiveRole(fetcher, identityUrl, targetSubjectId, roleCode, correlationId) {
+  const effective = await postJson(
+    fetcher,
+    `${identityUrl}/internal/identity/effective-permissions`,
+    { tokenReference: targetSubjectId },
+    correlationId
+  );
+  if (!effective.ok || !Array.isArray(effective.data?.roles)) return false;
+  const expected = roleCode.replaceAll("-", "_").toUpperCase();
+  return effective.data.roles.some((role) => role?.code === expected);
 }
 
 export function buildReferenceMutationCommand(record, correlationId) {
@@ -256,6 +283,55 @@ function validateReferenceRecords(pack, errors) {
       }
     }
   }
+}
+
+function validateCanonicalReferenceSets(pack, errors) {
+  const vesselVoyage = pack.referenceData?.sets?.VESSEL_VOYAGE ?? [];
+  const vessels = vesselVoyage.filter((record) => record.attributes?.recordType === "VESSEL");
+  const voyages = vesselVoyage.filter((record) => record.attributes?.recordType === "VOYAGE");
+  if (vessels.length < 1) {
+    errors.push("referenceData.sets.VESSEL_VOYAGE must contain at least one vessel");
+  }
+  if (voyages.length < 2) {
+    errors.push("referenceData.sets.VESSEL_VOYAGE must contain at least two voyages");
+  }
+  for (const vessel of vessels) {
+    if (!/^\d{7}$/.test(vessel.attributes?.vesselIMONumber ?? "")) {
+      errors.push(`VESSEL_VOYAGE:${vessel.code} requires a seven-digit vesselIMONumber`);
+    }
+  }
+  for (const voyage of voyages) {
+    for (const field of ["vesselId", "carrierVoyageNumber", "originLocationId", "destinationLocationId", "scheduledDeparture", "scheduledArrival"]) {
+      if (typeof voyage.attributes?.[field] !== "string" || voyage.attributes[field].trim() === "") {
+        errors.push(`VESSEL_VOYAGE:${voyage.code} requires ${field}`);
+      }
+    }
+  }
+
+  const equipmentCodes = new Set((pack.referenceData?.sets?.EQUIPMENT_TYPE ?? []).map((record) => record.code));
+  for (const requiredCode of ["22G1", "42G1", "45G1"]) {
+    if (!equipmentCodes.has(requiredCode)) {
+      errors.push(`referenceData.sets.EQUIPMENT_TYPE missing ISO 6346 code ${requiredCode}`);
+    }
+  }
+  for (const record of pack.referenceData?.sets?.EQUIPMENT_TYPE ?? []) {
+    if (!/^\d{2}[A-Z]\d$/.test(record.code ?? "")) {
+      errors.push(`EQUIPMENT_TYPE:${record.code} must use an ISO 6346 size/type code`);
+    }
+  }
+  for (const record of pack.referenceData?.sets?.CHARGE_CODE ?? []) {
+    if (typeof record.attributes?.chargeFamily !== "string" || record.attributes.chargeFamily.trim() === "") {
+      errors.push(`CHARGE_CODE:${record.code} requires chargeFamily`);
+    }
+  }
+}
+
+function isCurrentRecord(current, desired) {
+  const currentCode = typeof current?.code === "string" ? current.code : current?.code?.value;
+  return currentCode === desired.code
+    && current?.displayName === desired.displayName
+    && current?.status === desired.status
+    && JSON.stringify(sortObject(current?.attributes ?? {})) === JSON.stringify(sortObject(desired.attributes ?? {}));
 }
 
 function validateIdentity(pack, errors) {
@@ -365,9 +441,19 @@ async function putJson(fetcher, url, body, correlationId) {
 
 async function requestJson(fetcher, url, init, correlationId) {
   try {
+    const referenceHeaders = new URL(url).pathname.startsWith("/reference-sets/")
+      ? {
+          "x-linercore-service-id": "seed-loader",
+          "x-linercore-local-token": process.env.REFERENCE_DATA_SEED_TOKEN ?? "reference_data_seed_local_token"
+        }
+      : {};
     const response = await fetcher(url, {
       ...init,
-      headers: { "x-correlation-id": correlationId, ...(init.headers ?? {}) }
+      headers: {
+        "x-correlation-id": correlationId,
+        ...referenceHeaders,
+        ...(init.headers ?? {})
+      }
     });
     const text = await response.text();
     const data = text ? JSON.parse(text) : null;

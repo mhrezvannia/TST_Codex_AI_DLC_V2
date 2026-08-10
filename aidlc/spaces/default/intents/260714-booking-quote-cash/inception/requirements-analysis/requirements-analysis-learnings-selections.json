@@ -1,0 +1,13 @@
+{
+  "stage_slug": "requirements-analysis",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Resolve contradictions between checked-in executable contracts and authoritative enterprise contracts explicitly before generating requirements, because either choice changes public field names, endpoints, and test evidence.",
+      "source": "orchestrator"
+    }
+  ]
+}

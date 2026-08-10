@@ -5,25 +5,19 @@
 > not directly.
 
 ## Way of Working
-
-The LinerCore enterprise program uses AI-DLC stage gates and short-lived delivery branches against the main integration line. The current working branch is `enterprise/linercore` for enterprise preparation, but feature and Bolt work should remain small, reviewed, and traceable back to the active enterprise intent, the completed Shared Platform MVP intent, the `shared-platform-mvp-complete` tag, Graphify analysis, and the authoritative program documents.
+W2-01 uses the existing short-lived intent branch `intent/W2-01-app-shell-and-auth` from `integ/main-reconciled` and keeps one Platform+UI driver accountable for the full shell/auth/Booking vertical slice. Contributors work through owned seams rather than broad cross-module rewrites.
 
 ## Walking Skeleton
-
-The first Construction Bolt must be an enterprise walking skeleton, not a Shared Platform-only continuation. It should prove a minimal real vertical slice across authentication, reference data, pricing/agreement readiness, booking confirmation, event publication/consumption, CMM journey/status handling, frontend access, and local runtime health before the remaining module ladder is accelerated.
+The first W2-01 Construction slice should prove the protected shell entry and session handoff before any shell chrome expansion. The risk-first path is login through Keycloak/auth, shell landing, and one Booking call that cannot fall back to `local-user`.
 
 ## Testing Posture
-
-Tests live with the code they validate and must run through blocking quality gates before merge. Unit tests, integration tests, contract tests, message contract tests, local readiness checks, and end-to-end enterprise flow checks are all required before any module is called complete; existing Java/JUnit, Vitest, Turbo, Maven, and contract scripts remain the default tooling unless later design stages replace them with stronger project evidence.
+Tests are written alongside code and must include targeted coverage for session-derived actor propagation, denied authorization, sign-out/session clearing, and detector 6d hardcoded-auth evidence. Unit and integration tests are necessary but insufficient; live Compose proof through Nginx and Keycloak remains the exit gate.
 
 ## Deployment
-
-Local execution is the primary delivery environment for this program, with Docker Compose expected to evolve into `core`, `app`, `observability`, `devtools`, and `full` profiles. CI currently runs quality and readiness gates, but enterprise readiness cannot be claimed until PostgreSQL, Kafka, Schema Registry, Keycloak, all backend services, all frontend apps, reverse proxy, contracts, seed data, and observability are wired and health-checked together.
+W2-01 acceptance targets the local/on-prem Docker Compose topology with Nginx, Keycloak, identity-service, Booking service, and shell/auth app. Public-cloud deployment is not a release condition for this intent.
 
 ## Code Style
-
-Backend services follow the existing Java 21, Spring Boot, Maven, and service-module pattern with domain-core kept free of Spring, persistence, messaging, and frontend concerns. Frontend code follows the Yarn/Turbo, Next.js, React, TypeScript strict, shared `@erp/*` package style, with ESLint enforcement including no explicit `any`; broad architectural or cross-module edits must use Graphify query, explain, or path first.
-
+Frontend work stays in strict TypeScript/Next.js/Yarn workspace patterns and reuses shared packages where practical. Backend changes preserve service ownership and Java/Spring boundaries; local auth bypass code must be explicit, logged, and fail closed outside local profiles.
 ## Forbidden
 
 <!-- Team-specific forbidden patterns -->

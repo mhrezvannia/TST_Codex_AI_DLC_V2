@@ -1,0 +1,44 @@
+{
+    "value":  [
+                  {
+                      "eventId":  "11031f65-de48-4d1d-b61d-668a87564956",
+                      "recordId":  "charge-code-thc",
+                      "referenceSet":  "CHARGE_CODE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  2,
+                      "lastAttemptAt":  "2026-07-14T19:09:46.666261011Z",
+                      "publishedAt":  "2026-07-14T19:09:47.959402271Z",
+                      "brokerMetadata":  "referencedata.events:0:6",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  },
+                  {
+                      "eventId":  "35585cba-0ca0-4d3c-914d-1e0d90361013",
+                      "recordId":  "charge-code-baf",
+                      "referenceSet":  "CHARGE_CODE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  2,
+                      "lastAttemptAt":  "2026-07-14T19:09:46.666261011Z",
+                      "publishedAt":  "2026-07-14T19:09:47.940597108Z",
+                      "brokerMetadata":  "referencedata.events:0:5",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  },
+                  {
+                      "eventId":  "7f9b2e86-f569-4965-827a-c5ce6da30200",
+                      "recordId":  "charge-code-ofr",
+                      "referenceSet":  "CHARGE_CODE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  2,
+                      "lastAttemptAt":  "2026-07-14T19:09:46.666261011Z",
+                      "publishedAt":  "2026-07-14T19:09:47.919278367Z",
+                      "brokerMetadata":  "referencedata.events:0:4",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  }
+              ],
+    "Count":  3
+}

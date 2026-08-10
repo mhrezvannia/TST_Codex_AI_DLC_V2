@@ -1,12 +1,14 @@
 {
-  "pricingRef": "price_20260709_0001",
-  "correlationId": "corr-booking-0001",
+  "bookingRef": "booking-0001",
   "pricingBasis": "AGREEMENT",
-  "lineItems": [
+  "pricingRef": "agreement-0001",
+  "charges": [
     {
       "chargeCode": "BASE_FREIGHT",
-      "amount": "1200.00",
+      "category": "FREIGHT",
+      "amount": 1200.00,
       "currency": "USD"
     }
-  ]
+  ],
+  "applicableDndRuleTypes": []
 }

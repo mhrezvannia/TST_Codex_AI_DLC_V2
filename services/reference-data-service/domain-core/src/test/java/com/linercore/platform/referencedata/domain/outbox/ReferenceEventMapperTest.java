@@ -24,4 +24,16 @@ class ReferenceEventMapperTest {
         assertEquals("CURRENCY:id-1:CREATED:change-1", event.payload().get("deduplicationKey"));
         assertEquals("corr-1", event.payload().get("correlationId"));
     }
+
+    @Test
+    void keepsPublishedVoyageEventNameForVesselVoyageSet() {
+        ReferenceChangedFact fact = new ReferenceChangedFact("change-2", ReferenceSet.VESSEL_VOYAGE, "voyage-1", "LC001E",
+                ReferenceOperation.CREATED, Map.of(), Map.of("carrierVoyageNumber", "LC001E"),
+                Instant.EPOCH, "corr-2");
+
+        OutboxEvent event = new ReferenceEventMapper().toOutboxEvent("event-2", fact);
+
+        assertEquals("referencedata.voyage.changed", event.eventType());
+        assertEquals("referencedata.voyage.changed-value", event.payload().get("schemaSubject"));
+    }
 }

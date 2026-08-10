@@ -1,0 +1,13 @@
+{
+  "stage_slug": "user-stories",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Model live and audit acceptance through a release-review role while keeping the business user primary; this preserves business value and testability without inventing named staff.",
+      "source": "orchestrator"
+    }
+  ]
+}

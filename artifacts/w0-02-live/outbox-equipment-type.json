@@ -1,0 +1,44 @@
+{
+    "value":  [
+                  {
+                      "eventId":  "d0e0f1a0-5b28-4a93-a7e0-bf9cf872fd60",
+                      "recordId":  "equipment-type-45g1",
+                      "referenceSet":  "EQUIPMENT_TYPE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  2,
+                      "lastAttemptAt":  "2026-07-14T19:09:46.666261011Z",
+                      "publishedAt":  "2026-07-14T19:09:48.072030320Z",
+                      "brokerMetadata":  "referencedata.events:0:9",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  },
+                  {
+                      "eventId":  "04d2b7bf-8054-46cf-9507-6d4fdb761224",
+                      "recordId":  "equipment-type-42g1",
+                      "referenceSet":  "EQUIPMENT_TYPE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  2,
+                      "lastAttemptAt":  "2026-07-14T19:09:46.666261011Z",
+                      "publishedAt":  "2026-07-14T19:09:48.042571183Z",
+                      "brokerMetadata":  "referencedata.events:0:8",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  },
+                  {
+                      "eventId":  "37e18504-83ce-4418-a1a3-aacc39779b5f",
+                      "recordId":  "equipment-type-22g1",
+                      "referenceSet":  "EQUIPMENT_TYPE",
+                      "operation":  "CREATED",
+                      "status":  "PUBLISHED",
+                      "attemptCount":  2,
+                      "lastAttemptAt":  "2026-07-14T19:09:46.666261011Z",
+                      "publishedAt":  "2026-07-14T19:09:48.017069708Z",
+                      "brokerMetadata":  "referencedata.events:0:7",
+                      "lastError":  null,
+                      "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                  }
+              ],
+    "Count":  3
+}

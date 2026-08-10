@@ -1,0 +1,13 @@
+{
+  "stage_slug": "refined-mockups",
+  "selections": [
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Keep operator-facing transport details out of primary screens and expose correlation or event identity only through a collapsed Audit surface; users need actionable pending and retry evidence rather than Kafka internals in the main journey.",
+      "source": "orchestrator"
+    }
+  ]
+}

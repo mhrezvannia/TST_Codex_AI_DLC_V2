@@ -1,0 +1,4 @@
+HTTP 200
+Vessel / Voyage=True
+Equipment Type=True
+Charge Code=True

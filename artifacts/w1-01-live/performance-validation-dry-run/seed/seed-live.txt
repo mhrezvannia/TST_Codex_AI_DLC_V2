@@ -1,0 +1,6 @@
+gate=seed-live
+status=PLANNED
+exitCode=
+command=node scripts/seed-local.mjs --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json --summary-file D:/TST_Codex_W1-01/artifacts/w1-01-live/performance-validation-dry-run/seed/seed-apply.json
+
+dry-run: command not executed

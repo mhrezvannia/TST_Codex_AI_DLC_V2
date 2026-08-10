@@ -93,4 +93,4 @@ Booking Desk and Customer Service share the same canonical composition but may r
 - `read`, `create`, `correct`, `validate`, `price`, and `confirm` are independently enforced server-side; no persona definition assigns them implicitly.
 - A denied/session-boundary experience discloses no protected existence or payload facts.
 - Every applicable persona workflow is keyboard-operable with visible focus, persistent labels, linked/announced errors, controlled live regions, focus restoration, reduced motion, and non-color state meaning.
-- Required evidence covers 390, 768, 1024, and 1440 px plus 200% zoom in light/dark themes; story acceptance may not claim PASS from source inspection or mockups alone.
+- Required evidence covers 375, 390, 768, 1024, and 1440 px plus 200% zoom in light/dark themes; story acceptance may not claim PASS from source inspection or mockups alone.

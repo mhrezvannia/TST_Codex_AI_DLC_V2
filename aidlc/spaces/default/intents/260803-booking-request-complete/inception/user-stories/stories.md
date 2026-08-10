@@ -17,11 +17,9 @@ Source basis: `requirements.md`, `business-overview.md`, `component-inventory.md
 | US-09 | Inspect one canonical operational workflow | All operational personas | Must |
 | US-10 | Enforce authorization, privacy, and safe errors | All personas | Must |
 | US-11 | Prove the integrated W3-04 outcome | Operational Auditor | Must |
-| US-12 | Use authoritative prefill and provenance help | Booking Desk Agent | Should |
-| US-13 | Inspect privacy-safe operational diagnostics | Booking Supervisor | Should |
-| US-14 | Reuse governed recent choices | Booking Desk Agent | Could |
+| US-12 | Inspect privacy-safe operational diagnostics | Booking Supervisor | Should |
 
-PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complete the non-deferrable W3-04 outcome; Delivery Planning may group them into Bolts without changing their priority or acceptance. US-12 through US-14 cannot displace a Must story.
+PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complete the non-deferrable W3-04 outcome; Delivery Planning may group them into Bolts without changing their priority or acceptance. US-12 cannot displace a Must story.
 
 ## US-01 — Create and Reopen the PB-01 Request Spine
 
@@ -51,7 +49,7 @@ PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complet
 **Acceptance criteria**
 
 1. **Given** valid maximum/boundary text and numeric inputs, **when** the request is saved and reopened, **then** normalized customer reference/cargo description, package count/type, KGM gross weight, optional MTQ volume, parties, locations, requested date, voyage, equipment type, and quantity round-trip exactly. (FR-001–FR-005; AC-001, AC-002)
-2. **Given** consignee, notify party, or volume is blank, **when** all required fields are valid, **then** the draft remains saveable and those fields do not block completeness. (FR-001, FR-005)
+2. **Given** consignee, notify party, or volume is blank, **when** all required fields are valid, **then** the draft remains saveable and those fields do not block completeness; when supplied, each optional value round-trips exactly. (FR-001, FR-004, FR-005)
 3. **Given** controls, excess length/precision, zero/negative/non-integer counts, mismatched units, unsupported units, or unknown free-text package/commodity values, **when** validation runs, **then** stable linked field errors appear without clearing unrelated input. (FR-002–FR-007; AC-002, AC-003)
 4. **Given** quantity greater than one, **when** the request is read through UI and API, **then** quantity remains the requested count and is never collapsed to one or expanded into fabricated physical assignments. (FR-004, FR-021; NFR-003)
 
@@ -85,8 +83,8 @@ PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complet
 **Acceptance criteria**
 
 1. **Given** representative pre-W3 snapshots, **when** additive readers/upcasters run, **then** authoritative facts are preserved, unsupported facts carry explicit incompleteness reasons, and no W3 default or synthetic identifier is introduced. (FR-011–FR-013; AC-006)
-2. **Given** migration/backfill executes twice and the service restarts, **when** ledger/projection results are compared, **then** outcomes are restartable, idempotent, and stable. (FR-011–FR-013; AC-006)
-3. **Given** a legacy-incomplete record, **when** an authorized agent corrects required facts, **then** the same booking identity/revision chain becomes eligible for validation rather than a replacement draft being created. (FR-014; AC-006)
+2. **Given** migration/backfill executes twice and the service restarts, **when** ledger/projection results are compared, **then** outcomes are restartable, idempotent, and stable with source/target version, safe reason, and baseline-drift protection. (FR-011, FR-013, FR-014; AC-006)
+3. **Given** a legacy-incomplete record, **when** an authorized agent corrects required facts, **then** the same booking identity/revision chain becomes eligible for validation rather than a replacement draft being created. (FR-012, FR-014; AC-006)
 4. **Given** a migration or correction conflict, **when** the latest revision is refreshed, **then** non-sensitive conflict context is shown and no silent overwrite occurs. (FR-015, FR-027; NFR-002)
 
 **INVEST:** Independently valuable recovery path; additive technical means negotiable; bounded by one record lineage; migration and UI cases executable.
@@ -154,7 +152,7 @@ PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complet
 
 1. **Given** current completeness, valid references, confirmation-grade schedule, authoritative current price, expected revision, authorization, and idempotency identity, **when** the impact dialog is accepted, **then** it summarizes the booking/customer/route/schedule/equipment count/type/no-ID/revision/price authority before one confirmation. (FR-019)
 2. **Given** quantity `3` and no equipment ID, **when** confirmation succeeds or the same command is repeated after uncertainty, **then** one state transition, outbox record, audit transition, and schema-valid `booking.confirmed` event exists. (FR-020, FR-022, FR-023; AC-009)
-3. **Given** the event reaches CMM, **when** it is consumed, **then** CMM stores pending requested count/type, creates no synthetic container ID or journey, and awaits later assignment. (FR-021; AC-009)
+3. **Given** the event reaches CMM, **when** it is consumed, **then** CMM stores pending requested count/type, creates no synthetic container ID or journey, and awaits later assignment. (FR-022; AC-009)
 4. **Given** the inventoried producer/consumer/Compose/verification rollout, **when** compatibility deployment executes, **then** tolerant consumers survive the transition, all authorities converge on `booking.confirmed`, and no indefinite dual publication or undiscovered-consumer PASS is claimed. (FR-020–FR-022; AC-010)
 5. **Given** a user without confirm permission, **when** confirmation is attempted, **then** server denial precedes mutation/outbox work and reveals no protected confirmation detail. (FR-028–FR-030; AC-012)
 
@@ -173,7 +171,7 @@ PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complet
 1. **Given** `/booking` or a legacy `/bookings` link, **when** a user creates, corrects, validates, prices, confirms, or inspects, **then** one shared-shell composition owns behavior and no second form/detail implementation appears. (FR-024; AC-011)
 2. **Given** the current record/provider condition, **when** detail resolves, **then** FR-015 precedence exposes exactly one authorized action—Inspect, Refresh status, Retry once, Correct, Validate, Price, Confirm, or the safe session/list path—and no lower-precedence mutation is substituted. (FR-015, FR-027; AC-011)
 3. **Given** Overview, Charges, Journey, or Activity, **when** the user navigates tabs, **then** request completeness, requested/derived schedule provenance, equipment request, reference state, detailed price evidence, lifecycle activity, and privacy-safe collapsed diagnostics appear in their owning section without losing context. (FR-025, FR-026)
-4. **Given** every FR-027 state at 390, 768, 1024, and 1440 px and 200% zoom, **when** exercised by keyboard in light/dark themes, **then** the exact mapped recovery/terminal path, visible focus, persistent labels, linked/announced errors, stable layout, reduced motion, and non-color state meaning are observed. (FR-027; NFR-007; AC-011)
+4. **Given** every FR-027 state at 375, 390, 768, 1024, and 1440 px and 200% zoom, **when** exercised by keyboard in light/dark themes, **then** the exact mapped recovery/terminal path, visible focus, persistent labels, linked/announced errors, stable layout, reduced motion, and non-color state meaning are observed. (FR-027; NFR-007; AC-011)
 
 **INVEST:** One coherent operator workspace; platform/domain ownership bounded; every state observable and browser-testable.
 
@@ -206,59 +204,27 @@ PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complet
 
 1. **Given** the isolated live Compose stack, **when** create→reopen→invalidate/correct→validate→price→confirm→consume→detail and the negative/degraded matrix execute, **then** zero duplicate effects and zero fabricated/lost facts are observed and correlation spans every seam. (NFR-002–NFR-006; AC-013)
 2. **Given** every W3-touched module, **when** tests run alongside the changes, **then** evidence records at least 80% line coverage of changed executable production lines plus required domain, mapping, migration/restart, contract, auth/privacy, idempotency/conflict, provider, browser/a11y, and live cases. (NFR-008, NFR-009)
-3. **Given** the UI journey, **when** browser evidence runs at 390/768/1024/1440 px, 200% zoom, keyboard-only, reduced motion, and light/dark themes, **then** WCAG 2.1 AA behavior and no page-level overflow/overlap/clipping are observed on the real route. (NFR-007; AC-013)
+3. **Given** the UI journey, **when** browser evidence runs at 375/390/768/1024/1440 px, 200% zoom, keyboard-only, reduced motion, and light/dark themes, **then** WCAG 2.1 AA behavior and no page-level overflow/overlap/clipping are observed on the real route. (NFR-007; AC-013)
 4. **Given** create/read/validate/price/confirm/provider-timeout/UI-recovery paths, **when** evidence is finalized, **then** observed durations and 2.5-second BFF timeout outcomes are recorded as local/non-production without an invented SLO/capacity claim. (NFR-001; AC-014)
 5. **Given** any missing live/security/contract/browser/audit prerequisite, **when** the W3-04 manifest is evaluated, **then** the result is BLOCKED rather than PASS; otherwise contract/migration/security/`aidlc-audit`/`erp-fidelity-audit` gates are green and no prior-intent PASS is reused. (NFR-005, NFR-010; AC-013)
 
 **INVEST:** Independent evidence outcome and exit gate; implementation tools negotiable; scope fixed; binary acceptance.
 
-## US-12 — Use Authoritative Prefill and Provenance Help
-
-**Story:** As a Booking Desk Agent, I want safe authoritative prefill and concise provenance help, so that repeated entry is faster without guessing required commercial facts.
-
-**Priority:** Should  
-**Required permission:** Same permission as the owning create/correct action.  
-**Dependencies/owners:** Existing governed Reference Data and LinerCore form primitives only; no copied list or new local primitive.
-
-**Acceptance criteria**
-
-1. **Given** one unambiguous current governed value already established by the user’s context, **when** the form opens, **then** it may prefill with source/version visible and remains explicitly changeable.
-2. **Given** no authoritative value or multiple candidates, **when** the field renders, **then** it remains unselected and no guessed commercial fact is inserted.
-3. **Given** requested departure versus voyage ETD or cargo gross weight versus later SOLAS VGM, **when** help is opened/read by keyboard or screen reader, **then** the distinction is concise, linked to the field, and does not redefine W3 scope.
-
-**INVEST:** Optional efficiency value; independent of Must completion; bounded to governed facts; accessibility-testable.
-
-## US-13 — Inspect Privacy-Safe Diagnostics
+## US-12 — Inspect Privacy-Safe Diagnostics
 
 **Story:** As a Booking Supervisor, I want concise privacy-safe diagnostics for recoverable exceptions, so that I can coordinate support without exposing raw business payloads or turning technical details into the primary workflow.
 
 **Priority:** Should  
-**Required permission:** `read` plus any separately governed diagnostics permission; no fixed supervisor bundle is assumed.  
+**Required permission:** `read`; no additional diagnostics entitlement is introduced by W3-04.  
 **Dependencies/owners:** Booking view model/log/error contract and existing LinerCore disclosure primitives; missing shared primitive is a UI Platform dependency and remains BLOCKED.
 
 **Acceptance criteria**
 
 1. **Given** a provider, reference, conflict, migration, or contract exception, **when** diagnostics are expanded, **then** safe reason code, correlation, revision/provider state, and next owner are shown without raw party/customer/cargo payloads, credentials, Kafka body, or schema dump. (FR-026, FR-030; NFR-005, NFR-006)
 2. **Given** diagnostics are collapsed, **when** the main page is scanned or navigated by keyboard, **then** the business status and one next action remain primary and focus restore works.
-3. **Given** a user lacks diagnostics access, **when** detail loads, **then** the disclosure is absent without indicating hidden protected content.
+3. **Given** a user lacks `read`, **when** detail or its diagnostics are requested, **then** the existing denied/session boundary applies before protected lookup and exposes no record-existence, payload, provider, or hidden-content hint. (FR-028–FR-030; AC-012)
 
 **INVEST:** Support-speed value separate from core flow; uses existing primitives; small disclosure behavior; privacy/a11y testable.
-
-## US-14 — Reuse Governed Recent Choices
-
-**Story:** As a Booking Desk Agent, I want optional recent-choice suggestions from governed values, so that repeated entry is faster without creating local reference authority.
-
-**Priority:** Could  
-**Required permission:** Same as the owning create/correct action.  
-**Dependencies/owners:** Existing Reference Data option contract and Combobox behavior; no new persistence of sensitive recent payloads without a later approved policy.
-
-**Acceptance criteria**
-
-1. **Given** a current governed option previously selected in the same approved user context, **when** suggestions open, **then** the option may be ranked as recent but remains version/current-state validated before selection.
-2. **Given** a recent option is stale, inactive, unauthorized, or no longer route-compatible, **when** suggestions load, **then** it is omitted or visibly invalid and cannot satisfy confirmation.
-3. **Given** suggestion support is absent or blocked, **when** the core form is used, **then** every Must story remains fully operable and no delivery gate is weakened.
-
-**INVEST:** Independent nonessential accelerator; safely removable; small and testable; cannot become reference authority.
 
 ## Requirements and Acceptance Traceability
 
@@ -274,10 +240,11 @@ PB-01 (US-01) is the first gated Construction slice. US-02 through US-11 complet
 | FR-028–FR-030; AC-012 | US-05, US-08, US-09, US-10 |
 | NFR-001; AC-014 | US-11 |
 | NFR-002–NFR-010; AC-013 | US-01, US-04, US-06–US-11 |
-| Approved Should outcomes | US-12, US-13 |
-| Approved Could outcome | US-14 |
+| FR-026, FR-028–FR-030; NFR-005–NFR-006; AC-012 | US-12 |
 
 No story covers a Won't-Have item. Physical assignment/amendment/reconfirmation, cancellation, multi-leg routing, reefer/DG, multi-currency, special equipment, shipping documentation, allocation policy, external portals, AWS, program compliance decisions, local themes, a second Booking frontend, guessed schedule facts, fabricated identifiers, and weakened live gates remain out of scope.
+
+The efficient-prefill/provenance-help Should candidates and recent-choice Could candidate named in `scope-document.md` are not decomposed into executable User Stories because `requirements.md` does not yet define their product behavior or acceptance. They remain deferred backlog candidates and require a future Requirements approval before implementation; they cannot enter W3-04 Delivery Planning by implication.
 
 ## Dependency and Ownership Rules
 
@@ -288,10 +255,9 @@ No story covers a Won't-Have item. Physical assignment/amendment/reconfirmation,
 
 ## Review
 
-**Verdict: NOT-READY**
+**Verdict: READY**
 
-- US-12 and US-14 are orphan scope additions, not decompositions of a traced FR/NFR/AC: authoritative prefill/provenance help and recent-choice ranking introduce new product and interaction behavior. A User Stories planning answer cannot substitute for Requirements approval. Remove/defer them or return the additions to Requirements Analysis; the trace matrix label “Approved Should/Could outcomes” is not requirement traceability.
-- US-13 introduces an undefined “separately governed diagnostics permission” beyond the approved independent action permissions. Engineering cannot know whether `read` is sufficient, a new entitlement is required, or the story is blocked; resolve the authorization boundary upstream without inventing a role bundle.
-- Acceptance traceability is inaccurate. US-04 AC2 omits migration-operation FR-014 while US-04 AC3 cites FR-014 for same-record correction instead of FR-012; US-08 AC3 cites compatible-event FR-021 for CMM pending assignment instead of FR-022; and US-02 AC2 omits optional-field FR-004. Correct each criterion-level link before relying on the range matrix.
-- NFR-007 coverage is incomplete: `personas.md`, US-09 AC4, and US-11 AC3 omit the required 375 px viewport while claiming responsive/a11y coverage. Include 375 px consistently so QA can demonstrate the requirement rather than a reduced subset.
-- `required-sections` and `upstream-coverage` passed for `stories.md`, `personas.md`, and `user-stories-assessment.md`; those sensors do not detect the scope and traceability gaps above.
+- The 12-story backlog is buildable, INVEST-aligned, vertically sliced, correctly prioritized, and bounded to approved W3-04 requirements; unapproved prefill/help and recent-choice candidates are explicitly deferred from Delivery Planning.
+- Personas are goal-based and operationally credible without inventing role bundles. Each protected outcome states approved action permissions, contributing owners/contracts, degraded-state behavior, and a testable customer or control benefit.
+- Requirement and acceptance coverage is complete enough for engineering and QA: Must outcomes cover the full request-to-confirmation/live-proof path, diagnostics remains a traced Should refinement under `read`, and responsive/a11y evidence consistently includes 375, 390, 768, 1024, and 1440 px plus 200% zoom.
+- `required-sections` and `upstream-coverage` passed for `stories.md`, `personas.md`, and `user-stories-assessment.md`.

@@ -1,0 +1,591 @@
+openapi: 3.1.0
+info:
+  title: Charge Pricing API
+  version: 1.0.0
+paths:
+  /pricing-requests:
+    post:
+      operationId: requestPricing
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/CorrelationId'
+        - $ref: '#/components/parameters/ServiceId'
+        - $ref: '#/components/parameters/ServiceToken'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api.v1+json:
+            schema:
+              $ref: '#/components/schemas/PricingRequest'
+      responses:
+        '200':
+          description: Immutable itemized pricing result
+          content:
+            application/vnd.api.v1+json:
+              schema:
+                $ref: '#/components/schemas/PricingResult'
+        '400':
+          $ref: '#/components/responses/PricingBadRequest'
+        '401':
+          $ref: '#/components/responses/PricingIdentityRequired'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NoRate'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Unprocessable'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /api/manual-pricing-cases:
+    get:
+      operationId: listManualPricingCases
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+        - $ref: '#/components/parameters/SubjectAssertion'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [OPEN]
+            default: OPEN
+        - name: reasonCode
+          in: query
+          schema:
+            $ref: '#/components/schemas/ManualReason'
+        - name: bookingRef
+          in: query
+          schema:
+            type: string
+        - name: openedFrom
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: openedTo
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Authorized OPEN manual pricing evidence
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManualCasePage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/SubjectAssertionUnauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '503':
+          $ref: '#/components/responses/ManualCaseUnavailable'
+  /api/manual-pricing-cases/{caseId}:
+    get:
+      operationId: getManualPricingCase
+      parameters:
+        - $ref: '#/components/parameters/CorrelationId'
+        - $ref: '#/components/parameters/SubjectAssertion'
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 64
+      responses:
+        '200':
+          description: Authorized OPEN manual pricing evidence
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManualCase'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '401':
+          $ref: '#/components/responses/SubjectAssertionUnauthorized'
+        '404':
+          description: Manual pricing evidence was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          $ref: '#/components/responses/ManualCaseUnavailable'
+components:
+  parameters:
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      description: bookingRef and amendment sequence, formatted as bookingRef:amendmentSeq
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 160
+    CorrelationId:
+      in: header
+      name: X-Correlation-Id
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+    ServiceId:
+      in: header
+      name: X-LinerCore-Service-Id
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+    ServiceToken:
+      in: header
+      name: X-LinerCore-Service-Token
+      required: true
+      schema:
+        type: string
+        minLength: 1
+    SubjectAssertion:
+      in: header
+      name: X-LinerCore-Subject-Assertion
+      required: true
+      description: Signed, single-use assertion bound to the exact HTTP method, path, and correlation ID
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 8192
+  schemas:
+    PricingRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - bookingRef
+        - tradeLane
+        - pol
+        - pod
+        - equipmentType
+        - partyId
+        - commodityCode
+        - reeferIndicator
+        - dgIndicator
+        - dates
+        - quantities
+      properties:
+        bookingRef:
+          type: string
+        tradeLane:
+          type: string
+        pol:
+          type: string
+          pattern: '^[A-Z]{2}[A-Z0-9]{3}$'
+        pod:
+          type: string
+          pattern: '^[A-Z]{2}[A-Z0-9]{3}$'
+        equipmentType:
+          type: string
+        partyId:
+          type: string
+        commodityCode:
+          type: string
+        reeferIndicator:
+          type: boolean
+        dgIndicator:
+          type: boolean
+        dates:
+          $ref: '#/components/schemas/PricingDates'
+        quantities:
+          $ref: '#/components/schemas/PricingQuantities'
+    PricingDates:
+      type: object
+      additionalProperties: false
+      required: [effectiveDate, requestedDepartureDate]
+      properties:
+        effectiveDate:
+          type: string
+          format: date
+          description: Date used to resolve agreement or tariff validity
+        requestedDepartureDate:
+          type: string
+          format: date
+          description: Requested departure date for the selected voyage
+    PricingQuantities:
+      type: object
+      additionalProperties: false
+      required: [equipmentQuantity, teu, amendmentSeq]
+      properties:
+        equipmentQuantity:
+          type: integer
+          minimum: 1
+        teu:
+          type: integer
+          minimum: 1
+        amendmentSeq:
+          type: integer
+          minimum: 0
+    PricingResult:
+      type: object
+      additionalProperties: false
+      description: >-
+        Additive v1 success. Legacy consumers may observe only the retained required fields;
+        the W2 provider emits total, currency, requestedDepartureDate, pricingRequestId,
+        correlationId, pricedAt, and every enriched ChargeLine field as one complete set.
+      x-provider-runtime-all-or-none:
+        - [total, currency, requestedDepartureDate, pricingRequestId, correlationId, pricedAt]
+      required: [bookingRef, pricingBasis, pricingRef, charges, applicableDndRuleTypes]
+      properties:
+        bookingRef:
+          type: string
+        pricingBasis:
+          type: string
+          enum: [AGREEMENT, TARIFF]
+        pricingRef:
+          type: string
+        charges:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ChargeLine'
+        applicableDndRuleTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicableDndRuleType'
+        total:
+          type: number
+          minimum: 0
+          multipleOf: 0.01
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+        requestedDepartureDate:
+          type: string
+          format: date
+        pricingRequestId:
+          type: string
+        correlationId:
+          type: string
+        pricedAt:
+          type: string
+          format: date-time
+        agreementVersionId:
+          type: string
+    ChargeLine:
+      type: object
+      additionalProperties: false
+      description: >-
+        Retained amount/category fields remain required for v1 compatibility. The W2 provider
+        emits rateCategory, basis, quantity, unitRate, and sourceRateVersionId all-or-none.
+      x-provider-runtime-all-or-none:
+        - [rateCategory, basis, quantity, unitRate, sourceRateVersionId]
+      required: [chargeCode, category, amount, currency]
+      properties:
+        chargeCode:
+          type: string
+        category:
+          type: string
+          enum: [FREIGHT, SURCHARGE, LOCAL]
+        amount:
+          type: number
+          minimum: 0
+          multipleOf: 0.01
+        currency:
+          type: string
+          pattern: '^[A-Z]{3}$'
+        rateCategory:
+          type: string
+          enum: [BASE, SURCHARGE, LOCAL]
+        basis:
+          type: string
+          enum: [PER_CONTAINER]
+        quantity:
+          type: integer
+          minimum: 1
+        unitRate:
+          type: number
+          minimum: 0
+          multipleOf: 0.01
+        sourceRateVersionId:
+          type: string
+    ApplicableDndRuleType:
+      type: object
+      additionalProperties: false
+      required:
+        - ruleType
+        - startMoveTypeCode
+        - startEmptyIndicatorCode
+        - endMoveTypeCode
+        - endEmptyIndicatorCode
+      properties:
+        ruleType:
+          type: string
+          enum: [IMPORT_DEMURRAGE, IMPORT_DETENTION, EXPORT_DETENTION]
+        startMoveTypeCode:
+          type: string
+          enum: [DISC, GTOT, GTIN]
+        startEmptyIndicatorCode:
+          type: string
+          enum: [EMPTY, LADEN]
+        endMoveTypeCode:
+          type: string
+          enum: [DISC, GTOT, GTIN]
+        endEmptyIndicatorCode:
+          type: string
+          enum: [EMPTY, LADEN]
+    Error:
+      type: object
+      additionalProperties: false
+      required: [code, message, correlationId]
+      properties:
+        code:
+          type: string
+          enum:
+            - PRICING_BAD_REQUEST
+            - NO_RATE
+            - IDEMPOTENCY_CONFLICT
+            - PRICING_IN_PROGRESS
+            - PRICING_VALIDATION
+            - COMMODITY_NOT_ELIGIBLE
+            - PRICING_UNAVAILABLE
+            - PRICING_FORBIDDEN
+            - MANUAL_CASE_BAD_REQUEST
+            - MANUAL_CASE_FORBIDDEN
+            - MANUAL_CASE_NOT_FOUND
+            - MANUAL_CASE_UNAVAILABLE
+        message:
+          type: string
+        correlationId:
+          type: string
+        reasonCode:
+          $ref: '#/components/schemas/ManualReason'
+        pricingRequestId:
+          type: string
+        manualCaseId:
+          type: string
+    PricingBoundaryBadRequestError:
+      type: object
+      additionalProperties: false
+      required: [code, message, correlationId]
+      properties:
+        code:
+          type: string
+          enum: [PRICING_IDENTITY_SPOOF_REJECTED, PRICING_CORRELATION_INVALID]
+        message:
+          type: string
+        correlationId:
+          type: string
+          const: rejected
+    PricingIdentityRequiredError:
+      type: object
+      additionalProperties: false
+      required: [code, message, correlationId]
+      properties:
+        code:
+          type: string
+          const: PRICING_SERVICE_IDENTITY_REQUIRED
+        message:
+          type: string
+        correlationId:
+          type: string
+          const: rejected
+    SubjectAssertionUnauthorizedError:
+      type: object
+      additionalProperties: false
+      required: [code, message, fields]
+      properties:
+        code:
+          type: string
+          const: INVALID_SUBJECT_ASSERTION
+        message:
+          type: string
+        fields:
+          type: array
+          maxItems: 0
+    SubjectAssertionCapacityError:
+      type: object
+      additionalProperties: false
+      required: [code, message, fields]
+      properties:
+        code:
+          type: string
+          const: SUBJECT_ASSERTION_CAPACITY_EXHAUSTED
+        message:
+          type: string
+        fields:
+          type: array
+          maxItems: 0
+    ManualReason:
+      type: string
+      enum:
+        - NO_RATE
+        - AMBIGUOUS_AGREEMENT_AUTHORITY
+        - AMBIGUOUS_BASE_RATE
+        - AMBIGUOUS_SURCHARGE_RATE
+        - AMBIGUOUS_LOCAL_RATE
+    ManualCasePage:
+      type: object
+      additionalProperties: false
+      required: [items, total, page, size]
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/ManualCase'
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 0
+        size:
+          type: integer
+          minimum: 1
+          maximum: 100
+    ManualCase:
+      type: object
+      additionalProperties: false
+      required: [caseId, pricingRequestId, reasonCode, status, legacyEvidence]
+      properties:
+        caseId:
+          type: string
+        pricingRequestId:
+          type: string
+        reasonCode:
+          $ref: '#/components/schemas/ManualReason'
+        status:
+          type: string
+          enum: [OPEN]
+        bookingRef:
+          type: [string, 'null']
+        amendmentSeq:
+          type: [integer, 'null']
+          minimum: 0
+        requestHash:
+          type: [string, 'null']
+          pattern: '^[0-9a-f]{64}$'
+        correlationId:
+          type: [string, 'null']
+        openedAt:
+          type: [string, 'null']
+          format: date-time
+        requestContext:
+          oneOf:
+            - $ref: '#/components/schemas/PricingRequestContext'
+            - type: 'null'
+        legacyEvidence:
+          type: boolean
+    PricingRequestContext:
+      type: object
+      additionalProperties: false
+      required:
+        - tradeLane
+        - pol
+        - pod
+        - equipmentType
+        - partyId
+        - commodityCode
+        - reeferIndicator
+        - dgIndicator
+        - dates
+        - quantities
+      properties:
+        tradeLane:
+          type: string
+        pol:
+          type: string
+        pod:
+          type: string
+        equipmentType:
+          type: string
+        partyId:
+          type: string
+        commodityCode:
+          type: string
+        reeferIndicator:
+          type: boolean
+        dgIndicator:
+          type: boolean
+        dates:
+          $ref: '#/components/schemas/PricingDates'
+        quantities:
+          $ref: '#/components/schemas/PricingQuantities'
+  responses:
+    PricingBadRequest:
+      description: Malformed request or rejected pricing identity/correlation boundary
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Error'
+              - $ref: '#/components/schemas/PricingBoundaryBadRequestError'
+    PricingIdentityRequired:
+      description: Trusted pricing service identity is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PricingIdentityRequiredError'
+    SubjectAssertionUnauthorized:
+      description: The required subject assertion is missing, malformed, expired, replayed, or not request-bound
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubjectAssertionUnauthorizedError'
+    ManualCaseUnavailable:
+      description: Manual evidence is unavailable or assertion replay capacity is exhausted
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Error'
+              - $ref: '#/components/schemas/SubjectAssertionCapacityError'
+    BadRequest:
+      description: Malformed request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Caller is authenticated but lacks the exact capability
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NoRate:
+      description: Neither an active agreement nor tariff resolves
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Idempotency conflict or request already in progress
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unprocessable:
+      description: Pricing validation or commodity eligibility failure
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unavailable:
+      description: Pricing service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

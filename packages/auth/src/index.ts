@@ -1,3 +1,5 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 export type SessionSummary = {
   isAuthenticated: boolean;
   subject: string;
@@ -9,6 +11,8 @@ export type SessionSummary = {
   permissions?: string[];
   permissionSummary?: PermissionSummary;
   policyVersion?: string;
+  issuedAt?: string;
+  expiresAt?: string;
   correlationId?: string;
 };
 
@@ -254,6 +258,103 @@ export function toSessionSummary(session: AuthSession, correlationId: string): S
     permissions: session.permissions,
     permissionSummary: summarizePermissions(session.permissions),
     policyVersion: session.policyVersion,
+    issuedAt: session.issuedAt,
+    expiresAt: session.expiresAt,
     correlationId
   };
+}
+
+export function resolveCookieSigningSecret(
+  env: Record<string, string | undefined> = process.env
+): string {
+  const configured = env.AUTH_SESSION_SECRET?.trim();
+  if (configured) {
+    return configured;
+  }
+  if (isLocalRuntimeProfile(env)) {
+    return "linercore-local-session-secret";
+  }
+  throw new Error("AUTH_SESSION_SECRET is required outside local and test profiles");
+}
+
+export function encodeSignedCookie<T>(value: T, secret?: string): string {
+  const payload = Buffer.from(JSON.stringify(value), "utf8").toString("base64url");
+  const signature = createHmac("sha256", secret ?? resolveCookieSigningSecret()).update(payload).digest("base64url");
+  return `${payload}.${signature}`;
+}
+
+export function decodeSignedCookie<T>(value: string | undefined, secret?: string): T | null {
+  if (!value) {
+    return null;
+  }
+  try {
+    const [payload, signature, extra] = value.split(".");
+    if (!payload || !signature || extra) {
+      return null;
+    }
+    const expected = createHmac("sha256", secret ?? resolveCookieSigningSecret()).update(payload).digest();
+    const supplied = Buffer.from(signature, "base64url");
+    if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) {
+      return null;
+    }
+    return JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as T;
+  } catch {
+    return null;
+  }
+}
+
+export function encodeSessionCookie(session: AuthSession, secret?: string): string {
+  return encodeSignedCookie(session, secret);
+}
+
+export function decodeSessionCookie(value: string | undefined, secret?: string): AuthSession | null {
+  return decodeSignedCookie<AuthSession>(value, secret);
+}
+
+export function readCookieValue(header: string | null | undefined, name: string): string | undefined {
+  return header
+    ?.split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${name}=`))
+    ?.slice(name.length + 1);
+}
+
+export function isSessionExpired(session: AuthSession, now = new Date()): boolean {
+  const expiresAt = Date.parse(session.expiresAt);
+  return !Number.isFinite(expiresAt) || expiresAt <= now.getTime();
+}
+
+export function sessionFromCookieHeader(cookieHeader: string | null | undefined): AuthSession | null {
+  const session = decodeSessionCookie(readCookieValue(cookieHeader, SESSION_COOKIE_NAME));
+  return session && !isSessionExpired(session) ? session : null;
+}
+
+export function sessionFromRequest(request: Request): AuthSession | null {
+  return sessionFromCookieHeader(request.headers.get("cookie"));
+}
+
+export function safeSessionSummaryFromRequest(request: Request, correlationId = createCorrelationId()): SessionSummary {
+  const session = sessionFromRequest(request);
+  if (!session) {
+    return {
+      isAuthenticated: false,
+      subject: "",
+      subjectType: "user",
+      displayName: "",
+      roles: [],
+      permissions: [],
+      permissionSummary: { total: 0, byResource: {} },
+      correlationId
+    };
+  }
+  return toSessionSummary(session, correlationId);
+}
+
+export function actorSubjectFromSession(session: AuthSession | null | undefined): string | null {
+  const subject = session?.subjectId?.trim();
+  return subject ? subject : null;
+}
+
+export function actorSubjectFromRequest(request: Request): string | null {
+  return actorSubjectFromSession(sessionFromRequest(request));
 }

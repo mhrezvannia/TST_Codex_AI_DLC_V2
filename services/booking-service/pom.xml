@@ -13,5 +13,8 @@
     <modules>
         <module>domain-core</module>
         <module>application-service</module>
+        <module>dataaccess</module>
+        <module>messaging</module>
+        <module>container</module>
     </modules>
 </project>

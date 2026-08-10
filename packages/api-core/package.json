@@ -9,7 +9,7 @@
     "build": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "node ../../node_modules/vitest/vitest.mjs --root ../.. run packages/api-core"
   },
   "dependencies": {
     "axios": "^1.7.9"

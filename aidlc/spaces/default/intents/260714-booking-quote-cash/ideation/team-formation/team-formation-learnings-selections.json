@@ -1,0 +1,21 @@
+{
+  "stage_slug": "team-formation",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Represent repository ownership and review responsibilities as roles without inventing named human staff, capacity, or availability.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Use one stream-aligned intent delivery mob with specialist review hats rather than horizontal teams when a thin journey crosses multiple modules and needs one accountable driver.",
+      "source": "orchestrator"
+    }
+  ]
+}

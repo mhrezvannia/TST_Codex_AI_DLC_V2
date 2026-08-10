@@ -1,6 +1,7 @@
 package com.linercore.platform.identity.domain.model;
 
 public enum RoleCode {
+    SUPERUSER("superuser"),
     PRICING("pricing"),
     SALES("sales"),
     BOOKING_DESK("booking-desk"),

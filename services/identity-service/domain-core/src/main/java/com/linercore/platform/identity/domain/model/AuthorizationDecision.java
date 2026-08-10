@@ -13,10 +13,12 @@ public record AuthorizationDecision(
         String scope,
         Instant evaluatedAt,
         String policyVersion,
-        String correlationId) {
+        String correlationId,
+        String caller) {
     public static AuthorizationDecision allow(AuthenticatedSubject subject, AuthorizationRequest request, String policyVersion, Instant now) {
         return new AuthorizationDecision(UUID.randomUUID().toString(), subject.subjectId(), DecisionResult.ALLOW, ReasonCode.ALLOW,
-                request.resource(), request.action(), request.scope(), now, policyVersion, request.correlationId());
+                request.resource(), request.action(), request.scope(), now, policyVersion, request.correlationId(),
+                request.context().get("caller"));
     }
 
     public static AuthorizationDecision deny(String subjectId, AuthorizationRequest request, ReasonCode reasonCode, String policyVersion, Instant now) {
@@ -26,6 +28,7 @@ public record AuthorizationDecision(
                 request == null ? null : request.scope(),
                 now,
                 policyVersion,
-                request == null ? null : request.correlationId());
+                request == null ? null : request.correlationId(),
+                request == null ? null : request.context().get("caller"));
     }
 }

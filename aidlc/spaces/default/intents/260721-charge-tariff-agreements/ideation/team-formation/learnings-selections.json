@@ -1,0 +1,21 @@
+{
+  "stage_slug": "team-formation",
+  "selections": [
+    {
+      "candidate_id": "260721-c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "For W2-03 team planning, define roles and review hats without inferring real staffing readiness; named or system-assigned owners, availability, review independence, time zones, competing priorities, and Docker-capable acceptance ownership must be verified before committing a delivery schedule.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "260721-c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Deliver W2-03 through one stream-aligned intent mob with rotating Charge, Booking, architecture, data, frontend/UX, quality/security, and release-review hats; do not split its vertical Definition of Done across horizontal component teams.",
+      "source": "orchestrator"
+    }
+  ]
+}

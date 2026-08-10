@@ -26,5 +26,47 @@
     "dirName": "260708-linercore-enterprise",
     "scope": "enterprise",
     "status": "in-flight"
+  },
+  {
+    "uuid": "019f628f-fab3-719d-bc28-ed73dd00d76c",
+    "slug": "booking-quote-cash",
+    "dirName": "260714-booking-quote-cash",
+    "scope": "feature",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f71d3-c192-7e35-b9d7-19c76d20d1fe",
+    "slug": "app-shell-auth",
+    "dirName": "260717-app-shell-auth",
+    "scope": "enterprise",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f8494-4efd-7764-8d07-3286a83d43a1",
+    "slug": "design-system-closure",
+    "dirName": "260721-design-system-closure",
+    "scope": "feature",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f8495-6e69-7c56-a525-2d531aaec19d",
+    "slug": "charge-tariff-agreements",
+    "dirName": "260721-charge-tariff-agreements",
+    "scope": "feature",
+    "status": "complete"
+  },
+  {
+    "uuid": "019f8496-fc67-7f42-b3e4-b0f3e788e615",
+    "slug": "container-track-trace",
+    "dirName": "260721-container-track-trace",
+    "scope": "feature",
+    "status": "complete"
+  },
+  {
+    "uuid": "019fc6a3-467a-796a-9b12-3fb5588780b7",
+    "slug": "booking-request-complete",
+    "dirName": "260803-booking-request-complete",
+    "scope": "feature",
+    "status": "in-flight"
   }
 ]

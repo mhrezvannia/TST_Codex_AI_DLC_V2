@@ -1,0 +1,13 @@
+{
+  "preSignOutSubject": null,
+  "signOutCorrelationId": "not-captured",
+  "signOutCommand": "POST /api/auth/sign-out through shell/auth route",
+  "signOutExitOrHttpStatus": null,
+  "cookieCleared": false,
+  "postSignOutRoute": "/booking",
+  "postSignOutDecision": "BLOCKED - live proof not executed",
+  "staleCallStatus": null,
+  "staleCallCode": null,
+  "staleCallCorrelationId": "not-captured",
+  "backendLocalUserObserved": false
+}

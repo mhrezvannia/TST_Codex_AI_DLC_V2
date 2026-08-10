@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260722083455-0122bcaabb93-a7e4e63b",
+  "workspaceDigest": "0122bcaabb93fbaeb79dc5766d009f759a2041af8291b5de77888034f25d1afb",
+  "command": "node scripts/wave-a-compose.mjs -f compose.yaml -f infrastructure/compose/w2-02-acceptance.compose.yaml ps --format json",
+  "startedAt": "2026-07-22T08:42:36.854Z",
+  "finishedAt": "2026-07-22T08:42:55.659Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "3df2e8c731ebcc02a819cf697f6dd107ae58b7b38479530e863648ca28460198",
+  "outputBytes": 35680,
+  "services": [
+    {
+      "Service": "apps-auth",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-booking",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "apps-charge-agreements",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-reference-data",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-shell",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "booking-service",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "charge-agreement-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "container-movement-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "identity-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "kafka",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "keycloak",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "nginx",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "postgres",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "reference-data-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "schema-registry",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "seed-loader",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "w2-02-ssr-control",
+      "State": "running",
+      "Health": "healthy"
+    }
+  ]
+}

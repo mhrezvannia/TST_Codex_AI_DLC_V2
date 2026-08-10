@@ -1,0 +1,25 @@
+{
+  "name": "@erp/app-shell",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "node ../../node_modules/vitest/vitest.mjs --root ../.. run apps/shell"
+  },
+  "dependencies": {
+    "@erp/auth": "workspace:*",
+    "@erp/shared-types": "workspace:*",
+    "@erp/ui": "workspace:*",
+    "next": "15.5.21",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.0.1",
+    "typescript": "^5.7.2",
+    "vitest": "3.2.6"
+  }
+}

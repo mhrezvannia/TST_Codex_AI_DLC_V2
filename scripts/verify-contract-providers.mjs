@@ -1,7 +1,12 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { REQUIRED_EVENT_SCHEMAS, validateContractCatalog } from "./validate-contract-catalog.mjs";
+import {
+  hasSchemaFieldPath,
+  REQUIRED_EVENT_SCHEMAS,
+  validateContractCatalog,
+  validateU04PricingMatrix
+} from "./validate-contract-catalog.mjs";
 
 const REQUIRED_OPENAPI_PATHS = {
   "contracts/openapi/reference-data-service.yaml": [
@@ -22,6 +27,11 @@ const REQUIRED_OPENAPI_PATHS = {
     "/api/charge-agreements/active-lookup",
     "/api/pricing/quote",
     "/api/pricing/dnd"
+  ],
+  "contracts/openapi/pricing.v1.yaml": [
+    "/pricing-requests",
+    "/api/manual-pricing-cases",
+    "/api/manual-pricing-cases/{caseId}"
   ]
 };
 
@@ -70,10 +80,28 @@ export async function verifyContractProviders(options = {}) {
   verifyAsyncApiChannels(root, checks, failures);
   verifyAvroSchemas(root, checks, failures);
   verifyFixtures(root, checks, failures);
+  const pricingFailures = validateU04PricingMatrix(root, catalog.catalog);
+  push(checks, failures, "U04 pricing terminal/Pact matrix", pricingFailures.length === 0, pricingFailures.join("; "));
 
   if (live) {
     await checkLive("identity roles", `${options.identityServiceUrl ?? process.env.IDENTITY_SERVICE_URL ?? "http://localhost:8082"}/internal/identity/roles`, checks, failures);
-    await checkLive("reference sets", `${options.referenceDataServiceUrl ?? process.env.REFERENCE_DATA_SERVICE_URL ?? "http://localhost:8083"}/reference-sets`, checks, failures);
+    const referenceDataServiceId = options.referenceDataServiceId
+      ?? process.env.REFERENCE_DATA_VERIFY_SERVICE_ID
+      ?? "apps-reference-data";
+    const referenceDataToken = options.referenceDataToken
+      ?? process.env.REFERENCE_DATA_VERIFY_TOKEN
+      ?? process.env.REFERENCE_DATA_BFF_TOKEN
+      ?? "reference_data_bff_local_token";
+    await checkLive(
+      "reference sets",
+      `${options.referenceDataServiceUrl ?? process.env.REFERENCE_DATA_SERVICE_URL ?? "http://localhost:8083"}/reference-sets`,
+      checks,
+      failures,
+      {
+        "x-linercore-service-id": referenceDataServiceId,
+        "x-linercore-local-token": referenceDataToken
+      }
+    );
   } else {
     checks.push({ name: "live provider verification", status: "skipped", reason: "run with --live when services are available" });
   }
@@ -110,9 +138,8 @@ function verifyAvroSchemas(root, checks, failures) {
       const schemaPath = resolve(root, "contracts/avro", `${eventType}.avsc`);
       const schema = existsSync(schemaPath) ? JSON.parse(readFileSync(schemaPath, "utf8")) : null;
       push(checks, failures, `${eventType} avro record`, schema?.type === "record" && Boolean(schema?.name), "invalid Avro record schema");
-      const fieldNames = new Set((schema?.fields ?? []).map((field) => field.name));
       for (const field of expected.requiredFields) {
-        push(checks, failures, `${contractId} ${eventType} field ${field}`, fieldNames.has(field), "missing required Avro field");
+        push(checks, failures, `${contractId} ${eventType} field ${field}`, hasSchemaFieldPath(schema, field), "missing required Avro field");
       }
     }
   }
@@ -147,9 +174,9 @@ function push(checks, failures, name, condition, reason) {
   }
 }
 
-async function checkLive(name, url, checks, failures) {
+async function checkLive(name, url, checks, failures, headers = {}) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { headers });
     push(checks, failures, name, response.ok, `HTTP ${response.status}`);
   } catch (error) {
     push(checks, failures, name, false, error instanceof Error ? error.message : String(error));
@@ -177,17 +204,23 @@ function parseArgs(argv) {
   return args;
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
-  const args = parseArgs(process.argv.slice(2));
-  const result = await verifyContractProviders({ live: args.live });
+export async function runVerifyContractProvidersCli(argv = [], options = {}) {
+  const args = parseArgs(argv);
+  const result = await verifyContractProviders({
+    root: options.root,
+    live: args.live
+  });
   const payload = { status: result.valid ? "ok" : "failed", ...result };
   if (args.evidenceFile) {
-    const evidencePath = resolve(args.evidenceFile);
+    const evidencePath = resolve(options.root ?? process.cwd(), args.evidenceFile);
     mkdirSync(dirname(evidencePath), { recursive: true });
     writeFileSync(evidencePath, `${JSON.stringify(payload, null, 2)}\n`);
   }
-  console.log(JSON.stringify(payload, null, 2));
-  if (!result.valid) {
-    process.exit(1);
-  }
+  (options.log ?? console.log)(JSON.stringify(payload, null, 2));
+  return { exitCode: result.valid ? 0 : 1, payload };
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  const outcome = await runVerifyContractProvidersCli(process.argv.slice(2));
+  process.exitCode = outcome.exitCode;
 }

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260726110629-a0c9634879ab-5297cd6a",
+  "workspaceDigest": "a0c9634879ab41a4794c2fb99da31639713ecfc4488c8542edf30848d7deedc3",
+  "command": "node scripts/wave-a-compose.mjs -f compose.yaml -f infrastructure/compose/w2-02-acceptance.compose.yaml ps --all --format json",
+  "startedAt": "2026-07-26T11:06:37.819Z",
+  "finishedAt": "2026-07-26T11:06:38.673Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "outputBytes": 1,
+  "preExistingResources": 0,
+  "ownership": "UNCLAIMED",
+  "cleanupArmed": false,
+  "wrapperOnly": true
+}

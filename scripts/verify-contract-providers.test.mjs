@@ -1,10 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { verifyContractProviders } from "./verify-contract-providers.mjs";
+import { runVerifyContractProvidersCli, verifyContractProviders } from "./verify-contract-providers.mjs";
 
 test("verifies offline provider contract coverage", async () => {
   const result = await verifyContractProviders();
@@ -21,8 +21,8 @@ test("verifies required booking and movement Avro fields", async () => {
   const result = await verifyContractProviders();
 
   assert.equal(result.valid, true, result.failures.join("\n"));
-  assert.equal(result.checks.some((check) => check.name.includes("event-booking-confirmed booking.confirmed field idempotencyKey") && check.status === "ok"), true);
-  assert.equal(result.checks.some((check) => check.name.includes("event-container-movement-status containermovement.status field sequenceNumber") && check.status === "ok"), true);
+  assert.equal(result.checks.some((check) => check.name.includes("event-booking-confirmed booking.confirmed field data.bookingId") && check.status === "ok"), true);
+  assert.equal(result.checks.some((check) => check.name.includes("event-container-movement-status containermovement.status field data.derivedStatus") && check.status === "ok"), true);
 });
 
 test("verifies HTTP Pact and message-pact fixtures", async () => {
@@ -32,6 +32,27 @@ test("verifies HTTP Pact and message-pact fixtures", async () => {
   assert.equal(result.checks.some((check) => check.name.includes("booking-charge-pricing-fixtures.json response status") && check.status === "ok"), true);
   assert.equal(result.checks.some((check) => check.name.includes("booking-confirmed-message-fixtures.json payload example exists") && check.status === "ok"), true);
   assert.equal(result.checks.some((check) => check.name.includes("container-movement-status-message-fixtures.json payload example exists") && check.status === "ok"), true);
+  assert.equal(result.checks.some((check) => check.name === "U04 pricing terminal/Pact matrix" && check.status === "ok"), true);
+});
+
+test("verification fails when U04 Pact ownership or terminal correlation drifts", async () => {
+  await usingFixture(async (root) => {
+    const catalogPath = join(root, "contracts/catalog/contract-catalog.json");
+    const matrixPath = join(root, "contracts/examples/pricing-u04-terminal-matrix.json");
+    const catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+    const matrix = JSON.parse(readFileSync(matrixPath, "utf8"));
+    catalog.contracts.find((contract) => contract.contractId === "pact-booking-charge-pricing").consumerService =
+      "another-consumer";
+    matrix.scenarios.find((scenario) => scenario.scenarioId === "no-rate").response.correlationId = "";
+    writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`);
+    writeFileSync(matrixPath, `${JSON.stringify(matrix, null, 2)}\n`);
+
+    const result = await verifyContractProviders({ root });
+
+    assert.equal(result.valid, false);
+    assert.match(result.failures.join("\n"), /OpenAPI and Pact ownership must be synchronized/);
+    assert.match(result.failures.join("\n"), /no-rate.correlationId is required/);
+  });
 });
 
 test("verification fails when required OpenAPI path is missing", async () => {
@@ -51,7 +72,8 @@ test("verification fails when a required Avro field is missing", async () => {
   await usingFixture(async (root) => {
     const path = join(root, "contracts/avro/containermovement.status.avsc");
     const schema = JSON.parse(readFileSync(path, "utf8"));
-    schema.fields = schema.fields.filter((field) => field.name !== "sequenceNumber");
+    const data = schema.fields.find((field) => field.name === "data").type;
+    data.fields = data.fields.filter((field) => field.name !== "derivedStatus");
     writeFileSync(path, `${JSON.stringify(schema, null, 2)}\n`);
 
     const result = await verifyContractProviders({ root });
@@ -76,14 +98,15 @@ test("verification fails when message-pact payload example is missing", async ()
 });
 
 test("CLI writes evidence file", async () => {
-  await usingFixture((root) => {
+  await usingFixture(async (root) => {
     const evidenceFile = join(root, "artifacts/contracts-verification.json");
-    execFileSync(process.execPath, [join(process.cwd(), "scripts/verify-contract-providers.mjs"), "--evidence-file", evidenceFile], {
-      cwd: root,
-      stdio: "pipe"
+    const outcome = await runVerifyContractProvidersCli(["--evidence-file", evidenceFile], {
+      root,
+      log: () => {}
     });
     const evidence = JSON.parse(readFileSync(evidenceFile, "utf8"));
 
+    assert.equal(outcome.exitCode, 0);
     assert.equal(evidence.status, "ok");
     assert.equal(evidence.healthSnapshot.overallStatus, "green");
   });
@@ -99,6 +122,41 @@ test("live provider verification reports service failures", async () => {
   assert.equal(result.valid, false);
   assert.equal(result.failures.some((failure) => failure.includes("identity roles")), true);
   assert.equal(result.failures.some((failure) => failure.includes("reference sets")), true);
+});
+
+test("live reference provider verification sends the configured service identity", async () => {
+  const requests = [];
+  const server = createServer((request, response) => {
+    requests.push({
+      url: request.url,
+      serviceId: request.headers["x-linercore-service-id"],
+      token: request.headers["x-linercore-local-token"]
+    });
+    response.writeHead(200, { "content-type": "application/json" });
+    response.end("[]");
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const address = server.address();
+    const serviceUrl = `http://127.0.0.1:${address.port}`;
+    const result = await verifyContractProviders({
+      live: true,
+      identityServiceUrl: serviceUrl,
+      referenceDataServiceUrl: serviceUrl,
+      referenceDataServiceId: "contract-verifier",
+      referenceDataToken: "contract-verifier-token"
+    });
+
+    assert.equal(result.valid, true, result.failures.join("\n"));
+    const referenceRequest = requests.find((request) => request.url === "/reference-sets");
+    assert.deepEqual(referenceRequest, {
+      url: "/reference-sets",
+      serviceId: "contract-verifier",
+      token: "contract-verifier-token"
+    });
+  } finally {
+    await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  }
 });
 
 async function usingFixture(callback) {

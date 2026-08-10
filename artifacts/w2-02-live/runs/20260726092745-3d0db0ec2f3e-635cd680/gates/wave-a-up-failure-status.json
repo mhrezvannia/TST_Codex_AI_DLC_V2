@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260726092745-3d0db0ec2f3e-635cd680",
+  "workspaceDigest": "3d0db0ec2f3ebd55a5b1a93aa0ae34e9b3881215a481c21a5e4b41d07f39a2d6",
+  "startedAt": "2026-07-26T10:34:41.208Z",
+  "finishedAt": "2026-07-26T10:35:39.960Z",
+  "exitCode": 1,
+  "directExit": true,
+  "result": "FAIL",
+  "outputHash": "f5f0868b398b810944da862ee826bbca9d08a06e4ca18d6ddfd492bbe95933e4",
+  "outputBytes": 342,
+  "wrapperOnly": true,
+  "ownership": "THIS_ATTEMPT",
+  "services": []
+}

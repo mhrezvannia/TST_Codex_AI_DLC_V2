@@ -12,9 +12,38 @@ export const gateDefinitions = [
   { id: "skeleton-validate", scope: "workspace", required: true, command: "node scripts/validate-skeleton.mjs" },
   { id: "frontend-reference-data-test", scope: "apps/reference-data", required: true, command: "node node_modules/vitest/vitest.mjs run apps/reference-data/app/page.test.tsx apps/reference-data/lib/reference-data.test.ts apps/reference-data/lib/contract-catalog.test.ts --config vitest.config.ts" },
   { id: "frontend-reference-data-typecheck", scope: "apps/reference-data", required: true, command: "corepack yarn workspace @erp/app-reference-data typecheck" },
+  { id: "package-auth-test", scope: "packages/auth", required: true, command: "corepack yarn workspace @erp/auth test" },
+  { id: "package-auth-typecheck", scope: "packages/auth", required: true, command: "corepack yarn workspace @erp/auth typecheck" },
+  { id: "package-auth-lint", scope: "packages/auth", required: true, command: "corepack yarn workspace @erp/auth lint" },
+  { id: "package-shared-types-test", scope: "packages/shared-types", required: true, command: "corepack yarn workspace @erp/shared-types test" },
+  { id: "package-shared-types-typecheck", scope: "packages/shared-types", required: true, command: "corepack yarn workspace @erp/shared-types typecheck" },
+  { id: "package-shared-types-lint", scope: "packages/shared-types", required: true, command: "corepack yarn workspace @erp/shared-types lint" },
+  { id: "frontend-auth-test", scope: "apps/auth", required: true, command: "corepack yarn workspace @erp/app-auth test" },
   { id: "frontend-auth-typecheck", scope: "apps/auth", required: true, command: "corepack yarn workspace @erp/app-auth typecheck" },
+  { id: "frontend-auth-lint", scope: "apps/auth", required: true, command: "corepack yarn workspace @erp/app-auth lint" },
+  { id: "frontend-auth-build", scope: "apps/auth", required: true, command: "corepack yarn workspace @erp/app-auth build" },
   { id: "frontend-charge-agreements-test", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements test" },
   { id: "frontend-charge-agreements-typecheck", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements typecheck" },
+  { id: "frontend-charge-agreements-lint", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements lint" },
+  { id: "frontend-charge-agreements-build", scope: "apps/charge-agreements", required: true, command: "corepack yarn workspace @erp/app-charge-agreements build" },
+  { id: "u02-route-preservation", scope: "apps/charge-agreements", required: true, command: "node scripts/u02-route-preservation.mjs" },
+  { id: "u02-subject-assertion-contract", scope: "apps/charge-agreements", required: true, command: "mvn -f services/pom.xml -pl charge-agreement-service/container -am -Dtest=ChargeSubjectAssertionVerifierTest -Dsurefire.failIfNoSpecifiedTests=false test" },
+  { id: "u02-security", scope: "apps/charge-agreements", required: true, command: "node scripts/run-u02-security-gates.mjs" },
+  { id: "u02-performance", scope: "apps/charge-agreements", required: true, command: "node scripts/u02-bff-performance.mjs --input artifacts/u02/performance.json" },
+  { id: "u03-agreement-preservation", scope: "apps/charge-agreements", required: true, command: "node scripts/u03-agreement-preservation.test.mjs" },
+  { id: "u03-agreement-performance-contract", scope: "apps/charge-agreements", required: true, command: "node scripts/u03-agreement-performance.test.mjs" },
+  { id: "u04-pricing-preservation", scope: "apps/charge-agreements", required: true, command: "node scripts/u04-pricing-preservation.test.mjs" },
+  { id: "u04-pricing-performance-contract", scope: "apps/charge-agreements", required: true, command: "node scripts/u04-pricing-performance.test.mjs" },
+  { id: "u04-rollback-policy", scope: "apps/charge-agreements", required: true, command: "node scripts/u04-rollback-policy.test.mjs" },
+  { id: "frontend-booking-test", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking test" },
+  { id: "frontend-booking-typecheck", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking typecheck" },
+  { id: "frontend-booking-lint", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking lint" },
+  { id: "frontend-booking-build", scope: "apps/booking", required: true, command: "corepack yarn workspace @erp/app-booking build" },
+  { id: "frontend-shell-test", scope: "apps/shell", required: true, command: "corepack yarn workspace @erp/app-shell test" },
+  { id: "frontend-shell-typecheck", scope: "apps/shell", required: true, command: "corepack yarn workspace @erp/app-shell typecheck" },
+  { id: "frontend-shell-lint", scope: "apps/shell", required: true, command: "corepack yarn workspace @erp/app-shell lint" },
+  { id: "frontend-shell-build", scope: "apps/shell", required: true, command: "corepack yarn workspace @erp/app-shell build" },
+  { id: "w2-01-live-acceptance", scope: "w2-01-live", required: true, command: "node scripts/w2-01-live-acceptance.mjs --output-root artifacts/w2-01-live/app-shell-auth && node scripts/w2-01-live-acceptance.mjs --validate --require-pass --output-root artifacts/w2-01-live/app-shell-auth" },
   { id: "backend-test", scope: "services", required: true, command: "mvn -f services/pom.xml test" }
 ];
 
@@ -25,9 +54,15 @@ export function classifyChangedPaths(paths) {
     if (path.startsWith("apps/reference-data/")) scopes.add("apps/reference-data");
     if (path.startsWith("apps/auth/")) scopes.add("apps/auth");
     if (path.startsWith("apps/charge-agreements/")) scopes.add("apps/charge-agreements");
+    if (path.startsWith("apps/booking/")) scopes.add("apps/booking");
+    if (path.startsWith("apps/shell/")) scopes.add("apps/shell");
+    if (path.startsWith("packages/auth/")) scopes.add("packages/auth");
+    if (path.startsWith("packages/shared-types/")) scopes.add("packages/shared-types");
     if (path.startsWith("packages/")) scopes.add("packages");
     if (path.startsWith("contracts/")) scopes.add("contracts");
     if (path.startsWith("infrastructure/seeds/") || path === "compose.yaml") scopes.add("seeds");
+    if (path.startsWith("scripts/w2-01-live-acceptance")) scopes.add("w2-01-live");
+    if (path.startsWith("artifacts/w2-01-live/")) scopes.add("w2-01-live");
     if (path.startsWith(".github/workflows/") || path.startsWith("scripts/")) scopes.add("workspace");
   }
   return [...scopes].sort();
@@ -61,7 +96,9 @@ export function runPolicyChecks(root = process.cwd()) {
       "-Command",
       `Select-String -Path '${resolve(root, domainPath)}\\**\\*.java' -Pattern 'org.springframework|jakarta.persistence|javax.persistence|org.apache.kafka|com.fasterxml.jackson|lombok|dataaccess|messaging' -CaseSensitive:$false`
     ], { encoding: "utf8" });
-    if (result.stdout.trim()) {
+    if (result.error) {
+      failures.push(`domain-core purity check unavailable under ${domainPath}: ${result.error.message}`);
+    } else if ((result.stdout ?? "").trim()) {
       failures.push(`domain-core impurity detected under ${domainPath}`);
     }
   }
@@ -78,7 +115,7 @@ export function aggregate(results) {
 
 export function runQualityGates(options = {}) {
   const changedPaths = options.all ? ["<all>"] : options.changedPaths ?? discoverChangedPaths();
-  const scopes = options.all ? ["workspace", "services", "apps/reference-data", "apps/auth", "apps/charge-agreements", "packages", "contracts", "seeds"] : classifyChangedPaths(changedPaths);
+  const scopes = options.all ? ["workspace", "services", "apps/reference-data", "apps/auth", "apps/charge-agreements", "apps/booking", "apps/shell", "packages", "packages/auth", "packages/shared-types", "contracts", "seeds", "w2-01-live"] : classifyChangedPaths(changedPaths);
   const gates = selectGates(scopes, options.all);
   const results = gates.map((gate) => runGate(gate, options));
   const aggregateResult = aggregate(results);
@@ -140,7 +177,7 @@ function discoverChangedPaths() {
   return result.stdout.trim().split(/\r?\n/);
 }
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   return {
     all: argv.includes("--all"),
     dryRun: argv.includes("--dry-run"),

@@ -1,0 +1,155 @@
+{
+  "realm": "linercore-local",
+  "enabled": true,
+  "loginTheme": "linercore",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "loginWithEmailAllowed": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "superuser",
+        "description": "Local-only unrestricted application access"
+      },
+      {
+        "name": "booking-desk",
+        "description": "Create, validate, confirm, and view bookings"
+      },
+      {
+        "name": "reference-admin",
+        "description": "Maintain shared reference data without Booking access"
+      },
+      {
+        "name": "pricing",
+        "description": "Maintain and approve charge rates and customer agreements"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "linercore-auth",
+      "name": "LinerCore application shell",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://127.0.0.1:8088/auth/api/auth/callback",
+        "http://127.0.0.1:18088/auth/api/auth/callback"
+      ],
+      "webOrigins": [
+        "http://127.0.0.1:8088",
+        "http://127.0.0.1:18088"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://127.0.0.1:8088/auth/signed-out##http://127.0.0.1:18088/auth/signed-out##http://127.0.0.1:8088/signed-out##http://127.0.0.1:18088/signed-out"
+      },
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "protocolMappers": [
+        {
+          "name": "realm roles in ID token",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "local.superuser",
+      "username": "superuser",
+      "firstName": "Local",
+      "lastName": "Superuser",
+      "email": "superuser@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "superuser",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "superuser",
+        "booking-desk",
+        "reference-admin",
+        "pricing"
+      ]
+    },
+    {
+      "id": "local.booking.user",
+      "username": "booking.user",
+      "firstName": "Booking",
+      "lastName": "Operator",
+      "email": "booking.user@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "booking",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "booking-desk"
+      ]
+    },
+    {
+      "id": "local.reference.admin",
+      "username": "reference.admin",
+      "firstName": "Reference",
+      "lastName": "Administrator",
+      "email": "reference.admin@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "reference"
+        }
+      ],
+      "realmRoles": [
+        "reference-admin"
+      ]
+    },
+    {
+      "id": "local.pricing.analyst",
+      "username": "pricing.user",
+      "firstName": "Pricing",
+      "lastName": "Analyst",
+      "email": "pricing.user@example.test",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "pricing",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "pricing"
+      ]
+    }
+  ]
+}

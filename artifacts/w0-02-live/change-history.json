@@ -1,0 +1,68 @@
+{
+    "voyage":  {
+                   "value":  [
+                                 {
+                                     "changeId":  "c8f3eafa-dbea-488e-8cdd-477a36fa08da",
+                                     "referenceSet":  "VESSEL_VOYAGE",
+                                     "recordId":  {
+                                                      "value":  "voyage-local-001"
+                                                  },
+                                     "operation":  "CREATED",
+                                     "beforeSummary":  null,
+                                     "afterSummary":  "ReferenceRecord[id=ReferenceId[value=voyage-local-001], set=VESSEL_VOYAGE, code=ReferenceCode[value=LC001E], displayName=LinerCore Atlas LC001E, status=ACTIVE, version=1, createdBy=AuditActor[subjectId=local.reference.admin, displayName=Local Reference Admin], createdAt=2026-07-14T19:01:44.106200484Z, updatedBy=AuditActor[subjectId=local.reference.admin, displayName=Local Reference Admin], updatedAt=2026-07-14T19:01:44.106201933Z, statusChangedBy=null, statusChangedAt=null, changeReason=local seed voyage-local-001, attributes={originLocationId=location-usnyc, recordType=VOYAGE, scheduledArrival=2026-08-10T08:00:00Z, relationship=USNYC to NLRTM, 01-10 Aug 2026, carrierVoyageNumber=LC001E, vesselId=vessel-linercore-atlas, localOnly=true, scheduledDeparture=2026-08-01T10:00:00Z, destinationLocationId=location-nlrot}]",
+                                     "changedBy":  {
+                                                       "subjectId":  "local.reference.admin",
+                                                       "displayName":  "Local Reference Admin"
+                                                   },
+                                     "changedAt":  "2026-07-14T19:01:44.114428088Z",
+                                     "reason":  "local seed voyage-local-001",
+                                     "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                                 }
+                             ],
+                   "Count":  1
+               },
+    "equipment":  {
+                      "value":  [
+                                    {
+                                        "changeId":  "086adc8a-3403-4892-80a8-b055afb98abf",
+                                        "referenceSet":  "EQUIPMENT_TYPE",
+                                        "recordId":  {
+                                                         "value":  "equipment-type-22g1"
+                                                     },
+                                        "operation":  "CREATED",
+                                        "beforeSummary":  null,
+                                        "afterSummary":  "ReferenceRecord[id=ReferenceId[value=equipment-type-22g1], set=EQUIPMENT_TYPE, code=ReferenceCode[value=22G1], displayName=20 Foot General Purpose, status=ACTIVE, version=1, createdBy=AuditActor[subjectId=local.reference.admin, displayName=Local Reference Admin], createdAt=2026-07-14T19:01:44.355180833Z, updatedBy=AuditActor[subjectId=local.reference.admin, displayName=Local Reference Admin], updatedAt=2026-07-14T19:01:44.355183137Z, statusChangedBy=null, statusChangedAt=null, changeReason=local seed equipment-type-22g1, attributes={relationship=ISO 6346 size/type 22G1, localOnly=true}]",
+                                        "changedBy":  {
+                                                          "subjectId":  "local.reference.admin",
+                                                          "displayName":  "Local Reference Admin"
+                                                      },
+                                        "changedAt":  "2026-07-14T19:01:44.362906530Z",
+                                        "reason":  "local seed equipment-type-22g1",
+                                        "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                                    }
+                                ],
+                      "Count":  1
+                  },
+    "charge":  {
+                   "value":  [
+                                 {
+                                     "changeId":  "b28fb27c-891e-4a4f-a442-4332e6eda930",
+                                     "referenceSet":  "CHARGE_CODE",
+                                     "recordId":  {
+                                                      "value":  "charge-code-ofr"
+                                                  },
+                                     "operation":  "CREATED",
+                                     "beforeSummary":  null,
+                                     "afterSummary":  "ReferenceRecord[id=ReferenceId[value=charge-code-ofr], set=CHARGE_CODE, code=ReferenceCode[value=OFR], displayName=Ocean Freight, status=ACTIVE, version=1, createdBy=AuditActor[subjectId=local.reference.admin, displayName=Local Reference Admin], createdAt=2026-07-14T19:01:44.229922891Z, updatedBy=AuditActor[subjectId=local.reference.admin, displayName=Local Reference Admin], updatedAt=2026-07-14T19:01:44.229925132Z, statusChangedBy=null, statusChangedAt=null, changeReason=local seed charge-code-ofr, attributes={chargeFamily=freight, relationship=Freight, localOnly=true}]",
+                                     "changedBy":  {
+                                                       "subjectId":  "local.reference.admin",
+                                                       "displayName":  "Local Reference Admin"
+                                                   },
+                                     "changedAt":  "2026-07-14T19:01:44.235814056Z",
+                                     "reason":  "local seed charge-code-ofr",
+                                     "correlationId":  "da98f7d4-c00e-40db-97b2-b6bba8e15947"
+                                 }
+                             ],
+                   "Count":  1
+               }
+}

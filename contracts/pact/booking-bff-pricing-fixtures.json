@@ -1,0 +1,29 @@
+{
+  "fixtureId": "booking-bff-pricing-u05",
+  "contractId": "pact-booking-bff-pricing",
+  "provider": "booking-service",
+  "consumer": "booking-bff",
+  "interactionId": "booking-price-or-reprice",
+  "requestShape": {
+    "method": "POST",
+    "path": "/api/bookings/booking-0001/price",
+    "headers": {
+      "X-Correlation-Id": "corr-booking-0001"
+    },
+    "body": {
+      "idempotencyKey": "browser-command-0001",
+      "actorSubjectId": "booking-user-0001",
+      "correlationId": "corr-booking-0001"
+    }
+  },
+  "responseShape": {
+    "status": 422,
+    "contentType": "application/json",
+    "example": "contracts/examples/booking-price-manual.response.json"
+  },
+  "preconditions": [
+    "the Booking BFF derives actor identity from the authenticated session",
+    "the Charge provider has returned NO_RATE for the current immutable pricing input"
+  ],
+  "verificationStatus": "pending"
+}

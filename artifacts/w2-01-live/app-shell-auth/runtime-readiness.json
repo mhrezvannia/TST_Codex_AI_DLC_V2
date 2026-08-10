@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "services": [
+    {
+      "name": "nginx",
+      "url": "http://127.0.0.1:8088/health",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "name": "apps-shell",
+      "url": "http://127.0.0.1:8088/api/health",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "name": "apps-auth",
+      "url": "http://127.0.0.1:8088/auth/api/health",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "name": "apps-booking",
+      "url": "http://127.0.0.1:3001/",
+      "httpStatus": 308,
+      "status": "PASS"
+    },
+    {
+      "name": "identity-service",
+      "url": "http://127.0.0.1:8082/actuator/health",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "name": "charge-agreement-service",
+      "url": "http://127.0.0.1:8084/actuator/health",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "name": "booking-service",
+      "url": "http://127.0.0.1:8085/actuator/health",
+      "httpStatus": 200,
+      "status": "PASS"
+    }
+  ]
+}

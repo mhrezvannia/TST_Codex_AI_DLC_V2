@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { PlatformShell } from "@erp/ui";
+import "./rates/rates.css";
 
 export const metadata = {
   title: "LinerCore Charge Agreements",

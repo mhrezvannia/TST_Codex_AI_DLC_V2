@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260722095446-d0f46130f1c5-36c31862",
+  "workspaceDigest": "d0f46130f1c554802b14b94b9ed2c0af4501ba80c25fcb18ca4b5b2c3673ed9e",
+  "command": "node scripts/wave-a-compose.mjs -f compose.yaml -f infrastructure/compose/w2-02-acceptance.compose.yaml ps --format json",
+  "startedAt": "2026-07-22T09:58:04.670Z",
+  "finishedAt": "2026-07-22T09:58:05.365Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "19defb6b2c82b114be4a05129d6e13831bbe62e11b78025698078c42f6d3cdf7",
+  "outputBytes": 33811,
+  "services": [
+    {
+      "Service": "apps-auth",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-booking",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "apps-charge-agreements",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-reference-data",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "apps-shell",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "booking-service",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "charge-agreement-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "container-movement-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "identity-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "kafka",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "keycloak",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "nginx",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "postgres",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "reference-data-service",
+      "State": "running",
+      "Health": ""
+    },
+    {
+      "Service": "schema-registry",
+      "State": "running",
+      "Health": "healthy"
+    },
+    {
+      "Service": "w2-02-ssr-control",
+      "State": "running",
+      "Health": "healthy"
+    }
+  ]
+}

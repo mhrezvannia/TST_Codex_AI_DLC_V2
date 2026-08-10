@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "runId": "20260730071753-e8d654ff47be-d6a12388",
+  "id": "keyboard:create-to-confirm",
+  "result": "PASS",
+  "assertions": {
+    "semantic": "PASS",
+    "keyboard-focus": "PASS",
+    "live-region": "PASS",
+    "reduced-motion": "PASS",
+    "primary-action": "PASS",
+    "overflow": "PASS",
+    "overlap": "PASS",
+    "clipping": "PASS",
+    "theme": "PASS",
+    "axe": "PASS"
+  },
+  "startedAt": "2026-07-30T07:26:14.114Z",
+  "actionAt": "2026-07-30T07:26:14.146Z",
+  "capturedAt": "2026-07-30T07:26:26.483Z",
+  "browserPermit": {
+    "schemaVersion": 1,
+    "producer": "playwright-global-setup",
+    "status": "PERMITTED",
+    "runId": "20260730071753-e8d654ff47be-d6a12388",
+    "workspaceDigest": "e8d654ff47be960380fee8f174325d63b1d769d11e027c448ddacabe286f2972",
+    "guardFinishedAt": "2026-07-30T07:21:56.365Z",
+    "guardSha256": "f735e3ad51c19d5d63a2940fc509c7d793f0e9bc328a248447609ca44a8ba4fa",
+    "authorizedAt": "2026-07-30T07:21:56.369Z"
+  },
+  "timing": {
+    "type": "navigate",
+    "durationMs": 216,
+    "domInteractiveMs": 212,
+    "loadEventEndMs": 216
+  },
+  "mutation": true,
+  "control": {
+    "kind": "ssr-proxy",
+    "mode": "passthrough",
+    "appliedCount": 12,
+    "verified": true,
+    "causal": true,
+    "observations": [
+      {
+        "method": "GET",
+        "path": "/api/reference-options",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "GET",
+        "path": "/api/reference-options",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "GET",
+        "path": "/api/reference-options",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "GET",
+        "path": "/api/reference-options",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "POST",
+        "path": "/api/bookings",
+        "status": 201,
+        "action": "passthrough"
+      },
+      {
+        "method": "GET",
+        "path": "/api/bookings/9eadf557-776a-4ff3-bc83-4f0541a65c29",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "POST",
+        "path": "/api/bookings/9eadf557-776a-4ff3-bc83-4f0541a65c29/validate",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "GET",
+        "path": "/api/bookings/9eadf557-776a-4ff3-bc83-4f0541a65c29",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "POST",
+        "path": "/api/bookings/9eadf557-776a-4ff3-bc83-4f0541a65c29/price",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "GET",
+        "path": "/api/bookings/9eadf557-776a-4ff3-bc83-4f0541a65c29",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "POST",
+        "path": "/api/bookings/9eadf557-776a-4ff3-bc83-4f0541a65c29/confirm",
+        "status": 200,
+        "action": "passthrough"
+      },
+      {
+        "method": "GET",
+        "path": "/api/bookings/9eadf557-776a-4ff3-bc83-4f0541a65c29",
+        "status": 200,
+        "action": "passthrough"
+      }
+    ]
+  },
+  "trace": {
+    "promoted": "traces/mutation-sanitized.zip",
+    "report": "traces/mutation-sanitizer-report.json",
+    "rawRemoved": true
+  }
+}

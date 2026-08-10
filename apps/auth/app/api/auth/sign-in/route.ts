@@ -3,8 +3,10 @@ import {
   authConfig,
   createLocalSession,
   createOidcTransaction,
+  createPkceChallenge,
   encodeCookie,
   isAuthBypassEnabled,
+  localSubjectId,
   redirectResponse,
   setCookieHeader
 } from "../../../../lib/auth-server";
@@ -15,7 +17,7 @@ export function GET(request: Request) {
   const tx = createOidcTransaction(url.searchParams.get("returnUrl") ?? "/session");
   if (isAuthBypassEnabled()) {
     const response = redirectResponse(new URL(tx.returnUrl, request.url));
-    response.headers.append("Set-Cookie", setCookieHeader(SESSION_COOKIE_NAME, encodeCookie(createLocalSession("local-user")), 3600));
+    response.headers.append("Set-Cookie", setCookieHeader(SESSION_COOKIE_NAME, encodeCookie(createLocalSession(localSubjectId(url.searchParams.get("subjectId")))), 3600));
     return response;
   }
 
@@ -26,7 +28,7 @@ export function GET(request: Request) {
   authorizeUrl.searchParams.set("scope", "openid profile email");
   authorizeUrl.searchParams.set("state", tx.state);
   authorizeUrl.searchParams.set("nonce", tx.nonce);
-  authorizeUrl.searchParams.set("code_challenge", "local-placeholder");
+  authorizeUrl.searchParams.set("code_challenge", createPkceChallenge(tx.pkceVerifier));
   authorizeUrl.searchParams.set("code_challenge_method", "S256");
 
   const response = redirectResponse(authorizeUrl);

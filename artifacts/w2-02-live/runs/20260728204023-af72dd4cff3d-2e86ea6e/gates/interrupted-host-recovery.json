@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260728204023-af72dd4cff3d-2e86ea6e",
+  "sequence": 28,
+  "event": "STALE_ATTEMPT_RECOVERY_PRECONDITIONS",
+  "observedAt": "2026-07-29T08:40:05.961Z",
+  "result": "PASS",
+  "diagnostic": "Formal acceptance host execution channel terminated during sequence 28; the original process was absent, Wave A owned zero resources, trace staging was absent, and the protected manager guard passed before stale-lock recovery.",
+  "diagnosticHash": "441aa49d12937b20e3d406b76793028225e793bab72671f59b08a35cc55e2ace",
+  "invariants": {
+    "lifecycleLockOwnedByRun": true,
+    "startedRecordValid": true,
+    "terminalRecordAbsent": true,
+    "indexRecoveryRecordAbsent": true,
+    "survivingAcceptanceProcessAbsent": true,
+    "waveAResourcesAbsent": true,
+    "traceStagingAbsent": true,
+    "protectedManagerGuardPassed": true
+  },
+  "managerGuardOutputHash": "3dbb7cd93bf7cd3b14698ec218b71e09d5f667b56699146b338dddefa68304e4"
+}

@@ -1,0 +1,56 @@
+{
+  "schema": "linercore.u05-u06-handoff/v1",
+  "status": "source-ready-live-evidence-blocked",
+  "verified": {
+    "bookingDomainTests": {
+      "status": "passed",
+      "tests": 21
+    },
+    "migrationStaticTests": {
+      "status": "passed",
+      "tests": 10
+    },
+    "u05EvaluatorTests": {
+      "status": "passed",
+      "tests": 7,
+      "isolation": "none"
+    },
+    "bookingTypecheck": "passed",
+    "bookingLint": "passed",
+    "contractCatalog": {
+      "status": "passed",
+      "contracts": 15
+    },
+    "contractProviderVerification": {
+      "status": "passed",
+      "checks": 199,
+      "liveProvider": "skipped"
+    }
+  },
+  "blocked": [
+    "Resilience4j 2.2.0 is uncached and both configured Aliyun and direct Maven Central time out",
+    "full Booking Maven reactor and dependency convergence/license/vulnerability evidence",
+    "Docker/Testcontainers/PostgreSQL migration, concurrency, restart, and query-plan evidence",
+    "Booking Vitest/esbuild spawn EPERM before test discovery",
+    "changed-line coverage measurement",
+    "isolated Compose and demo-guard evidence",
+    "Playwright width/theme/keyboard/state evidence",
+    "live bilateral correlation, performance, provider/Pact, aidlc-audit, and erp-fidelity-audit"
+  ],
+  "ownership": {
+    "allowed": [
+      "services/booking-service",
+      "apps/booking existing pricing region and BFF",
+      "additive Booking consumer contracts",
+      "U05 scripts, docs, artifacts, and approved local configuration"
+    ],
+    "forbiddenAndUnchangedByU05": [
+      "packages/ui",
+      "shared shell/navigation/tokens/palette",
+      "Charge pricing authority",
+      "D&D behavior",
+      "manual quote/case-resolution workflow"
+    ]
+  },
+  "handoffDocument": "docs/u05-booking-consumption-u06-handoff.md"
+}

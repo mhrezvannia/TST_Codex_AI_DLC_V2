@@ -1,0 +1,403 @@
+"use client";
+
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Button,
+  Combobox,
+  DefinitionList,
+  Dialog,
+  Field,
+  Input,
+  PartialDataNotice,
+  StatusStrip
+} from "@erp/ui";
+import { mapServerFields, validateDraft, type BookingDraftFields } from "../../../lib/booking-form";
+import type { BookingReferenceCatalog, ReferenceOption } from "../../../lib/bookings";
+
+const initial: BookingDraftFields = {
+  customerId: "",
+  loadUnLocode: "",
+  dischargeUnLocode: "",
+  voyageId: "",
+  equipmentTypeCode: "",
+  equipmentId: "",
+  commodityCode: ""
+};
+
+type FormErrors = Partial<Record<keyof BookingDraftFields | "form", string>>;
+
+export function BookingCreateForm({ options }: { options: BookingReferenceCatalog }) {
+  const router = useRouter();
+  const [fields, setFields] = useState(initial);
+  const [idempotencyKey, setIdempotencyKey] = useState(() => crypto.randomUUID());
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [busy, setBusy] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const selectedVoyage = options.voyages.find((option) => option.id === fields.voyageId);
+  const routeSource = selectedVoyage ? `Derived from ${selectedVoyage.code}` : "Select a voyage to populate the route";
+
+  useEffect(() => {
+    function beforeUnload(event: BeforeUnloadEvent) {
+      if (!dirty || busy) return;
+      event.preventDefault();
+      event.returnValue = "";
+    }
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => window.removeEventListener("beforeunload", beforeUnload);
+  }, [busy, dirty]);
+
+  const comboOptions = useMemo(() => ({
+    customers: toComboOptions(options.customers, "id"),
+    locations: toComboOptions(options.locations, "code"),
+    voyages: toComboOptions(
+      options.voyages.filter((option) => option.attributes.recordType === "VOYAGE"),
+      "id"
+    ),
+    equipment: toComboOptions(options.equipment, "code")
+  }), [options]);
+
+  function change(name: keyof BookingDraftFields, value: string) {
+    setFields((current) => ({ ...current, [name]: value }));
+    setErrors((current) => ({ ...current, [name]: undefined, form: undefined }));
+    setIdempotencyKey(crypto.randomUUID());
+    setDirty(true);
+  }
+
+  function selectVoyage(value: string) {
+    const voyage = options.voyages.find((option) => option.id === value);
+    const load = options.locations.find(
+      (option) => option.id === voyage?.attributes.originLocationId
+    )?.code;
+    const discharge = options.locations.find(
+      (option) => option.id === voyage?.attributes.destinationLocationId
+    )?.code;
+    setFields((current) => ({
+      ...current,
+      voyageId: value,
+      loadUnLocode: load ?? current.loadUnLocode,
+      dischargeUnLocode: discharge ?? current.dischargeUnLocode
+    }));
+    setErrors((current) => ({
+      ...current,
+      voyageId: undefined,
+      loadUnLocode: undefined,
+      dischargeUnLocode: undefined,
+      form: undefined
+    }));
+    setIdempotencyKey(crypto.randomUUID());
+    setDirty(true);
+  }
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (busy) return;
+    const nextErrors = validateCanonicalDraft(fields, options);
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
+      focusErrors();
+      return;
+    }
+
+    setBusy(true);
+    setErrors({});
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "idempotency-key": idempotencyKey
+        },
+        body: JSON.stringify({
+          customerId: fields.customerId,
+          routing: [{
+            legSequence: 1,
+            loadUnLocode: fields.loadUnLocode,
+            dischargeUnLocode: fields.dischargeUnLocode,
+            voyageId: fields.voyageId
+          }],
+          equipment: [{
+            equipmentTypeCode: fields.equipmentTypeCode,
+            quantity: 1,
+            equipmentId: fields.equipmentId.toUpperCase()
+          }],
+          currency: "USD",
+          cargoMode: "FCL_DRY",
+          reefer: false,
+          dangerousGoods: false,
+          attributes: { commodityCode: fields.commodityCode }
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const fieldErrors = mapServerFields(payload.fields, payload.message);
+        setErrors(Object.keys(fieldErrors).length
+          ? fieldErrors
+          : { form: payload.message ?? "The booking draft could not be created. Your entries were retained." });
+        focusErrors();
+        return;
+      }
+      setDirty(false);
+      router.push(`/bookings/${payload.id}?created=1`);
+    } catch {
+      setErrors({ form: "The Booking service did not respond. Your entries were retained." });
+      focusErrors();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function focusErrors() {
+    window.setTimeout(() => document.getElementById("booking-errors")?.focus(), 0);
+  }
+
+  const fieldErrors = Object.entries(errors).filter(
+    ([name, message]) => name !== "form" && message
+  );
+
+  return (
+    <>
+      <form className="booking-create-layout" onSubmit={submit} noValidate>
+        <div className="booking-form-sections">
+          {Object.keys(errors).length > 0 ? (
+            <div id="booking-errors" className="booking-error-summary" tabIndex={-1} role="alert">
+              <h2>Booking not created</h2>
+              {errors.form ? <p>{errors.form}</p> : null}
+              {fieldErrors.length > 0 ? (
+                <ul>
+                  {fieldErrors.map(([name, message]) => (
+                    <li key={name}><a href={`#booking-${name}`}>{message}</a></li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          ) : null}
+
+          <fieldset className="booking-form-section">
+            <legend><span>1</span> Customer</legend>
+            <Field
+              label="Customer"
+              error={errors.customerId}
+              errorId="customerId-error"
+              htmlFor="booking-customerId"
+              required
+            >
+              <Combobox
+                id="booking-customerId"
+                data-testid="booking-customerId"
+                name="customerId"
+                aria-label="Customer"
+                options={comboOptions.customers}
+                value={fields.customerId}
+                onChange={(value) => change("customerId", value)}
+                invalid={Boolean(errors.customerId)}
+                describedBy={errors.customerId ? "customerId-error" : undefined}
+                placeholder="Search code or customer name"
+                required
+              />
+            </Field>
+          </fieldset>
+
+          <fieldset className="booking-form-section">
+            <legend><span>2</span> Route and voyage</legend>
+            <div className="booking-form-grid">
+              <Field label="Voyage" error={errors.voyageId} errorId="voyageId-error" htmlFor="booking-voyageId" required>
+                <Combobox
+                  id="booking-voyageId"
+                  data-testid="booking-voyageId"
+                  name="voyageId"
+                  aria-label="Voyage"
+                  options={comboOptions.voyages}
+                  value={fields.voyageId}
+                  onChange={selectVoyage}
+                  invalid={Boolean(errors.voyageId)}
+                  describedBy={errors.voyageId ? "voyageId-error" : undefined}
+                  placeholder="Search voyage code or vessel"
+                  required
+                />
+              </Field>
+              <div className="booking-route-source" role="status">{routeSource}</div>
+              <Field label="Place of loading" error={errors.loadUnLocode} errorId="loadUnLocode-error" htmlFor="booking-loadUnLocode" required>
+                <Combobox
+                  id="booking-loadUnLocode"
+                  data-testid="booking-loadUnLocode"
+                  name="loadUnLocode"
+                  aria-label="Place of loading"
+                  options={comboOptions.locations}
+                  value={fields.loadUnLocode}
+                  onChange={(value) => change("loadUnLocode", value)}
+                  invalid={Boolean(errors.loadUnLocode)}
+                  describedBy={errors.loadUnLocode ? "loadUnLocode-error" : undefined}
+                  placeholder="Search UN/LOCODE or location"
+                  required
+                />
+              </Field>
+              <Field label="Place of discharge" error={errors.dischargeUnLocode} errorId="dischargeUnLocode-error" htmlFor="booking-dischargeUnLocode" required>
+                <Combobox
+                  id="booking-dischargeUnLocode"
+                  data-testid="booking-dischargeUnLocode"
+                  name="dischargeUnLocode"
+                  aria-label="Place of discharge"
+                  options={comboOptions.locations}
+                  value={fields.dischargeUnLocode}
+                  onChange={(value) => change("dischargeUnLocode", value)}
+                  invalid={Boolean(errors.dischargeUnLocode)}
+                  describedBy={errors.dischargeUnLocode ? "dischargeUnLocode-error" : undefined}
+                  placeholder="Search UN/LOCODE or location"
+                  required
+                />
+              </Field>
+            </div>
+          </fieldset>
+
+          <fieldset className="booking-form-section">
+            <legend><span>3</span> Equipment and cargo</legend>
+            <div className="booking-form-grid">
+              <Field label="Equipment type" error={errors.equipmentTypeCode} errorId="equipmentTypeCode-error" htmlFor="booking-equipmentTypeCode" required>
+                <Combobox
+                  id="booking-equipmentTypeCode"
+                  data-testid="booking-equipmentTypeCode"
+                  name="equipmentTypeCode"
+                  aria-label="Equipment type"
+                  options={comboOptions.equipment}
+                  value={fields.equipmentTypeCode}
+                  onChange={(value) => change("equipmentTypeCode", value)}
+                  invalid={Boolean(errors.equipmentTypeCode)}
+                  describedBy={errors.equipmentTypeCode ? "equipmentTypeCode-error" : undefined}
+                  placeholder="Search ISO size/type code"
+                  required
+                />
+              </Field>
+              <Field
+                label="Equipment ID"
+                hint="ISO 6346 identifier including its check digit."
+                error={errors.equipmentId}
+                errorId="equipmentId-error"
+                htmlFor="booking-equipmentId"
+                required
+              >
+                <Input
+                  id="booking-equipmentId"
+                  data-testid="booking-equipmentId"
+                  value={fields.equipmentId}
+                  onChange={(event) => change("equipmentId", event.target.value.toUpperCase())}
+                  aria-invalid={Boolean(errors.equipmentId)}
+                  aria-describedby={errors.equipmentId ? "equipmentId-error" : undefined}
+                  autoComplete="off"
+                  required
+                />
+              </Field>
+              <Field label="Commodity code" error={errors.commodityCode} errorId="commodityCode-error" htmlFor="booking-commodityCode" required>
+                <Input
+                  id="booking-commodityCode"
+                  data-testid="booking-commodityCode"
+                  value={fields.commodityCode}
+                  onChange={(event) => change("commodityCode", event.target.value.toUpperCase())}
+                  aria-invalid={Boolean(errors.commodityCode)}
+                  aria-describedby={errors.commodityCode ? "commodityCode-error" : undefined}
+                  autoComplete="off"
+                  required
+                />
+              </Field>
+            </div>
+            <DefinitionList columns={4} items={[
+              { term: "Quantity", description: "1" },
+              { term: "Cargo mode", description: "FCL dry" },
+              { term: "Reefer", description: "No" },
+              { term: "Dangerous goods", description: "No" }
+            ]} />
+          </fieldset>
+        </div>
+
+        <aside className="booking-create-summary" aria-labelledby="booking-review-title">
+          <h2 id="booking-review-title"><span>4</span> Review and create</h2>
+          <DefinitionList columns={1} items={[
+            { term: "Customer", description: optionLabel(options.customers, fields.customerId) },
+            { term: "Route", description: fields.loadUnLocode && fields.dischargeUnLocode ? `${fields.loadUnLocode} to ${fields.dischargeUnLocode}` : "Not selected" },
+            { term: "Voyage", description: optionLabel(options.voyages, fields.voyageId) },
+            { term: "Equipment", description: fields.equipmentId ? `${fields.equipmentId} / ${fields.equipmentTypeCode || "type not selected"}` : "Not entered" },
+            { term: "Commercial setup", description: "USD / FCL dry" }
+          ]} />
+          <PartialDataNotice>
+            The booking will be created as a Draft. Reference validation and pricing happen after creation.
+          </PartialDataNotice>
+          <div className="booking-create-actions">
+            <Button
+              data-testid="booking-submit"
+              type="submit"
+              variant="primary"
+              busy={busy}
+              busyLabel="Creating draft"
+            >
+              Create draft
+            </Button>
+            <Button type="button" onClick={() => dirty ? setCancelOpen(true) : router.push("/bookings")}>
+              Cancel
+            </Button>
+          </div>
+          <StatusStrip announce="polite">
+            Required fields use canonical reference data.
+          </StatusStrip>
+        </aside>
+      </form>
+
+      <Dialog
+        open={cancelOpen}
+        title="Discard this booking draft?"
+        onClose={() => setCancelOpen(false)}
+        actions={
+          <>
+            <Button onClick={() => setCancelOpen(false)}>Keep editing</Button>
+            <Button variant="danger" onClick={() => {
+              setDirty(false);
+              router.push("/bookings");
+            }}>
+              Discard draft
+            </Button>
+          </>
+        }
+      >
+        <p>Your entered booking details have not been created.</p>
+      </Dialog>
+    </>
+  );
+}
+
+function toComboOptions(options: ReferenceOption[], value: "id" | "code") {
+  return options.map((option) => ({
+    value: option[value],
+    label: `${option.code} - ${option.displayName}`
+  }));
+}
+
+function optionLabel(options: ReferenceOption[], value: string) {
+  const option = options.find((candidate) => candidate.id === value);
+  return option ? `${option.code} - ${option.displayName}` : "Not selected";
+}
+
+function validateCanonicalDraft(
+  fields: BookingDraftFields,
+  options: BookingReferenceCatalog
+): FormErrors {
+  const errors: FormErrors = validateDraft(fields);
+  if (fields.customerId && !options.customers.some((option) => option.id === fields.customerId)) {
+    errors.customerId = "Select an active customer from the list";
+  }
+  const load = options.locations.find((option) => option.code === fields.loadUnLocode);
+  const discharge = options.locations.find((option) => option.code === fields.dischargeUnLocode);
+  if (fields.loadUnLocode && !load) errors.loadUnLocode = "Select an active place of loading from the list";
+  if (fields.dischargeUnLocode && !discharge) errors.dischargeUnLocode = "Select an active place of discharge from the list";
+  const voyage = options.voyages.find((option) => option.id === fields.voyageId);
+  if (fields.voyageId && !voyage) errors.voyageId = "Select an active voyage from the list";
+  if (voyage && load && voyage.attributes.originLocationId !== load.id) {
+    errors.loadUnLocode = "Place of loading must match the selected voyage";
+  }
+  if (voyage && discharge && voyage.attributes.destinationLocationId !== discharge.id) {
+    errors.dischargeUnLocode = "Place of discharge must match the selected voyage";
+  }
+  if (fields.equipmentTypeCode && !options.equipment.some((option) => option.code === fields.equipmentTypeCode)) {
+    errors.equipmentTypeCode = "Select an active equipment type from the list";
+  }
+  return errors;
+}

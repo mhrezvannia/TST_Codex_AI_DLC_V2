@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 3,
+  "runId": "20260722091244-d0f46130f1c5-f945e2fe",
+  "command": "npm run demo:guard",
+  "producer": "acceptance-parent",
+  "phase": "post",
+  "startedAt": "2026-07-22T09:45:26.853Z",
+  "finishedAt": "2026-07-22T09:45:46.527Z",
+  "exitCode": 0,
+  "directExit": true,
+  "result": "PASS",
+  "outputHash": "938382573a595dde2753a37f5f8c497c2687a120eb2d520a5886ce24aafee5ef",
+  "outputBytes": 117
+}

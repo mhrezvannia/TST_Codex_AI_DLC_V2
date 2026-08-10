@@ -10,7 +10,7 @@
       "name": "app",
       "description": "Implemented backend services, frontends, reverse proxy, seed loader, and contract hooks.",
       "readinessState": "application_ready",
-      "services": ["postgres", "keycloak", "kafka", "schema-registry", "identity-service", "reference-data-service", "apps-auth", "apps-reference-data", "nginx", "seed-loader"]
+      "services": ["postgres", "keycloak", "kafka", "schema-registry", "identity-service", "reference-data-service", "charge-agreement-service", "booking-service", "container-movement-service", "apps-auth", "apps-reference-data", "apps-charge-agreements", "apps-booking", "apps-container-movement", "nginx", "seed-loader"]
     },
     {
       "name": "observability",
@@ -28,7 +28,7 @@
       "name": "full",
       "description": "All implemented local runtime profiles with honest missing-unit reporting.",
       "readinessState": "evidence_ready",
-      "services": ["postgres", "keycloak", "kafka", "schema-registry", "identity-service", "reference-data-service", "apps-auth", "apps-reference-data", "nginx", "seed-loader", "contract-devtools", "prometheus", "grafana", "jaeger", "otel-collector", "elasticsearch", "kibana"]
+      "services": ["postgres", "keycloak", "kafka", "schema-registry", "identity-service", "reference-data-service", "charge-agreement-service", "booking-service", "container-movement-service", "apps-auth", "apps-reference-data", "apps-charge-agreements", "apps-booking", "apps-container-movement", "nginx", "seed-loader", "contract-devtools", "prometheus", "grafana", "jaeger", "otel-collector", "elasticsearch", "kibana"]
     }
   ],
   "ideModes": [
@@ -48,9 +48,16 @@
     },
     {
       "targetService": "apps-reference-data",
-      "hostPort": 3001,
+      "hostPort": 3002,
       "containerDependencies": ["identity-service", "reference-data-service"],
-      "envOverrides": ["HOST_RUNTIME=true", "REFERENCE_DATA_APP_URL=http://127.0.0.1:3001"],
+      "envOverrides": ["HOST_RUNTIME=true", "REFERENCE_DATA_APP_URL=http://127.0.0.1:3002"],
+      "statusReportingMode": "host_run_frontend"
+    },
+    {
+      "targetService": "apps-booking",
+      "hostPort": 3001,
+      "containerDependencies": ["booking-service", "reference-data-service", "charge-agreement-service", "container-movement-service"],
+      "envOverrides": ["HOST_RUNTIME=true", "BOOKING_APP_URL=http://127.0.0.1:3001"],
       "statusReportingMode": "host_run_frontend"
     }
   ],
@@ -68,16 +75,43 @@
       "audience": "linercore-shared-platform",
       "issuer": "http://keycloak:8080/realms/linercore-local",
       "capabilities": ["reference-data:read", "reference-data:create", "reference-data:update", "platform-status:read"]
+    },
+    {
+      "serviceName": "booking-service",
+      "clientId": "linercore-booking-service",
+      "audience": "linercore-shared-platform",
+      "issuer": "http://keycloak:8080/realms/linercore-local",
+      "capabilities": ["booking:read", "booking:create", "booking:update", "pricing:request", "movement-status:consume"]
+    },
+    {
+      "serviceName": "charge-agreement-service",
+      "clientId": "linercore-charge-agreement-service",
+      "audience": "linercore-shared-platform",
+      "issuer": "http://keycloak:8080/realms/linercore-local",
+      "capabilities": ["pricing:read", "pricing:calculate", "platform-status:read"]
+    },
+    {
+      "serviceName": "container-movement-service",
+      "clientId": "linercore-container-movement-service",
+      "audience": "linercore-shared-platform",
+      "issuer": "http://keycloak:8080/realms/linercore-local",
+      "capabilities": ["movement:read", "movement:create", "booking-confirmed:consume", "platform-status:read"]
     }
   ],
   "ports": [
-    { "serviceName": "postgres", "hostPort": 5432, "containerPort": 5432, "requiredProfiles": ["core", "app", "devtools", "full"] },
+    { "serviceName": "postgres", "hostPort": 55432, "containerPort": 5432, "requiredProfiles": ["core", "app", "devtools", "full"] },
     { "serviceName": "keycloak", "hostPort": 8080, "containerPort": 8080, "requiredProfiles": ["core", "app", "devtools", "full"] },
     { "serviceName": "schema-registry", "hostPort": 8081, "containerPort": 8081, "requiredProfiles": ["core", "app", "devtools", "full"] },
     { "serviceName": "kafka", "hostPort": 9092, "containerPort": 9092, "requiredProfiles": ["core", "app", "devtools", "full"] },
     { "serviceName": "identity-service", "hostPort": 8082, "containerPort": 8082, "requiredProfiles": ["app", "full"] },
     { "serviceName": "reference-data-service", "hostPort": 8083, "containerPort": 8083, "requiredProfiles": ["app", "full"] },
+    { "serviceName": "charge-agreement-service", "hostPort": 8084, "containerPort": 8084, "requiredProfiles": ["app", "full"] },
+    { "serviceName": "booking-service", "hostPort": 8085, "containerPort": 8085, "requiredProfiles": ["app", "full"] },
+    { "serviceName": "container-movement-service", "hostPort": 8086, "containerPort": 8086, "requiredProfiles": ["app", "full"] },
+    { "serviceName": "apps-booking", "hostPort": 3001, "containerPort": 3000, "requiredProfiles": ["app", "full"] },
+    { "serviceName": "apps-reference-data", "hostPort": 3002, "containerPort": 3000, "requiredProfiles": ["app", "full"] },
     { "serviceName": "nginx", "hostPort": 8088, "containerPort": 80, "requiredProfiles": ["app", "full"] },
-    { "serviceName": "grafana", "hostPort": 3001, "containerPort": 3000, "requiredProfiles": ["observability", "full"] }
+    { "serviceName": "prometheus", "hostPort": 9090, "containerPort": 9090, "requiredProfiles": ["observability", "full"] },
+    { "serviceName": "grafana", "hostPort": 3003, "containerPort": 3000, "requiredProfiles": ["observability", "full"] }
   ]
 }

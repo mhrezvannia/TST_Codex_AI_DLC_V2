@@ -1,0 +1,6 @@
+gate=seed-dry-run
+status=PLANNED
+exitCode=
+command=node scripts/seed-local.mjs --dry-run --seed-file infrastructure/seeds/shared-platform-mvp-defaults.json
+
+dry-run: command not executed

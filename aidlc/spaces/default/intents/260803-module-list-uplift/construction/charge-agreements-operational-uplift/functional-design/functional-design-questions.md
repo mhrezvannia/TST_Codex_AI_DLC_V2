@@ -16,7 +16,7 @@ C. Forward every browser query key and let the provider decide
 D. Fetch broadly and filter/sort in the browser
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - Strict BFF query contract (Recommended) - 2026-08-10T19:47:12Z - **Mode:** guided - User response: `A. Strict BFF query contract (Rec)`
 
 ### Q2. Which entities and boundary state should U03 add?
 
@@ -26,7 +26,7 @@ C. Create a generic cross-domain commercial aggregate
 D. Persist capabilities and drafts in browser storage
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - No new persistence or shared aggregate; typed VMs only (Recommended) - 2026-08-10T19:47:12Z - **Mode:** guided - User response: `A. No new persistence, VMs only (Rec)`
 
 ### Q3. How should Charge resolve Reference options?
 
@@ -36,7 +36,7 @@ C. Query the Reference database directly
 D. Accept arbitrary user labels as canonical IDs
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - Bounded `ChargeReferenceOptionsPort` only (Recommended) - 2026-08-10T19:47:12Z - **Mode:** guided - User response: `A. Bounded ChargeReferenceOptionsPort (Rec)`
 
 ### Q4. What is authoritative Agreement detail and tab behavior?
 
@@ -46,7 +46,7 @@ C. Link the newest approved rate instead of the bound version
 D. Reverse-search Booking by customer/lane labels
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - Provider truth with honest not-integrated/BLOCKED D&D (Recommended) - 2026-08-10T19:47:12Z - **Mode:** guided - User response: `A. Provider truth, honest BLOCKED D&D (Rec)`
 
 ## Commands and Recovery Questions
 
@@ -58,7 +58,7 @@ C. Mutate an approved version in place
 D. Optimistically advance lifecycle before provider acceptance
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - Reauthorized commands with version/replay evidence and authoritative re-read (Recommended) - 2026-08-10T19:49:10Z - **Mode:** guided - User response: `A. Reauthorize + version evidence (Rec)`
 
 ### Q6. How should Charge mutation outcomes map?
 
@@ -68,7 +68,7 @@ C. Treat timeout as known failure and resubmit automatically
 D. Close the dialog and clear state for every response
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - One exhaustive Charge-local result/transport union (Recommended) - 2026-08-10T19:49:10Z - **Mode:** guided - User response: `A. Exhaustive result union (Rec)`
 
 ### Q7. How should Approval Queue and manual-pricing evidence behave?
 
@@ -78,7 +78,7 @@ C. Add bulk approval because it is convenient
 D. Add manual amount and close actions in the UI
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - Independently contract-test-gated queue segments; read-only manual evidence (Recommended) - 2026-08-10T19:49:10Z - **Mode:** guided - User response: `A. Segment-gated on contract tests (Rec)`
 
 ### Q8. How should denied, stale, partial, and dependency failures behave?
 
@@ -88,7 +88,7 @@ C. Hide the entire record if one tab or label dependency fails
 D. Use browser fixtures when Charge or Reference is unavailable
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - Reauthorized, region-scoped degradation with exact Retry ownership and no fabrication (Recommended) - 2026-08-10T19:49:10Z - **Mode:** guided - User response: `A. Region-scoped, no fabrication (Rec)`
 
 ## Frontend and Evidence Questions
 
@@ -100,7 +100,7 @@ C. Copy shared Dialog/Table/Tabs into the Charge app
 D. Put Charge workflows inside `packages/ui`
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - One `PlatformShell`, Charge-owned compositions over shared `@erp/ui` only (Recommended) - 2026-08-10T19:52:00Z - **Mode:** guided - User response: `A. One PlatformShell, @erp/ui only (Rec)`
 
 ### Q10. Which U03 scenarios define completion?
 
@@ -110,7 +110,7 @@ C. Defer recovery, accessibility, performance, and dependency failures to intent
 D. Count static design/source inspection as live completion
 X. Other (please specify)
 
-[Answer]:
+[Answer]: A - Full live evidence bar; blocked capabilities absent, not simulated (Recommended) - 2026-08-10T19:52:00Z - **Mode:** guided - User response: `A. Full evidence bar, blockers absent (Rec)`
 
 ## Ambiguity Analysis Placeholder
 

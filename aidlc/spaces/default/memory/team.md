@@ -5,18 +5,33 @@
 > not directly.
 
 ## Way of Working
-W3-04 stays on its short-lived `intent/W3-04-booking-request-completeness` branch, synchronizes with `integ/main-reconciled`, and integrates through the program backlog protocol. The repository does not prove one universal merge style or external branch-protection policy, so neither is invented.
+W4-01 stays on the short-lived `intent/W4-01-module-list-detail-uplift` branch and resynchronizes with the current `integ/main-reconciled` baseline before Construction. The UI team remains the single Driver; Reference Data, Charge, and Container Movement owners review changes inside their domains, and any shared contract change remains append-only with producer and consumer sign-off before the final exit-gated merge.
 
 ## Walking Skeleton
-PB-01 is the first gated Construction slice: a real shared-shell request creates and reopens with authoritative voyage schedule facts and equipment quantity greater than one without a physical identifier. Commercial breadth, legacy correction, pricing, and confirmation build only after that cross-layer spine is proven.
+The first Construction slice is a gated Reference Data list-to-detail journey through the canonical authenticated shell, real authorization/session propagation, the existing BFF and service, shared `@erp/ui` primitives, responsive operational states, the isolated live Compose stack, and both audits. Charge Agreements follows only after that pattern is proven, then Container Journeys completes the required three-module sequence.
 
 ## Testing Posture
-Tests are written alongside W3-04 changes and evidence at least 80% line coverage of changed executable production lines in every W3-touched module. Coverage is necessary but insufficient: domain/completeness, additive migration/restart, pricing and event contracts, duplicate/conflict/degraded paths, Playwright accessibility/responsive behavior, isolated live Compose, `aidlc-audit`, and `erp-fidelity-audit` are mandatory, and a missing prerequisite is BLOCKED rather than PASS.
+Tests are written alongside code, with test-first treatment for defects, contracts, and risky state transitions. W4-owned changed frontend code carries executable 80 percent line coverage, while unit, component, route, shell-integration, four-viewport Playwright, accessibility, live Compose, `aidlc-audit`, and `erp-fidelity-audit` evidence remain blocking according to risk; breadth or file counts never substitute for measured results.
 
 ## Deployment
-Fast Java/frontend/contract/lint/build checks block integration, followed by one serialized manual acceptance run on the approved isolated Compose topology with live contracts, browser/accessibility evidence, demo protection, and audits. This practice does not claim an established staging/production deployment pipeline, cadence, rollback mechanism, or continuous delivery.
+The canonical W4 acceptance environment is the isolated `linercore-wave-a` Compose project operated through `scripts/wave-a-compose.mjs`, with the manager demo guarded before and after acceptance. Repository evidence supports validation and local release acceptance only: W4 claims no production deployment cadence, staging topology, cloud platform, branch-protection enforcement, or automated production rollback without separate executable evidence.
 
 ## Code Style
+TypeScript stays strict, follows the shared ESLint and EditorConfig rules, uses Next.js App Router conventions, keeps domain UI and BFF code feature-local, and composes the single LinerCore shell with shared auth, tokens, and `@erp/ui`. Any Java touched preserves framework-free domain cores, application ports/services, service-owned persistence, adapter/container boundaries, and boundary-level error translation; W4 introduces neither a universal formatter nor a universal `Result<T,E>` migration.
+
+## W3-04 Booking Request Completeness
+W3-04 stays on its short-lived `intent/W3-04-booking-request-completeness` branch, synchronizes with `integ/main-reconciled`, and integrates through the program backlog protocol. The repository does not prove one universal merge style or external branch-protection policy, so neither is invented.
+
+### Walking Skeleton
+PB-01 is the first gated Construction slice: a real shared-shell request creates and reopens with authoritative voyage schedule facts and equipment quantity greater than one without a physical identifier. Commercial breadth, legacy correction, pricing, and confirmation build only after that cross-layer spine is proven.
+
+### Testing Posture
+Tests are written alongside W3-04 changes and evidence at least 80% line coverage of changed executable production lines in every W3-touched module. Coverage is necessary but insufficient: domain/completeness, additive migration/restart, pricing and event contracts, duplicate/conflict/degraded paths, Playwright accessibility/responsive behavior, isolated live Compose, `aidlc-audit`, and `erp-fidelity-audit` are mandatory, and a missing prerequisite is BLOCKED rather than PASS.
+
+### Deployment
+Fast Java/frontend/contract/lint/build checks block integration, followed by one serialized manual acceptance run on the approved isolated Compose topology with live contracts, browser/accessibility evidence, demo protection, and audits. This practice does not claim an established staging/production deployment pipeline, cadence, rollback mechanism, or continuous delivery.
+
+### Code Style
 Java preserves framework-free domain cores, application-service transaction boundaries, ports/adapters, service-owned persistence, immutable typed outcomes, correlated boundary errors, idempotency, audit, and transactional outbox patterns. TypeScript remains strict, centralizes Booking BFF security/error behavior, uses shared workspace types and `@erp/ui` inside the one LinerCore shell, and adds no repository-wide formatter or architecture-tool mandate within W3-04.
 
 ## W2-02 Closure Preservation

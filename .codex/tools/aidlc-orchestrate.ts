@@ -1281,7 +1281,13 @@ function handleNext(args: string[], projectDir: string | undefined): void {
   // workflow (`/aidlc --resume`), the prose presents a resume-choice
   // AskUserQuestion. The engine NEVER calls AskUserQuestion (it is a Bash tool
   // the conductor owns); it emits an `ask` directive carrying the question and
-  // STOPS, and the conductor renders it and feeds the answer back via report.
+  // STOPS. The conductor renders it and feeds the answer back by RE-RUNNING
+  // `next` with the flags that answer implies — NOT via report. A resume choice
+  // is a routing decision, not a stage verdict, and report accepts forward
+  // verdicts only: reporting one here would commit GATE_APPROVED +
+  // STAGE_COMPLETED against the current stage and advance past a gate the human
+  // never saw. report now refuses a verdict without an explicit --stage, and the
+  // question text says so, so the trap is closed on both sides.
   // No state file → there is nothing to resume, so fall through to the
   // no-state error below.
   if (flags.resume && stateContent) {
@@ -1289,7 +1295,11 @@ function handleNext(args: string[], projectDir: string | undefined): void {
     const where = currentSlug.length > 0 ? ` (currently at "${currentSlug}")` : "";
     emit(askDirective(
       `An existing workflow was found${where}. How would you like to proceed? ` +
-        "Resume from last checkpoint, redo the current stage, jump to a stage, or start fresh.",
+        "Resume from last checkpoint, redo the current stage, jump to a stage, or start fresh. " +
+        "Feed the answer back by re-running `next` with the flags it implies — bare `next` to " +
+        "resume, `next --stage <slug>` to redo the current stage or jump to another. " +
+        "Do NOT report this answer: report commits a forward stage verdict and would approve a " +
+        "gate the human never saw.",
     ));
     return;
   }
@@ -2431,7 +2441,30 @@ function handleReport(args: string[], projectDir: string | undefined): void {
     return;
   }
   const explicitStage = flags.stage?.trim();
-  const slug = explicitStage && explicitStage.length > 0 ? explicitStage : currentSlug;
+
+  // A forward verdict MUST name the stage it commits. The historical
+  // Current-Stage fallback made `report --result <verdict>` with no --stage
+  // silently approve whatever stage the pointer happened to name — so a
+  // report round-trip that is NOT a stage verdict (notably feeding back the
+  // answer to a `--resume` ask, which needs SOME --result to satisfy the check
+  // above) would commit a GATE_APPROVED + STAGE_COMPLETED for a stage the human
+  // never saw a gate for, and auto-advance past it. Naming the stage is free
+  // for a genuine verdict (the conductor always knows which directive it
+  // acted on) and fatal to that class of accident, so it is required.
+  if (!explicitStage || explicitStage.length === 0) {
+    emit({
+      kind: "error",
+      message:
+        `report --result "${flags.result}" requires --stage <slug> naming the stage whose ` +
+        `transition you are committing. Refusing to infer it from Current Stage ` +
+        `("${currentSlug}") — a forward verdict commits a gate approval and advances the ` +
+        `workflow, so it must never target a stage by accident. If you are feeding back the ` +
+        `answer to a resume/scope question rather than reporting a stage, do not call report: ` +
+        `re-run \`next\` with the flags that answer implies.`,
+    });
+    return;
+  }
+  const slug = explicitStage;
 
   const scope = getField(stateContent, "Scope");
   if (!scope || scope.length === 0) {

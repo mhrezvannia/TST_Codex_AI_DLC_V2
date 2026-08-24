@@ -68,5 +68,12 @@
     "dirName": "260803-booking-request-complete",
     "scope": "feature",
     "status": "in-flight"
+  },
+  {
+    "uuid": "019fc6b5-7561-7810-9944-cd0a009b2156",
+    "slug": "module-list-uplift",
+    "dirName": "260803-module-list-uplift",
+    "scope": "feature",
+    "status": "in-flight"
   }
 ]

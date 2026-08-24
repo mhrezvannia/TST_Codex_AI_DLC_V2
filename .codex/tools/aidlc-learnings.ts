@@ -194,7 +194,13 @@ function handleSurface(args: string[], projectDir: string): void {
   const raw = existsSync(memAbs) ? readFileSync(memAbs, "utf-8") : "";
   const entries = parseMemoryEntries(raw);
 
-  const phase = memRel.split("/")[1] ?? "";
+  // memory_path is always `<record-prefix>/<phase>/<stage-slug>/memory.md`, so
+  // the phase is the third segment from the end. Indexing from the FRONT (the
+  // previous `split("/")[1]`) landed on "spaces" — the second segment of the
+  // `aidlc/spaces/<space>/...` prefix — for every stage in every phase, so the
+  // surfaced phase was never correct regardless of the prefix's length.
+  const memParts = memRel.split("/").filter((p) => p.length > 0);
+  const phase = memParts.length >= 3 ? memParts[memParts.length - 3] : "";
 
   const candidates: SurfaceCandidate[] = [];
   const parked: SurfaceParkedQuestion[] = [];

@@ -1,0 +1,45 @@
+{
+  "stage_slug": "user-stories",
+  "selections": [
+    {
+      "candidate_id": "c1",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Way of Working",
+      "text": "Define delivery personas by distinct operational goals and permission contexts rather than creating one persona for every job title; do not introduce personas for explicitly out-of-scope administration surfaces.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c2",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "Keep release-wide or intent-wide acceptance matrices outside the INVEST user-story count; represent them as explicit exit gates and keep the counted stories small and actor-valued.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c3",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Testing Posture",
+      "text": "Use one explicitly inherited cross-cutting acceptance contract for accessibility, security, resilience, and evidence when repeating it in every story would obscure actor value; never postpone those NFRs into a late quality-only story.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c4",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Contract Evolution",
+      "text": "Keep unsupported provider controls and missing canonical identifiers as named dependencies with owners and exit conditions rather than implementation stories; a story cannot promise actor value the approved provider contract cannot deliver.",
+      "source": "orchestrator"
+    },
+    {
+      "candidate_id": "c5",
+      "type": "learning",
+      "scope": "project",
+      "heading": "Corrections",
+      "text": "When a desired command is blocked by an unadmitted contract exit, keep the command absent in current acceptance and write a current actor-valued story such as truthful recovery; post-exit behavior stays in change-controlled backlog scope until admitted.",
+      "source": "orchestrator"
+    }
+  ]
+}

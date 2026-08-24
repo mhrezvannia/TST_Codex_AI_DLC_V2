@@ -94,6 +94,22 @@ export function defaultPermissionState(correlationId = "ref-ui-local"): Permissi
   };
 }
 
+// The fail-closed counterpart to defaultPermissionState. Used wherever authorization
+// cannot be established — no session, an expired session, or absent server-side
+// configuration — so that an unresolved decision denies rather than grants.
+export function deniedPermissionState(
+  correlationId: string,
+  reason = "Authorization could not be established."
+): PermissionState {
+  return {
+    canRead: false,
+    canWrite: false,
+    requestedArea: "reference-data",
+    correlationId,
+    reason
+  };
+}
+
 export function getReferenceSet(id: string): ReferenceSetDescriptor | undefined {
   return referenceSetDescriptors.find((set) => set.id === id);
 }

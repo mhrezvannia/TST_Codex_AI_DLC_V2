@@ -992,7 +992,9 @@ function handleAdvance(args: string[]): void {
       completed_count: completedCount,
       next_after: nextAfterNext ? nextAfterNext.slug : null,
       already_completed: alreadyMarkedCompleted,
-      memory_path: relativeMemoryPath(nextStage.phase, nextStage.slug),
+      // Same record-prefix requirement as aidlc-runtime.ts's compile: without
+      // it this reports a path one directory short of the real diary.
+      memory_path: relativeMemoryPath(nextStage.phase, nextStage.slug, relativeRecordDir(pd)),
       timestamp,
     })
   );

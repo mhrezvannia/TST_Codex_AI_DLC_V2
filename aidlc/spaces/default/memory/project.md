@@ -32,6 +32,7 @@
 
 - For brownfield service database changes, use an ordered Flyway baseline plus additive migrations and prove existing-data upgrade, backfill, restart, and restore or forward-repair behavior; destructive reset is not acceptance evidence. (learned 2026-07-15) <!-- cid:application-design:c6 -->
 - For W2-03 performance validation, execute and report the exact requirement-bound fixtures, warm-ups, concurrency, sample populations, percentile algorithms, contention rounds, and resource cycles before adding generic stress, soak, auto-scaling, or production-capacity claims. (learned 2026-07-30) <!-- cid:performance-validation:c3 -->
+- Apply numeric feature coverage defaults only with executable instrumentation that measures the active intent's changed code; test counts and historical percentages are not coverage evidence. (learned 2026-08-03) <!-- cid:practices-discovery:c2 -->
 ## Deployment
 
 <!-- Project-specific override. -->
@@ -117,6 +118,15 @@ NEVER relabel an environmental block or accepted waiver as PASS. (affirmed 2026-
 - NEVER fabricate commodity, trade-lane, voyage schedule, party, equipment quantity, or physical identifier defaults to satisfy completeness. (affirmed 2026-08-03)
 - NEVER add a module-local shell, palette, typography system, or shared-primitive fork within W3-04. (affirmed 2026-08-03)
 - NEVER claim staging, production, rollback, supply-chain provenance, or continuous deployment capability from static CI/Compose definitions alone. (affirmed 2026-08-03)
+NEVER create a domain-local theme, shell, navigation system, token system, authentication flow, or shared-component fork. (affirmed 2026-08-03)
+NEVER move shared design-system ownership out of `@erp/ui` or bypass the W2-02 contribution and review boundary. (affirmed 2026-08-03)
+NEVER claim W4 coverage from test counts, historical percentages, or unexecuted configuration. (affirmed 2026-08-03)
+NEVER treat the current non-operational security gate, advisory audit detector output, or unknown branch protection as a passing control. (affirmed 2026-08-03)
+NEVER broaden W4 into repository-wide security modernization, production deployment, cloud infrastructure, or release-platform work without an approved scope change. (affirmed 2026-08-03)
+NEVER introduce cross-service database access, a shared write model, or framework dependencies into Java domain cores. (affirmed 2026-08-03)
+NEVER impose a universal formatter, file-size threshold, or `Result<T,E>` pattern that the repository does not enforce. (affirmed 2026-08-03)
+NEVER call documents, mockups, detached module pages, static scans, container startup, or screenshots alone a live acceptance pass. (affirmed 2026-08-03)
+- Do not reproduce generic template controls for search, sort, pagination, correction, publication, or cross-links when approved requirements and executable provider contracts do not support them. (learned 2026-08-09) <!-- cid:refined-mockups:c4 -->
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -192,6 +202,17 @@ ALWAYS preserve the historical W1 BLOCKED record and waiver separately from the 
 - ALWAYS evolve Booking persistence additively with a versioned snapshot, ordered migration, deterministic backfill, restart/idempotency evidence, and no invented legacy values. (affirmed 2026-08-03)
 - ALWAYS preserve typed operational outcomes or translated correlated exceptions at service boundaries without leaking raw backend errors. (affirmed 2026-08-03)
 - ALWAYS use strict TypeScript, the central Booking BFF security/error path, shared workspace types, and `@erp/ui` in the one LinerCore shell. (affirmed 2026-08-03)
+ALWAYS resynchronize the short-lived W4 intent branch with the current integration baseline before Construction. (affirmed 2026-08-03)
+ALWAYS keep the UI team accountable as the W4 Driver while obtaining owning-module review for Reference Data, Charge, and Container Movement changes. (affirmed 2026-08-03)
+ALWAYS obtain producer and consumer sign-off for append-only shared contract changes. (affirmed 2026-08-03)
+ALWAYS build the gated Reference Data shell-to-service list/detail journey first, followed by Charge Agreements and then Container Journeys. (affirmed 2026-08-03)
+ALWAYS preserve the single authenticated LinerCore shell, shared tokens, shared auth, and `@erp/ui` ownership. (affirmed 2026-08-03)
+ALWAYS write tests alongside code and use test-first treatment for defects, contracts, and risky state transitions. (affirmed 2026-08-03)
+ALWAYS enforce executable 80 percent line coverage for changed W4-owned frontend code. (affirmed 2026-08-03)
+ALWAYS make Reference Data, Charge, Container Journey, shell-integration, responsive, accessibility, live Compose, `aidlc-audit`, and `erp-fidelity-audit` verdicts blocking according to the approved W4 acceptance matrix. (affirmed 2026-08-03)
+ALWAYS make the existing required security gate operational, or replace it with a bounded executable equivalent, before W4 merge. (affirmed 2026-08-03)
+ALWAYS operate W4 live acceptance through the isolated `linercore-wave-a` wrapper and protect the manager demo before and after the run. (affirmed 2026-08-03)
+ALWAYS preserve strict TypeScript, Next.js App Router conventions, repository ESLint and EditorConfig rules, Java ports-and-adapters boundaries, and service-owned persistence. (affirmed 2026-08-03)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->
@@ -278,5 +299,35 @@ ALWAYS preserve the historical W1 BLOCKED record and waiver separately from the 
 
 - When Deployment Execution has produced no observable candidate, define alert severity, thresholds, role ownership, and runbook intent as evidence-only gates; do not claim external paging, notification delivery, or automated remediation until an environment, owner, and channel are approved. (learned 2026-07-30) <!-- cid:observability-setup:c3 -->
 - For W2-03 incident response, automate bounded evidence capture, validation, read-only inventory, and safe stopping, but require explicit human approval before restart, restore, forward repair, cleanup, or credential rotation. (learned 2026-07-30) <!-- cid:incident-response:c3 -->
+- Treat prior-intent-specific practice prose as evidence, not the active intent's default; re-affirm only choices the active intent and current repository evidence do not settle. (learned 2026-08-03) <!-- cid:practices-discovery:c1 -->
+- Keep feature security work bounded to operationalizing or replacing already-required gates; broader scanner, SBOM, signing, or provenance modernization requires approved scope expansion. (learned 2026-08-03) <!-- cid:practices-discovery:c5 -->
+- Treat the approved Context Pack, scope, page contracts, rough interaction artifacts, and affirmed practices as binding requirements sources; use the requirements interview only for decisions those sources explicitly leave unresolved. (learned 2026-08-03) <!-- cid:requirements-analysis:c1 -->
+- When a desired command is blocked by an unadmitted contract exit, keep the command absent in current acceptance and write a current actor-valued story such as truthful recovery; post-exit behavior stays in change-controlled backlog scope until admitted. (learned 2026-08-09) <!-- cid:user-stories:c5 -->
+- Keep detailed approved page-level design candidates as supporting evidence while consolidating their binding decisions into concise stage artifacts for a navigable implementation handoff. (learned 2026-08-09) <!-- cid:refined-mockups:c5 -->
+- A domain app may wrap a shared `@erp/ui` primitive to add domain behaviour (consequence copy, reason capture, precondition summary), but must never reimplement its focus trap, overlay, or dismissal semantics; missing general primitive behaviour stays a platform BLOCKED dependency rather than a local fork (learned 2026-08-10) <!-- cid:functional-design:u03-fd-dialog-composition -->
+- When a brownfield BFF query key differs from the approved contract, record the fix as an explicit contract-tested adaptation with a named mapping, never a silent rename or alias (learned 2026-08-10) <!-- cid:functional-design:u03-fd-query-key-adaptation -->
+- Define a domain-local mutation result union when the shared `MutationResult<T>` cannot represent known acceptance without an authoritative value; the local union changes no other domain's contract (learned 2026-08-10) <!-- cid:functional-design:u03-fd-local-result-union -->
+- Claim per-region failure independence only where a separate call actually exists; verify each claimed independent region against the declared seam and the live source before designing its failure state (learned 2026-08-10) <!-- cid:functional-design:u03-fd-region-independence-seams -->
+- Prefer per-region failure containment over whole-record failure so verified truth stays visible during partial outages, accepting the extra state plumbing and test fixtures (learned 2026-08-10) <!-- cid:functional-design:u03-fd-region-containment -->
+- Gate each queue or list segment on its own contract test rather than gating the whole screen on all of them, so one untested filter cannot remove a working segment and no client-side merge becomes tempting (learned 2026-08-10) <!-- cid:functional-design:u03-fd-segment-admission -->
+- When two independent conditions can disable the same control, report each with its own precise reason rather than collapsing them into one generic disabled state; a user cannot act on 'unavailable' (learned 2026-08-10) <!-- cid:functional-design:u04-fd-distinct-disable-gates -->
+- When a design deliberately keeps facts separate (persisted, published, delivered, applied), derive no aggregate or roll-up status across them; a roll-up silently reintroduces the inference the separation exists to prevent (learned 2026-08-10) <!-- cid:functional-design:u04-fd-no-rollup-status -->
+- Carry cross-module navigation context in a signed, bounded, subject- and target-bound origin token rather than a returnTo string; a same-module allow-list cannot bound a return target that leaves the module (learned 2026-08-10) <!-- cid:functional-design:u04-fd-signed-origin-tokens -->
+- When a stage inherits a seam that upstream design named but never specified, specify it against the nearest approved analogue and record it as an additive contract requiring producer/consumer sign-off, rather than building on the gap or assuming a shape (learned 2026-08-10) <!-- cid:functional-design:u04-fd-specify-inherited-seams -->
+- Treat an approved upstream requirements table as decided input rather than a topic to re-open in a later stage; re-asking settled targets invites answers that contradict an approved artifact (learned 2026-08-11) <!-- cid:nfr-requirements:nfr-no-reask-settled -->
+- Before invoking a protocol clause as justification, verify its precondition actually holds for this project; state a judgment call as a judgment call rather than dressing it as a protocol entitlement (learned 2026-08-11) <!-- cid:nfr-requirements:nfr-verify-clause-precondition -->
+- When the engine's directive order contradicts the approved delivery plan's sequencing, raise it at the first directive that diverges rather than continuing and letting a reviewer find it stages later (learned 2026-08-11) <!-- cid:nfr-requirements:nfr-flag-sequencing-conflict -->
+- Carry a brownfield scan's evidence limitations into every derived artifact; never fill an unresolved version or unscanned fact with a plausible value (learned 2026-08-11) <!-- cid:nfr-requirements:nfr-preserve-evidence-limits -->
+- Treat a stage's `consumes` frontmatter as a per-artifact checklist: every produced artifact must name each declared input explicitly. Citing inputs collectively ("all four NFR requirements artifacts") does not satisfy upstream-coverage and hides which input actually informed the work (learned 2026-08-11) <!-- cid:nfr-design:nfrd-consumes-per-artifact -->
+- When a stage suggests a pattern catalogue the project's constraints forbid, design only what applies and record each exclusion with its reason and the approved artifact that forecloses it, so absence reads as a decision rather than an oversight (learned 2026-08-11) <!-- cid:nfr-design:nfrd-record-excluded-patterns -->
+- Prefer a contract whose violation fails the build over one whose violation fails a request; moving a failure from runtime to build time is the strongest containment available (learned 2026-08-11) <!-- cid:nfr-design:nfrd-fail-at-build-time -->
+- When a needed control belongs to another team, leave the gap visibly open with owner and evidence rather than designing around it; designing an unowned control creates the appearance of protection the running system does not have (learned 2026-08-11) <!-- cid:nfr-design:nfrd-dont-design-unowned-controls -->
+- In a brownfield design, never describe approved target design as existing infrastructure. Read the actual configuration and separate verified current state from required change; an artifact that presents its target as its present state tells implementers there is nothing to build (learned 2026-08-11) <!-- cid:infrastructure-design:infra-verify-current-state -->
+- Before recording something as an open question, check whether the repository already answers it; a mechanism visible in existing configuration should be specified, not deferred (learned 2026-08-11) <!-- cid:infrastructure-design:infra-check-repo-before-open-question -->
+- Treat a stage's suggested pattern catalogue as a menu to select from against the project's real constraints, not a checklist to satisfy, especially when the stage's lead persona pulls toward patterns the project forbids (learned 2026-08-11) <!-- cid:infrastructure-design:infra-catalogue-is-a-menu -->
+- When two stages could own the same artifact, state the boundary explicitly and list what the later stage must take from the earlier one without re-deriving it (learned 2026-08-11) <!-- cid:infrastructure-design:infra-name-handoff-boundary -->
 ## Contract Evolution
 - For additive bilateral contract enrichment, retain existing field types and required sets, declare new properties optional for legacy-consumer schema compatibility, require the enriched provider set all-or-none at runtime, and make consumers distinguish absent legacy enrichment from invalid partial enrichment. (learned 2026-07-21) <!-- cid:application-design:c3 -->
+- Preserve one shared interaction grammar while respecting provider-owned capability differences; never create identical client controls that simulate unsupported operations or silently expand backend scope. (learned 2026-08-03) <!-- cid:requirements-analysis:c2 -->
+- Create a permanent compatibility redirect only when an inventoried source maps unambiguously to one canonical target and every retained query value can be safely validated; otherwise use the explicit not-found or gone outcome from the approved retirement inventory. (learned 2026-08-03) <!-- cid:requirements-analysis:c4 -->
+- Keep unsupported provider controls and missing canonical identifiers as named dependencies with owners and exit conditions rather than implementation stories; a story cannot promise actor value the approved provider contract cannot deliver. (learned 2026-08-09) <!-- cid:user-stories:c4 -->

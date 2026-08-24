@@ -1,6 +1,6 @@
-import { isLocalBypassEnabled } from "@erp/auth";
+import { isLocalBypassEnabled, isSessionExpired, sessionFromRequest } from "@erp/auth";
 import {
-  defaultPermissionState,
+  deniedPermissionState,
   getReferenceSet,
   type PermissionState,
   type ReferenceRecordView,
@@ -53,8 +53,16 @@ export type BffReferencePage = {
   correlationId: string;
 };
 
+// A supplied correlation id is accepted only when it matches the bounded shape the
+// Charge BFF already enforces; anything else is replaced with a server-generated
+// value. An unvalidated inbound header is browser-controlled and reaches logs.
+export const CORRELATION_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
+
 export function correlationIdFrom(request: Request, fallback = "ref-bff-local"): string {
-  return request.headers.get("x-correlation-id") ?? `${fallback}-${crypto.randomUUID()}`;
+  const supplied = request.headers.get("x-correlation-id");
+  return supplied && CORRELATION_PATTERN.test(supplied)
+    ? supplied
+    : `${fallback}-${crypto.randomUUID()}`;
 }
 
 export function isLocalAuthBypassEnabled(): boolean {
@@ -81,17 +89,34 @@ export async function resolveReferenceDataPermissions(
     };
   }
 
-  const tokenReference = request.headers.get("authorization")
-    ?? request.headers.get("x-token-reference")
-    ?? process.env.LOCAL_REFERENCE_DATA_TOKEN
-    ?? "";
+  // Authorization material is never taken from the browser. `authorization` and
+  // `x-token-reference` are caller-suppliable, so honouring them let a client choose
+  // its own token reference (FR-020, NFR-004). The subject comes from the signed
+  // session cookie; the token reference comes from server-side configuration only.
+  const session = sessionFromRequest(request);
+  if (!session || isSessionExpired(session)) {
+    return {
+      ok: true,
+      status: 200,
+      correlationId,
+      data: deniedPermissionState(correlationId, "Authentication is required.")
+    };
+  }
 
+  const tokenReference = process.env.LOCAL_REFERENCE_DATA_TOKEN ?? "";
+
+  // Previously an absent token fell through to defaultPermissionState(), which grants
+  // canRead without ever consulting Identity — a fail-open path. Absent configuration
+  // now denies rather than grants.
   if (!tokenReference) {
     return {
       ok: true,
       status: 200,
       correlationId,
-      data: defaultPermissionState(correlationId)
+      data: deniedPermissionState(
+        correlationId,
+        "Reference Data authorization is not configured; access denied."
+      )
     };
   }
 
@@ -119,12 +144,15 @@ export async function resolveReferenceDataPermissions(
   }
 
   const allowed = decision.data.result === "ALLOW";
+  // `canRead` was previously hard-coded true, so an explicit Identity DENY still
+  // granted read access and a denied deep link could never render the denied state
+  // (FR-012, US-001). The decision now governs both flags.
   return {
     ok: true,
     status: 200,
     correlationId,
     data: {
-      canRead: true,
+      canRead: allowed,
       canWrite: allowed,
       requestedArea: "reference-data",
       correlationId: decision.data.correlationId ?? correlationId,

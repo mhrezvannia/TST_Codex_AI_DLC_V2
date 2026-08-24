@@ -354,6 +354,16 @@ function compile(opts: CompileOptions): { skipped?: string; written?: string } {
   const stages: RuntimeStage[] = [];
   const zeroEntryApprovedStages: { slug: string; completed_at: string }[] = [];
 
+  // The record-dir prefix for every emitted memory_path. Without this,
+  // relativeMemoryPath falls back to relativeSpaceRecordPrefix() — which is the
+  // bare `aidlc/spaces/<space>/intents` with NO `<slug>-<id8>` record-dir
+  // segment — so every emitted memory_path pointed one directory short of the
+  // real diary. aidlc-learnings.ts resolves candidates from that path, so the
+  // §13 learnings ritual silently surfaced zero candidates on every stage
+  // (and reported phase "spaces", the second path segment of the truncated
+  // form). Null (no active intent) keeps the historical fallback.
+  const recordPrefix = relativeRecordDir(projectDir);
+
   for (const [slug, entry] of slugsByStartTime) {
     const phaseInfo = phaseMap.get(slug);
     if (!phaseInfo) continue; // unknown slug — skip rather than fail
@@ -367,7 +377,7 @@ function compile(opts: CompileOptions): { skipped?: string; written?: string } {
       started_at: entry.started_at,
       completed_at: entry.completed_at,
       agent: entry.agent || phaseInfo.agent,
-      memory_path: relativeMemoryPath(phaseInfo.phase, slug),
+      memory_path: relativeMemoryPath(phaseInfo.phase, slug, recordPrefix),
       memory_entries: memory.memory_entries,
       memory_breakdown: memory.memory_breakdown,
       sensor_firings: [],

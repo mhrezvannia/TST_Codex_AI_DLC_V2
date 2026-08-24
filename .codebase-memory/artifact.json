@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "96d8f47522fd967aae41d0be75e856fb596ccdbd",
-    "indexed_at": "2026-08-02T10:48:20Z",
-    "project": "TST_Codex_phase1_merge",
-    "nodes": 126162,
-    "edges": 149549,
-    "original_size": 172752896,
-    "compressed_size": 16196082,
-    "compression_level": 3
+    "commit": "2484ca54eea87134f7e017cf643343580740c594",
+    "indexed_at": "2026-08-03T12:40:52Z",
+    "project": "tst_codex_w3_01",
+    "nodes": 114477,
+    "edges": 137931,
+    "original_size": 97255424,
+    "compressed_size": 10073815,
+    "compression_level": 9
 }

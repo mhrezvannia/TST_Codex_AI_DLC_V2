@@ -127,6 +127,11 @@ NEVER introduce cross-service database access, a shared write model, or framewor
 NEVER impose a universal formatter, file-size threshold, or `Result<T,E>` pattern that the repository does not enforce. (affirmed 2026-08-03)
 NEVER call documents, mockups, detached module pages, static scans, container startup, or screenshots alone a live acceptance pass. (affirmed 2026-08-03)
 - Do not reproduce generic template controls for search, sort, pagination, correction, publication, or cross-links when approved requirements and executable provider contracts do not support them. (learned 2026-08-09) <!-- cid:refined-mockups:c4 -->
+- NEVER create a new D&D service, move pricing authority into Booking or Container Movement, or share service persistence. (affirmed 2026-08-03)
+- NEVER claim DCSA certification, invoice-level legal compliance, production deployment readiness, or production availability from local/static evidence. (affirmed 2026-08-03)
+- NEVER waive a required security gate or report green security evidence when pinned scanners did not execute. (affirmed 2026-08-03)
+- NEVER introduce module-local shell, palette, typography, component library, or marketing composition in the Charge UI. (affirmed 2026-08-03)
+- NEVER edit approved historical pricing versions in place or silently fall back to UTC for port-local calculation. (affirmed 2026-08-03)
 ## Mandated
 
 <!-- Populated by practices-discovery affirmation gate. -->
@@ -213,6 +218,12 @@ ALWAYS make Reference Data, Charge, Container Journey, shell-integration, respon
 ALWAYS make the existing required security gate operational, or replace it with a bounded executable equivalent, before W4 merge. (affirmed 2026-08-03)
 ALWAYS operate W4 live acceptance through the isolated `linercore-wave-a` wrapper and protect the manager demo before and after the run. (affirmed 2026-08-03)
 ALWAYS preserve strict TypeScript, Next.js App Router conventions, repository ESLint and EditorConfig rules, Java ports-and-adapters boundaries, and service-owned persistence. (affirmed 2026-08-03)
+- ALWAYS preserve W2-03 Rate/RateVersion, Agreement/AgreementVersion, `pricing.v1`, and signed-fixture compatibility through additive evolution. (affirmed 2026-08-03)
+- ALWAYS keep D&D commercial authority inside Charge and use bounded provider contracts for Booking consumption. (affirmed 2026-08-03)
+- ALWAYS deliver W3-01 as a risk-first vertical with domain, persistence, API, UI, and evidence in the slice that proves the outcome. (affirmed 2026-08-03)
+- ALWAYS require at least 80% changed-line coverage for touched Charge backend and Charge UI production code. (affirmed 2026-08-03)
+- ALWAYS require deterministic D&D boundary tests, dual-signed fixtures, Playwright accessibility, isolated Compose, demo guards, `aidlc-audit`, and `erp-fidelity-audit` before release claims. (affirmed 2026-08-03)
+- ALWAYS keep required security checks fail-closed and disclose unavailable scanners or unproven controls. (affirmed 2026-08-03)
 ## Corrections
 
 <!-- Project-specific corrections from human feedback. -->
